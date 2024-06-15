@@ -1,4 +1,4 @@
-# Team 03
+# JBAAAM
 
 ## Meet the members
 - Adelaine Suhendro, 1007059, CSD
@@ -10,3 +10,4 @@
 
 ## More Info
 [Project Handout](https://github.com/ilenhanako/SDS-2024-Team-03/files/15323228/Final.Project.Handout.Summer.2024.1.docx)
+View our [Website](https://sites.google.com/view/jbaaam/home)
