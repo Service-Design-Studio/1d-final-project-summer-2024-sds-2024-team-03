@@ -1,10 +1,11 @@
 class FeedbacksController < ApplicationController
+    layout 'jbaaam'
     before_action :set_feedback, only: [:show, :edit, :update, :destroy]
   
     # GET /feedbacks
     def index
       @feedbacks = Feedback.all
-      render json: @feedbacks
+    #  render json: @feedbacks
     end
   
     # GET /feedbacks/1
