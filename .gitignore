@@ -35,3 +35,9 @@
 /config/master.key
 /react/node_modules/
 /react/build/
+/public/packs
+/public/packs-test
+/node_modules
+/yarn-error.log
+yarn-debug.log*
+.yarn-integrity

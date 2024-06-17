@@ -7,10 +7,11 @@
     <%= csp_meta_tag %>
 
     <%= stylesheet_link_tag "application", "jbaaam", "data-turbo-track": "reload" %>
-    <%= javascript_include_tag asset_path('main.0ae9d550.js'), 'data-turbo-track': 'reload' %>
-  </head>
+    </head>
 
   <body>
+    <div id="root"></div>
     <%= yield %>
+    <%= javascript_include_tag '/react_build/static/js/main.0ae9d550.js' %>
   </body>
 </html>
