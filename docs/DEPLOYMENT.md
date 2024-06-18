@@ -14,10 +14,15 @@ gcloud config set project PROJECT_ID
 4. Build docker image
 ```bash
 gcloud builds submit --tag gcr.io/PROJECT_ID/myapp
+
+gcloud builds submit --tag gcr.io/jbaaam/jbaaam
 ```
+ID: jbaaam
 
 5. Deploy image to GC run
 ```bash
 gcloud run deploy --image gcr.io/PROJECT_ID/myapp --platform managed
+
+gcloud run deploy --image gcr.io/jbaaam/jbaaam --platform managed
 ```
 [10] asia-southeast2
