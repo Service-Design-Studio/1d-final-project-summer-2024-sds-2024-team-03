@@ -88,6 +88,7 @@ export default function MainApp() {
   //const theme = useTheme();
   const [open, setOpen] = React.useState(false);
   const [selectedMenu, setSelectedMenu] = useState("dashboard");
+  const [fromDate, setFromDate] = useState("01/01/2000");
   const handleDrawerOpen = () => {
     setOpen(true);
   };
@@ -162,8 +163,12 @@ export default function MainApp() {
           <Container maxWidth="lg">
             <Main open={open}>
               <DrawerHeader />
-              {selectedMenu === "dashboard" && <Dashboard />}
-              {selectedMenu === "analytics" && <Analytics />}
+              {selectedMenu === "dashboard" && (
+                <Dashboard setFromDate={setFromDate} fromDate={fromDate} />
+              )}
+              {selectedMenu === "analytics" && (
+                <Analytics setFromDate={setFromDate} fromDate={fromDate} />
+              )}
             </Main>
           </Container>
         </React.Fragment>
