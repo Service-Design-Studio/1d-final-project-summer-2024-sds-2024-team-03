@@ -2,7 +2,8 @@ class AnalyticsController < ApplicationController
   before_action :set_analytic, only: %i[ show edit update destroy ]
 
   def distinct_products
-    @products = Analytic.select(:product).distinct
+    #@products = Analytic.select(:product).distinct
+    @products = Analytic.select(:product).distinct.pluck(:product)
     render json: @products
   end
 
