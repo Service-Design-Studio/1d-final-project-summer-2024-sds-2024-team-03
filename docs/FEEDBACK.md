@@ -5,6 +5,7 @@
 1. **Install Rails:**
 
    If you haven't already installed Rails, do so by running:
+
    ```bash
    gem install rails
    ```
@@ -12,6 +13,7 @@
 2. **Create a New Rails Application:**
 
    Create a new Rails application:
+
    ```bash
    rails new feedback_app
    cd feedback_app
@@ -22,13 +24,21 @@
 1. **Generate the Feedback Model:**
 
    Generate a model for the feedback with necessary fields:
+
    ```bash
    rails generate model Feedback user_id:integer category:string content:text sentiment:string
+
+   rails generate model Analytics date:string feedback:string product:string subcategory:string sentiment:string sentiment_score:string source:string
+
+   rails generate scaffold_controller Analytic date:string feedback:string product:string subcategory:string sentiment:string sentiment_score:string source:string
    ```
+
+   CREATE TABLE sprint1 ( Date TEXT, Feedback TEXT, Product VARCHAR(50), Subcategory VARCHAR(500), Sentiment VARCHAR(100), Sentiment_Score VARCHAR(10), Source VARCHAR(100) );
 
 2. **Run the Migration:**
 
    Apply the migration to create the feedback table in the database:
+
    ```bash
    rails db:migrate
    ```
@@ -38,8 +48,11 @@
 1. **Generate the Feedback Controller:**
 
    Generate a controller to handle CRUD operations:
+
    ```bash
    rails generate controller Feedbacks
+
+   rails generate controller Analytics
    ```
 
 2. **Define Controller Actions:**
@@ -112,6 +125,7 @@
 1. **Create View Files:**
 
    Create view files for each action in `app/views/feedbacks/`:
+
    - `index.html.erb`
    - `show.html.erb`
    - `new.html.erb`
@@ -121,6 +135,7 @@
 2. **Example Views:**
 
    `index.html.erb`:
+
    ```erb
    <h1>Feedbacks</h1>
 
@@ -154,6 +169,7 @@
    ```
 
    `_form.html.erb`:
+
    ```erb
    <%= form_with(model: feedback, local: true) do |form| %>
      <% if feedback.errors.any? %>
@@ -195,6 +211,7 @@
    ```
 
    `new.html.erb` and `edit.html.erb`:
+
    ```erb
    <h1><%= action_name.capitalize %> Feedback</h1>
 
@@ -204,6 +221,7 @@
    ```
 
    `show.html.erb`:
+
    ```erb
    <p>
      <strong>User:</strong>
@@ -247,6 +265,7 @@
 1. **Start the Rails Server:**
 
    Start the Rails server:
+
    ```bash
    rails server
    ```
