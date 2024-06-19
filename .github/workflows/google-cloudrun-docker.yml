@@ -81,7 +81,7 @@ jobs:
       - name: Docker Auth
         id: docker-auth
         run: |-
-          gcloud auth configure-docker gcr.io"
+          gcloud auth configure-docker gcr.io
 
       - name: Build and Push Container
         # ALW host location>project>repo>image! 
