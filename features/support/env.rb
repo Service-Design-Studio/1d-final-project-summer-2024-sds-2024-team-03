@@ -6,16 +6,18 @@
 
 
 require 'cucumber/rails'
-require 'capybara/rspec'
+require 'capybara/cucumber'
 require 'selenium-webdriver'
 
-Capybara.server = :puma
-
-Capybara.register_driver :selenium do |app|
-  Capybara::Selenium::Driver.new(app, browser: :chrome)
+Capybara.register_driver :chrome do |app|
+  options = Selenium::WebDriver::Chrome::Options.new
+  # options.add_argument('--headless') # Uncomment to run Chrome in headless mode
+  Capybara::Selenium::Driver.new(app, browser: :chrome, options: options, )
 end
 
-Capybara.javascript_driver = :selenium
+Capybara.default_driver = :chrome
+Capybara.app_host = 'http://127.0.0.1:3000/feedbacks'
+
 
 # By default, any exception happening in your Rails application will bubble up
 # to Cucumber so that your scenario will fail. This is a different from how
@@ -61,3 +63,4 @@ end
 # The :transaction strategy is faster, but might give you threading problems.
 # See https://github.com/cucumber/cucumber-rails/blob/master/features/choose_javascript_database_strategy.feature
 Cucumber::Rails::Database.javascript_strategy = :truncation
+
