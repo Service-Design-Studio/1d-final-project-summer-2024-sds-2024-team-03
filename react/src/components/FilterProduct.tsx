@@ -53,7 +53,7 @@ export default function FilterProduct({
     console.log("====> process.env", process.env.NODE_ENV);
     const urlPrefix =
       process.env.NODE_ENV == "development" ? "http://localhost:3000" : "";
-    fetch(`${urlPrefix}/analytics/distinct_products`)
+    fetch(`${urlPrefix}/analytics/filter_product`)
       .then((response) => response.json())
       .then((data) => setProducts(data));
   }, []);

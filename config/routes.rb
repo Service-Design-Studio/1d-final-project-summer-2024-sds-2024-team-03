@@ -1,6 +1,6 @@
 Rails.application.routes.draw do
   resources :analytics do
-    get 'distinct_products', on: :collection
+    get 'filter_product', on: :collection
   end
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
