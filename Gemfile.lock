@@ -181,12 +181,9 @@ GEM
     nio4r (2.7.3)
     nokogiri (1.16.6-x64-mingw-ucrt)
       racc (~> 1.4)
-<<<<<<< HEAD
     pg (1.5.6)
-=======
     nokogiri (1.16.6-x86_64-linux)
       racc (~> 1.4)
->>>>>>> fork/main
     psych (5.1.2)
       stringio
     public_suffix (5.0.5)
