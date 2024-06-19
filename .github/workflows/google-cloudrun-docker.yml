@@ -32,90 +32,99 @@
 #
 # For more support on how to run this workflow, please visit https://github.com/marketplace/actions/deploy-to-cloud-run
 
-
 name: Build and Deploy to Cloud Run
 
 on:
-  push:
-    branches: [ "main" ]
+    push:
+        branches: ["main"]
 
 env:
-  PROJECT_ID: jbaaam # TODO: update Google Cloud project id
-  GAR_NAME: ghaction # TODO: update Artifact Registry location
-  GAR_LOCATION: asia-southeast1 # TODO: update Artifact Registry location
-  SERVICE: jbaaam # TODO: update Cloud Run service name
-  REGION: asia-southeast2 # TODO: update Cloud Run service region
+    PROJECT_ID: jbaaam # TODO: update Google Cloud project id
+    GAR_NAME: ghaction # TODO: update Artifact Registry location
+    GAR_LOCATION: asia-southeast1 # TODO: update Artifact Registry location
+    SERVICE: jbaaam # TODO: update Cloud Run service name
+    REGION: asia-southeast2 # TODO: update Cloud Run service region
 
 jobs:
-  deploy:
-    # Add 'id-token' with the intended permissions for workload identity federation
-    permissions:
-      contents: 'read'
-      id-token: 'write'
+    deploy:
+        # Add 'id-token' with the intended permissions for workload identity federation
+        permissions:
+            contents: "read"
+            id-token: "write"
 
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v4
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '18' # Specify the Node.js version
+            - name: Set up Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: "18" # Specify the Node.js version
 
-      - name: Install dependencies
-        run: npm install
-        working-directory: ./react
+            - name: Install dependencies
+              run: npm install
+              working-directory: ./react
 
-      - name: Build React app
-        run: npm run build
-        working-directory: ./react
+            - name: Build React app
+              run: |
+                  # ensure warnings are not errors and fail
+                  export CI=false
+                  npm run build
+              working-directory: ./react
 
-      - name: Copy react/build output to public/react_build
-        run: cp -r ./react/build/* ./public/react_build
+            - name: Copy react/build output to public/react_build
+              run: |
+                  rm -rf ./public/react_build
+                  mkdir -p ./public/react_build
+                  cp -r ./react/build/* ./public/react_build
 
-      - name: Replace main.js in jbaaam.html.erb
-        run: |
-          # Find the main.*.js file
-          MAIN_JS=$(ls ./public/react_build/static/js/main.*.js | xargs -n 1 basename)
-          # Replace the javascript_include_tag line in the HTML file
-          sed -i "s|<%= javascript_include_tag '/react_build/static/js/main.*.js' %>|<%= javascript_include_tag '/react_build/static/js/$MAIN_JS' %>|" ./app/views/layouts/jbaaam.html.erb
-      
-      # NOTE: Alternative option - authentication via credentials json, SERVICE ACC
-      - name: Google Auth
-        id: auth
-        # Check latest version: https://github.com/google-github-actions/auth
-        uses: 'google-github-actions/auth@v2'
-        with:
-          credentials_json: '${{ secrets.GCP_CREDENTIALS }}'
+            - name: Replace main.js in jbaaam.html.erb
+              run: |
+                  # Find the main.*.js file
+                  MAIN_JS=$(ls ./public/react_build/static/js/main.*.js | xargs -n 1 basename)
+                  echo $MAIN_JS
+                  # Replace the javascript_include_tag line in the HTML file
+                  sed -i "s|<%= javascript_include_tag '/react_build/static/js/main.*.js' %>|<%= javascript_include_tag '/react_build/static/js/$MAIN_JS' %>|" ./app/views/layouts/jbaaam.html.erb
 
-      # BEGIN - Docker auth and build (NOTE: If you already have a container image, these Docker steps can be omitted)
+            # - name: test
+            #   run:
 
-      # Authenticate Docker to Google Cloud Artifact Registry
-      - name: Docker Auth
-        id: docker-auth
-        run: |-
-          gcloud auth configure-docker "${{ env.GAR_LOCATION }}-docker.pkg.dev"
+            # NOTE: Alternative option - authentication via credentials json, SERVICE ACC
+            - name: Google Auth
+              id: auth
+              # Check latest version: https://github.com/google-github-actions/auth
+              uses: "google-github-actions/auth@v2"
+              with:
+                  credentials_json: "${{ secrets.GCP_CREDENTIALS }}"
 
-      - name: Build and Push Container
-        # ALW host location>project>repo>image! 
-        # https://cloud.google.com/artifact-registry/docs/docker/pushing-and-pulling#tag
-        run: |-
-          docker build -t "${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.GAR_NAME }}/${{ env.SERVICE }}:${{ github.sha }}" ./
-          docker push "${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.GAR_NAME }}/${{ env.SERVICE }}:${{ github.sha }}"
+            # BEGIN - Docker auth and build (NOTE: If you already have a container image, these Docker steps can be omitted)
 
-      # END - Docker auth and build
+            # Authenticate Docker to Google Cloud Artifact Registry
+            - name: Docker Auth
+              id: docker-auth
+              run: |-
+                  gcloud auth configure-docker "${{ env.GAR_LOCATION }}-docker.pkg.dev"
 
-      - name: Deploy to Cloud Run
-        id: deploy
-        # Check latest version: https://github.com/google-github-actions/deploy-cloudrun
-        uses: google-github-actions/deploy-cloudrun@v2
-        with:
-          service: "${{ env.SERVICE }}"
-          region: "${{ env.REGION }}"
-          # NOTE: If using a pre-built image, update the image name here
-          image: "${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.GAR_NAME }}/${{ env.SERVICE }}:${{ github.sha }}"
+            - name: Build and Push Container
+              # ALW host location>project>repo>image!
+              # https://cloud.google.com/artifact-registry/docs/docker/pushing-and-pulling#tag
+              run: |-
+                  docker build -t "${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.GAR_NAME }}/${{ env.SERVICE }}:${{ github.sha }}" ./
+                  docker push "${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.GAR_NAME }}/${{ env.SERVICE }}:${{ github.sha }}"
 
-      # If required, use the Cloud Run url output in later steps
-      - name: Show Output
-        run: echo "${{ steps.deploy.outputs.url }}"
+            # END - Docker auth and build
+
+            - name: Deploy to Cloud Run
+              id: deploy
+              # Check latest version: https://github.com/google-github-actions/deploy-cloudrun
+              uses: google-github-actions/deploy-cloudrun@v2
+              with:
+                  service: "${{ env.SERVICE }}"
+                  region: "${{ env.REGION }}"
+                  # NOTE: If using a pre-built image, update the image name here
+                  image: "${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.GAR_NAME }}/${{ env.SERVICE }}:${{ github.sha }}"
+
+            # If required, use the Cloud Run url output in later steps
+            - name: Show Output
+              run: echo "${{ steps.deploy.outputs.url }}"

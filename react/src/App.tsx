@@ -90,8 +90,8 @@ export default function MainApp() {
   const [selectedProduct, setSelectedProduct] = React.useState<string[]>([]);
   const [selectedSource, setSelectedSource] = React.useState<string[]>([]);
   const [selectedMenu, setSelectedMenu] = useState("dashboard");
-  const [fromDate, setFromDate] = useState("01/01/2000");
-  const [toDate, setToDate] = useState("01/01/2024");
+  const [fromDate, setFromDate] = useState(dayjs().subtract(1, 'week'));
+  const [toDate, setToDate] = useState(dayjs());
   const handleDrawerOpen = () => {
     setOpen(true);
   };
@@ -99,7 +99,6 @@ export default function MainApp() {
   const handleDrawerClose = () => {
     setOpen(false);
   };
-  const [value, setValue] = React.useState<Dayjs | null>(dayjs("2022-04-17"));
 
   return (
     <ThemeProvider theme={theme}>
@@ -108,6 +107,7 @@ export default function MainApp() {
         <AppBar position="fixed" open={open}>
           <Toolbar>
             <IconButton
+              id="nav-hamburger"
               color="inherit"
               aria-label="open drawer"
               onClick={handleDrawerOpen}
