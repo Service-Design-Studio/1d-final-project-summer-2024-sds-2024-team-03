@@ -11,22 +11,22 @@ import FilterSource from "../components/FilterSource";
 import Grid from "@mui/material/Unstable_Grid2";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 
-interface DashboardProps {
+interface ActionablesProps {
   setFromDate: React.Dispatch<React.SetStateAction<string>>;
   fromDate: string;
   setToDate: React.Dispatch<React.SetStateAction<string>>;
   toDate: string;
 }
 
-export default function Dashboard({
+export default function Actionables({
   setFromDate,
   fromDate,
   setToDate,
   toDate,
-}: DashboardProps) {
+}: ActionablesProps) {
   return (
     <>
-      <h1>Overview Dashboard</h1>
+      <h1>Actionable Tasks</h1>
       <Box sx={{ flexGrow: 1 }}>
         <Grid container spacing={2}>
           <Grid xs={3}>

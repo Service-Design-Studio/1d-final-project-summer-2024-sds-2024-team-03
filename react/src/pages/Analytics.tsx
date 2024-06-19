@@ -14,9 +14,16 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 interface AnalyticsProps {
   setFromDate: React.Dispatch<React.SetStateAction<string>>;
   fromDate: string;
+  setToDate: React.Dispatch<React.SetStateAction<string>>;
+  toDate: string;
 }
 
-export default function Analytics({ setFromDate, fromDate }: AnalyticsProps) {
+export default function Analytics({
+  setFromDate,
+  fromDate,
+  setToDate,
+  toDate,
+}: AnalyticsProps) {
   return (
     <>
       <h1>Feedback Analysis</h1>
@@ -38,7 +45,16 @@ export default function Analytics({ setFromDate, fromDate }: AnalyticsProps) {
           </Grid>
           <Grid xs={3}>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
-              <DatePicker label="To" sx={{ width: "100%" }} />
+              <DatePicker
+                label="To"
+                value={dayjs(toDate)}
+                sx={{ width: "100%" }}
+                onChange={(newValue) => {
+                  setToDate(
+                    newValue ? newValue.format("MM/DD/YYYY") : "01/01/2024"
+                  );
+                }}
+              />
             </LocalizationProvider>
           </Grid>
           <Grid xs={3}>

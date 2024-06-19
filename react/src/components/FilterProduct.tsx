@@ -38,10 +38,9 @@ const products = [
   "General Insurance",
 ];
 
-export default function MultipleSelectChip() {
+export default function FilterProduct() {
   const theme = useTheme();
   const [selectedProduct, setselectedProduct] = React.useState<string[]>([]);
-
   const handleChange = (event: SelectChangeEvent<typeof selectedProduct>) => {
     const {
       target: { value },
