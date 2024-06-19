@@ -23,6 +23,7 @@ import InboxIcon from "@mui/icons-material/MoveToInbox";
 import MailIcon from "@mui/icons-material/Mail";
 import Dashboard from "./pages/Dashboard";
 import Analytics from "./pages/Analytics";
+import Actionables from "./pages/Actionables";
 import { useState } from "react";
 
 const drawerWidth = 240;
@@ -85,10 +86,12 @@ const DrawerHeader = styled("div")(({ theme }) => ({
 }));
 
 export default function MainApp() {
-  //const theme = useTheme();
   const [open, setOpen] = React.useState(false);
+  const [selectedProduct, setSelectedProduct] = React.useState<string[]>([]);
+  const [selectedSource, setSelectedSource] = React.useState<string[]>([]);
   const [selectedMenu, setSelectedMenu] = useState("dashboard");
   const [fromDate, setFromDate] = useState("01/01/2000");
+  const [toDate, setToDate] = useState("01/01/2024");
   const handleDrawerOpen = () => {
     setOpen(true);
   };
@@ -164,10 +167,42 @@ export default function MainApp() {
             <Main open={open}>
               <DrawerHeader />
               {selectedMenu === "dashboard" && (
-                <Dashboard setFromDate={setFromDate} fromDate={fromDate} />
+                <>
+                  <Dashboard
+                    setFromDate={setFromDate}
+                    fromDate={fromDate}
+                    setToDate={setToDate}
+                    toDate={toDate}
+                    selectedProduct={selectedProduct}
+                    setSelectedProduct={setSelectedProduct}
+                    selectedSource={selectedSource}
+                    setSelectedSource={setSelectedSource}
+                  />
+                </>
               )}
               {selectedMenu === "analytics" && (
-                <Analytics setFromDate={setFromDate} fromDate={fromDate} />
+                <Analytics
+                  setFromDate={setFromDate}
+                  fromDate={fromDate}
+                  setToDate={setToDate}
+                  toDate={toDate}
+                  selectedProduct={selectedProduct}
+                  setSelectedProduct={setSelectedProduct}
+                  selectedSource={selectedSource}
+                  setSelectedSource={setSelectedSource}
+                />
+              )}
+              {selectedMenu === "actionables" && (
+                <Actionables
+                  setFromDate={setFromDate}
+                  fromDate={fromDate}
+                  setToDate={setToDate}
+                  toDate={toDate}
+                  selectedProduct={selectedProduct}
+                  setSelectedProduct={setSelectedProduct}
+                  selectedSource={selectedSource}
+                  setSelectedSource={setSelectedSource}
+                />
               )}
             </Main>
           </Container>

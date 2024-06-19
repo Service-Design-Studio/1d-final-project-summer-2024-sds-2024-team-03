@@ -38,15 +38,21 @@ const products = [
   "General Insurance",
 ];
 
-export default function MultipleSelectChip() {
-  const theme = useTheme();
-  const [selectedProduct, setselectedProduct] = React.useState<string[]>([]);
+interface FilterProductProps {
+  selectedProduct: string[];
+  setSelectedProduct: React.Dispatch<React.SetStateAction<string[]>>;
+}
 
+export default function FilterProduct({
+  selectedProduct,
+  setSelectedProduct,
+}: FilterProductProps) {
+  const theme = useTheme();
   const handleChange = (event: SelectChangeEvent<typeof selectedProduct>) => {
     const {
       target: { value },
     } = event;
-    setselectedProduct(
+    setSelectedProduct(
       // On autofill we get a stringified value.
       typeof value === "string" ? value.split(",") : value
     );
