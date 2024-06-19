@@ -22,6 +22,8 @@ import ListItemText from "@mui/material/ListItemText";
 import InboxIcon from "@mui/icons-material/MoveToInbox";
 import MailIcon from "@mui/icons-material/Mail";
 import Dashboard from "./pages/Dashboard";
+import Analytics from "./pages/Analytics";
+import { useState } from "react";
 
 const drawerWidth = 240;
 // Create a new theme using `createTheme`
@@ -82,10 +84,10 @@ const DrawerHeader = styled("div")(({ theme }) => ({
   justifyContent: "flex-end",
 }));
 
-export default function PersistentDrawerLeft() {
+export default function MainApp() {
   //const theme = useTheme();
   const [open, setOpen] = React.useState(false);
-
+  const [selectedMenu, setSelectedMenu] = useState("dashboard");
   const handleDrawerOpen = () => {
     setOpen(true);
   };
@@ -142,7 +144,9 @@ export default function PersistentDrawerLeft() {
             {["Dashboard", "Analytics", "Actionables", "Upload Data"].map(
               (text, index) => (
                 <ListItem key={text} disablePadding>
-                  <ListItemButton>
+                  <ListItemButton
+                    onClick={() => setSelectedMenu(text.toLowerCase())}
+                  >
                     <ListItemIcon>
                       {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
                     </ListItemIcon>
@@ -158,7 +162,8 @@ export default function PersistentDrawerLeft() {
           <Container maxWidth="lg">
             <Main open={open}>
               <DrawerHeader />
-              <Dashboard />
+              {selectedMenu === "dashboard" && <Dashboard />}
+              {selectedMenu === "analytics" && <Analytics />}
             </Main>
           </Container>
         </React.Fragment>
