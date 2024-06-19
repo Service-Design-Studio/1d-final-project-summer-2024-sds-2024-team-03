@@ -1,6 +1,11 @@
 class AnalyticsController < ApplicationController
   before_action :set_analytic, only: %i[ show edit update destroy ]
 
+  def distinct_products
+    @products = Analytic.select(:product).distinct
+    render json: @products
+  end
+
   # GET /analytics or /analytics.json
   def index
     @analytics = Analytic.all
