@@ -68,7 +68,9 @@ jobs:
         working-directory: ./react
 
       - name: Build React app
-        run: npm run build
+        run: |
+          export CI=false
+          npm run build
         working-directory: ./react
 
       - name: Copy react/build output to public/react_build
