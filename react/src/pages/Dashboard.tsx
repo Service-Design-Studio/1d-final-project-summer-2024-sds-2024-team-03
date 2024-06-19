@@ -16,6 +16,10 @@ interface DashboardProps {
   fromDate: string;
   setToDate: React.Dispatch<React.SetStateAction<string>>;
   toDate: string;
+  selectedProduct: string[];
+  setSelectedProduct: React.Dispatch<React.SetStateAction<string[]>>;
+  selectedSource: string[];
+  setSelectedSource: React.Dispatch<React.SetStateAction<string[]>>;
 }
 
 export default function Dashboard({
@@ -23,6 +27,10 @@ export default function Dashboard({
   fromDate,
   setToDate,
   toDate,
+  selectedProduct,
+  setSelectedProduct,
+  selectedSource,
+  setSelectedSource,
 }: DashboardProps) {
   return (
     <>
@@ -58,10 +66,16 @@ export default function Dashboard({
             </LocalizationProvider>
           </Grid>
           <Grid xs={3}>
-            <FilterProduct />
+            <FilterProduct
+              selectedProduct={selectedProduct}
+              setSelectedProduct={setSelectedProduct}
+            />
           </Grid>
           <Grid xs={3}>
-            <FilterSource />
+            <FilterSource
+              selectedSource={selectedSource}
+              setSelectedSource={setSelectedSource}
+            />
           </Grid>
         </Grid>
       </Box>

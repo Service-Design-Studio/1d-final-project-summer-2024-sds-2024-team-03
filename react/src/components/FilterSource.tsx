@@ -26,16 +26,22 @@ const sources = [
   "Product Survey with NPS",
   "Product Survey w/o NPS",
 ];
+interface FilterSourceProps {
+  selectedSource: string[];
+  setSelectedSource: React.Dispatch<React.SetStateAction<string[]>>;
+}
 
-export default function MultipleSelectChip() {
+export default function FilterSource({
+  selectedSource,
+  setSelectedSource,
+}: FilterSourceProps) {
   const theme = useTheme();
-  const [selectedSource, setselectedSource] = React.useState<string[]>([]);
 
   const handleChange = (event: SelectChangeEvent<typeof selectedSource>) => {
     const {
       target: { value },
     } = event;
-    setselectedSource(
+    setSelectedSource(
       // On autofill we get a stringified value.
       typeof value === "string" ? value.split(",") : value
     );

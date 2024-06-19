@@ -87,6 +87,8 @@ const DrawerHeader = styled("div")(({ theme }) => ({
 
 export default function MainApp() {
   const [open, setOpen] = React.useState(false);
+  const [selectedProduct, setSelectedProduct] = React.useState<string[]>([]);
+  const [selectedSource, setSelectedSource] = React.useState<string[]>([]);
   const [selectedMenu, setSelectedMenu] = useState("dashboard");
   const [fromDate, setFromDate] = useState("01/01/2000");
   const [toDate, setToDate] = useState("01/01/2024");
@@ -171,6 +173,10 @@ export default function MainApp() {
                     fromDate={fromDate}
                     setToDate={setToDate}
                     toDate={toDate}
+                    selectedProduct={selectedProduct}
+                    setSelectedProduct={setSelectedProduct}
+                    selectedSource={selectedSource}
+                    setSelectedSource={setSelectedSource}
                   />
                 </>
               )}
@@ -180,6 +186,10 @@ export default function MainApp() {
                   fromDate={fromDate}
                   setToDate={setToDate}
                   toDate={toDate}
+                  selectedProduct={selectedProduct}
+                  setSelectedProduct={setSelectedProduct}
+                  selectedSource={selectedSource}
+                  setSelectedSource={setSelectedSource}
                 />
               )}
               {selectedMenu === "actionables" && (
@@ -188,6 +198,10 @@ export default function MainApp() {
                   fromDate={fromDate}
                   setToDate={setToDate}
                   toDate={toDate}
+                  selectedProduct={selectedProduct}
+                  setSelectedProduct={setSelectedProduct}
+                  selectedSource={selectedSource}
+                  setSelectedSource={setSelectedSource}
                 />
               )}
             </Main>

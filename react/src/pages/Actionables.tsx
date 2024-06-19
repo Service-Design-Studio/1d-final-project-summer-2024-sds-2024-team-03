@@ -11,22 +11,30 @@ import FilterSource from "../components/FilterSource";
 import Grid from "@mui/material/Unstable_Grid2";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 
-interface ActionablesProps {
+interface DashboardProps {
   setFromDate: React.Dispatch<React.SetStateAction<string>>;
   fromDate: string;
   setToDate: React.Dispatch<React.SetStateAction<string>>;
   toDate: string;
+  selectedProduct: string[];
+  setSelectedProduct: React.Dispatch<React.SetStateAction<string[]>>;
+  selectedSource: string[];
+  setSelectedSource: React.Dispatch<React.SetStateAction<string[]>>;
 }
 
-export default function Actionables({
+export default function Dashboard({
   setFromDate,
   fromDate,
   setToDate,
   toDate,
-}: ActionablesProps) {
+  selectedProduct,
+  setSelectedProduct,
+  selectedSource,
+  setSelectedSource,
+}: DashboardProps) {
   return (
     <>
-      <h1>Actionable Tasks</h1>
+      <h1>Actionable</h1>
       <Box sx={{ flexGrow: 1 }}>
         <Grid container spacing={2}>
           <Grid xs={3}>
@@ -58,10 +66,16 @@ export default function Actionables({
             </LocalizationProvider>
           </Grid>
           <Grid xs={3}>
-            <FilterProduct />
+            <FilterProduct
+              selectedProduct={selectedProduct}
+              setSelectedProduct={setSelectedProduct}
+            />
           </Grid>
           <Grid xs={3}>
-            <FilterSource />
+            <FilterSource
+              selectedSource={selectedSource}
+              setSelectedSource={setSelectedSource}
+            />
           </Grid>
         </Grid>
       </Box>
