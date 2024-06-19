@@ -80,6 +80,7 @@ jobs:
         run: |
           # Find the main.*.js file
           MAIN_JS=$(ls ./public/react_build/static/js/main.*.js | xargs -n 1 basename)
+          echo $MAIN_JS
           # Replace the javascript_include_tag line in the HTML file
           sed -i "s|<%= javascript_include_tag '/react_build/static/js/main.*.js' %>|<%= javascript_include_tag '/react_build/static/js/$MAIN_JS' %>|" ./app/views/layouts/jbaaam.html.erb
       
