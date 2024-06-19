@@ -51,7 +51,7 @@ on:
 env:
   PROJECT_ID: jbaaam # TODO: update Google Cloud project id
   GAR_NAME: ghaction # TODO: update Artifact Registry location
-  GAR_LOCATION: asia-southeast1 # TODO: update Artifact Registry location
+  GAR_LOCATION: asia-southeast2 # TODO: update Artifact Registry location
   SERVICE: jbaaam # TODO: update Cloud Run service name
   REGION: asia-southeast2 # TODO: update Cloud Run service region
 
