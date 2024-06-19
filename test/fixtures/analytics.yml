@@ -1,0 +1,19 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  date: MyString
+  feedback: MyString
+  product: MyString
+  subcategory: MyString
+  sentiment: MyString
+  sentiment_score: MyString
+  source: MyString
+
+two:
+  date: MyString
+  feedback: MyString
+  product: MyString
+  subcategory: MyString
+  sentiment: MyString
+  sentiment_score: MyString
+  source: MyString
