@@ -1,21 +1,16 @@
 import * as React from "react";
-import { styled, useTheme } from "@mui/material/styles";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { styled } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import Drawer from "@mui/material/Drawer";
 import dayjs, { Dayjs } from "dayjs";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import CssBaseline from "@mui/material/CssBaseline";
 import MuiAppBar, { AppBarProps as MuiAppBarProps } from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import List from "@mui/material/List";
 import Typography from "@mui/material/Typography";
 import Divider from "@mui/material/Divider";
-import FilterProduct from "./FilterProduct";
-import FilterSource from "./FilterSource";
-import Grid from "@mui/material/Unstable_Grid2";
 import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
@@ -24,9 +19,9 @@ import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import InboxIcon from "@mui/icons-material/MoveToInbox";
 import MailIcon from "@mui/icons-material/Mail";
+import Dashboard from "./pages/Dashboard";
 
 const drawerWidth = 240;
 // Create a new theme using `createTheme`
@@ -116,7 +111,7 @@ export default function PersistentDrawerLeft() {
               <MenuIcon />
             </IconButton>
             <Typography variant="h6" noWrap component="div">
-              Persistent drawer
+              VOCUS x JBAAAM
             </Typography>
           </Toolbar>
         </AppBar>
@@ -163,27 +158,7 @@ export default function PersistentDrawerLeft() {
           <Container maxWidth="lg">
             <Main open={open}>
               <DrawerHeader />
-              <h1>Overview Dashboard</h1>
-              <Box sx={{ flexGrow: 1 }}>
-                <Grid container spacing={2}>
-                  <Grid xs={3}>
-                    <LocalizationProvider dateAdapter={AdapterDayjs}>
-                      <DatePicker label="From" sx={{ width: "100%" }} />
-                    </LocalizationProvider>
-                  </Grid>
-                  <Grid xs={3}>
-                    <LocalizationProvider dateAdapter={AdapterDayjs}>
-                      <DatePicker label="To" sx={{ width: "100%" }} />
-                    </LocalizationProvider>
-                  </Grid>
-                  <Grid xs={3}>
-                    <FilterProduct />
-                  </Grid>
-                  <Grid xs={3}>
-                    <FilterSource />
-                  </Grid>
-                </Grid>
-              </Box>
+              <Dashboard />
             </Main>
           </Container>
         </React.Fragment>
