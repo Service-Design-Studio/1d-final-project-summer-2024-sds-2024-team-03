@@ -11,15 +11,29 @@ import FilterSource from "../components/FilterSource";
 import Grid from "@mui/material/Unstable_Grid2";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 
-export default function Dashboard() {
+interface AnalyticsProps {
+  setFromDate: React.Dispatch<React.SetStateAction<string>>;
+  fromDate: string;
+}
+
+export default function Analytics({ setFromDate, fromDate }: AnalyticsProps) {
   return (
     <>
-      <h1>Feedback Analytics</h1>
+      <h1>Feedback Analysis</h1>
       <Box sx={{ flexGrow: 1 }}>
         <Grid container spacing={2}>
           <Grid xs={3}>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
-              <DatePicker label="From" sx={{ width: "100%" }} />
+              <DatePicker
+                label="From"
+                value={dayjs(fromDate)}
+                sx={{ width: "100%" }}
+                onChange={(newValue) => {
+                  setFromDate(
+                    newValue ? newValue.format("MM/DD/YYYY") : "01/01/2020"
+                  );
+                }}
+              />
             </LocalizationProvider>
           </Grid>
           <Grid xs={3}>
