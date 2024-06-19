@@ -74,7 +74,10 @@ jobs:
               working-directory: ./react
 
             - name: Copy react/build output to public/react_build
-              run: cp -r ./react/build/* ./public/react_build
+              run: |
+                  rm -rf ./public/react_build
+                  mkdir -p ./public/react_build
+                  cp -r ./react/build/* ./public/react_build
 
             - name: Replace main.js in jbaaam.html.erb
               run: |

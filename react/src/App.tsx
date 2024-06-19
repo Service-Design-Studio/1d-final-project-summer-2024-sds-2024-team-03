@@ -31,7 +31,7 @@ const drawerWidth = 240;
 const theme = createTheme({
   palette: {
     primary: {
-      main: "#8D1927", // replace '#yourColor' with your desired color
+      main: "#8D1927",
     },
   },
 });
