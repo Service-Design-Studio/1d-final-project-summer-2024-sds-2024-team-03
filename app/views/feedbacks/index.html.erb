@@ -14,16 +14,6 @@
   </thead>
 
   <tbody>
-    <% @feedbacks.each do |feedback| %>
-      <tr>
-        <td><%= feedback.user_id %></td>
-        <td><%= feedback.category %></td>
-        <td><%= feedback.content %></td>
-        <td><%= feedback.sentiment %></td>
-        <td><%= link_to 'Show', feedback %></td>
-        <td><%= link_to 'Edit', edit_feedback_path(feedback) %></td>
-        <td><%= link_to 'Destroy', feedback, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-      </tr>
-    <% end %>
+
   </tbody>
 </table>

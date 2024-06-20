@@ -37,6 +37,12 @@ export default function Dashboard({
           <Grid xs={3}>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DatePicker
+              slotProps={{
+                textField: {
+                  required: true,
+                  id: 'from-date',
+                },
+              }}
                 format="DD/MM/YYYY"
                 label="From"
                 value={dayjs(fromDate)}
@@ -52,6 +58,12 @@ export default function Dashboard({
           <Grid xs={3}>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DatePicker
+              slotProps={{
+                textField: {
+                  required: true,
+                  id: 'to-date',
+                },
+              }}
                 format="DD/MM/YYYY"
                 label="To"
                 value={dayjs(toDate)}
