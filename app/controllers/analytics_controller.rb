@@ -9,6 +9,8 @@ class AnalyticsController < ApplicationController
 
   # GET /analytics or /analytics.json
   def index
+    #add to logger index
+    Rails.logger.info("=> Analytics.index.............")
     @analytics = Analytic.all
   end
 
