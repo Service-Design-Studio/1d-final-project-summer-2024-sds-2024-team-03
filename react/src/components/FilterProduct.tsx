@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import * as React from "react";
 import { Theme, useTheme } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import OutlinedInput from "@mui/material/OutlinedInput";
@@ -20,7 +20,7 @@ const MenuProps = {
 };
 
 const products = [
-  "Depositsxxxx",
+  "Deposits",
   "Digital Banking App",
   "Contact Center",
   "Payments",
@@ -47,17 +47,6 @@ export default function FilterProduct({
   selectedProduct,
   setSelectedProduct,
 }: FilterProductProps) {
-  const [products, setProducts] = useState<string[]>([]);
-
-  useEffect(() => {
-    console.log("====> process.env", process.env.NODE_ENV);
-    const urlPrefix =
-      process.env.NODE_ENV == "development" ? "http://localhost:3000" : "";
-    fetch(`${urlPrefix}/analytics/filter_products`)
-      .then((response) => response.json())
-      .then((data) => setProducts(data));
-  }, []);
-
   const theme = useTheme();
   const handleChange = (event: SelectChangeEvent<typeof selectedProduct>) => {
     const {
@@ -89,7 +78,7 @@ export default function FilterProduct({
           )}
           MenuProps={MenuProps}
         >
-          {products.map((product: string) => (
+          {products.map((product) => (
             <MenuItem key={product} value={product}>
               {product}
             </MenuItem>

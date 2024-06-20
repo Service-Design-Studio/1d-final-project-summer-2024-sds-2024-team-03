@@ -10,13 +10,8 @@ default: &default
   timeout: 5000
 
 development:
-  adapter: postgresql
-  encoding: unicode
-  username: postgres
-  password: JBAAAMinstance
-  host: 34.124.203.237
-  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
-  database: feedback_db
+  <<: *default
+  database: storage/development.sqlite3
 
 # Warning: The database defined as "test" will be erased and
 # re-generated from your development database when you run "rake".
@@ -26,10 +21,5 @@ test:
   database: storage/test.sqlite3
 
 production:
-  adapter: postgresql
-  encoding: unicode
-  username: postgres
-  password: JBAAAMinstance
-  host: jbaaam:asia-southeast1:feedback
-  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
-  database: feedback_db
+  <<: *default
+  database: storage/production.sqlite3

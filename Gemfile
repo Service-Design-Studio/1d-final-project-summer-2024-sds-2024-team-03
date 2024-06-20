@@ -42,8 +42,6 @@ gem "tzinfo-data", platforms: %i[ windows jruby ]
 gem "bootsnap", require: false
 
 #gem 'webpacker', '~> 5.0'
-gem 'pg', '>= 0.18', '< 2.0'
-gem 'rack-cors'
 
 # Use Active Storage variants [https://guides.rubyonrails.org/active_storage_overview.html#transforming-images]
 # gem "image_processing", "~> 1.2"
@@ -70,5 +68,4 @@ group :test do
   gem "selenium-webdriver"
   gem 'rspec-rails'
   gem 'cucumber-rails', require: false
-  gem 'database_cleaner'
 end

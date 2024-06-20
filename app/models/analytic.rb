@@ -1,2 +1,0 @@
-class Analytic < ApplicationRecord
-end
