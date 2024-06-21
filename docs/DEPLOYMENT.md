@@ -5,7 +5,7 @@ gcloud auth login
 ```
 
 2. Set up GC Proj
-```bash 
+```bash
 gcloud config set project PROJECT_ID
 ```
 
