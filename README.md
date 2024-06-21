@@ -12,9 +12,9 @@
 
 ## More Info
 View our
-- [FrontEnd](https://jbaaam-frontend.et.r.appspot.com/)
+- [The App](https://jbaaam-yl5rojgcbq-et.a.run.app/feedbacks)
+- [Our Website](https://sites.google.com/view/jbaaam/home)
 - [Project Handout](https://github.com/ilenhanako/SDS-2024-Team-03/files/15323228/Final.Project.Handout.Summer.2024.1.docx)
-- [Website](https://sites.google.com/view/jbaaam/home)
 - [HI-FI Figma Prototype](https://www.figma.com/proto/kTLbEtR91dCn9nWa8NLiuC/Hifi-Prototype?node-id=0-1&t=BTGPwEbyxkxrfKef-0&scaling=min-zoom&content-scaling=fixed&page-id=0%3A1&starting-point-node-id=1%3A2)
 - [MIRO Planning](https://miro.com/app/board/uXjVKFI343k=/)
 - [GitHub Classroom Repo](https://github.com/Service-Design-Studio/1d-final-project-summer-2024-sds-2024-team-03)
