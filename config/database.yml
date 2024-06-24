@@ -18,6 +18,15 @@ development:
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
   database: feedback_db
 
+production:
+  adapter: postgresql
+  encoding: unicode
+  username: postgres
+  password: JBAAAMinstance
+  host: 34.124.203.237
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  database: feedback_db
+
 # Warning: The database defined as "test" will be erased and
 # re-generated from your development database when you run "rake".
 # Do not set this db to the same as development or production.
@@ -25,7 +34,7 @@ test:
   <<: *default
   database: storage/test.sqlite3
 
-production:
+production2:
   adapter: postgresql
   encoding: unicode
   username: postgres
