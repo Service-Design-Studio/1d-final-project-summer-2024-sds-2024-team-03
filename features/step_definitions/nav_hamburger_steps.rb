@@ -1,18 +1,15 @@
-Given("I am on the dashboard") do
-    visit('/')
+Given("I am on page") do
+  visit('/')
+end
+
+When("I select the hamburger menu") do
+  sleep(4)
+  find('#nav-hamburger').click
+end
+
+Then("the hamburger menu should expand out to reveal {string}") do |sites|
+  sleep(4)
+  sites.split(', ').each do |site|
+    expect(page).to have_content(site)
   end
-  
-  When("I select the hamburger menu") do
-    find('#nav-hamburger').click
-  end
-  
-  Then /^the hamburger menu should expand out to reveal (.*)$/ do |sites|
-    sites =  sites.split(', ')
-    sites.each do |site|
-      expect(page).to have_content(site)
-    end
-  end
-  
-  # Then("the page I am currently on should be highlighted") do
-  #   expect(find('.menu-item.active')).to have_content('Dashboard')
-  # end
+end

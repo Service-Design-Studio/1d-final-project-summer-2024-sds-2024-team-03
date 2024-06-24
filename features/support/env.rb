@@ -9,6 +9,8 @@ require 'cucumber/rails'
 require 'capybara/cucumber'
 require 'selenium-webdriver'
 
+
+
 Capybara.register_driver :chrome do |app|
   options = Selenium::WebDriver::Chrome::Options.new
   # options.add_argument('--headless') # Uncomment to run Chrome in headless mode
