@@ -1,5 +1,5 @@
 FactoryBot.define do
-  factory :feedback do
+  factory :application_record do
     
   end
 end

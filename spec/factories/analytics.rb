@@ -1,5 +1,5 @@
 FactoryBot.define do
-  factory :feedback do
+  factory :analytic do
     
   end
 end

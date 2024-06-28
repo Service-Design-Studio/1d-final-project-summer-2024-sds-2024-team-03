@@ -102,6 +102,12 @@
           null
         ]
       },
+      "C:/Users/Matthew/Desktop/sds/1d-final-project-summer-2024-sds-2024-team-03/app/models/feedback.rb": {
+        "lines": [
+          1,
+          null
+        ]
+      },
       "C:/Users/Matthew/Desktop/sds/1d-final-project-summer-2024-sds-2024-team-03/app/channels/application_cable/channel.rb": {
         "lines": [
           0,
@@ -228,16 +234,8 @@
         ],
         "branches": {
         }
-      },
-      "C:/Users/Matthew/Desktop/sds/1d-final-project-summer-2024-sds-2024-team-03/app/models/feedback.rb": {
-        "lines": [
-          0,
-          0
-        ],
-        "branches": {
-        }
       }
     },
-    "timestamp": 1719518036
+    "timestamp": 1719594403
   }
 }
