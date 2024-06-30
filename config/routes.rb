@@ -1,7 +1,13 @@
 Rails.application.routes.draw do
   resources :analytics do
     get 'filter_products', on: :collection
+    get 'filter_sources', on: :collection
+    get 'get_sentiment_scores', on: :collection
+    get 'get_overall_sentiment_scores', on: :collection
+    get 'get_sentiments_sorted', on: :collection
+    get 'get_sentiments_distribution', on: :collection
   end
+
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.

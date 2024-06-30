@@ -19,23 +19,10 @@ const MenuProps = {
   },
 };
 
+// For testing
 const products = [
   "DepositsxxxxXXX",
   "Digital Banking App",
-  "Contact Center",
-  "Payments",
-  "Cards",
-  "Investments",
-  "Financial GPS",
-  "Self-Service Banking",
-  "Remittance",
-  "Webpage",
-  "Others",
-  "Secured Loans",
-  "PayLah!",
-  "Unsecured Loans",
-  "Internet banking",
-  "General Insurance",
 ];
 
 interface FilterProductProps {
@@ -59,7 +46,6 @@ export default function FilterProduct({
   }, []);
 
   const theme = useTheme();
-  console.log("DFDSFDSFSDFWERQWDAD");
   const handleChange = (event: SelectChangeEvent<typeof selectedProduct>) => {
     const {
       target: { value },
