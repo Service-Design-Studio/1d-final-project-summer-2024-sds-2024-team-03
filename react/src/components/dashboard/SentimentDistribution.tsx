@@ -16,7 +16,7 @@ fromDate, toDate, selectedProduct, selectedSource
   const fromDate_string = fromDate.format('DD/MM/YYYY')
   const toDate_string = toDate.format('DD/MM/YYYY')
   const [sentimentDistribution, setSentimentDistribution] = useState<Record<string, string>>({});
-  const order: Record<string, string> = { "Happy": "darkgreen", "Satisfied": "green", "Neutral": "orange", "Others": "red" };
+  const order: Record<string, string> = { "Positive": "darkgreen", "Negative": "red" };
 
   useEffect(() => {
     console.log("====> process.env", process.env.NODE_ENV);
@@ -34,7 +34,7 @@ fromDate, toDate, selectedProduct, selectedSource
         });
         setSentimentDistribution(sentimentPercentages);
       })
-  }, []);
+  }, [fromDate, toDate, selectedProduct, selectedSource]);
 
   const theme = useTheme();
 

@@ -41,9 +41,7 @@ fromDate, toDate, selectedProduct, selectedSource
       const prevOverallSentimentScore = avgScore
       setOverallSentimentScoreChange(parseFloat(((overallSentimentScore - prevOverallSentimentScore)/100).toFixed(1)))
     });
-
-    
-  }, []);
+  }, [fromDate, toDate, selectedProduct, selectedSource]);
 
   const theme = useTheme();
 
