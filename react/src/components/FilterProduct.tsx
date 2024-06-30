@@ -20,7 +20,7 @@ const MenuProps = {
 };
 
 const products = [
-  "Depositsxxxx",
+  "DepositsxxxxXXX",
   "Digital Banking App",
   "Contact Center",
   "Payments",
@@ -59,6 +59,7 @@ export default function FilterProduct({
   }, []);
 
   const theme = useTheme();
+  console.log("DFDSFDSFSDFWERQWDAD");
   const handleChange = (event: SelectChangeEvent<typeof selectedProduct>) => {
     const {
       target: { value },
