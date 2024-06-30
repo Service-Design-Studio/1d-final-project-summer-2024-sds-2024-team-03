@@ -1,4 +1,4 @@
-import * as React from "react";
+import  React, { useEffect, useState } from "react";
 import { Theme, useTheme } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import OutlinedInput from "@mui/material/OutlinedInput";
@@ -35,7 +35,17 @@ export default function FilterSource({
   selectedSource,
   setSelectedSource,
 }: FilterSourceProps) {
+  const [sources, setSources] = useState<string[]>([]);
   const theme = useTheme();
+
+  useEffect(() => {
+    console.log("====> process.env", process.env.NODE_ENV);
+    const urlPrefix =
+      process.env.NODE_ENV == "development" ? "http://localhost:3000" : "";
+    fetch(`${urlPrefix}/analytics/filter_sources`)
+      .then((response) => response.json())
+      .then((data) => setSources(data));
+  }, []);
 
   const handleChange = (event: SelectChangeEvent<typeof selectedSource>) => {
     const {

@@ -87,11 +87,12 @@ const DrawerHeader = styled("div")(({ theme }) => ({
 
 export default function MainApp() {
   const [open, setOpen] = React.useState(false);
-  const [selectedProduct, setSelectedProduct] = React.useState<string[]>([]);
-  const [selectedSource, setSelectedSource] = React.useState<string[]>([]);
   const [selectedMenu, setSelectedMenu] = useState("dashboard");
   const [fromDate, setFromDate] = useState(dayjs().subtract(1, 'week'));
   const [toDate, setToDate] = useState(dayjs());
+  const [selectedProduct, setSelectedProduct] = React.useState<string[]>([]);
+  const [selectedSource, setSelectedSource] = React.useState<string[]>([]);
+
   const handleDrawerOpen = () => {
     setOpen(true);
   };

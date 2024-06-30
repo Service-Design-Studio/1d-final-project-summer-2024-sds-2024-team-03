@@ -3,9 +3,46 @@ class AnalyticsController < ApplicationController
 
   def filter_products
     #@products = Analytic.select(:product).distinct
-    @products = Analytic.select(:product).distinct.pluck(:product)
+    @products = private_filter(:product)
     render json: @products
   end
+
+  def filter_sources
+    @sources = private_filter(:source)
+    render json: @sources
+  end
+
+  def get_sentiment_scores
+    # Need to add to private below to allow these params?
+    @sentiment_scores = private_get_sentiment_scores(params[:fromDate], params[:toDate], params[:product], params[:source])
+    render json: @sentiment_scores
+  end
+  
+
+  def get_overall_sentiment_scores
+    @overall_sentiment_scores = private_get_sentiment_scores(params[:fromDate], params[:toDate], params[:product], params[:source])
+                                .group(:date)
+                                .average(:sentiment_score)
+    render json: @overall_sentiment_scores
+  end
+
+  def get_sentiments_sorted
+    @sentiments_sorted = private_get_sentiments(params[:fromDate], params[:toDate], params[:product], params[:source])
+                  .group(:product, :subcategory)
+                  .order('MAX(sentiment_score) DESC')
+    render json: @sentiments_sorted
+  end
+  
+
+  def get_sentiments_distribution
+    @sentiments_distribution = private_get_sentiments(params[:fromDate], params[:toDate], params[:product], params[:source])
+                              .group(:sentiment)
+                              .count
+    render json: @sentiments_distribution
+  end
+
+  # Bubble graph => donut chart
+  # Arent the bubbles actionables??
 
   # GET /analytics or /analytics.json
   def index
@@ -69,6 +106,25 @@ class AnalyticsController < ApplicationController
     # Use callbacks to share common setup or constraints between actions.
     def set_analytic
       @analytic = Analytic.find(params[:id])
+    end
+
+    def private_filter(attribute)
+      Analytic.select(attribute).distinct.pluck(attribute)
+    end
+
+    def private_get_sentiment_scores(fromDate, toDate, products, sources)
+      Analytic.where(date: fromDate..toDate)
+              .where(product: products)
+              .where(source: sources)
+              .select(:sentiment_score, :date, :product, :subcategory)
+    end
+
+    # feedback, source for digging, sentiment_score for sorting
+    def private_get_sentiments(fromDate, toDate, products, sources)
+      Analytic.where(date: fromDate..toDate)
+              .where(product: products)
+              .where(source: sources)
+              .select(:sentiment, :date, :product, :subcategory, :feedback,  :source, :sentiment_score)
     end
 
     # Only allow a list of trusted parameters through.
