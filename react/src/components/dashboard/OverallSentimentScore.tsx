@@ -24,9 +24,12 @@ fromDate, toDate, selectedProduct, selectedSource
       process.env.NODE_ENV == "development" ? "http://localhost:3000" : "";
     fetch(`${urlPrefix}/analytics/get_overall_sentiment_scores?fromDate=${fromDate_string}&toDate=${toDate_string}&product=${selectedProduct}&source=${selectedSource}`)
       .then((response) => response.json())
-      .then((data) => {
-        const dates = Object.keys(data);
-        const totalScore = dates.reduce((sum, date) => sum + data[date], 0);
+      .then((data: Record<string, string | number>[]) => {
+        const dates: string[] = data.map(item => item.date as string);
+        const totalScore = data.reduce((sum, item) => {
+          const score = parseFloat(item.sentiment_score as string);
+          return sum + (isNaN(score) ? 0 : score);
+        }, 0);
         const avgScore = totalScore / dates.length;
         setOverallSentimentScore(parseFloat(avgScore.toFixed(1)))
       });
@@ -34,11 +37,14 @@ fromDate, toDate, selectedProduct, selectedSource
     const prevFromDate_string = dayjs(fromDate).subtract(dayjs(toDate).diff(dayjs(fromDate), 'day'), 'day').format('DD/MM/YYYY');
     fetch(`${urlPrefix}/analytics/get_overall_sentiment_scores?fromDate=${prevFromDate_string}&toDate=${fromDate_string}&product=${selectedProduct}&source=${selectedSource}`)
     .then((response) => response.json())
-    .then((data) => {
-      const dates = Object.keys(data);
-      const totalScore = dates.reduce((sum, date) => sum + data[date], 0);
+    .then((data: Record<string, string | number>[]) => {
+      const dates: string[] = data.map(item => item.date as string);
+      const totalScore = data.reduce((sum, item) => {
+        const score = parseFloat(item.sentiment_score as string);
+        return sum + (isNaN(score) ? 0 : score);
+      }, 0);
       const avgScore = totalScore / dates.length;
-      const prevOverallSentimentScore = avgScore
+      const prevOverallSentimentScore = avgScore;
       setOverallSentimentScoreChange(parseFloat(((overallSentimentScore - prevOverallSentimentScore)/100).toFixed(1)))
     });
   }, [fromDate, toDate, selectedProduct, selectedSource]);

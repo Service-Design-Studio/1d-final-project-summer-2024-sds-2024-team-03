@@ -21,8 +21,8 @@ class AnalyticsController < ApplicationController
 
   def get_overall_sentiment_scores
     @overall_sentiment_scores = private_get_sentiment_scores(params[:fromDate], params[:toDate], params[:product], params[:source])
+                                .select("date, AVG(CAST(sentiment_score AS numeric)) AS avg_sentiment_score")
                                 .group(:date)
-                                .average(:sentiment_score)
     render json: @overall_sentiment_scores
   end
 
