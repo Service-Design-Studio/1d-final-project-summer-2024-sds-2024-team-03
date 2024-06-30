@@ -1,6 +1,6 @@
 class CreateAnalytics < ActiveRecord::Migration[7.1]
   def change
-    create_table :analytics do |t|
+    create_table :analytics, if_not_exists: true do |t|
       t.string :date
       t.string :feedback
       t.string :product
