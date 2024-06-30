@@ -13,6 +13,8 @@ interface OverallSentimentScoreProps {
 export default function OverallSentimentScore({
 fromDate, toDate, selectedProduct, selectedSource
 }: OverallSentimentScoreProps) {
+  const fromDate_string = fromDate.format('DD/MM/YYYY')
+  const toDate_string = toDate.format('DD/MM/YYYY')
   const [overallSentimentScore, setOverallSentimentScore] = useState<number>(0);
   const [overallSentimentScoreChange, setOverallSentimentScoreChange] = useState<number>(0);
 
@@ -20,7 +22,7 @@ fromDate, toDate, selectedProduct, selectedSource
     console.log("====> process.env", process.env.NODE_ENV);
     const urlPrefix =
       process.env.NODE_ENV == "development" ? "http://localhost:3000" : "";
-    fetch(`${urlPrefix}/analytics/get_overall_sentiment_scores?fromDate=${fromDate}&toDate=${toDate}&product=${selectedProduct}&source=${selectedSource}`)
+    fetch(`${urlPrefix}/analytics/get_overall_sentiment_scores?fromDate=${fromDate_string}&toDate=${toDate_string}&product=${selectedProduct}&source=${selectedSource}`)
       .then((response) => response.json())
       .then((data) => {
         const dates = Object.keys(data);
@@ -29,8 +31,8 @@ fromDate, toDate, selectedProduct, selectedSource
         setOverallSentimentScore(parseFloat(avgScore.toFixed(1)))
       });
 
-    const prevFromDate = dayjs(fromDate).subtract(dayjs(toDate).diff(dayjs(fromDate), 'day'), 'day').format('DD/MM/YYYY');
-    fetch(`${urlPrefix}/analytics/get_overall_sentiment_scores?fromDate=${prevFromDate}&toDate=${fromDate}&product=${selectedProduct}&source=${selectedSource}`)
+    const prevFromDate_string = dayjs(fromDate).subtract(dayjs(toDate).diff(dayjs(fromDate), 'day'), 'day').format('DD/MM/YYYY');
+    fetch(`${urlPrefix}/analytics/get_overall_sentiment_scores?fromDate=${prevFromDate_string}&toDate=${fromDate_string}&product=${selectedProduct}&source=${selectedSource}`)
     .then((response) => response.json())
     .then((data) => {
       const dates = Object.keys(data);
@@ -39,6 +41,8 @@ fromDate, toDate, selectedProduct, selectedSource
       const prevOverallSentimentScore = avgScore
       setOverallSentimentScoreChange(parseFloat(((overallSentimentScore - prevOverallSentimentScore)/100).toFixed(1)))
     });
+
+    
   }, []);
 
   const theme = useTheme();
