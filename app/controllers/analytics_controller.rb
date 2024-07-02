@@ -113,6 +113,8 @@ class AnalyticsController < ApplicationController
     end
 
     def private_get_sentiment_scores(fromDate, toDate, products, sources)
+      fromDate = Date.strptime(fromDate, '%d/%m/%Y')
+      toDate = Date.strptime(toDate, '%d/%m/%Y')
       Analytic.where(date: fromDate..toDate)
               .where(product: products)
               .where(source: sources)
