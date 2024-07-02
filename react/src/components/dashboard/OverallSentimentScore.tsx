@@ -25,6 +25,7 @@ fromDate, toDate, selectedProduct, selectedSource
       console.log(fromDate_string, toDate_string, selectedProduct,selectedSource)
     fetch(`${urlPrefix}/analytics/get_overall_sentiment_scores?fromDate=${fromDate_string}&toDate=${toDate_string}&product=${selectedProduct}&source=${selectedSource}`)
       .then((response) => {
+        console.log(response)
         console.log(response.json())
         return response.json()
       })
