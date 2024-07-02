@@ -22,9 +22,11 @@ fromDate, toDate, selectedProduct, selectedSource
     console.log("====> process.env", process.env.NODE_ENV);
     const urlPrefix =
       process.env.NODE_ENV == "development" ? "http://localhost:3000" : "";
+      console.log(fromDate_string, toDate_string, selectedProduct,selectedSource)
     fetch(`${urlPrefix}/analytics/get_overall_sentiment_scores?fromDate=${fromDate_string}&toDate=${toDate_string}&product=${selectedProduct}&source=${selectedSource}`)
       .then((response) => response.json())
       .then((data: Record<string, string | number>[]) => {
+        console.log(data)
         const dates: string[] = data.map(item => item.date as string);
         const totalScore = data.reduce((sum, item) => {
           const score = parseFloat(item.sentiment_score as string);
