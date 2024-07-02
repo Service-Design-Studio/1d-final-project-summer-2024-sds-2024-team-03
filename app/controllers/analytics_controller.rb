@@ -3,7 +3,7 @@ class AnalyticsController < ApplicationController
 
   def filter_products
     #@products = Analytic.select(:product).distinct
-    @products = private_filter(:product)
+    @products = private_filter(params[:product])
     render json: @products
   end
 
@@ -109,7 +109,7 @@ class AnalyticsController < ApplicationController
     end
 
     def private_filter(attribute)
-      Analytic.select(attribute).distinct
+      Analytic.select(attribute).distinct.pluck(attribute)
     end
 
     def private_get_sentiment_scores(fromDate, toDate, products, sources)
