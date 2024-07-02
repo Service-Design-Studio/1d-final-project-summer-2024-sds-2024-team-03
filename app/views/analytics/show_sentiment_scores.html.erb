@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Sentiment Scores</title>
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      const sentimentScores = <%= @overall_sentiment_scores.to_json.html_safe %>;
+      console.log("Sentiment Scores:", sentimentScores);
+    });
+  </script>
+</head>
+<body>
+  <h1>Sentiment Scores</h1>
+  <pre><%= @overall_sentiment_scores.to_json %></pre>
+</body>
+</html>
