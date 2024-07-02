@@ -29,7 +29,7 @@ class AnalyticsController < ApplicationController
   def get_sentiments_sorted
     @sentiments_sorted = private_get_sentiments(params[:fromDate], params[:toDate], params[:product], params[:source])
                   .group(:product, :subcategory)
-                  .order('MAX(sentiment_score) DESC')
+                  .order('MAX(CAST(sentiment_score AS numeric)) DESC')
     render json: @sentiments_sorted
   end
   
