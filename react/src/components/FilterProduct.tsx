@@ -41,8 +41,15 @@ export default function FilterProduct({
     const urlPrefix =
       process.env.NODE_ENV == "development" ? "http://localhost:3000" : "";
     fetch(`${urlPrefix}/analytics/filter_products`)
-      .then((response) => response.json())
-      .then((data) => setProducts(data));
+      .then((response) => {
+        const a = response.json()
+        console.log(a)
+        return a
+      })
+      .then((data) => {
+        console.log(data)
+        setProducts(data)
+      });
   }, []);
 
   const theme = useTheme();
