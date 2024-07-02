@@ -115,6 +115,8 @@ class AnalyticsController < ApplicationController
     def private_get_sentiment_scores(fromDate, toDate, products, sources)
       fromDate = Date.strptime(fromDate, '%d/%m/%Y')
       toDate = Date.strptime(toDate, '%d/%m/%Y')
+      products = params[:product].split(',')
+      sources = params[:source].split(',')
       Analytic.where(date: fromDate..toDate)
               .where(product: products)
               .where(source: sources)
@@ -123,6 +125,10 @@ class AnalyticsController < ApplicationController
 
     # feedback, source for digging, sentiment_score for sorting
     def private_get_sentiments(fromDate, toDate, products, sources)
+      fromDate = Date.strptime(fromDate, '%d/%m/%Y')
+      toDate = Date.strptime(toDate, '%d/%m/%Y')
+      products = params[:product].split(',')
+      sources = params[:source].split(',')
       Analytic.where(date: fromDate..toDate)
               .where(product: products)
               .where(source: sources)
