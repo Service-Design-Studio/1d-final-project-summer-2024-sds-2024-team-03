@@ -3,7 +3,7 @@ class AnalyticsController < ApplicationController
 
   def filter_products
     #@products = Analytic.select(:product).distinct
-    @products = private_filter(params[:product])
+    @products = private_filter(:product)
     render json: @products
   end
 
