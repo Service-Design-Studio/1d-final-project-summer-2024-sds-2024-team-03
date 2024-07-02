@@ -109,7 +109,7 @@ class AnalyticsController < ApplicationController
     end
 
     def private_filter(attribute)
-      Analytic.select(attribute).distinct.pluck(attribute)
+      Analytic.select(attribute).distinct
     end
 
     def private_get_sentiment_scores(fromDate, toDate, products, sources)
