@@ -182,7 +182,7 @@ export default function Dashboard({
             "happyColor": "hsl(289, 70%, 50%)",
           }]}
         keys={[
-            'angry',
+            'very angry',
             'sad',
             'others',
             'satisfied',
@@ -220,7 +220,7 @@ export default function Dashboard({
         fill={[
             {
                 match: {
-                    id: 'angry'
+                    id: 'very angry'
                 },
                 id: 'dots'
             },

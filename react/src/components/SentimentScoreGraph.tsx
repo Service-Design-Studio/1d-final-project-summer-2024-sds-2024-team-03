@@ -86,6 +86,7 @@ fromDate, toDate, selectedProduct, selectedSource, isDetailed
       fetch(`${urlPrefix}/analytics/get_sentiment_scores?fromDate=${fromDate_string}&toDate=${toDate_string}&product=${selectedProduct}&source=${selectedSource}`)
         .then((response) => response.json())
         .then((data: Record<string, string>[]) => {
+          console.log(data)
           // Not sure if will cause problem as changing useEffect
           if (graphSubcategories.length == 0) {
             const subcategories: string[] = data.map(({subcategory}) => subcategory);
