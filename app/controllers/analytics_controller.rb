@@ -2,44 +2,47 @@ class AnalyticsController < ApplicationController
   before_action :set_analytic, only: %i[ show edit update destroy ]
 
   def filter_products
-    #@products = Analytic.select(:product).distinct
-    @products = private_filter(:product)
+    @products = private_filter(:Product)
     render json: @products
   end
 
   def filter_sources
-    @sources = private_filter(:source)
+    @sources = private_filter(:Source)
     render json: @sources
   end
 
   def get_sentiment_scores
     # Need to add to private below to allow these params?
-    @sentiment_scores = private_get_sentiment_scores(params[:fromDate], params[:toDate], params[:product], params[:source])
-                        .pluck(:sentiment_score, :date, :product, :subcategory)
-
+    @sentiment_scores = Analytic.select(:Sentiment_Score, :Date, :Product, :Subcategory)
+              .where(Date: params[:fromDate]..params[:toDate])
+              .where(Product: params[:Product])
+              .where(Source: params[:Source])
     render json: @sentiment_scores
   end
   
 
   def get_overall_sentiment_scores
-    @overall_sentiment_scores = private_get_sentiment_scores(params[:fromDate], params[:toDate], params[:product], params[:source])
-                                .pluck("date, AVG(CAST(sentiment_score AS numeric)) AS avg_sentiment_score")
-                                .group(:date)
+    @overall_sentiment_scores = Analytic.select("Date, AVG(CAST(Sentiment_Score AS numeric)) AS Avg_Sentiment_Score")
+    .where(Date: params[:fromDate]..params[:toDate])
+    .where(Product: params[:Product])
+    .where(Source: params[:Source])
+    .group(:Date)
+    
     render json: @overall_sentiment_scores
   end
 
   def get_sentiments_sorted
-    @sentiments_sorted = private_get_sentiments(params[:fromDate], params[:toDate], params[:product], params[:source])
-                        .group(:sentiment, :date, :product, :subcategory, :feedback,  :source)
-                        .order('MAX(CAST(sentiment_score AS numeric)) DESC')
+    @sentiments_sorted = private_get_sentiments(params[:fromDate], params[:toDate], params[:Product], params[:Source])
+                        .group(:Sentiment, :Date, :Product, :Subcategory, :Feedback,  :Source)
+                        .order('MAX(CAST(Sentiment_Score AS numeric)) DESC')
     render json: @sentiments_sorted
   end
   
 
   def get_sentiments_distribution
-    @sentiments_distribution = private_get_sentiments(params[:fromDate], params[:toDate], params[:product], params[:source])
-                              .group(:sentiment_score, :date, :product, :subcategory, :feedback,  :source,)
-                              .count
+    @sentiments_distribution = private_get_sentiments(params[:fromDate], params[:toDate], params[:Product], params[:Source])
+                              .count(:Sentiment)
+                              .group(:Sentiment_Score, :Date, :Product, :Subcategory, :Feedback,  :Source,)
     render json: @sentiments_distribution
   end
 
@@ -114,30 +117,20 @@ class AnalyticsController < ApplicationController
       Analytic.select(attribute).distinct.pluck(attribute)
     end
 
-    def private_get_sentiment_scores(fromDate, toDate, products, sources)
-      fromDate = Date.strptime(fromDate, '%d/%m/%Y')
-      toDate = Date.strptime(toDate, '%d/%m/%Y')
-      products = products.split(',')
-      sources = sources.split(',')
-      Analytic.where(date: fromDate..toDate)
-              .where(product: products)
-              .where(source: sources)
-    end
-
-    # feedback, source for digging, sentiment_score for sorting
+    # feedback, Source for digging, sentiment_score for sorting
     def private_get_sentiments(fromDate, toDate, products, sources)
       fromDate = Date.strptime(fromDate, '%d/%m/%Y')
       toDate = Date.strptime(toDate, '%d/%m/%Y')
       products = products.split(',')
       sources = sources.split(',')
-      Analytic.where(date: fromDate..toDate)
-              .where(product: products)
-              .where(source: sources)
-              .select(:sentiment, :date, :product, :subcategory, :feedback,  :source, :sentiment_score)
+      Analytic.select(:Sentiment, :Date, :Product, :Subcategory, :Feedback,  :Source, :Sentiment_Score)
+              .where(Date: fromDate..toDate)
+              .where(Product: products)
+              .where(Source: sources)
     end
 
     # Only allow a list of trusted parameters through.
     def analytic_params
-      params.require(:analytic).permit(:date, :feedback, :product, :subcategory, :sentiment, :sentiment_score, :source)
+      params.require(:analytic).permit(:Date, :Feedback, :Product, :Subcategory, :Sentiment, :Sentiment_Score, :Source, :Feedback_Category)
     end
 end
