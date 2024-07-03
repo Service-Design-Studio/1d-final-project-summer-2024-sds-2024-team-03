@@ -22,21 +22,15 @@ class AnalyticsController < ApplicationController
   
 
   def get_overall_sentiment_scores
-    fromDate = Date.strptime(params[:fromDate], '%d/%m/%Y')
-      toDate = Date.strptime(params[:toDate], '%d/%m/%Y')
-      products = params[:product].split(',')
-      sources = params[:source].split(',')
-      Analytic.where(date: fromDate..toDate)
-              .where(product: products)
-              .where(source: sources)
+    @overall_sentiment_scores = private_get_sentiment_scores(params[:fromDate], params[:toDate], params[:product], params[:source])
                                 .select("date, AVG(CAST(sentiment_score AS numeric)) AS avg_sentiment_score")
-                                # .group(:date)
+                                .group(:date)
     render json: @overall_sentiment_scores
   end
 
   def get_sentiments_sorted
     @sentiments_sorted = private_get_sentiments(params[:fromDate], params[:toDate], params[:product], params[:source])
-                        .group(:product, :subcategory)
+                        .group(:sentiment, :date, :product, :subcategory, :feedback,  :source)
                         .order('MAX(CAST(sentiment_score AS numeric)) DESC')
     render json: @sentiments_sorted
   end
@@ -44,7 +38,7 @@ class AnalyticsController < ApplicationController
 
   def get_sentiments_distribution
     @sentiments_distribution = private_get_sentiments(params[:fromDate], params[:toDate], params[:product], params[:source])
-                              .group(:sentiment)
+                              .group(:sentiment_score, :date, :product, :subcategory, :feedback,  :source,)
                               .count
     render json: @sentiments_distribution
   end
