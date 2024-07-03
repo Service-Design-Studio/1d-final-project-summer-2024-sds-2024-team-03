@@ -15,6 +15,8 @@ class AnalyticsController < ApplicationController
   def get_sentiment_scores
     # Need to add to private below to allow these params?
     @sentiment_scores = private_get_sentiment_scores(params[:fromDate], params[:toDate], params[:product], params[:source])
+                        .select(:sentiment_score, :date, :product, :subcategory)
+
     render json: @sentiment_scores
   end
   
@@ -28,8 +30,8 @@ class AnalyticsController < ApplicationController
 
   def get_sentiments_sorted
     @sentiments_sorted = private_get_sentiments(params[:fromDate], params[:toDate], params[:product], params[:source])
-                  .group(:product, :subcategory)
-                  .order('MAX(CAST(sentiment_score AS numeric)) DESC')
+                        .group(:product, :subcategory)
+                        .order('MAX(CAST(sentiment_score AS numeric)) DESC')
     render json: @sentiments_sorted
   end
   
@@ -120,7 +122,6 @@ class AnalyticsController < ApplicationController
       Analytic.where(date: fromDate..toDate)
               .where(product: products)
               .where(source: sources)
-              .select(:sentiment_score, :date, :product, :subcategory)
     end
 
     # feedback, source for digging, sentiment_score for sorting
