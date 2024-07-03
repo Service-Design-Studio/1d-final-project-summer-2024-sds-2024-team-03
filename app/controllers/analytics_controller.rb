@@ -22,9 +22,15 @@ class AnalyticsController < ApplicationController
   
 
   def get_overall_sentiment_scores
-    @overall_sentiment_scores = private_get_sentiment_scores(params[:fromDate], params[:toDate], params[:product], params[:source])
-                                .select("date, AVG(CAST(sentiment_score AS numeric)) AS avg_sentiment_score")
-                                .group(:date)
+    fromDate = Date.strptime(params[:fromDate], '%d/%m/%Y')
+      toDate = Date.strptime(params[:toDate], '%d/%m/%Y')
+      products = params[:product].split(',')
+      sources = params[:source].split(',')
+      Analytic.where(date: fromDate..toDate)
+              .where(product: products)
+              .where(source: sources)
+                                # .select("date, AVG(CAST(sentiment_score AS numeric)) AS avg_sentiment_score")
+                                # .group(:date)
     render json: @overall_sentiment_scores
   end
 
@@ -117,8 +123,8 @@ class AnalyticsController < ApplicationController
     def private_get_sentiment_scores(fromDate, toDate, products, sources)
       fromDate = Date.strptime(fromDate, '%d/%m/%Y')
       toDate = Date.strptime(toDate, '%d/%m/%Y')
-      products = params[:product].split(',')
-      sources = params[:source].split(',')
+      products = products.split(',')
+      sources = sources.split(',')
       Analytic.where(date: fromDate..toDate)
               .where(product: products)
               .where(source: sources)
@@ -128,8 +134,8 @@ class AnalyticsController < ApplicationController
     def private_get_sentiments(fromDate, toDate, products, sources)
       fromDate = Date.strptime(fromDate, '%d/%m/%Y')
       toDate = Date.strptime(toDate, '%d/%m/%Y')
-      products = params[:product].split(',')
-      sources = params[:source].split(',')
+      products = products.split(',')
+      sources = sources.split(',')
       Analytic.where(date: fromDate..toDate)
               .where(product: products)
               .where(source: sources)
