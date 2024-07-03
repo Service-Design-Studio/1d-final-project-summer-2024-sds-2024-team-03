@@ -29,7 +29,7 @@ class AnalyticsController < ApplicationController
       Analytic.where(date: fromDate..toDate)
               .where(product: products)
               .where(source: sources)
-                                # .select("date, AVG(CAST(sentiment_score AS numeric)) AS avg_sentiment_score")
+                                .select("date, AVG(CAST(sentiment_score AS numeric)) AS avg_sentiment_score")
                                 # .group(:date)
     render json: @overall_sentiment_scores
   end
