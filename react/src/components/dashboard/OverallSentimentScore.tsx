@@ -24,7 +24,7 @@ fromDate, toDate, selectedProduct, selectedSource
       process.env.NODE_ENV == "development" ? "http://localhost:3000" : "";
     fetch(`${urlPrefix}/analytics/get_overall_sentiment_scores?fromDate=${fromDate_string}&toDate=${toDate_string}&product=${selectedProduct}&source=${selectedSource}`)
       .then((response) => response.json())
-      .then((data: Record<string, string | number>[]) => {
+      .then((data: Record<string, string>[]) => {
         console.log(data)
         const dates: string[] = data.map(item => item.date as string);
         const totalScore = data.reduce((sum, item) => {

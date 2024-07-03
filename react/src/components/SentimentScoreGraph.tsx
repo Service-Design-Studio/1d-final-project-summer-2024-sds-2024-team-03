@@ -115,10 +115,10 @@ fromDate, toDate, selectedProduct, selectedSource, isDetailed
         })} else {
           fetch(`${urlPrefix}/analytics/get_overall_sentiment_scores?fromDate=${fromDate_string}&toDate=${toDate_string}&product=${selectedProduct}&source=${selectedSource}`)
         .then((response) => response.json())
-        .then((data: Record<string, number>) => {
+        .then((data: Record<string, string>) => {
           setSentimentScores([{"id": "all", "color":"hsl(8, 70%, 50%)", "data":Object.entries(data).map(([date, sentiment_score]) => ({
             "x": formatDate(date),
-            "y": parseFloat(sentiment_score.toFixed(1))
+            "y": parseFloat(sentiment_score)
           }))}]);
         })
     }}, [fromDate, toDate, selectedProduct, selectedSource, graphProducts, graphSubcategories]);
