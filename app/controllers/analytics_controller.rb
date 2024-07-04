@@ -16,7 +16,7 @@ class AnalyticsController < ApplicationController
     products = params[:product].split(',')
     sources = params[:source].split(',')
     @sentiment_scores = Analytic.select(:sentiment_score, :date, :product, :subcategory, :feedback_category)
-    .where("STR_TO_DATE(date, '%d/%m/%Y') BETWEEN STR_TO_DATE(?, '%d/%m/%Y') AND STR_TO_DATE(?, '%d/%m/%Y')", params[:fromDate], params[:toDate])
+    .where("CAST(STR_TO_DATE(date, '%d/%m/%Y') AS DATE) BETWEEN CAST(STR_TO_DATE(?, '%d/%m/%Y') AS DATE) AND CAST(STR_TO_DATE(?, '%d/%m/%Y') AS DATE)", params[:fromDate], params[:toDate])
 
                                 .where(product: products)
                                 .where(source: sources)
@@ -28,7 +28,7 @@ class AnalyticsController < ApplicationController
     products = params[:product].split(',')
     sources = params[:source].split(',')
     @overall_sentiment_scores = Analytic.select(:date, 'CAST(AVG(CAST(sentiment_score AS numeric)) AS text) AS sentiment_score')
-    .where("STR_TO_DATE(date, '%d/%m/%Y') BETWEEN STR_TO_DATE(?, '%d/%m/%Y') AND STR_TO_DATE(?, '%d/%m/%Y')", params[:fromDate], params[:toDate])
+    .where("CAST(STR_TO_DATE(date, '%d/%m/%Y') AS DATE) BETWEEN CAST(STR_TO_DATE(?, '%d/%m/%Y') AS DATE) AND CAST(STR_TO_DATE(?, '%d/%m/%Y') AS DATE)", params[:fromDate], params[:toDate])
 
                                         .where(product: products)
                                         .where(source: sources)
@@ -42,7 +42,7 @@ class AnalyticsController < ApplicationController
     products = params[:product].split(',')
     sources = params[:source].split(',')
     @sentiments_sorted =Analytic.select('*')
-    .where("STR_TO_DATE(date, '%d/%m/%Y') BETWEEN STR_TO_DATE(?, '%d/%m/%Y') AND STR_TO_DATE(?, '%d/%m/%Y')", params[:fromDate], params[:toDate])
+    .where("CAST(STR_TO_DATE(date, '%d/%m/%Y') AS DATE) BETWEEN CAST(STR_TO_DATE(?, '%d/%m/%Y') AS DATE) AND CAST(STR_TO_DATE(?, '%d/%m/%Y') AS DATE)", params[:fromDate], params[:toDate])
 
                                 .where(product: products)
                                 .where(source: sources)
@@ -56,7 +56,7 @@ class AnalyticsController < ApplicationController
     products = params[:product].split(',')
     sources = params[:source].split(',')
     @sentiments_distribution = Analytic.select(:sentiment, 'COUNT(sentiment)')
-    .where("STR_TO_DATE(date, '%d/%m/%Y') BETWEEN STR_TO_DATE(?, '%d/%m/%Y') AND STR_TO_DATE(?, '%d/%m/%Y')", params[:fromDate], params[:toDate])
+    .where("CAST(STR_TO_DATE(date, '%d/%m/%Y') AS DATE) BETWEEN CAST(STR_TO_DATE(?, '%d/%m/%Y') AS DATE) AND CAST(STR_TO_DATE(?, '%d/%m/%Y') AS DATE)", params[:fromDate], params[:toDate])
 
                                       .where(product: products)
                                       .where(source: sources)
