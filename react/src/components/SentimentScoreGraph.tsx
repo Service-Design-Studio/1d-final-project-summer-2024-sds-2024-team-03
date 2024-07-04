@@ -118,9 +118,9 @@ fromDate, toDate, selectedProduct, selectedSource, isDetailed
         .then((response) => response.json())
         .then((data: Record<string, string>[]) => {
           console.log(data)
-          setSentimentScores([{"id": "all", "color":"hsl(8, 70%, 50%)", "data":data.map((item) => ({
-            "x": formatDate(item.date),
-            "y": parseFloat(item.sentiment_score)
+          setSentimentScores([{"id": "all", "color":"hsl(8, 70%, 50%)", "data":data.map(({ date, sentiment_score }) => ({
+            "x": formatDate(date),
+            "y": parseFloat(sentiment_score)
           }))}]);
         })
     }}, [fromDate, toDate, selectedProduct, selectedSource, graphProducts, graphSubcategories]);
