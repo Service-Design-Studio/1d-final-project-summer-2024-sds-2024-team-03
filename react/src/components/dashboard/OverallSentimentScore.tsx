@@ -20,14 +20,11 @@ fromDate, toDate, selectedProduct, selectedSource
 
   useEffect(() => {
     console.log("====> process.env", process.env.NODE_ENV);
-    console.log(fromDate_string)
     const urlPrefix =
       process.env.NODE_ENV == "development" ? "http://localhost:3000" : "";
     fetch(`${urlPrefix}/analytics/get_overall_sentiment_scores?fromDate=${fromDate_string}&toDate=${toDate_string}&product=${selectedProduct}&source=${selectedSource}`)
       .then((response) => response.json())
       .then((data: Record<string, string>[]) => {
-        console.log(data)
-        console.log("TESTTTTTT")
         const dates: string[] = data.map(item => item.date as string);
         const totalScore = data.reduce((sum, item) => {
           const score = parseFloat(item.sentiment_score as string);
@@ -48,7 +45,7 @@ fromDate, toDate, selectedProduct, selectedSource
       }, 0);
       const avgScore = totalScore / dates.length;
       const prevOverallSentimentScore = avgScore;
-      setOverallSentimentScoreChange(parseFloat(((overallSentimentScore - prevOverallSentimentScore)/100).toFixed(1)))
+      setOverallSentimentScoreChange(parseFloat((100 * (overallSentimentScore - prevOverallSentimentScore)/overallSentimentScore).toFixed(1)))
     });
   }, [fromDate, toDate, selectedProduct, selectedSource]);
 
@@ -58,8 +55,8 @@ fromDate, toDate, selectedProduct, selectedSource
     <div>
       <Paper sx={{ p: 2, borderRadius: 2, flex: 1 }} id="overall-sentiment-score">
         <Typography variant="h6" color="grey">Overall Sentiment Score</Typography>
-        <Typography variant="h4" color="black">{overallSentimentScore}/5</Typography>
-        <Typography variant="subtitle1" color={overallSentimentScoreChange > 0 ? "darkgreen" : "red"}> {overallSentimentScoreChange > 0 ? `↑ ${overallSentimentScoreChange}% Increase` : `↓ ${overallSentimentScoreChange}% Decrease`} </Typography>
+        <Typography variant="h4" color="black">{overallSentimentScore ? overallSentimentScore : 0}/5</Typography>
+        <Typography variant="subtitle1" color={overallSentimentScoreChange > 0 ? "darkgreen" : overallSentimentScoreChange === 0 ? "grey": "red"}> {overallSentimentScoreChange > 0 ? `↑ ${overallSentimentScoreChange}% Increase` :  overallSentimentScoreChange === 0 ? `Not Applicable`:`↓ ${overallSentimentScoreChange}% Decrease`} </Typography>
       </Paper>
     </div>
   );

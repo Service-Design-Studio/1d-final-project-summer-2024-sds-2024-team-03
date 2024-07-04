@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useState, useEffect } from "react";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { Box, Grid, Paper, Typography, Divider } from "@mui/material";
 import dayjs, { Dayjs } from "dayjs";
@@ -33,6 +33,20 @@ export default function Dashboard({
   setSelectedSource,
 }: DashboardProps) {
   
+  const [earliestLatestDates, setEarliestLatestDates] = useState<Record <string, Dayjs>>({})
+
+  useEffect(() => {
+    const urlPrefix =
+      process.env.NODE_ENV == "development" ? "http://localhost:3000" : "";
+    fetch(`${urlPrefix}/analytics/get_earliest_latest_dates`)
+      .then(response => response.json())
+      .then(data => {
+        setEarliestLatestDates({"earliestDate": dayjs(data.earliest_date, "DD/MM/YYYY"), "latestDate": dayjs(data.latest_date, "DD/MM/YYYY")});
+      })
+
+
+  }, []);
+
   return (
     <>
       <h1>Overview Dashboard</h1>
@@ -57,6 +71,8 @@ export default function Dashboard({
                     newValue ? newValue : dayjs().subtract(1, 'week')
                   );
                 }}
+                minDate={earliestLatestDates["earliestDate"] ? earliestLatestDates["earliestDate"] : undefined}
+                maxDate={toDate}
               />
             </LocalizationProvider>
           </Grid>
@@ -79,6 +95,8 @@ export default function Dashboard({
                     newValue ? newValue: dayjs()
                   );
                 }}
+                minDate={fromDate}
+                maxDate={earliestLatestDates["latestDate"] ? earliestLatestDates["latestDate"] : undefined}
               />
             </LocalizationProvider>
           </Grid>

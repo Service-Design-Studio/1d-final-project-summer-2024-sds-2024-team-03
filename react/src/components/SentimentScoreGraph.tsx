@@ -86,13 +86,11 @@ fromDate, toDate, selectedProduct, selectedSource, isDetailed
       fetch(`${urlPrefix}/analytics/get_sentiment_scores?fromDate=${fromDate_string}&toDate=${toDate_string}&product=${selectedProduct}&source=${selectedSource}`)
         .then((response) => response.json())
         .then((data: Record<string, string>[]) => {
-          console.log(data)
           // Not sure if will cause problem as changing useEffect
           if (graphSubcategories.length == 0) {
             const subcategories: string[] = data.map(({subcategory}) => subcategory);
-  setGraphSubcategories(subcategories);
+            setGraphSubcategories(subcategories);
           }
-
           const filteredData = data.filter(item => graphProducts.includes(item.product) && graphSubcategories.includes(item.subcategory));
           const filteredDataGroupedByProduct = filteredData.reduce((acc, item) => {
             if (!acc[item.product]) {
@@ -186,9 +184,9 @@ fromDate, toDate, selectedProduct, selectedSource, isDetailed
       </FormControl>
 
       <Box sx={{ display: 'flex', gap: 2, mt: 2,  width: "100%", height:200}}>
-      {sentimentScores.length > 0 &&  (<ResponsiveLine
+      {sentimentScores && sentimentScores.length > 0 &&  (<ResponsiveLine
         data={ sentimentScores }
-          margin={{ top: 20, right: 20, bottom: 20, left: 20 }}
+          margin={{ top: 20, right: 20, bottom: 40, left: 40  }}
           xScale={{ type: 'point' }}
           yScale={{
               type: 'linear',
@@ -265,9 +263,9 @@ fromDate, toDate, selectedProduct, selectedSource, isDetailed
         <Paper sx={{ p: 2, borderRadius: 2, flex: 1 }}>
       <h3>Sentiment vs Time trend for Product(s) (All Subcategories)</h3>
       <Box sx={{ display: 'flex', gap: 2, mt: 2,  width: "100%", height:200}}>
-      {sentimentScores.length > 0 && (<ResponsiveLine
+      {sentimentScores && sentimentScores.length > 0 && (<ResponsiveLine
         data={ sentimentScores}
-          margin={{ top: 20, right: 20, bottom: 20, left: 30 }}
+          margin={{ top: 20, right: 20, bottom: 40, left: 40 }}
           xScale={{ type: 'point' }}
           yScale={{
               type: 'linear',

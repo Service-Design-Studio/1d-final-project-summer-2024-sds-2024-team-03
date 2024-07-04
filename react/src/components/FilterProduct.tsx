@@ -42,7 +42,7 @@ export default function FilterProduct({
       process.env.NODE_ENV == "development" ? "http://localhost:3000" : "";
     fetch(`${urlPrefix}/analytics/filter_products`)
       .then((response) => response.json())
-      .then((data) => setProducts(data));
+      .then((data) => setProducts(data.sort()));
   }, []);
 
   const theme = useTheme();
@@ -70,14 +70,14 @@ export default function FilterProduct({
           renderValue={(selected) => (
             <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
               {selected.map((value) => (
-                <Chip key={value} label={value} />
+                <Chip key={value} label={value} className="filter-product-value"/>
               ))}
             </Box>
           )}
           MenuProps={MenuProps}
         >
           {products.map((product: string) => (
-            <MenuItem key={product} value={product}>
+            <MenuItem key={product} value={product} className="filter-product-option">
               {product}
             </MenuItem>
           ))}

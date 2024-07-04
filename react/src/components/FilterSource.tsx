@@ -44,7 +44,7 @@ export default function FilterSource({
       process.env.NODE_ENV == "development" ? "http://localhost:3000" : "";
     fetch(`${urlPrefix}/analytics/filter_sources`)
       .then((response) => response.json())
-      .then((data) => setSources(data));
+      .then((data) => setSources(data.sort()));
   }, []);
 
   const handleChange = (event: SelectChangeEvent<typeof selectedSource>) => {
@@ -71,14 +71,14 @@ export default function FilterSource({
           renderValue={(selected) => (
             <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
               {selected.map((value) => (
-                <Chip key={value} label={value} />
+                <Chip key={value} label={value} className="filter-source-value"/>
               ))}
             </Box>
           )}
           MenuProps={MenuProps}
         >
           {sources.map((source) => (
-            <MenuItem key={source} value={source}>
+            <MenuItem key={source} value={source} className="filter-source-option">
               {source}
             </MenuItem>
           ))}
