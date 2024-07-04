@@ -2,10 +2,14 @@ class AnalyticsController < ApplicationController
   before_action :set_analytic, only: %i[ show edit update destroy ]
 
   def get_earliest_latest_dates
-    query = Analytic.select(:date)
+    @earliest_date = Analytic.select(:date)
                     .order("TO_DATE(date, 'DD/MM/YYYY') ASC")
-    @earliest_date = query.first.pluck("TO_DATE(date, 'DD/MM/YYYY')")
-    @latest_date = query.last.pluck("TO_DATE(date, 'DD/MM/YYYY')")
+                    .limit(1)
+                    .pluck("TO_DATE(date, 'DD/MM/YYYY')")
+    @latest_date = Analytic.select(:date)
+                          .order("TO_DATE(date, 'DD/MM/YYYY') DESC")
+                          .limit(1)
+                          .pluck("TO_DATE(date, 'DD/MM/YYYY')")
     render json: { earliest_date: @earliest_date, latest_date: @latest_date }
   end
 
