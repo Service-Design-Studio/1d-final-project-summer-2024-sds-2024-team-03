@@ -25,7 +25,6 @@ fromDate, toDate, selectedProduct, selectedSource
     fetch(`${urlPrefix}/analytics/get_sentiments_distribution?fromDate=${fromDate_string}&toDate=${toDate_string}&product=${selectedProduct}&source=${selectedSource}`)
       .then((response) => response.json())
       .then((data: {count: number, sentiment: string}[]) => {
-        console.log(data);
         const totalSentiments = data.reduce((sum, item) => sum + item.count, 0);
         const sentimentPercentages: Record<string, string> = {};
         data.forEach((item) => {
@@ -42,7 +41,7 @@ fromDate, toDate, selectedProduct, selectedSource
   return (
     <Paper sx={{ p: 2, borderRadius: 2, flex: 1, alignItems: 'center', flexDirection: 'row' }} id="sentiment-distribution">
       <Typography variant="h6" color="grey">Distribution of Sentiment</Typography>
-      {Object.entries(order).map(([sentiment, sentimentColor]) => (
+      {Object.entries(order).reverse().map(([sentiment, sentimentColor]) => (
         <Typography key={sentiment} variant="body1" style={{ color: sentimentColor }}>
           {sentimentDistribution[sentiment] ? `${sentimentDistribution[sentiment]}% ` : '0% '}{sentiment}
         </Typography>

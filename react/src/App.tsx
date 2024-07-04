@@ -19,8 +19,10 @@ import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
-import InboxIcon from "@mui/icons-material/MoveToInbox";
-import MailIcon from "@mui/icons-material/Mail";
+import DashboardIcon from "@mui/icons-material/Dashboard";
+import BarChartIcon from "@mui/icons-material/BarChart";
+import ListAltIcon from "@mui/icons-material/ListAlt";
+import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import Dashboard from "./pages/Dashboard";
 import Analytics from "./pages/Analytics";
 import Actionables from "./pages/Actionables";
@@ -146,16 +148,20 @@ export default function MainApp() {
           </DrawerHeader>
           <Divider />
           <List>
-            {["Dashboard", "Analytics", "Actionables", "Upload Data"].map(
-              (text, index) => (
-                <ListItem key={text} disablePadding>
-                  <ListItemButton
-                    onClick={() => setSelectedMenu(text.toLowerCase())}
+            {Object.entries({"Dashboard": DashboardIcon, "Analytics": BarChartIcon, "Actionables": ListAltIcon, "Upload Data":CloudUploadIcon }).map(
+              ([page, Icon]) => (
+                <ListItem key={page} disablePadding >
+                  <ListItemButton 
+                    onClick={() => setSelectedMenu(page.toLowerCase())}
+                    className={selectedMenu === page.toLowerCase() ? "menu-item-active" : "menu-item"}
+                    sx={{
+                      backgroundColor: selectedMenu === page.toLowerCase() ? "grey": "inherit",
+                    }}
                   >
                     <ListItemIcon>
-                      {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+                    <Icon />
                     </ListItemIcon>
-                    <ListItemText primary={text} />
+                    <ListItemText primary={page} />
                   </ListItemButton>
                 </ListItem>
               )
@@ -165,7 +171,7 @@ export default function MainApp() {
         <React.Fragment>
           <CssBaseline />
           <Container maxWidth="lg">
-            <Main open={open}>
+            <Main open={open} >
               <DrawerHeader />
               {selectedMenu === "dashboard" && (
                 <>
