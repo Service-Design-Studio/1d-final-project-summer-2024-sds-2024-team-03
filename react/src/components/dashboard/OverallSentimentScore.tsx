@@ -27,11 +27,14 @@ fromDate, toDate, selectedProduct, selectedSource
       .then((data: Record<string, string>[]) => {
         console.log(data)
         const dates: string[] = data.map(item => item.date as string);
+        console.log(dates)
         const totalScore = data.reduce((sum, item) => {
           const score = parseFloat(item.avg_sentiment_score as string);
           return sum + (isNaN(score) ? 0 : score);
         }, 0);
+        console.log(totalScore)
         const avgScore = totalScore / dates.length;
+        console.log(avgScore)
         setOverallSentimentScore(parseFloat(avgScore.toFixed(1)))
       });
 

@@ -16,7 +16,7 @@ fromDate, toDate, selectedProduct, selectedSource
   const fromDate_string = fromDate.format('DD/MM/YYYY')
   const toDate_string = toDate.format('DD/MM/YYYY')
   const [sentimentDistribution, setSentimentDistribution] = useState<Record<string, string>>({});
-  const order: Record<string, string> = { "Excited": "darkgreen", "Satisfied": "green", "Neutral": "darkgrey", "Unsatisfied": "orange", "Frustrated": "red" };
+  const order: Record<string, string> = { "Excited": "darkgreen", "Satisfied": "green", "Neutral": "grey", "Unsatisfied": "orange", "Frustrated": "red" };
 
   useEffect(() => {
     console.log("====> process.env", process.env.NODE_ENV);
@@ -25,6 +25,7 @@ fromDate, toDate, selectedProduct, selectedSource
     fetch(`${urlPrefix}/analytics/get_sentiments_distribution?fromDate=${fromDate_string}&toDate=${toDate_string}&product=${selectedProduct}&source=${selectedSource}`)
       .then((response) => response.json())
       .then((data: Record<string, number>) => {
+        console.log(data)
         const totalSentiments = Object.values(data).reduce((sum, count) => sum + count, 0);
         const sentimentPercentages: Record<string, string> = {};
         Object.keys(data).forEach((sentiment) => {
