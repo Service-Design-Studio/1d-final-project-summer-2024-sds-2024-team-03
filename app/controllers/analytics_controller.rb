@@ -1,24 +1,12 @@
 class AnalyticsController < ApplicationController
   before_action :set_analytic, only: %i[ show edit update destroy ]
 
-  def get_earliest_date
+  def get_earliest_latest_dates
     query = Analytic.where("TO_DATE(date, 'DD/MM/YYYY') IS NOT NULL")
                             .order("TO_DATE(date, 'DD/MM/YYYY')")
-                            .limit(1)
-                            .pluck("TO_DATE(date, 'DD/MM/YYYY')")
-    @earliest_date = query.first
-    @latest_date = query.last
-    
+    @earliest_date = query.first.pluck("TO_DATE(date, 'DD/MM/YYYY')")
+    @latest_date = query.last.pluck("TO_DATE(date, 'DD/MM/YYYY')")
     render json: { earliest_date: @earliest_date, latest_date: @latest_date }
-  end
-
-  def get_latest_date
-    @latest_date = Analytic.where("TO_DATE(date, 'DD/MM/YYYY') IS NOT NULL")
-                            .order("TO_DATE(date, 'DD/MM/YYYY') DESC")
-                            .limit(1)
-                            .pluck("TO_DATE(date, 'DD/MM/YYYY')")
-                            .first
-    render json: @latest_date
   end
 
   def filter_products
