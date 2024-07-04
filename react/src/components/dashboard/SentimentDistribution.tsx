@@ -24,17 +24,17 @@ fromDate, toDate, selectedProduct, selectedSource
       process.env.NODE_ENV == "development" ? "http://localhost:3000" : "";
     fetch(`${urlPrefix}/analytics/get_sentiments_distribution?fromDate=${fromDate_string}&toDate=${toDate_string}&product=${selectedProduct}&source=${selectedSource}`)
       .then((response) => response.json())
-      .then((data: Record<string, number>) => {
-        console.log(data)
-        const totalSentiments = Object.values(data).reduce((sum, count) => sum + count, 0);
+      .then((data: {count: number, sentiment: string}[]) => {
+        console.log(data);
+        const totalSentiments = data.reduce((sum, item) => sum + item.count, 0);
         const sentimentPercentages: Record<string, string> = {};
-        Object.keys(data).forEach((sentiment) => {
-          const count = data[sentiment];
-          const percentage = ((count / totalSentiments) * 100).toFixed(1);
-          sentimentPercentages[sentiment] = percentage;
+        data.forEach((item) => {
+          const percentage = ((item.count / totalSentiments) * 100).toFixed(1);
+          sentimentPercentages[item.sentiment] = percentage;
         });
         setSentimentDistribution(sentimentPercentages);
       })
+
   }, [fromDate, toDate, selectedProduct, selectedSource]);
 
   const theme = useTheme();

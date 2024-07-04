@@ -27,7 +27,7 @@ class AnalyticsController < ApplicationController
     fromDate = Date.strptime(params[:fromDate], '%d/%m/%Y')
     toDate = Date.strptime(params[:toDate], '%d/%m/%Y')
   
-    @overall_sentiment_scores = Analytic.select('date, CAST(AVG(CAST(sentiment_score AS numeric)) AS text) AS sentiment_score')
+    @overall_sentiment_scores = Analytic.select(:date, 'CAST(AVG(CAST(sentiment_score AS numeric)) AS text) AS sentiment_score')
                                         .where("CAST(date AS date) BETWEEN ? AND ?", params[:fromDate], params[:toDate])
                                         .where(product: products)
                                         .where(source: sources)
