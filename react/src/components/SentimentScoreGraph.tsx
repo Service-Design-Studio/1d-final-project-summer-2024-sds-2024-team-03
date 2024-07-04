@@ -57,6 +57,7 @@ fromDate, toDate, selectedProduct, selectedSource, isDetailed
     const date = new Date(year, month - 1, day);
     const options: Intl.DateTimeFormatOptions = { day: 'numeric', month: 'long' };
     const formattedDate = new Intl.DateTimeFormat('en-US', options).format(date);
+    console.log(formattedDate)
     return formattedDate;
   }
 
@@ -115,10 +116,11 @@ fromDate, toDate, selectedProduct, selectedSource, isDetailed
         })} else {
           fetch(`${urlPrefix}/analytics/get_overall_sentiment_scores?fromDate=${fromDate_string}&toDate=${toDate_string}&product=${selectedProduct}&source=${selectedSource}`)
         .then((response) => response.json())
-        .then((data: Record<string, string>) => {
-          setSentimentScores([{"id": "all", "color":"hsl(8, 70%, 50%)", "data":Object.entries(data).map(([date, sentiment_score]) => ({
-            "x": formatDate(date),
-            "y": parseFloat(sentiment_score)
+        .then((data: Record<string, string>[]) => {
+          console.log(data)
+          setSentimentScores([{"id": "all", "color":"hsl(8, 70%, 50%)", "data":data.map((item) => ({
+            "x": formatDate(item.date),
+            "y": parseFloat(item.sentiment_score)
           }))}]);
         })
     }}, [fromDate, toDate, selectedProduct, selectedSource, graphProducts, graphSubcategories]);
