@@ -1,4 +1,8 @@
 Rails.application.routes.draw do
+  root to: redirect('/feedbacks')
+  # Define routes for Feedbacks
+  resources :feedbacks
+  
   resources :analytics do
     get 'filter_products', on: :collection
     get 'filter_sources', on: :collection
@@ -17,4 +21,7 @@ Rails.application.routes.draw do
 
   # Defines the root path route ("/")
   # root "posts#index"
+  
+  # Redirect from root to /feedbacks
+
 end
