@@ -13,13 +13,10 @@ class AnalyticsController < ApplicationController
 
   def get_sentiment_scores
     # SentimentScoreGraph (detailed)
-    # + :feedback_category
-    fromDate = Date.strptime(params[:fromDate], '%d/%m/%Y')
-    toDate = Date.strptime(params[:toDate], '%d/%m/%Y')
     products = params[:product].split(',')
     sources = params[:source].split(',')
-    @sentiment_scores = Analytic.select(:sentiment_score, :date, :product, :subcategory)
-                                .where("CAST(date AS date) BETWEEN ? AND ?", fromDate, toDate)
+    @sentiment_scores = Analytic.select(:sentiment_score, :date, :product, :subcategory, :feedback_category)
+                                .where("CAST(date AS date) BETWEEN ? AND ?", params[:fromDate], params[:toDate])
                                 .where(product: products)
                                 .where(source: sources)
     render json: @sentiment_scores
@@ -27,23 +24,14 @@ class AnalyticsController < ApplicationController
   
 
   def get_overall_sentiment_scores
-    # Parse dates from string parameters into Ruby Date objects.
     fromDate = Date.strptime(params[:fromDate], '%d/%m/%Y')
     toDate = Date.strptime(params[:toDate], '%d/%m/%Y')
   
-    # Split product and source parameters into arrays. Ensure the string is stripped of spaces for consistent splitting.
-    products = params[:product].split(',').map(&:strip)
-    sources = params[:source].split(',').map(&:strip)
-  
-    # Build the query using ActiveRecord, incorporating proper casting for date and aggregation for sentiment score.
-    @overall_sentiment_scores = Analytic.select("date, CAST(AVG(CAST(sentiment_score AS numeric)) AS text) AS sentiment_score")
-                                        .where("CAST(date AS date) BETWEEN ? AND ?", fromDate, toDate)
+    @overall_sentiment_scores = Analytic.select(:date, 'CAST(AVG(CAST(sentiment_score AS numeric)) AS text) AS sentiment_score')
+                                        .where("CAST(date AS date) BETWEEN ? AND ?", params[:fromDate], params[:toDate])
                                         .where(product: products)
                                         .where(source: sources)
                                         .group(:date)
-    Rails.logger.debug "Generated SQL Query: #{@overall_sentiment_scores.to_sql}"
-
-    # Render the resulting data as JSON.
     render json: @overall_sentiment_scores
   end
   
@@ -51,12 +39,10 @@ class AnalyticsController < ApplicationController
 
   def get_sentiments_sorted
     # Categorisation: feedback, source for digging,
-    fromDate = Date.strptime(params[:fromDate], '%d/%m/%Y')
-    toDate = Date.strptime(params[:toDate], '%d/%m/%Y')
     products = params[:product].split(',')
     sources = params[:source].split(',')
     @sentiments_sorted =Analytic.select('*')
-                                .where("CAST(date AS date) BETWEEN ? AND ?", fromDate, toDate)
+                                .where("CAST(date AS date) BETWEEN ? AND ?", params[:fromDate], params[:toDate])
                                 .where(product: products)
                                 .where(source: sources)
                                 .order('CAST(sentiment_score AS numeric) DESC')
@@ -66,12 +52,10 @@ class AnalyticsController < ApplicationController
 
   def get_sentiments_distribution
     # Overview 
-    fromDate = Date.strptime(params[:fromDate], '%d/%m/%Y')
-    toDate = Date.strptime(params[:toDate], '%d/%m/%Y')
     products = params[:product].split(',')
     sources = params[:source].split(',')
     @sentiments_distribution = Analytic.select(:sentiment, 'COUNT(sentiment)')
-                                      .where("CAST(date AS date) BETWEEN ? AND ?", fromDate, toDate)
+                                      .where("CAST(date AS date) BETWEEN ? AND ?", params[:fromDate], params[:toDate])
                                       .where(product: products)
                                       .where(source: sources)
                                       .group(:sentiment)
