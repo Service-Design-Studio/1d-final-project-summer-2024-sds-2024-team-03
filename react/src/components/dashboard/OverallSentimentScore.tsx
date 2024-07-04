@@ -25,7 +25,8 @@ fromDate, toDate, selectedProduct, selectedSource, setSelectedMenu
     fetch(`${urlPrefix}/analytics/get_overall_sentiment_scores?fromDate=${fromDate_string}&toDate=${toDate_string}&product=${selectedProduct}&source=${selectedSource}`)
       .then((response) => response.json())
       .then((data: Record<string, string>[]) => {
-        console.log(`CURR: ${data}`)
+        console.log(`CURR:`)
+        console.log(data)
         const dates: string[] = data.map(item => item.date as string);
         const totalScore = data.reduce((sum, item) => {
           const score = parseFloat(item.sentiment_score as string);
@@ -39,8 +40,9 @@ fromDate, toDate, selectedProduct, selectedSource, setSelectedMenu
     fetch(`${urlPrefix}/analytics/get_overall_sentiment_scores?fromDate=${prevFromDate_string}&toDate=${fromDate_string}&product=${selectedProduct}&source=${selectedSource}`)
     .then((response) => response.json())
     .then((data: Record<string, string>[]) => {
-      console.log(`PREV: ${data}`)
-      const dates: string[] = data.map(item => item.date as string);
+      console.log(`PREV:`)
+      console.log(data)
+        const dates: string[] = data.map(item => item.date as string);
       const totalScore = data.reduce((sum, item) => {
         const score = parseFloat(item.sentiment_score  as string);
         return sum + (isNaN(score) ? 0 : score);
