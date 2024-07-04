@@ -43,7 +43,7 @@ env:
     GAR_NAME: ghaction # TODO: update Artifact Registry location
     GAR_LOCATION: asia-southeast1 # TODO: update Artifact Registry location
     SERVICE: jbaaam # TODO: update Cloud Run service name
-    REGION: asia-southeast1 # TODO: update Cloud Run service region
+    REGION: asia-southeast2 # TODO: update Cloud Run service region
 
 jobs:
     deploy:
