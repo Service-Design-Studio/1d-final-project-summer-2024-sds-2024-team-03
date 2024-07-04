@@ -14,7 +14,7 @@ class AnalyticsController < ApplicationController
   def get_sentiment_scores
     # SentimentScoreGraph (detailed)
     products = params[:product].split(',')
-    sources = params[:source].split(',').map(&:strip)
+    sources = params[:source].split(',')
     @sentiment_scores = Analytic.select(:sentiment_score, :date, :product, :subcategory, :feedback_category)
                                 .where("CAST(date AS date) BETWEEN ? AND ?", params[:fromDate], params[:toDate])
                                 .where(product: products)
@@ -25,7 +25,7 @@ class AnalyticsController < ApplicationController
 
   def get_overall_sentiment_scores
     products = params[:product].split(',')
-    sources = params[:source].split(',').map(&:strip)
+    sources = params[:source].split(',')
     @overall_sentiment_scores = Analytic.select(:date, 'CAST(AVG(CAST(sentiment_score AS numeric)) AS text) AS sentiment_score')
                                         .where("CAST(date AS date) BETWEEN ? AND ?", params[:fromDate], params[:toDate])
                                         .where(product: products)
@@ -34,12 +34,11 @@ class AnalyticsController < ApplicationController
     render json: @overall_sentiment_scores
   end
   
-  
 
   def get_sentiments_sorted
-    # Categorisation: feedback, source for digging,
+    # Categorisation: feedback, source for digging
     products = params[:product].split(',')
-    sources = params[:source].split(',').map(&:strip)
+    sources = params[:source].split(',')
     @sentiments_sorted =Analytic.select('*')
                                 .where("CAST(date AS date) BETWEEN ? AND ?", params[:fromDate], params[:toDate])
                                 .where(product: products)
@@ -52,7 +51,7 @@ class AnalyticsController < ApplicationController
   def get_sentiments_distribution
     # Overview 
     products = params[:product].split(',')
-    sources = params[:source].split(',').map(&:strip)
+    sources = params[:source].split(',')
     @sentiments_distribution = Analytic.select(:sentiment, 'COUNT(sentiment)')
                                       .where("CAST(date AS date) BETWEEN ? AND ?", params[:fromDate], params[:toDate])
                                       .where(product: products)

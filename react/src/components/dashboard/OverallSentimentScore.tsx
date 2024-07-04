@@ -20,23 +20,20 @@ fromDate, toDate, selectedProduct, selectedSource
 
   useEffect(() => {
     console.log("====> process.env", process.env.NODE_ENV);
+    console.log(fromDate_string)
     const urlPrefix =
       process.env.NODE_ENV == "development" ? "http://localhost:3000" : "";
     fetch(`${urlPrefix}/analytics/get_overall_sentiment_scores?fromDate=${fromDate_string}&toDate=${toDate_string}&product=${selectedProduct}&source=${selectedSource}`)
       .then((response) => response.json())
       .then((data: Record<string, string>[]) => {
         console.log(data)
-        console.log("WTFFFFFF")
+        console.log("TESTTTTTT")
         const dates: string[] = data.map(item => item.date as string);
-        console.log(dates)
         const totalScore = data.reduce((sum, item) => {
           const score = parseFloat(item.sentiment_score as string);
-          console.log(score)
           return sum + (isNaN(score) ? 0 : score);
         }, 0);
-        console.log(totalScore)
         const avgScore = totalScore / dates.length;
-        console.log(avgScore)
         setOverallSentimentScore(parseFloat(avgScore.toFixed(1)))
       });
 
