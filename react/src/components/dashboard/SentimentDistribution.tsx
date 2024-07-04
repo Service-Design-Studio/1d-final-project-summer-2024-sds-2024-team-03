@@ -16,7 +16,7 @@ fromDate, toDate, selectedProduct, selectedSource
   const fromDate_string = fromDate.format('DD/MM/YYYY')
   const toDate_string = toDate.format('DD/MM/YYYY')
   const [sentimentDistribution, setSentimentDistribution] = useState<Record<string, string>>({});
-  const order: Record<string, string> = { "Excited": "darkgreen", "Satisfied": "green", "Neutral": "white", "Unsatisfied": "orange", "Frustrated": "red" };
+  const order: Record<string, string> = { "Excited": "darkgreen", "Satisfied": "green", "Neutral": "darkgrey", "Unsatisfied": "orange", "Frustrated": "red" };
 
   useEffect(() => {
     console.log("====> process.env", process.env.NODE_ENV);
