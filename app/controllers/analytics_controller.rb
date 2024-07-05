@@ -7,11 +7,13 @@ class AnalyticsController < ApplicationController
                     .order("TO_DATE(date, 'DD/MM/YYYY') ASC")
                     .limit(1)
                     .pluck(:date)
+                    .first
     @latest_date = Analytic.select(:date)
                     .distinct
                     .order("TO_DATE(date, 'DD/MM/YYYY') DESC")
                     .limit(1)
                     .pluck(:date)
+                    .first
     render json: { "earliest_date": @earliest_date, "latest_date": @latest_date }
   end
 
