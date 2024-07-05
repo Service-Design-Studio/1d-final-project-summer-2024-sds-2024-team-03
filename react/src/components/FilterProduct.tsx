@@ -20,10 +20,7 @@ const MenuProps = {
 };
 
 // For testing
-const products = [
-  "DepositsxxxxXXX",
-  "Digital Banking App",
-];
+const products = ["DepositsxxxxXXX", "Digital Banking App"];
 
 interface FilterProductProps {
   selectedProduct: string[];
@@ -58,10 +55,12 @@ export default function FilterProduct({
 
   return (
     <div>
+      {" "}
+      {/*put test id */}
       <FormControl sx={{ m: 0, width: "100%" }}>
         <InputLabel id="filter-product-label">Products</InputLabel>
         <Select
-          labelId="filter-product-label"
+          labelIw
           id="filter-product"
           multiple
           value={selectedProduct}

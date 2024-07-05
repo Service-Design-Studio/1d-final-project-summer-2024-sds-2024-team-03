@@ -1,11 +1,23 @@
 {
   "dependencies": {
     "@rails/webpacker": "5.4.4",
+    "@testing-library/jest-dom": "^6.4.6",
+    "@testing-library/react": "^16.0.0",
+    "jest-fetch-mock": "^3.0.3",
     "webpack": "^4.46.0",
     "webpack-cli": "^3.3.12",
     "yarn": "^1.22.22"
   },
   "devDependencies": {
+    "jest": "^29.7.0",
     "webpack-dev-server": "^3"
+  },
+  "scripts": {
+    "test": "jest"
+  },
+  "jest": {
+    "setupFilesAfterEnv": [
+      "@testing-library/jest-dom/extend-expect"
+    ]
   }
 }
