@@ -20,6 +20,7 @@ interface DashboardProps {
   setSelectedProduct: React.Dispatch<React.SetStateAction<string[]>>;
   selectedSource: string[];
   setSelectedSource: React.Dispatch<React.SetStateAction<string[]>>;
+  setSelectedMenu:React.Dispatch<React.SetStateAction<string>>;
 }
 
 export default function Dashboard({
@@ -31,6 +32,7 @@ export default function Dashboard({
   setSelectedProduct,
   selectedSource,
   setSelectedSource,
+  setSelectedMenu,
 }: DashboardProps) {
   
   const [earliestLatestDates, setEarliestLatestDates] = useState<Record <string, Dayjs>>({})
@@ -41,6 +43,7 @@ export default function Dashboard({
     fetch(`${urlPrefix}/analytics/get_earliest_latest_dates`)
       .then(response => response.json())
       .then(data => {
+        console.log(data)
         setEarliestLatestDates({"earliestDate": dayjs(data.earliest_date, "DD/MM/YYYY"), "latestDate": dayjs(data.latest_date, "DD/MM/YYYY")});
       })
 
@@ -124,6 +127,7 @@ export default function Dashboard({
           toDate = {toDate}
           selectedProduct = {selectedProduct}
           selectedSource = {selectedSource}
+          setSelectedMenu = {setSelectedMenu}
         />
 
         <SentimentDistribution
@@ -131,6 +135,7 @@ export default function Dashboard({
           toDate = {toDate}
           selectedProduct = {selectedProduct}
           selectedSource = {selectedSource}
+          setSelectedMenu = {setSelectedMenu}
         />
 
         <Paper sx={{ p: 2, borderRadius: 2, flex: 2, display: 'flex', flexDirection: 'column', justifyContent: 'center', height: 200 }}>
@@ -156,7 +161,8 @@ export default function Dashboard({
             </Box>
           </Box>
         </Paper>
-      </Box>
+          {/* setSelectedMenu = {setSelectedMenu} */}
+          </Box>
 
       <SentimentScoreGraph
       fromDate = {fromDate}
@@ -164,6 +170,7 @@ export default function Dashboard({
       selectedProduct = {selectedProduct}
       selectedSource = {selectedSource}
       isDetailed = {false}
+      setSelectedMenu = {setSelectedMenu}
       />
       <Box sx={{ display: 'flex', gap: 2, mt: 2,  width: "100%", flexDirection: 'column',}} id="detailed-sentimentscoregraph">
         <Paper sx={{ p: 2, borderRadius: 2, flexDirection: 'row',}}>
@@ -294,8 +301,11 @@ export default function Dashboard({
         role="application"
         ariaLabel="Categorization"
         barAriaLabel={e=>e.id+": "+e.formattedValue+" for Subcategory: "+e.indexValue}
-    /></Box></Paper></Box>
-      
+    />
+    {/* setSelectedMenu = {setSelectedMenu} */}
+    </Box>
+    </Paper>
+    </Box>
       </>
   );
 }

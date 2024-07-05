@@ -184,6 +184,7 @@ export default function MainApp() {
                     setSelectedProduct={setSelectedProduct}
                     selectedSource={selectedSource}
                     setSelectedSource={setSelectedSource}
+                    setSelectedMenu={setSelectedMenu}
                   />
                 </>
               )}

@@ -19,12 +19,6 @@ const MenuProps = {
   },
 };
 
-// For testing
-const products = [
-  "DepositsxxxxXXX",
-  "Digital Banking App",
-];
-
 interface FilterProductProps {
   selectedProduct: string[];
   setSelectedProduct: React.Dispatch<React.SetStateAction<string[]>>;
@@ -37,9 +31,8 @@ export default function FilterProduct({
   const [products, setProducts] = useState<string[]>([]);
 
   useEffect(() => {
-    console.log("====> process.env", process.env.NODE_ENV);
     const urlPrefix =
-      process.env.NODE_ENV == "development" ? "http://localhost:3000" : "";
+      process.env.NODE_ENV === "development" ? "http://localhost:3000" : "";
     fetch(`${urlPrefix}/analytics/filter_products`)
       .then((response) => response.json())
       .then((data) => setProducts(data.sort()));
