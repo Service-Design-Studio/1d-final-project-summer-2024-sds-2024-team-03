@@ -77,7 +77,7 @@ export default function FilterSource({
           )}
           MenuProps={MenuProps}
         >
-          {sources.map((source) => (
+          {sources.map((source: string) => (
             <MenuItem key={source} value={source} className="filter-source-option">
               {source}
             </MenuItem>
