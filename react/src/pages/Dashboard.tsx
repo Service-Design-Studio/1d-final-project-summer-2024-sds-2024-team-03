@@ -1,14 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { Box, Grid, Paper, Typography, Divider } from "@mui/material";
 import dayjs, { Dayjs } from "dayjs";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import Calendar from "../components/Calendar";
 import FilterProduct from "../components/FilterProduct";
 import FilterSource from "../components/FilterSource";
 import OverallSentimentScore from "../components/dashboard/OverallSentimentScore";
 import SentimentDistribution from "../components/dashboard/SentimentDistribution";
 import SentimentScoreGraph from "../components/SentimentScoreGraph";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { ResponsiveBar } from '@nivo/bar'
 
 interface DashboardProps {
@@ -35,72 +33,29 @@ export default function Dashboard({
   setSelectedMenu,
 }: DashboardProps) {
   
-  const [earliestLatestDates, setEarliestLatestDates] = useState<Record <string, Dayjs>>({})
-
-  useEffect(() => {
-    const urlPrefix =
-      process.env.NODE_ENV === "development" ? "http://localhost:3000" : "";
-    fetch(`${urlPrefix}/analytics/get_earliest_latest_dates`)
-      .then(response => response.json())
-      .then(data => {
-        console.log(data)
-        setEarliestLatestDates({"earliestDate": dayjs(data.earliest_date, "DD/MM/YYYY"), "latestDate": dayjs(data.latest_date, "DD/MM/YYYY")});
-      })
-  }, []);
 
   return (
     <>
       <h1>Overview Dashboard</h1>
       <Box sx={{ flexGrow: 1 }}>
-
         <Grid container spacing={2}>
-          <Grid xs={3}>
-            <LocalizationProvider dateAdapter={AdapterDayjs}>
-              <DatePicker
-              slotProps={{
-                textField: {
-                  required: true,
-                  id: 'from-date',
-                },
-              }}
-                format="DD/MM/YYYY"
-                label="From"
-                value={dayjs(fromDate)}
-                sx={{ width: "100%" }}
-                onChange={(newValue) => {
-                  setFromDate(
-                    newValue ? newValue : dayjs().subtract(1, 'week')
-                  );
-                }}
-                minDate={earliestLatestDates["earliestDate"] ? earliestLatestDates["earliestDate"] : undefined}
-                maxDate={toDate}
-              />
-            </LocalizationProvider>
-          </Grid>
+          
+        <Calendar
+          fromDate = {fromDate}
+          setFromDate = {setFromDate}
+          toDate = {toDate}
+          setToDate = {setToDate}
+          isFrom = {true}
+        />
 
-          <Grid xs={3}>
-            <LocalizationProvider dateAdapter={AdapterDayjs}>
-              <DatePicker
-              slotProps={{
-                textField: {
-                  required: true,
-                  id: 'to-date',
-                },
-              }}
-                format="DD/MM/YYYY"
-                label="To"
-                value={dayjs(toDate)}
-                sx={{ width: "100%" }}
-                onChange={(newValue) => {
-                  setToDate(
-                    newValue ? newValue: dayjs()
-                  );
-                }}
-                minDate={fromDate}
-                maxDate={earliestLatestDates["latestDate"] ? earliestLatestDates["latestDate"] : undefined}
-              />
-            </LocalizationProvider>
-          </Grid>
+        <Calendar
+          fromDate = {fromDate}
+          setFromDate = {setFromDate}
+          toDate = {toDate}
+          setToDate = {setToDate}
+          isFrom = {false}
+        />
+          
 
           <Grid xs={3}>
             <FilterProduct
