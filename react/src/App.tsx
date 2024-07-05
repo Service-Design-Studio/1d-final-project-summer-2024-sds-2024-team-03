@@ -29,11 +29,10 @@ import Actionables from "./pages/Actionables";
 import { useState } from "react";
 
 const drawerWidth = 240;
-// Create a new theme using `createTheme`
 const theme = createTheme({
   palette: {
     primary: {
-      main: "#8D1927", // replace '#yourColor' with your desired color
+      main: "#8D1927", 
     },
   },
 });
