@@ -39,15 +39,13 @@ export default function Dashboard({
 
   useEffect(() => {
     const urlPrefix =
-      process.env.NODE_ENV == "development" ? "http://localhost:3000" : "";
+      process.env.NODE_ENV === "development" ? "http://localhost:3000" : "";
     fetch(`${urlPrefix}/analytics/get_earliest_latest_dates`)
       .then(response => response.json())
       .then(data => {
         console.log(data)
         setEarliestLatestDates({"earliestDate": dayjs(data.earliest_date, "DD/MM/YYYY"), "latestDate": dayjs(data.latest_date, "DD/MM/YYYY")});
       })
-
-
   }, []);
 
   return (

@@ -47,12 +47,12 @@ fromDate, toDate, selectedProduct, selectedSource, setSelectedMenu
             const score = parseFloat(item.sentiment_score  as string);
             return sum + (isNaN(score) ? 0 : score);
           }, 0);
-          const avgScore = totalScore / dates.length;
-          const prevOverallSentimentScore = avgScore;
+          const prevAvgScore = totalScore / dates.length;
+          const prevOverallSentimentScore = prevAvgScore;
           console.log(prevOverallSentimentScore)
           // increase/decrease from prevOverallSentimentScore -> overallSentimentScore
           if (prevOverallSentimentScore !== 0) {
-            setOverallSentimentScoreChange(parseFloat((100 * (overallSentimentScore - prevOverallSentimentScore)/prevOverallSentimentScore).toFixed(1)))
+            setOverallSentimentScoreChange(parseFloat((100 * (avgScore - prevOverallSentimentScore)/prevOverallSentimentScore).toFixed(1)))
           } 
         });
       });
