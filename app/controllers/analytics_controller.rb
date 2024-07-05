@@ -1,5 +1,19 @@
 class AnalyticsController < ApplicationController
   before_action :set_analytic, only: %i[ show edit update destroy ]
+  
+  def uploads
+    file = params[:file]
+
+    if file
+      service = GoogleCloudStorageService.new('jbaaam_upload')
+      destination_path = "uploads/#{file.original_filename}"
+
+      url = service.upload_file(file, destination_path)
+      render json: { message: "File uploaded successfully", url: url }, status: :ok
+    else
+      render json: { error: "No file selected" }, status: :unprocessable_entity
+    end
+  end
 
   def get_earliest_latest_dates
     @earliest_date = Analytic.select(:date)

@@ -11,6 +11,8 @@ Rails.application.routes.draw do
     get 'get_overall_sentiment_scores', on: :collection
     get 'get_sentiments_sorted', on: :collection
     get 'get_sentiments_distribution', on: :collection
+    post 'uploads', on: :collection # Added upload action as a collection route
+    
   end
 
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
@@ -19,6 +21,7 @@ Rails.application.routes.draw do
   # Can be used by load balancers and uptime monitors to verify that the app is live.
   get "up" => "rails/health#show", as: :rails_health_check
   resources :feedbacks
+  
 
   # Defines the root path route ("/")
   # root "posts#index"

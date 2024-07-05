@@ -63,14 +63,22 @@ export default function FilterProduct({
           renderValue={(selected) => (
             <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
               {selected.map((value) => (
-                <Chip key={value} label={value} className="filter-product-value"/>
+                <Chip
+                  key={value}
+                  label={value}
+                  className="filter-product-value"
+                />
               ))}
             </Box>
           )}
           MenuProps={MenuProps}
         >
           {products.map((product: string) => (
-            <MenuItem key={product} value={product} className="filter-product-option">
+            <MenuItem
+              key={product}
+              value={product}
+              className="filter-product-option"
+            >
               {product}
             </MenuItem>
           ))}
