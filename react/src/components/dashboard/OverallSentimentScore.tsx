@@ -35,27 +35,27 @@ fromDate, toDate, selectedProduct, selectedSource, setSelectedMenu
         const avgScore = totalScore / dates.length;
         console.log(avgScore)
         setOverallSentimentScore(parseFloat(avgScore.toFixed(1)))
-      });
 
-    const prevFromDate_string = dayjs(fromDate).subtract(dayjs(toDate).diff(dayjs(fromDate), 'day'), 'day').format('DD/MM/YYYY');
-    fetch(`${urlPrefix}/analytics/get_overall_sentiment_scores?fromDate=${prevFromDate_string}&toDate=${fromDate_string}&product=${selectedProduct}&source=${selectedSource}`)
-    .then((response) => response.json())
-    .then((data: Record<string, string>[]) => {
-      console.log(`PREV:`)
-      console.log(data)
-        const dates: string[] = data.map(item => item.date as string);
-      const totalScore = data.reduce((sum, item) => {
-        const score = parseFloat(item.sentiment_score  as string);
-        return sum + (isNaN(score) ? 0 : score);
-      }, 0);
-      const avgScore = totalScore / dates.length;
-      const prevOverallSentimentScore = avgScore;
-      console.log(prevOverallSentimentScore)
-      // increase/decrease from prevOverallSentimentScore -> overallSentimentScore
-      if (prevOverallSentimentScore !== 0) {
-        setOverallSentimentScoreChange(parseFloat((100 * (overallSentimentScore - prevOverallSentimentScore)/prevOverallSentimentScore).toFixed(1)))
-      } 
-    });
+        const prevFromDate_string = dayjs(fromDate).subtract(dayjs(toDate).diff(dayjs(fromDate), 'day'), 'day').format('DD/MM/YYYY');
+        fetch(`${urlPrefix}/analytics/get_overall_sentiment_scores?fromDate=${prevFromDate_string}&toDate=${fromDate_string}&product=${selectedProduct}&source=${selectedSource}`)
+        .then((response) => response.json())
+        .then((data: Record<string, string>[]) => {
+          console.log(`PREV:`)
+          console.log(data)
+            const dates: string[] = data.map(item => item.date as string);
+          const totalScore = data.reduce((sum, item) => {
+            const score = parseFloat(item.sentiment_score  as string);
+            return sum + (isNaN(score) ? 0 : score);
+          }, 0);
+          const avgScore = totalScore / dates.length;
+          const prevOverallSentimentScore = avgScore;
+          console.log(prevOverallSentimentScore)
+          // increase/decrease from prevOverallSentimentScore -> overallSentimentScore
+          if (prevOverallSentimentScore !== 0) {
+            setOverallSentimentScoreChange(parseFloat((100 * (overallSentimentScore - prevOverallSentimentScore)/prevOverallSentimentScore).toFixed(1)))
+          } 
+        });
+      });
   }, [fromDate, toDate, selectedProduct, selectedSource]);
 
   const theme = useTheme();
