@@ -3,12 +3,16 @@ class AnalyticsController < ApplicationController
 
   def get_earliest_latest_dates
     @earliest_date = Analytic.select(:date)
+                    .distinct
                     .order("TO_DATE(date, 'DD/MM/YYYY') ASC")
                     .limit(1)
+                    .pluck(:date)
     @latest_date = Analytic.select(:date)
-                          .order("TO_DATE(date, 'DD/MM/YYYY') DESC")
-                          .limit(1)
-    render json: { earliest_date: @earliest_date, latest_date: @latest_date }
+                    .distinct
+                    .order("TO_DATE(date, 'DD/MM/YYYY') DESC")
+                    .limit(1)
+                    .pluck(:date)
+    render json: { "earliest_date": @earliest_date, "latest_date": @latest_date }
   end
 
   def filter_products

@@ -33,6 +33,7 @@ fromDate, toDate, selectedProduct, selectedSource, setSelectedMenu
           return sum + (isNaN(score) ? 0 : score);
         }, 0);
         const avgScore = totalScore / dates.length;
+        console.log(avgScore)
         setOverallSentimentScore(parseFloat(avgScore.toFixed(1)))
       });
 
@@ -49,6 +50,7 @@ fromDate, toDate, selectedProduct, selectedSource, setSelectedMenu
       }, 0);
       const avgScore = totalScore / dates.length;
       const prevOverallSentimentScore = avgScore;
+      console.log(prevOverallSentimentScore)
       // increase/decrease from prevOverallSentimentScore -> overallSentimentScore
       if (prevOverallSentimentScore !== 0) {
         setOverallSentimentScoreChange(parseFloat((100 * (overallSentimentScore - prevOverallSentimentScore)/prevOverallSentimentScore).toFixed(1)))
