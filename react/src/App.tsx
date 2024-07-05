@@ -26,13 +26,14 @@ import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import Dashboard from "./pages/Dashboard";
 import Analytics from "./pages/Analytics";
 import Actionables from "./pages/Actionables";
+import UploadData from "./pages/UploadData";
 import { useState } from "react";
 
 const drawerWidth = 240;
 const theme = createTheme({
   palette: {
     primary: {
-      main: "#8D1927", 
+      main: "#8D1927",
     },
   },
 });
@@ -89,7 +90,7 @@ const DrawerHeader = styled("div")(({ theme }) => ({
 export default function MainApp() {
   const [open, setOpen] = React.useState(false);
   const [selectedMenu, setSelectedMenu] = useState("dashboard");
-  const [fromDate, setFromDate] = useState(dayjs().subtract(1, 'week'));
+  const [fromDate, setFromDate] = useState(dayjs().subtract(1, "week"));
   const [toDate, setToDate] = useState(dayjs());
   const [selectedProduct, setSelectedProduct] = React.useState<string[]>([]);
   const [selectedSource, setSelectedSource] = React.useState<string[]>([]);
@@ -101,6 +102,7 @@ export default function MainApp() {
   const handleDrawerClose = () => {
     setOpen(false);
   };
+  console.log("=> selected Menu", selectedMenu);
 
   return (
     <ThemeProvider theme={theme}>
@@ -147,30 +149,38 @@ export default function MainApp() {
           </DrawerHeader>
           <Divider />
           <List>
-            {Object.entries({"Dashboard": DashboardIcon, "Analytics": BarChartIcon, "Actionables": ListAltIcon, "Upload Data":CloudUploadIcon }).map(
-              ([page, Icon]) => (
-                <ListItem key={page} disablePadding >
-                  <ListItemButton 
-                    onClick={() => setSelectedMenu(page.toLowerCase())}
-                    className={selectedMenu === page.toLowerCase() ? "menu-item-active" : "menu-item"}
-                    sx={{
-                      backgroundColor: selectedMenu === page.toLowerCase() ? "grey": "inherit",
-                    }}
-                  >
-                    <ListItemIcon>
+            {Object.entries({
+              Dashboard: DashboardIcon,
+              Analytics: BarChartIcon,
+              Actionables: ListAltIcon,
+              "Upload Data": CloudUploadIcon,
+            }).map(([page, Icon]) => (
+              <ListItem key={page} disablePadding>
+                <ListItemButton
+                  onClick={() => setSelectedMenu(page.toLowerCase())}
+                  className={
+                    selectedMenu === page.toLowerCase()
+                      ? "menu-item-active"
+                      : "menu-item"
+                  }
+                  sx={{
+                    backgroundColor:
+                      selectedMenu === page.toLowerCase() ? "grey" : "inherit",
+                  }}
+                >
+                  <ListItemIcon>
                     <Icon />
-                    </ListItemIcon>
-                    <ListItemText primary={page} />
-                  </ListItemButton>
-                </ListItem>
-              )
-            )}
+                  </ListItemIcon>
+                  <ListItemText primary={page} />
+                </ListItemButton>
+              </ListItem>
+            ))}
           </List>
         </Drawer>
         <React.Fragment>
           <CssBaseline />
           <Container maxWidth="lg">
-            <Main open={open} >
+            <Main open={open}>
               <DrawerHeader />
               {selectedMenu === "dashboard" && (
                 <>
@@ -201,6 +211,18 @@ export default function MainApp() {
               )}
               {selectedMenu === "actionables" && (
                 <Actionables
+                  setFromDate={setFromDate}
+                  fromDate={fromDate}
+                  setToDate={setToDate}
+                  toDate={toDate}
+                  selectedProduct={selectedProduct}
+                  setSelectedProduct={setSelectedProduct}
+                  selectedSource={selectedSource}
+                  setSelectedSource={setSelectedSource}
+                />
+              )}
+              {selectedMenu === "upload data" && (
+                <UploadData
                   setFromDate={setFromDate}
                   fromDate={fromDate}
                   setToDate={setToDate}

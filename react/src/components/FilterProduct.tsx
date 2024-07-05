@@ -22,11 +22,13 @@ const MenuProps = {
 interface FilterProductProps {
   selectedProduct: string[];
   setSelectedProduct: React.Dispatch<React.SetStateAction<string[]>>;
+  multiple?: boolean;
 }
 
 export default function FilterProduct({
   selectedProduct,
   setSelectedProduct,
+  multiple = true,
 }: FilterProductProps) {
   const [products, setProducts] = useState<string[]>([]);
 
@@ -56,7 +58,7 @@ export default function FilterProduct({
         <Select
           labelId="filter-product-label"
           id="filter-product"
-          multiple
+          multiple={multiple} // Pass the `multiple` prop to the Select component
           value={selectedProduct}
           onChange={handleChange}
           input={<OutlinedInput id="select-product" label="product" />}
