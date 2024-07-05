@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Theme, useTheme } from "@mui/material/styles";
-import { Paper, Box, Typography} from "@mui/material";
+import { Paper, Box, Typography, ButtonBase} from "@mui/material";
 import { Dayjs } from "dayjs";
 import { ResponsiveLine } from '@nivo/line'
 import OutlinedInput from "@mui/material/OutlinedInput";
@@ -27,10 +27,11 @@ interface SentimentScoreGraphProps {
   selectedProduct: string[];
   selectedSource: string[];
   isDetailed: boolean;
+  setSelectedMenu:React.Dispatch<React.SetStateAction<string>>;
 }
 
 export default function SentimentScoreGraph({
-fromDate, toDate, selectedProduct, selectedSource, isDetailed
+fromDate, toDate, selectedProduct, selectedSource, isDetailed, setSelectedMenu
 }: SentimentScoreGraphProps) {
   const fromDate_string = fromDate.format('DD/MM/YYYY')
   const toDate_string = toDate.format('DD/MM/YYYY')
@@ -79,20 +80,17 @@ fromDate, toDate, selectedProduct, selectedSource, isDetailed
   };
 
   useEffect(() => {
-      console.log("====> process.env", process.env.NODE_ENV);
       const urlPrefix =
-        process.env.NODE_ENV == "development" ? "http://localhost:3000" : "";
+        process.env.NODE_ENV === "development" ? "http://localhost:3000" : "";
           if (isDetailed) {
       fetch(`${urlPrefix}/analytics/get_sentiment_scores?fromDate=${fromDate_string}&toDate=${toDate_string}&product=${selectedProduct}&source=${selectedSource}`)
         .then((response) => response.json())
         .then((data: Record<string, string>[]) => {
-          console.log(data)
           // Not sure if will cause problem as changing useEffect
           if (graphSubcategories.length == 0) {
             const subcategories: string[] = data.map(({subcategory}) => subcategory);
-  setGraphSubcategories(subcategories);
+            setGraphSubcategories(subcategories);
           }
-
           const filteredData = data.filter(item => graphProducts.includes(item.product) && graphSubcategories.includes(item.subcategory));
           const filteredDataGroupedByProduct = filteredData.reduce((acc, item) => {
             if (!acc[item.product]) {
@@ -102,7 +100,8 @@ fromDate, toDate, selectedProduct, selectedSource, isDetailed
             return acc;
           }, {} as Record<string, { date: string, sentiment_score: number }[]>);
           
-          setSentimentScores(Object.entries(filteredDataGroupedByProduct).map(([product, date_sentiment_score]) => {
+          if (data.length > 0) {
+            setSentimentScores(Object.entries(filteredDataGroupedByProduct).map(([product, date_sentiment_score]) => {
             return {
               id: product,
               color: "hsl(8, 70%, 50%)", 
@@ -111,15 +110,17 @@ fromDate, toDate, selectedProduct, selectedSource, isDetailed
                 "y": sentiment_score
               }))
             };
-          }))
+          }))}
         })} else {
           fetch(`${urlPrefix}/analytics/get_overall_sentiment_scores?fromDate=${fromDate_string}&toDate=${toDate_string}&product=${selectedProduct}&source=${selectedSource}`)
         .then((response) => response.json())
         .then((data: Record<string, string>[]) => {
-          setSentimentScores([{"id": "all", "color":"hsl(8, 70%, 50%)", "data":data.map(({ date, sentiment_score }) => ({
+          if (data.length > 0) {
+            setSentimentScores([{"id": "all", "color":"hsl(8, 70%, 50%)", "data":data.map(({ date, sentiment_score }) => ({
             "x": formatDate(date),
             "y": parseFloat(sentiment_score)
           }))}]);
+          }
         })
     }}, [fromDate, toDate, selectedProduct, selectedSource, graphProducts, graphSubcategories]);
   
@@ -127,11 +128,11 @@ fromDate, toDate, selectedProduct, selectedSource, isDetailed
     {/* Must have parent container with a defined size */}
     return isDetailed ? 
     (
-      <Box sx={{ display: 'flex', gap: 2, mt: 2,  width: "100%", flexDirection: 'column',}} id="detailed-sentimentscoregraph">
-        <Paper sx={{ p: 2, borderRadius: 2, flexDirection: 'row',}}>
+      <Box sx={{ display: 'flex', gap: 2, mt: 2,  width: "100%", flexDirection: 'column',}}>
+        <Paper sx={{ p: 2, borderRadius: 2, flexDirection: 'row',}} id="overall-sentimentscoregraph">
         <Typography variant="h6" component="h3" sx={{ marginRight: 2, width: "50%" , }}>
-    Sentiment vs Time trend for selected Product(s) & Subcategories
-  </Typography>
+          Sentiment vs Time trend for selected Product(s) & Subcategories
+        </Typography>
 
       <FormControl sx={{ m: 0, width: "20%" }}>
         <InputLabel id="detailed-sentimentscoregraph-filter-product-label">Products</InputLabel>
@@ -188,7 +189,7 @@ fromDate, toDate, selectedProduct, selectedSource, isDetailed
       <Box sx={{ display: 'flex', gap: 2, mt: 2,  width: "100%", height:200}}>
       {sentimentScores.length > 0 &&  (<ResponsiveLine
         data={ sentimentScores }
-          margin={{ top: 20, right: 20, bottom: 20, left: 20 }}
+          margin={{ top: 20, right: 20, bottom: 40, left: 40  }}
           xScale={{ type: 'point' }}
           yScale={{
               type: 'linear',
@@ -261,13 +262,31 @@ fromDate, toDate, selectedProduct, selectedSource, isDetailed
       </Box>
     )
     :(
-      <Box sx={{ display: 'flex', gap: 2, mt: 2,  width: "100%", flexDirection: 'column',}} id="overall-sentimentscoregraph">
-        <Paper sx={{ p: 2, borderRadius: 2, flex: 1 }}>
-      <h3>Sentiment vs Time trend for Product(s) (All Subcategories)</h3>
+      <Box sx={{ display: 'flex', gap: 2, mt: 2,  width: "100%", flexDirection: 'column',}}>
+        <ButtonBase
+      component={Paper}
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        p: 2,
+        borderRadius: 2,
+        flex: 1,
+        cursor: "pointer",
+        "&:hover": {
+          backgroundColor: "#f0f0f0", 
+        },
+      }}
+      id="overall-sentimentscoregraph"
+      onClick={() => setSelectedMenu("analytics")} >
+        <Typography variant="h6" component="h3" sx={{ marginRight: 2, width: "50%" , }}>
+        Sentiment vs Time trend for Product(s) (All Subcategories)
+        </Typography> 
       <Box sx={{ display: 'flex', gap: 2, mt: 2,  width: "100%", height:200}}>
       {sentimentScores.length > 0 && (<ResponsiveLine
         data={ sentimentScores}
-          margin={{ top: 20, right: 20, bottom: 20, left: 30 }}
+          margin={{ top: 20, right: 20, bottom: 40, left: 40 }}
           xScale={{ type: 'point' }}
           yScale={{
               type: 'linear',
@@ -310,7 +329,7 @@ fromDate, toDate, selectedProduct, selectedSource, isDetailed
           useMesh={true}
       />)}
       </Box>
-      </Paper>
+      </ButtonBase>
       </Box>
     );
   }

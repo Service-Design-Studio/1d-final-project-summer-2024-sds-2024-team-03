@@ -1,14 +1,12 @@
-import * as React from "react";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import React, { useState, useEffect } from "react";
 import { Box, Grid, Paper, Typography, Divider } from "@mui/material";
 import dayjs, { Dayjs } from "dayjs";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import Calendar from "../components/Calendar";
 import FilterProduct from "../components/FilterProduct";
 import FilterSource from "../components/FilterSource";
 import OverallSentimentScore from "../components/dashboard/OverallSentimentScore";
 import SentimentDistribution from "../components/dashboard/SentimentDistribution";
 import SentimentScoreGraph from "../components/SentimentScoreGraph";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { ResponsiveBar } from '@nivo/bar'
 
 interface DashboardProps {
@@ -20,6 +18,7 @@ interface DashboardProps {
   setSelectedProduct: React.Dispatch<React.SetStateAction<string[]>>;
   selectedSource: string[];
   setSelectedSource: React.Dispatch<React.SetStateAction<string[]>>;
+  setSelectedMenu:React.Dispatch<React.SetStateAction<string>>;
 }
 
 export default function Dashboard({
@@ -31,57 +30,32 @@ export default function Dashboard({
   setSelectedProduct,
   selectedSource,
   setSelectedSource,
+  setSelectedMenu,
 }: DashboardProps) {
   
+
   return (
     <>
       <h1>Overview Dashboard</h1>
       <Box sx={{ flexGrow: 1 }}>
-
         <Grid container spacing={2}>
-          <Grid xs={3}>
-            <LocalizationProvider dateAdapter={AdapterDayjs}>
-              <DatePicker
-              slotProps={{
-                textField: {
-                  required: true,
-                  id: 'from-date',
-                },
-              }}
-                format="DD/MM/YYYY"
-                label="From"
-                value={dayjs(fromDate)}
-                sx={{ width: "100%" }}
-                onChange={(newValue) => {
-                  setFromDate(
-                    newValue ? newValue : dayjs().subtract(1, 'week')
-                  );
-                }}
-              />
-            </LocalizationProvider>
-          </Grid>
+          
+        <Calendar
+          fromDate = {fromDate}
+          setFromDate = {setFromDate}
+          toDate = {toDate}
+          setToDate = {setToDate}
+          isFrom = {true}
+        />
 
-          <Grid xs={3}>
-            <LocalizationProvider dateAdapter={AdapterDayjs}>
-              <DatePicker
-              slotProps={{
-                textField: {
-                  required: true,
-                  id: 'to-date',
-                },
-              }}
-                format="DD/MM/YYYY"
-                label="To"
-                value={dayjs(toDate)}
-                sx={{ width: "100%" }}
-                onChange={(newValue) => {
-                  setToDate(
-                    newValue ? newValue: dayjs()
-                  );
-                }}
-              />
-            </LocalizationProvider>
-          </Grid>
+        <Calendar
+          fromDate = {fromDate}
+          setFromDate = {setFromDate}
+          toDate = {toDate}
+          setToDate = {setToDate}
+          isFrom = {false}
+        />
+          
 
           <Grid xs={3}>
             <FilterProduct
@@ -106,6 +80,7 @@ export default function Dashboard({
           toDate = {toDate}
           selectedProduct = {selectedProduct}
           selectedSource = {selectedSource}
+          setSelectedMenu = {setSelectedMenu}
         />
 
         <SentimentDistribution
@@ -113,6 +88,7 @@ export default function Dashboard({
           toDate = {toDate}
           selectedProduct = {selectedProduct}
           selectedSource = {selectedSource}
+          setSelectedMenu = {setSelectedMenu}
         />
 
         <Paper sx={{ p: 2, borderRadius: 2, flex: 2, display: 'flex', flexDirection: 'column', justifyContent: 'center', height: 200 }}>
@@ -138,7 +114,8 @@ export default function Dashboard({
             </Box>
           </Box>
         </Paper>
-      </Box>
+          {/* setSelectedMenu = {setSelectedMenu} */}
+          </Box>
 
       <SentimentScoreGraph
       fromDate = {fromDate}
@@ -146,6 +123,7 @@ export default function Dashboard({
       selectedProduct = {selectedProduct}
       selectedSource = {selectedSource}
       isDetailed = {false}
+      setSelectedMenu = {setSelectedMenu}
       />
       <Box sx={{ display: 'flex', gap: 2, mt: 2,  width: "100%", flexDirection: 'column',}} id="detailed-sentimentscoregraph">
         <Paper sx={{ p: 2, borderRadius: 2, flexDirection: 'row',}}>
@@ -276,8 +254,11 @@ export default function Dashboard({
         role="application"
         ariaLabel="Categorization"
         barAriaLabel={e=>e.id+": "+e.formattedValue+" for Subcategory: "+e.indexValue}
-    /></Box></Paper></Box>
-      
+    />
+    {/* setSelectedMenu = {setSelectedMenu} */}
+    </Box>
+    </Paper>
+    </Box>
       </>
   );
 }

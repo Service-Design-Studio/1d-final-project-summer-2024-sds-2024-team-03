@@ -15,6 +15,18 @@ class AnalyticsController < ApplicationController
     end
   end
 
+  def get_earliest_latest_dates
+    @earliest_date = Analytic.select(:date)
+                              .order(Arel.sql("TO_DATE(date, 'DD/MM/YYYY') ASC"))
+                              .pluck(:date)
+                              .first
+    @latest_date = Analytic.select(:date)
+                            .order(Arel.sql("TO_DATE(date, 'DD/MM/YYYY') DESC"))
+                            .pluck(:date)
+                            .first
+    render json: { "earliest_date": @earliest_date, "latest_date": @latest_date }
+  end
+
   def filter_products
     @products = private_filter(:product)
     render json: @products
@@ -30,7 +42,7 @@ class AnalyticsController < ApplicationController
     products = params[:product].split(',')
     sources = params[:source].split(',')
     @sentiment_scores = Analytic.select(:sentiment_score, :date, :product, :subcategory, :feedback_category)
-                                .where("CAST(date AS date) BETWEEN ? AND ?", params[:fromDate], params[:toDate])
+                                .where("TO_DATE(date, 'DD/MM/YYYY') BETWEEN TO_DATE(?, 'DD/MM/YYYY') AND TO_DATE(?, 'DD/MM/YYYY')", params[:fromDate], params[:toDate])
                                 .where(product: products)
                                 .where(source: sources)
     render json: @sentiment_scores
@@ -41,7 +53,7 @@ class AnalyticsController < ApplicationController
     products = params[:product].split(',')
     sources = params[:source].split(',')
     @overall_sentiment_scores = Analytic.select(:date, 'CAST(AVG(CAST(sentiment_score AS numeric)) AS text) AS sentiment_score')
-                                        .where("CAST(date AS date) BETWEEN ? AND ?", params[:fromDate], params[:toDate])
+                                        .where("TO_DATE(date, 'DD/MM/YYYY') BETWEEN TO_DATE(?, 'DD/MM/YYYY') AND TO_DATE(?, 'DD/MM/YYYY')", params[:fromDate], params[:toDate])
                                         .where(product: products)
                                         .where(source: sources)
                                         .group(:date)
@@ -54,7 +66,7 @@ class AnalyticsController < ApplicationController
     products = params[:product].split(',')
     sources = params[:source].split(',')
     @sentiments_sorted =Analytic.select('*')
-                                .where("CAST(date AS date) BETWEEN ? AND ?", params[:fromDate], params[:toDate])
+                                .where("TO_DATE(date, 'DD/MM/YYYY') BETWEEN TO_DATE(?, 'DD/MM/YYYY') AND TO_DATE(?, 'DD/MM/YYYY')", params[:fromDate], params[:toDate])
                                 .where(product: products)
                                 .where(source: sources)
                                 .order('CAST(sentiment_score AS numeric) DESC')
@@ -67,7 +79,7 @@ class AnalyticsController < ApplicationController
     products = params[:product].split(',')
     sources = params[:source].split(',')
     @sentiments_distribution = Analytic.select(:sentiment, 'COUNT(sentiment)')
-                                      .where("CAST(date AS date) BETWEEN ? AND ?", params[:fromDate], params[:toDate])
+                                      .where("TO_DATE(date, 'DD/MM/YYYY') BETWEEN TO_DATE(?, 'DD/MM/YYYY') AND TO_DATE(?, 'DD/MM/YYYY')", params[:fromDate], params[:toDate])
                                       .where(product: products)
                                       .where(source: sources)
                                       .group(:sentiment)

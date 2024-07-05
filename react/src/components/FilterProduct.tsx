@@ -19,9 +19,6 @@ const MenuProps = {
   },
 };
 
-// For testing
-const products = ["DepositsxxxxXXX", "Digital Banking App"];
-
 interface FilterProductProps {
   selectedProduct: string[];
   setSelectedProduct: React.Dispatch<React.SetStateAction<string[]>>;
@@ -34,12 +31,11 @@ export default function FilterProduct({
   const [products, setProducts] = useState<string[]>([]);
 
   useEffect(() => {
-    console.log("====> process.env", process.env.NODE_ENV);
     const urlPrefix =
-      process.env.NODE_ENV == "development" ? "http://localhost:3000" : "";
+      process.env.NODE_ENV === "development" ? "http://localhost:3000" : "";
     fetch(`${urlPrefix}/analytics/filter_products`)
       .then((response) => response.json())
-      .then((data) => setProducts(data));
+      .then((data) => setProducts(data.sort()));
   }, []);
 
   const theme = useTheme();
@@ -55,12 +51,10 @@ export default function FilterProduct({
 
   return (
     <div>
-      {" "}
-      {/*put test id */}
       <FormControl sx={{ m: 0, width: "100%" }}>
         <InputLabel id="filter-product-label">Products</InputLabel>
         <Select
-          labelIw
+          labelId="filter-product-label"
           id="filter-product"
           multiple
           value={selectedProduct}
@@ -69,14 +63,22 @@ export default function FilterProduct({
           renderValue={(selected) => (
             <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
               {selected.map((value) => (
-                <Chip key={value} label={value} />
+                <Chip
+                  key={value}
+                  label={value}
+                  className="filter-product-value"
+                />
               ))}
             </Box>
           )}
           MenuProps={MenuProps}
         >
           {products.map((product: string) => (
-            <MenuItem key={product} value={product}>
+            <MenuItem
+              key={product}
+              value={product}
+              className="filter-product-option"
+            >
               {product}
             </MenuItem>
           ))}

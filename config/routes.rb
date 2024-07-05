@@ -4,6 +4,7 @@ Rails.application.routes.draw do
   resources :feedbacks
   
   resources :analytics do
+    get 'get_earliest_latest_dates', on: :collection
     get 'filter_products', on: :collection
     get 'filter_sources', on: :collection
     get 'get_sentiment_scores', on: :collection
