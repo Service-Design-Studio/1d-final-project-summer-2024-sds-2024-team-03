@@ -46,9 +46,13 @@ export default function Dashboard({
             <FilterSource
               selectedSource={selectedSource}
               setSelectedSource={setSelectedSource}
+              multiple={false}
             />
           </Grid>
-          <FileDrop />
+          <FileDrop
+            selectedProduct={selectedProduct}
+            selectedSource={selectedSource}
+          />
         </Grid>
       </Box>
     </>
