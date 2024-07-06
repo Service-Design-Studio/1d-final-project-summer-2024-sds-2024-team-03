@@ -102,7 +102,6 @@ export default function MainApp() {
   const handleDrawerClose = () => {
     setOpen(false);
   };
-  console.log("=> selected Menu", selectedMenu);
 
   return (
     <ThemeProvider theme={theme}>

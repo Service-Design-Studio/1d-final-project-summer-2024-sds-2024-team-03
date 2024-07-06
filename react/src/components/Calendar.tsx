@@ -11,11 +11,10 @@ interface CalendarProps {
   fromDate: Dayjs;
   setToDate: React.Dispatch<React.SetStateAction<Dayjs>>;
   toDate: Dayjs;
-  isFrom: boolean;
 }
 
 export default function Calendar({
-  setFromDate, fromDate, setToDate, toDate, isFrom
+  setFromDate, fromDate, setToDate, toDate
 }: CalendarProps) {
   const [earliestLatestDates, setEarliestLatestDates] = useState<Record <string, Dayjs>>({})
   const theme = useTheme();
@@ -23,18 +22,15 @@ export default function Calendar({
   useEffect(() => {
     const urlPrefix =
       process.env.NODE_ENV === "development" ? "http://localhost:3000" : "";
-      if (isFrom) {
         fetch(`${urlPrefix}/analytics/get_earliest_latest_dates`)
         .then(response => response.json())
         .then(data => {
           setEarliestLatestDates({"earliestDate": dayjs(data.earliest_date, "DD/MM/YYYY"), "latestDate": dayjs(data.latest_date, "DD/MM/YYYY")});
         })
-      }
   }, []);
     
-    return isFrom ? 
-    (
-      <Grid item xs={3}>
+    return(
+      <Grid item xs={6} sx={{ display: 'flex', flexDirection: 'row'}}>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DatePicker
               slotProps={{
@@ -56,10 +52,6 @@ export default function Calendar({
                 maxDate={toDate}
               />
             </LocalizationProvider>
-          </Grid>
-    )
-    :(
-      <Grid item xs={3}>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DatePicker
               slotProps={{

@@ -33,10 +33,7 @@ export default function FilterProduct({
       process.env.NODE_ENV === "development" ? "http://localhost:3000" : "";
     fetch(`${urlPrefix}/analytics/filter_products`)
       .then((response) => response.json())
-      .then((data) => {
-        console.log(data.sort())
-        setProducts(data.sort())
-      });
+      .then((data) => setProducts(data.sort()));
   }, []);
 
   const theme = useTheme();

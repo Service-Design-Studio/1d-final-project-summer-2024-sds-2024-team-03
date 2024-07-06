@@ -37,21 +37,13 @@ export default function Dashboard({
   return (
     <>
       <h1>Overview Dashboard</h1>
-      <Box sx={{ flexGrow: 1 }}>
+      <Box sx={{ flexGrow: 1, flexDirection: 'row'}}>
         <Grid container >
           <Calendar
             fromDate = {fromDate}
             setFromDate = {setFromDate}
             toDate = {toDate}
             setToDate = {setToDate}
-            isFrom = {true}
-          />
-          <Calendar
-            fromDate = {fromDate}
-            setFromDate = {setFromDate}
-            toDate = {toDate}
-            setToDate = {setToDate}
-            isFrom = {false}
           />
           <FilterProduct
             selectedProduct={selectedProduct}
