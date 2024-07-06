@@ -41,9 +41,7 @@ export default function FilterSource({
       process.env.NODE_ENV === "development" ? "http://localhost:3000" : "";
     fetch(`${urlPrefix}/analytics/filter_sources`)
       .then((response) => response.json())
-      .then((data) => {
-        console.log(data.sort())
-        setSources(data.sort())});
+      .then((data) => setSources(data.sort()));
   }, []);
 
   const handleChange = (event: SelectChangeEvent<string[]>) => {
