@@ -5,6 +5,7 @@ import dayjs, { Dayjs } from "dayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import FilterProduct from "../components/FilterProduct";
 import FilterSource from "../components/FilterSource";
+import { FileDrop } from "../components/Uploader";
 import Grid from "@mui/material/Unstable_Grid2";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 
@@ -47,6 +48,7 @@ export default function Dashboard({
               setSelectedSource={setSelectedSource}
             />
           </Grid>
+          <FileDrop />
         </Grid>
       </Box>
     </>
