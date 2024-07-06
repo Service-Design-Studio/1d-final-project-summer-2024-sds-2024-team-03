@@ -1,5 +1,7 @@
 # MicroService: Data Processor
 
+This microservice, deployed as a **Google Cloud Function**, is designed to listen for new files uploaded to a specified Google Cloud Storage bucket -- `jbaaam-upload`. Upon detecting a new uploaded file, it triggers an event that activates the function. The function then processes the file by passing it to `inference.py`. This script runs a pre-trained prediction model on the incoming data, generating insightful predictions or classifications. After processing, the results are used to update a designated database in cloudsql -- `analytics table`, ensuring that the system remains current with the latest data and predictions. This architecture leverages the scalability and efficiency of serverless computing, allowing for seamless, automated data processing and integration into broader data workflows.
+
 ## Step 1: Enable Necessary APIs
 
 Enable the Cloud Functions and Cloud Storage APIs for your project:
