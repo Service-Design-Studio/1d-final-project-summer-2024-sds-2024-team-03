@@ -96,6 +96,8 @@ gcloud functions logs read gcs_event_function --gen2 --region=us-central1
 ## fix from stack
 
 [stackoverflow](https://stackoverflow.com/questions/74285987/how-do-i-deploy-a-google-cloud-function-2nd-generation)
+
+```bash
 PROJECT_ID=$(gcloud config get-value project)
 
 PROJECT_NUMBER=$(gcloud projects list --filter="project_id:$PROJECT_ID" --format='value(project_number)')
@@ -105,3 +107,4 @@ SERVICE_ACCOUNT=$(gsutil kms serviceaccount -p $PROJECT_NUMBER)
 gcloud projects add-iam-policy-binding jbaaam \
  --member serviceAccount:$SERVICE_ACCOUNT \
  --role roles/pubsub.publisher
+```
