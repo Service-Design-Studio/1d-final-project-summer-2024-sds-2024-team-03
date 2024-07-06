@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Theme, useTheme } from "@mui/material/styles";
 import { Grid} from "@mui/material";
 import dayjs, { Dayjs } from "dayjs";
@@ -23,17 +23,18 @@ export default function Calendar({
   useEffect(() => {
     const urlPrefix =
       process.env.NODE_ENV === "development" ? "http://localhost:3000" : "";
-    fetch(`${urlPrefix}/analytics/get_earliest_latest_dates`)
-      .then(response => response.json())
-      .then(data => {
-        console.log(data)
-        setEarliestLatestDates({"earliestDate": dayjs(data.earliest_date, "DD/MM/YYYY"), "latestDate": dayjs(data.latest_date, "DD/MM/YYYY")});
-      })
+      if (isFrom) {
+        fetch(`${urlPrefix}/analytics/get_earliest_latest_dates`)
+        .then(response => response.json())
+        .then(data => {
+          setEarliestLatestDates({"earliestDate": dayjs(data.earliest_date, "DD/MM/YYYY"), "latestDate": dayjs(data.latest_date, "DD/MM/YYYY")});
+        })
+      }
   }, []);
     
     return isFrom ? 
     (
-      <Grid xs={3}>
+      <Grid item xs={3}>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DatePicker
               slotProps={{
@@ -58,7 +59,7 @@ export default function Calendar({
           </Grid>
     )
     :(
-      <Grid xs={3}>
+      <Grid item xs={3}>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DatePicker
               slotProps={{

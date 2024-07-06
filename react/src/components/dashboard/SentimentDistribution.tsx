@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Theme, useTheme } from "@mui/material/styles";
 import { Paper, Typography, ButtonBase } from "@mui/material";
 import { Dayjs } from "dayjs";
@@ -25,6 +25,7 @@ fromDate, toDate, selectedProduct, selectedSource, setSelectedMenu
     fetch(`${urlPrefix}/analytics/get_sentiments_distribution?fromDate=${fromDate_string}&toDate=${toDate_string}&product=${selectedProduct}&source=${selectedSource}`)
       .then((response) => response.json())
       .then((data: {count: number, sentiment: string}[]) => {
+        console.log(data)
         const totalSentiments = data.reduce((sum, item) => sum + item.count, 0);
         const sentimentPercentages: Record<string, string> = {};
         data.forEach((item) => {

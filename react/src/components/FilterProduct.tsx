@@ -1,10 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Theme, useTheme } from "@mui/material/styles";
-import Box from "@mui/material/Box";
-import OutlinedInput from "@mui/material/OutlinedInput";
-import InputLabel from "@mui/material/InputLabel";
-import MenuItem from "@mui/material/MenuItem";
-import FormControl from "@mui/material/FormControl";
+import { Box, Grid, OutlinedInput, InputLabel, MenuItem, FormControl} from "@mui/material";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import Chip from "@mui/material/Chip";
 
@@ -37,11 +33,14 @@ export default function FilterProduct({
       process.env.NODE_ENV === "development" ? "http://localhost:3000" : "";
     fetch(`${urlPrefix}/analytics/filter_products`)
       .then((response) => response.json())
-      .then((data) => setProducts(data.sort()));
+      .then((data) => {
+        console.log(data.sort())
+        setProducts(data.sort())
+      });
   }, []);
 
   const theme = useTheme();
-  const handleChange = (event: SelectChangeEvent<typeof selectedProduct>) => {
+  const handleChange = (event: SelectChangeEvent<string[]>) => {
     const {
       target: { value },
     } = event;
@@ -52,8 +51,8 @@ export default function FilterProduct({
   };
 
   return (
-    <div>
-      <FormControl sx={{ m: 0, width: "100%" }}>
+        <Grid item xs={3}>
+          <FormControl sx={{ m: 0, width: "100%" }}>
         <InputLabel id="filter-product-label">Products</InputLabel>
         <Select
           labelId="filter-product-label"
@@ -86,6 +85,6 @@ export default function FilterProduct({
           ))}
         </Select>
       </FormControl>
-    </div>
+    </Grid>
   );
 }
