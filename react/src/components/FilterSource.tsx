@@ -1,4 +1,4 @@
-import  React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Theme, useTheme } from "@mui/material/styles";
 import { Box, Grid, OutlinedInput, InputLabel, MenuItem, FormControl} from "@mui/material";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
@@ -25,11 +25,13 @@ const sources = [
 interface FilterSourceProps {
   selectedSource: string[];
   setSelectedSource: React.Dispatch<React.SetStateAction<string[]>>;
+  multiple?: boolean;
 }
 
 export default function FilterSource({
   selectedSource,
   setSelectedSource,
+  multiple = true,
 }: FilterSourceProps) {
   const [sources, setSources] = useState<string[]>([]);
   const theme = useTheme();
@@ -61,21 +63,29 @@ export default function FilterSource({
         <Select
           labelId="filter-source-label"
           id="filter-source"
-          multiple
+          multiple={multiple} // Pass the `multiple` prop to the Select component
           value={selectedSource}
           onChange={handleChange}
           input={<OutlinedInput id="select-source" label="source" />}
           renderValue={(selected) => (
             <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
               {selected.map((value) => (
-                <Chip key={value} label={value} className="filter-source-value"/>
+                <Chip
+                  key={value}
+                  label={value}
+                  className="filter-source-value"
+                />
               ))}
             </Box>
           )}
           MenuProps={MenuProps}
         >
           {sources.map((source: string) => (
-            <MenuItem key={source} value={source} className="filter-source-option">
+            <MenuItem
+              key={source}
+              value={source}
+              className="filter-source-option"
+            >
               {source}
             </MenuItem>
           ))}
