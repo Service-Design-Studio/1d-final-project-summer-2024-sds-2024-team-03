@@ -3,7 +3,7 @@ require "google/cloud/storage"
 
 class GoogleCloudStorageService
   def initialize(bucket_name)
-    @storage = Google::Cloud::Storage.new
+    @storage = Google::Cloud::Storage.new(project: "jbaaam")
     @bucket = @storage.bucket(bucket_name)
   end
 
