@@ -4,12 +4,13 @@ class AnalyticsController < ApplicationController
   def get_earliest_latest_dates
     @earliest_date = Analytic.select(:date)
                               .order(Arel.sql("TO_DATE(date, 'DD/MM/YYYY') ASC"))
-                              .pluck(:date)
-                              .first
+                                .pluck(:date)
+                                .first
     @latest_date = Analytic.select(:date)
                             .order(Arel.sql("TO_DATE(date, 'DD/MM/YYYY') DESC"))
                             .pluck(:date)
-                            .first
+                            # because db got an issue, first is null
+                            .second
     render json: { "earliest_date": @earliest_date, "latest_date": @latest_date }
   end
 

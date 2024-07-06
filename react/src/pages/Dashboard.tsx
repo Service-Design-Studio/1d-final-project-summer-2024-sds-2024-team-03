@@ -38,38 +38,29 @@ export default function Dashboard({
     <>
       <h1>Overview Dashboard</h1>
       <Box sx={{ flexGrow: 1 }}>
-        <Grid container spacing={2}>
-          
-        <Calendar
-          fromDate = {fromDate}
-          setFromDate = {setFromDate}
-          toDate = {toDate}
-          setToDate = {setToDate}
-          isFrom = {true}
-        />
-
-        <Calendar
-          fromDate = {fromDate}
-          setFromDate = {setFromDate}
-          toDate = {toDate}
-          setToDate = {setToDate}
-          isFrom = {false}
-        />
-          
-
-          <Grid xs={3}>
-            <FilterProduct
-              selectedProduct={selectedProduct}
-              setSelectedProduct={setSelectedProduct}
-            />
-          </Grid>
-
-          <Grid xs={3}>
-            <FilterSource
-              selectedSource={selectedSource}
-              setSelectedSource={setSelectedSource}
-            />
-          </Grid>
+        <Grid container >
+          <Calendar
+            fromDate = {fromDate}
+            setFromDate = {setFromDate}
+            toDate = {toDate}
+            setToDate = {setToDate}
+            isFrom = {true}
+          />
+          <Calendar
+            fromDate = {fromDate}
+            setFromDate = {setFromDate}
+            toDate = {toDate}
+            setToDate = {setToDate}
+            isFrom = {false}
+          />
+          <FilterProduct
+            selectedProduct={selectedProduct}
+            setSelectedProduct={setSelectedProduct}
+          />
+          <FilterSource
+            selectedSource={selectedSource}
+            setSelectedSource={setSelectedSource}
+          />
         </Grid>
       </Box>
 
@@ -262,5 +253,3 @@ export default function Dashboard({
       </>
   );
 }
-
-export {};
