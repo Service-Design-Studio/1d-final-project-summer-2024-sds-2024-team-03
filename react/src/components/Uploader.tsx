@@ -1,6 +1,15 @@
 import { DragEvent, useState } from "react";
 
-export function FileDrop() {
+interface FileDropAttributes {
+  selectedProduct: string[];
+  selectedSource: string[];
+}
+export function FileDrop({
+  selectedProduct,
+  selectedSource,
+}: FileDropAttributes) {
+  console.log("Product:" + selectedProduct);
+  console.log("Source:" + selectedSource);
   const [isOver, setIsOver] = useState(false);
   const [files, setFiles] = useState<File[]>([]);
 
@@ -28,6 +37,10 @@ export function FileDrop() {
       const reader = new FileReader();
 
       reader.onloadend = () => {
+        const newFilename =
+          selectedProduct[0] + "__" + selectedSource[0] + "__" + file.name; // Append "abc" to the original filename
+        const newFile = new File([file], newFilename, { type: file.type }); // Create a new File object
+
         console.log("=> onloadend:");
         console.log("Filename:", file.name); // Print the filename
         console.log("File:", file); // Print the filename
@@ -43,10 +56,11 @@ export function FileDrop() {
           ? csrfMetaTag.getAttribute("content")
           : "";
 
-        formData.append("file", file);
+        formData.append("file", newFile);
         console.log("X-CSRF-Token", csrfToken);
-
-        fetch("http://localhost:3000/analytics/uploads", {
+        const urlPrefix =
+          process.env.NODE_ENV === "development" ? "http://localhost:3000" : "";
+        fetch(`${urlPrefix}/analytics/uploads`, {
           method: "POST",
           body: formData,
           headers: csrfToken ? { "X-CSRF-Token": csrfToken } : {},

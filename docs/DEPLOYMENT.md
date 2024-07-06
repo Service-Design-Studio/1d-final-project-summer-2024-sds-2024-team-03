@@ -33,3 +33,10 @@ gcloud run deploy --image gcr.io/jbaaam/jbaaam --platform managed
 ```
 
 [10] asia-southeast2
+
+6. RMB TO DO: on your rc file (~/.zshrc)
+   Add Google Application Credential
+
+```bash
+export GOOGLE_APPLICATION_CREDENTIALS="./jbaaam-upload-key.json"
+```
