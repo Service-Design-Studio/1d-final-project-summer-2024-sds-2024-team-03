@@ -46,7 +46,7 @@ Scenario: Only selecting Call Centre as the source for all dates and products
   Then I should see the overall sentiment score as '2.1/5'
   And I should see the distribution of sentiment as '30.0, 25.0, 25.0, 16.7, 3.3'
 
-Scenario: All Products and Sources Selected for all dates
+Scenario: All Products Sources Selected for all dates
   Given I am on the Dashboard page
   When the date is set from '01/01/2024' to '10/01/2024'
   And All Sources are selected

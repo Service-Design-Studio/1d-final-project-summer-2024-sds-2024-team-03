@@ -1,4 +1,6 @@
 # This file is copied to spec/ when you run 'rails generate rspec:install'
+require 'webmock/rspec'
+require 'rails-controller-testing'
 require 'simplecov'
 SimpleCov.start 'rails' do
   add_filter '/bin/'
@@ -70,4 +72,5 @@ RSpec.configure do |config|
   config.filter_rails_from_backtrace!
   # arbitrary gems may also be filtered via:
   # config.filter_gems_from_backtrace("gem name")
+  WebMock.disable_net_connect!(allow_localhost: true)
 end
