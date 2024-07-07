@@ -280,56 +280,56 @@ fromDate, toDate, selectedProduct, selectedSource, isDetailed, setSelectedMenu
       }}
       id="overall-sentimentscoregraph"
       onClick={() => setSelectedMenu("analytics")} >
-        <Typography variant="h6" component="h3" sx={{ marginRight: 2, width: "50%" , }}>
-        Sentiment vs Time trend for Product(s) (All Subcategories)
-        </Typography> 
-      <Box sx={{ display: 'flex', gap: 2, mt: 2,  width: "100%", height:200}}>
-      {sentimentScores.length > 0 && (<ResponsiveLine
-        data={ sentimentScores}
-          margin={{ top: 20, right: 20, bottom: 40, left: 40 }}
-          xScale={{ type: 'point' }}
-          yScale={{
-              type: 'linear',
-              min: 'auto',
-              max: 'auto',
-              stacked: true,
-              reverse: false
-          }}
-          yFormat=" >+.1f"
-          curve="natural"
-          axisTop={null}
-          axisRight={null}
-          axisBottom={{
-              tickSize: 5,
-              tickPadding: 5,
-              tickRotation: 0,
-              legend: '',
-              legendOffset: 36,
-              legendPosition: 'middle',
-              truncateTickAt: 0
-          }}
-          axisLeft={{
-              tickSize: 5,
-              tickPadding: 5,
-              tickRotation: 0,
-              legend: '',
-              legendOffset: -40,
-              legendPosition: 'middle',
-              truncateTickAt: 0
-          }}
-          enableGridX={false}
-          colors={{ scheme: 'category10' }}
-          pointSize={8}
-          pointColor={{ theme: 'background' }}
-          pointBorderWidth={2}
-          pointBorderColor={{ from: 'serieColor' }}
-          pointLabel="data.yFormatted"
-          pointLabelYOffset={-12}
-          enableTouchCrosshair={true}
-          useMesh={true}
-      />)}
-      </Box>
-      </ButtonBase>
+          <Typography variant="h6" component="h3" sx={{ marginRight: 2, width: "50%"}}>
+            Sentiment vs Time trend for Product(s) (All Subcategories)
+          </Typography> 
+          <Box sx={{ display: 'flex', gap: 2, mt: 2,  width: "100%", height:200}}>
+          {sentimentScores.length > 0 && (<ResponsiveLine
+            data={ sentimentScores}
+              margin={{ top: 20, right: 20, bottom: 40, left: 40 }}
+              xScale={{ type: 'point' }}
+              yScale={{
+                  type: 'linear',
+                  min: 'auto',
+                  max: 'auto',
+                  stacked: true,
+                  reverse: false
+              }}
+              yFormat=" >+.1f"
+              curve="natural"
+              axisTop={null}
+              axisRight={null}
+              axisBottom={{
+                  tickSize: 5,
+                  tickPadding: 5,
+                  tickRotation: 0,
+                  legend: '',
+                  legendOffset: 36,
+                  legendPosition: 'middle',
+                  truncateTickAt: 0
+              }}
+              axisLeft={{
+                  tickSize: 5,
+                  tickPadding: 5,
+                  tickRotation: 0,
+                  legend: '',
+                  legendOffset: -40,
+                  legendPosition: 'middle',
+                  truncateTickAt: 0
+              }}
+              enableGridX={false}
+              colors={{ scheme: 'category10' }}
+              pointSize={8}
+              pointColor={{ theme: 'background' }}
+              pointBorderWidth={2}
+              pointBorderColor={{ from: 'serieColor' }}
+              pointLabel="data.yFormatted"
+              pointLabelYOffset={-12}
+              enableTouchCrosshair={true}
+              useMesh={true}
+          />)}
+          </Box>
+        </ButtonBase>
       </Box>
     );
   }
