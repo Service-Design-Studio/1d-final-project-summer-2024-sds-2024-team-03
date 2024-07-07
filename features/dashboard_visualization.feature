@@ -1,4 +1,4 @@
-Feature: Filter features for the Dashboard
+Feature: Filter features for visualization on Dashboard
 
 Background: Data has been added to the database
 
