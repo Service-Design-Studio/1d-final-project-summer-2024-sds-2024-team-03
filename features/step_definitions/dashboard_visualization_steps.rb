@@ -20,10 +20,6 @@ Given /I am on the Dashboard page/ do
   visit root_path
 end
 
-When /No Products are selected/ do
-end
-
-
 And /All Products are selected/ do
   select_all_products
 end
@@ -66,8 +62,7 @@ end
 
 
 
-
-
+# helper methods
 def select_all_products
   # Ensure the dropdown is visible and interactable
   dropdown = find('#filter-product')
@@ -94,8 +89,11 @@ end
 def select_products(products)
   # Ensure the dropdown is visible and interactable
   dropdown = find('#filter-product')
+  using_wait_time(10) do
+    expect(page).not_to have_css('.MuiBackdrop-root')
+  end
   dropdown.click  # Open the dropdown to see the options
-  sleep(4)
+  expect(page).to have_css('.MuiMenuItem-root', wait: 10)
 
   # Loop through each product, find it in the dropdown by text, and click to select
   products.each do |product|
@@ -127,8 +125,11 @@ end
 def select_sources(sources)
   # Ensure the dropdown is interactable
   dropdown = find('#filter-source')
+  using_wait_time(10) do
+    expect(page).not_to have_css('.MuiBackdrop-root')
+  end
   dropdown.click  # Open the dropdown
-  sleep(4)
+  expect(page).to have_css('.MuiMenuItem-root', wait: 10)
 
   # Iterate through the sources to select
   sources.each do |source|
@@ -150,6 +151,6 @@ def set_date_range(start_date, end_date)
   find('#to-date').set(end_date)
   sleep(0.2)
   # Additional actions like submitting the form or clicking away to trigger any validations or updates can be added here
-  find('body').click # to close date picker if it stays open
+  find('header').click # to close date picker if it stays open
 end
 
