@@ -44,6 +44,9 @@ Then /I should be redirected to the Analytics Page with the same selected produc
   expect(selected_sources).to include('Product Survey', 'Call Centre')
 end
 
+
+
+# Helper methods
 def selected_products
   find('.filter-product-value').value
 end

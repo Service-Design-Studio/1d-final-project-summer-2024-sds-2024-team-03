@@ -143,7 +143,7 @@ end
 
 # Scenario: Calendar dropdown closes on clicking away
 When /I click away from the calendar dropdown/ do
-  find("body").click
+  find("header").click
 end
 
 # Scenario: Reset selection by refreshing
@@ -152,13 +152,12 @@ Given /I have selected a time period/ do
 end
 
 When /I refresh the page/ do
-  visit current_path
+  visit root_path
 end
 
 
 
-
-
+# Helper methods
 def get_sources_from_dataset
   url_prefix = 'http://localhost:3000'  # URL prefix is the same for both environments
 
