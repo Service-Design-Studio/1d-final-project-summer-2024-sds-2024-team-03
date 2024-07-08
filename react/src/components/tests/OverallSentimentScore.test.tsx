@@ -1,6 +1,6 @@
 import React from "react";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
-import OverallSentimentScore from "../dashboard/OverallSentimentScore";
+import OverallSentimentScore from "../Dashboard/OverallSentimentScore";
 import fetchMock from "jest-fetch-mock";
 import dayjs from "dayjs";
 
@@ -21,6 +21,8 @@ const prev_response = [
 
 describe("OverallSentimentScore Component", () => {
   beforeEach(() => {
+    jest.spyOn(global.console, 'error').mockImplementation(() => jest.fn());
+    jest.spyOn(global.console, 'log').mockImplementation(() => jest.fn());
     fetchMock.resetMocks()
     fetchMock.mockResponses(
         [JSON.stringify(curr_response),

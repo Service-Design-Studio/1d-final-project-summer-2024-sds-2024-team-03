@@ -222,10 +222,6 @@ export default function MainApp() {
               )}
               {selectedMenu === "upload data" && (
                 <UploadData
-                  setFromDate={setFromDate}
-                  fromDate={fromDate}
-                  setToDate={setToDate}
-                  toDate={toDate}
                   selectedProduct={selectedProduct}
                   setSelectedProduct={setSelectedProduct}
                   selectedSource={selectedSource}

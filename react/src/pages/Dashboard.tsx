@@ -4,8 +4,8 @@ import dayjs, { Dayjs } from "dayjs";
 import Calendar from "../components/Calendar";
 import FilterProduct from "../components/FilterProduct";
 import FilterSource from "../components/FilterSource";
-import OverallSentimentScore from "../components/dashboard/OverallSentimentScore";
-import SentimentDistribution from "../components/dashboard/SentimentDistribution";
+import OverallSentimentScore from "../components/Dashboard/OverallSentimentScore";
+import SentimentDistribution from "../components/Dashboard/SentimentDistribution";
 import SentimentScoreGraph from "../components/SentimentScoreGraph";
 import { ResponsiveBar } from '@nivo/bar'
 

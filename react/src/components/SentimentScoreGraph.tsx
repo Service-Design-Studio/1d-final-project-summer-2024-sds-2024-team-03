@@ -131,7 +131,7 @@ fromDate, toDate, selectedProduct, selectedSource, isDetailed, setSelectedMenu
       <Box sx={{ display: 'flex', gap: 2, mt: 2,  width: "100%", flexDirection: 'column',}}>
         <Paper sx={{ p: 2, borderRadius: 2, flexDirection: 'row',}} id="overall-sentimentscoregraph">
         <Typography variant="h6" component="h3" sx={{ marginRight: 2, width: "50%" , }}>
-          Sentiment vs Time trend for selected Product(s) & Subcategories
+        Sentiment vs Time trend for selected Subcategories & Feedback Categories
         </Typography>
 
       <FormControl sx={{ m: 0, width: "20%" }}>
