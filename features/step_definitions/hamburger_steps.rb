@@ -13,11 +13,11 @@ Given(/I am on (Dashboard|Analytics|Actionables|Upload Data)/) do |page|
   end
 end
 
-When /I select the hamburger menu/ do
+When(/I select the hamburger menu/) do
   find('#nav-hamburger').click
 end
 
-Then /the hamburger menu should expand out to reveal "(.*?)", "(.*?)", "(.*?)", "(.*?)"/ do |dashboard, analytics, actions, upload|
+Then(/the hamburger menu should expand out to reveal "(.*?)", "(.*?)", "(.*?)", "(.*?)"/) do |dashboard, analytics, actions, upload|
   within('.MuiList-root.MuiList-padding') do
     expect(page).to have_css('.MuiListItemText-primary', text: dashboard, wait: 10)
     expect(page).to have_css('.MuiListItemText-primary', text: analytics, wait: 10)
@@ -26,20 +26,20 @@ Then /the hamburger menu should expand out to reveal "(.*?)", "(.*?)", "(.*?)", 
   end
 end
 
-Then /the page I am currently on should be highlighted/ do
+Then(/the page I am currently on should be highlighted/) do
   highlighted_element = find('.menu-item-active') # highlight automatically applies to .menu-item-active
   expect(highlighted_element).to have_content(@current_page)
 end
 
-When /I select "(.*?)" and "(.*?)" for the Products/ do |product1, product2|
+When(/I select "(.*?)" and "(.*?)" for the Products/) do |product1, product2|
   select_products([product1, product2])
 end
 
-When /I select "(.*?)" and "(.*?)" for the Sources/ do |source1, source2|
+When(/I select "(.*?)" and "(.*?)" for the Sources/) do |source1, source2|
   select_sources([source1, source2])
 end
 
-When /I click on "(.*?)" in the Hamburger Menu/ do |menu_item|
+When(/I click on "(.*?)" in the Hamburger Menu/) do |menu_item|
   find('#nav-hamburger').click
   expect(page).to have_css('.menu-item')
   within('.MuiList-root.MuiList-padding') do
@@ -47,7 +47,7 @@ When /I click on "(.*?)" in the Hamburger Menu/ do |menu_item|
   end
 end
 
-Then /I should be redirected to the Analytics Page with the same selected products and sources/ do
+Then(/I should be redirected to the Analytics Page with the same selected products and sources/) do
   product_values = all('.filter-product-value').map(&:text)
   expect(product_values).to include('Contact Center')
   expect(product_values).to include('Remittance')

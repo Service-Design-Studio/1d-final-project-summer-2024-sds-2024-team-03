@@ -5,19 +5,19 @@ require 'uri'
 # Feature: Product filter dropdown for Dashboard
 
 # Scenario: Hovering on a dropdown option updates its color
-Given /there are products in the dataset/ do
+Given(/there are products in the dataset/) do
   @sources = get_products_from_dataset
 end
 
-When /I click on the "Products" dropdown button/ do
+When(/I click on the "Products" dropdown button/) do
   find('#filter-product').click
 end
 
-When /I hover over a dropdown option/ do
+When(/I hover over a dropdown option/) do
   find('.filter-product-option', match: :first).hover
 end
 
-Then /the dropdown option should be highlighted on hover/ do
+Then(/the dropdown option should be highlighted on hover/) do
   dropdown_option = find('.filter-product-option', match: :first)
   # Simulate hover effect using plain JavaScript
   page.execute_script("arguments[0].classList.add('hovered');", dropdown_option)
@@ -26,21 +26,20 @@ Then /the dropdown option should be highlighted on hover/ do
 end
 
 # Scenario: Available dropdown options
-Then /I should see all 18 products arranged alphabetically as dropdown options/ do
+Then(/I should see all 18 products arranged alphabetically as dropdown options/) do
   options = all('.filter-product-option').map(&:text)
   expect(options).to eq options.sort
   expect(options.size).to eq 18
 end
 
 # Scenario: No selection of dropdown option
-When /no Products dropdown options are selected/ do
-  dropdown = find('#filter-product')
+When(/no Products dropdown options are selected/) do
   all('.filter-product-option').each do |option|
     expect(option[:'aria-selected']).to eq 'false'
   end
 end
 
-Then /I should see "Products" in the text field of the dropdown button/ do
+Then(/I should see "Products" in the text field of the dropdown button/) do
   expect(page).to have_css('.MuiFormLabel-root.MuiInputLabel-root', text: 'Products')
 end
 
