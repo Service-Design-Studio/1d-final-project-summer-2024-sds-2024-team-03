@@ -1,3 +1,14 @@
+Given(/I am on (Dashboard|Analytics|Actionables|UploadData)/) do |page|
+  visit('/')
+  ## if there are multiple paths:
+  #case page.downcase
+  #when 'dashboard'
+  #  visit('/')
+  #else
+  #  visit("/#{page.downcase}")
+  #end
+end
+
 When /I select the hamburger menu/ do
   find('#nav-hamburger').click
 end
