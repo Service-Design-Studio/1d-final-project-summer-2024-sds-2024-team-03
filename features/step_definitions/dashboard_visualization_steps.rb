@@ -18,9 +18,7 @@ end
 
 Given /I am on the Dashboard page/ do
   visit root_path
-  sleep(3)
 end
-
 
 When /No Products are selected/ do
 end

@@ -29,7 +29,8 @@ Scenario: Calendar dropdown closes on clicking away
   Then the calendar dropdown should close
 
 Scenario: Reset selection by refreshing
-  Given I have selected a time period
+  Given I am on the Dashboard page
+  And I have selected a time period
   When I refresh the page
   Then the "From" date should be filled up with the date 1 week ago from now in the format of "DD/MM/YYYY"
   And the "To" date filled up with date now in the format of "DD/MM/YYYY"
