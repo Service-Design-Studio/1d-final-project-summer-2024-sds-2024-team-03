@@ -2,7 +2,6 @@ Feature: Date filter dropdown for Dashboard
 
 Scenario: View time period
   Given I am on the Dashboard page
-  And there are sources in the dataset
   And the earliest and latest dates are available
   Then the "From" date should be filled up with the date 1 week ago from now in the format of "DD/MM/YYYY"
   And any dates earlier than the earliest date among all the sources greyed out and unclickable
