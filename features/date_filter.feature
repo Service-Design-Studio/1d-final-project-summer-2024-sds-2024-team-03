@@ -1,55 +1,36 @@
-Feature: Filter features for the Dashboard
+Feature: Date filter dropdown for Dashboard
 
-Background: Data has been added to the database
-
-  Given the following feedback exists:
-  |date       |feedback                      |product         |subcategory              |feedback_category|sentiment   |sentiment_score|source                  |
-  |01/01/2024 |Great product!                |Investments     |Home Loan/Mortgage       |Others           |Frustrated  |0.2            |Product Survey          |
-  |02/01/2024 |Not satisfied                 |Unsecured Loans |compliments              |Process Related  |Unsatisfied |1.7            |Call Centre             |
-  |03/01/2024 |Average experience            |Others          |customer service issues  |application      |Unsatisfied |2.5            |Social Media            |
-  |04/01/2024 |Excellent service             |DBS Treasure    |application process      |Fee Related      |Satisfied   |4.1            |Problem Solution Survey |
-  |05/01/2024 |Could be better               |Secured Loans   |Others                   |Staff Related    |Neutral     |2.9            |Social Media            |
-  |06/01/2024 |Loved the features!           |DBS Treasure    |Others                   |application      |Excited     |4.7            |Product Survey          |
-  |07/01/2024 |Disappointed with the quality |Investments     |compliments              |fee Related      |Unsatisfied |1.3            |Call Centre             |
-  |08/01/2024 |Satisfactory performance      |Others          |Home Loan/Mortgage       |process Related  |Satisfied   |3.6            |Problem Solution Survey |
-  |09/01/2024 |Amazing user experience       |Others          |compliments              |application      |Excited     |4.9            |Social Media            |
-  |10/01/2024 |Needs improvement             |Unsecured Loans |application process      |Others           |Unsatisfied |2.1            |Product Survey          |
-  Then 10 seed feedback should exist
-
-Scenario: No selection of products
+Scenario: View time period
   Given I am on the Dashboard page
-  When No Products are selected
-  Then I should see the overall sentiment score as '0/5'
-  And I should see the distribution of sentiment as '0, 0, 0, 0, 0'
+  And there are sources in the dataset
+  And the earliest and latest dates are available
+  Then the "From" date should be filled up with the date 1 week ago from now in the format of "DD/MM/YYYY"
+  And any dates earlier than the earliest date among all the sources greyed out and unclickable
+  And the "To" date filled up with date now in the format of "DD/MM/YYYY"
+  And any dates later than the latest date among all the sources greyed out and unclickable
 
-Scenario: All Products and Sources Selected for 01/01/2024
+Scenario: Calendar dropdown
   Given I am on the Dashboard page
-  When the date is set from '01/01/2024' to '01/01/2024'
-  And All Sources are selected
-  And All Products are selected
-  Then I should see the overall sentiment score as '4.1/5'
-  And I should see the distribution of sentiment as '30.0, 40.0, 0, 20.0, 10.0'
+  When I click on the "From" dropdown button
+  Then I should see the calendar dropdown
+  And it should be clickable
 
-Scenario: Only selecting Investments as the products for all dates and sources
+Scenario: Calendar dropdown closes on selection 
   Given I am on the Dashboard page
-  When the date is set from '01/01/2024' to '10/01/2024'
-  And All Sources are selected
-  And the products selected are: 'Investments'
-  Then I should see the overall sentiment score as '2.3/5'
-  And I should see the distribution of sentiment as '11.1, 55.6, 22.2, 0, 11.1'
+  And I have the "From" calendar dropdown opened
+  When I select a date
+  Then the calendar dropdown should close
+  And the "From" date should be filled up in the format of "DD/MM/YYYY"
 
-Scenario: Only selecting Call Centre as the source for all dates and products
+Scenario: Calendar dropdown closes on clicking away
   Given I am on the Dashboard page
-  When the date is set from '01/01/2024' to '10/01/2024'
-  And the sources selected are: 'Product Survey'
-  And All Products are selected
-  Then I should see the overall sentiment score as '2.1/5'
-  And I should see the distribution of sentiment as '30.0, 25.0, 25.0, 16.7, 3.3'
+  And I have the "From" calendar dropdown opened
+  When I click away from the calendar dropdown
+  Then the calendar dropdown should close
 
-Scenario: All Products and Sources Selected for all dates
+Scenario: Reset selection by refreshing
   Given I am on the Dashboard page
-  When the date is set from '01/01/2024' to '10/01/2024'
-  And All Sources are selected
-  And All Products are selected
-  Then I should see the overall sentiment score as '2.2/5'
-  And I should see the distribution of sentiment as '28.6, 23.8, 27.0, 15.9, 4.8'
+  And I have selected a time period
+  When I refresh the page
+  Then the "From" date should be filled up with the date 1 week ago from now in the format of "DD/MM/YYYY"
+  And the "To" date filled up with date now in the format of "DD/MM/YYYY"
