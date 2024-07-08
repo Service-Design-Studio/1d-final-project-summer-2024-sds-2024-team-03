@@ -14,6 +14,7 @@ const urlPrefix = process.env.NODE_ENV === "development" ? "http://localhost:300
 
 describe("Calendar Component", () => {
   beforeEach(() => {
+    jest.spyOn(global.console, 'error').mockImplementation(() => jest.fn());
     fetchMock.resetMocks()
     fetchMock.mockResponseOnce(
           JSON.stringify({

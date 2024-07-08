@@ -29,6 +29,8 @@ const renderSentimentScoreGraph = (props = {}) =>
 
 describe("SentimentScoreGraph Component", () => {
   beforeEach(() => {
+    jest.spyOn(global.console, 'error').mockImplementation(() => jest.fn());
+    jest.spyOn(global.console, 'log').mockImplementation(() => jest.fn());
     fetchMock.resetMocks()
     fetchMock.mockResponseOnce(
         JSON.stringify(response),
