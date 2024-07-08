@@ -11,7 +11,7 @@ Scenario: Expansion of hamburger menu
   | Dashboard  |
   | Analytics  |
   | Actionables |
-  | UploadData |
+  | Upload Data |
 
 Scenario: Selections of filter carry over when going to analytics or actionables page
   Given I am on the Dashboard page

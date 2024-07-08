@@ -1,4 +1,4 @@
-Given /the following feedback exists/ do |feedback_table|
+Given(/the following feedback exists/) do |feedback_table|
   feedback_table.hashes.each do |feedback|
       Analytic.create(
         date: feedback['date'],
@@ -12,40 +12,36 @@ Given /the following feedback exists/ do |feedback_table|
   end
 end
 
-Then /(.*) seed feedback should exist/ do |n_seeds|
+Then(/(.*) seed feedback should exist/) do |n_seeds|
   expect(Analytic.count).to eq(n_seeds.to_i)
 end
 
-Given /I am on the Dashboard page/ do
+Given(/I am on the Dashboard page/) do
   visit root_path
 end
 
-When /No Products are selected/ do
-end
-
-
-And /All Products are selected/ do
+And(/All Products are selected/) do
   select_all_products
 end
 
-And /the products selected are: '(.*)'/ do |products|
+And(/the products selected are: '(.*)'/) do |products|
   select_products(products.split(', '))
 end
 
-And /All Sources are selected/ do
+And(/All Sources are selected/) do
   select_all_sources
 end
 
-And /the sources selected are: '(.*)'/ do |sources|
+And(/the sources selected are: '(.*)'/) do |sources|
   select_sources(sources.split(', '))
 end
 
-When /the date is set from '(.*)' to '(.*)'/ do |start_date, end_date|
+When(/the date is set from '(.*)' to '(.*)'/) do |start_date, end_date|
   set_date_range(start_date, end_date)
 
 end
 
-Then /I should see the overall sentiment score as '(.*)'/ do |expected_score|
+Then(/I should see the overall sentiment score as '(.*)'/) do |expected_score|
   sleep(7)
   full_text = find('#overall-sentiment-score').text
   actual_score = full_text.split("\n")[1]
@@ -53,7 +49,7 @@ Then /I should see the overall sentiment score as '(.*)'/ do |expected_score|
 
 end
 
-Then /I should see the distribution of sentiment as '(.*)'/ do |expected_distribution|
+Then(/I should see the distribution of sentiment as '(.*)'/) do |expected_distribution|
   # Find the element containing the sentiment distribution
   full_text = find('#sentiment-distribution').text
 
@@ -66,8 +62,7 @@ end
 
 
 
-
-
+# helper methods
 def select_all_products
   # Ensure the dropdown is visible and interactable
   dropdown = find('#filter-product')
@@ -94,8 +89,11 @@ end
 def select_products(products)
   # Ensure the dropdown is visible and interactable
   dropdown = find('#filter-product')
+  using_wait_time(10) do
+    expect(page).not_to have_css('.MuiBackdrop-root')
+  end
   dropdown.click  # Open the dropdown to see the options
-  sleep(4)
+  expect(page).to have_css('.MuiMenuItem-root', wait: 10)
 
   # Loop through each product, find it in the dropdown by text, and click to select
   products.each do |product|
@@ -127,8 +125,11 @@ end
 def select_sources(sources)
   # Ensure the dropdown is interactable
   dropdown = find('#filter-source')
+  using_wait_time(10) do
+    expect(page).not_to have_css('.MuiBackdrop-root')
+  end
   dropdown.click  # Open the dropdown
-  sleep(4)
+  expect(page).to have_css('.MuiMenuItem-root', wait: 10)
 
   # Iterate through the sources to select
   sources.each do |source|
@@ -150,6 +151,5 @@ def set_date_range(start_date, end_date)
   find('#to-date').set(end_date)
   sleep(0.2)
   # Additional actions like submitting the form or clicking away to trigger any validations or updates can be added here
-  find('body').click # to close date picker if it stays open
+  find('header').click # to close date picker if it stays open
 end
-
