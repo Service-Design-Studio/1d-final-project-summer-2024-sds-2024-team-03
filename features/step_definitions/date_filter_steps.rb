@@ -6,20 +6,20 @@ require 'uri'
 
 # Scenario: View time period
 
-Given /there are sources in the dataset/ do
+Given(/there are sources in the dataset/) do
   @sources = get_sources_from_dataset
 end
 
-Given /the earliest and latest dates are available/ do
+Given(/the earliest and latest dates are available/) do
   @dates = get_earliest_and_latest_dates
 end
 
-Then /the "From" date should be filled up with the date 1 week ago from now in the format of "DD\/MM\/YYYY"/ do
+Then(/the "From" date should be filled up with the date 1 week ago from now in the format of "DD\/MM\/YYYY"/) do
   from_date = (Date.today - 7).strftime("%d/%m/%Y")
   expect(find("#from-date").value).to eq from_date
 end
 
-Then /any dates earlier than the earliest date among all the sources greyed out and unclickable/ do
+Then(/any dates earlier than the earliest date among all the sources greyed out and unclickable/) do
   earliest_date = Date.parse(@dates[:earliest_date])
   
   # Extract the month and year from the earliest_date
@@ -39,12 +39,12 @@ Then /any dates earlier than the earliest date among all the sources greyed out 
   end
 end
 
-Then /the "To" date filled up with date now in the format of "DD\/MM\/YYYY"/ do
+Then(/the "To" date filled up with date now in the format of "DD\/MM\/YYYY"/) do
   to_date = Date.today.strftime("%d/%m/%Y")
   expect(find("#to-date").value).to eq to_date
 end
 
-Then /any dates later than the latest date among all the sources greyed out and unclickable/ do
+Then(/any dates later than the latest date among all the sources greyed out and unclickable/) do
   latest_date = Date.parse(@dates[:latest_date])
 
   # Extract the month and year from the latest_date
@@ -71,11 +71,11 @@ When(/I click on the "From" dropdown button/) do
   find('.MuiButtonBase-root.MuiIconButton-root.MuiIconButton-sizeMedium.css-slyssw', match: :first).click
 end
 
-Then /I should see the calendar dropdown/ do
+Then(/I should see the calendar dropdown/) do
   expect(page).to have_css('.MuiPaper-root.MuiPickersPopper-paper', visible: true)
 end
 
-Then /it should be clickable/ do
+Then(/it should be clickable/) do
   calendar_dates = all('.MuiPickersDay-root[role="gridcell"]', visible: true)
 
   clickable_found = false
@@ -100,7 +100,7 @@ end
 
 
 # Scenario: Calendar dropdown closes on selection
-Given /I have the "From" calendar dropdown opened/ do
+Given(/I have the "From" calendar dropdown opened/) do
   sleep 1
   dropdown_button = find('.MuiButtonBase-root.MuiIconButton-root.MuiIconButton-sizeMedium.css-slyssw', match: :first)
   unless page.has_css?('.MuiPaper-root.MuiPickersPopper-paper', visible: true)
@@ -109,7 +109,7 @@ Given /I have the "From" calendar dropdown opened/ do
   end
 end
 
-When /^I select a date$/ do
+When(/^I select a date$/) do
   # Find all date elements in the calendar
   calendar_dates = all('.MuiPickersDay-root[role="gridcell"]', visible: true)
   # Initialize a variable to store the clicked date
@@ -131,27 +131,27 @@ When /^I select a date$/ do
   @clicked_date = clicked_date
 end
 
-Then /the calendar dropdown should close/ do
+Then(/the calendar dropdown should close/) do
   expect(page).to have_no_css('.MuiPaper-root.MuiPickersPopper-paper', visible: true)
 end
 
-Then /the "From" date should be filled up in the format of "DD\/MM\/YYYY"/ do
+Then(/the "From" date should be filled up in the format of "DD\/MM\/YYYY"/) do
   # Parse the stored clicked date to format it correctly
   selected_date = Date.parse("#{@clicked_date}/#{Time.now.month}/#{Time.now.year}").strftime("%d/%m/%Y")
   expect(find("#from-date").value).to eq selected_date
 end
 
 # Scenario: Calendar dropdown closes on clicking away
-When /I click away from the calendar dropdown/ do
+When(/I click away from the calendar dropdown/) do
   find("header").click
 end
 
 # Scenario: Reset selection by refreshing
-Given /I have selected a time period/ do
+Given(/I have selected a time period/) do
   step 'I select a date'
 end
 
-When /I refresh the page/ do
+When(/I refresh the page/) do
   visit root_path
 end
 

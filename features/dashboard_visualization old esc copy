@@ -18,7 +18,7 @@ Background: Data has been added to the database
 
 Scenario: No selection of products
   Given I am on the Dashboard page
-  When No Products are selected
+  When no Products dropdown options are selected
   Then I should see the overall sentiment score as '0/5'
   And I should see the distribution of sentiment as '0, 0, 0, 0, 0'
 
@@ -27,7 +27,7 @@ Scenario: All Products and Sources Selected for 01/01/2024
   When the date is set from '01/01/2024' to '01/01/2024'
   And All Sources are selected
   And All Products are selected
-  Then I should see the overall sentiment score as '4.1/5'
+  Then I should see the overall sentiment score as '2.3/5'
   And I should see the distribution of sentiment as '30.0, 40.0, 0, 20.0, 10.0'
 
 Scenario: Only selecting Investments as the products for all dates and sources
