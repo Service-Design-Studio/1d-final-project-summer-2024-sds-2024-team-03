@@ -5,11 +5,6 @@ require 'uri'
 # Feature: Control of Time Period on Dashboard Page
 
 # Scenario: View time period
-
-Given(/there are sources in the dataset/) do
-  @sources = get_sources_from_dataset
-end
-
 Given(/the earliest and latest dates are available/) do
   @dates = get_earliest_and_latest_dates
 end
@@ -158,26 +153,6 @@ end
 
 
 # Helper methods
-def get_sources_from_dataset
-  url_prefix = 'http://localhost:3000'  # URL prefix is the same for both environments
-
-  uri = URI("#{url_prefix}/analytics/filter_sources")
-
-  begin
-    response = Net::HTTP.get_response(uri)
-
-    unless response.is_a?(Net::HTTPSuccess)
-      raise "Failed to fetch sources: #{response.message}"
-    end
-
-    JSON.parse(response.body).map(&:to_s).sort  # Parse JSON response and sort sources
-  rescue Errno::ECONNREFUSED => e
-    raise "Connection refused: #{e.message}. Check if the server is running and the URL is correct."
-  rescue SocketError => e
-    raise "Socket error: #{e.message}. Check the URL and network connectivity."
-  end
-end
-
 def get_earliest_and_latest_dates
   url = URI("http://localhost:3000/analytics/get_earliest_latest_dates")
   response = Net::HTTP.get(url)
