@@ -1,6 +1,6 @@
 import React from "react";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
-import SentimentDistribution from "../dashboard/SentimentDistribution";
+import SentimentDistribution from "../Dashboard/SentimentDistribution";
 import fetchMock from "jest-fetch-mock";
 import dayjs from "dayjs";
 
@@ -16,6 +16,7 @@ const selectedSource = ["Call Centre"]
 
 describe("SentimentDistribution Component", () => {
   beforeEach(() => {
+    jest.spyOn(global.console, 'error').mockImplementation(() => jest.fn());
     fetchMock.resetMocks()
     fetchMock.mockResponseOnce(
         JSON.stringify(response),

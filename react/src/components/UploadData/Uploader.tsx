@@ -1,4 +1,6 @@
-import { DragEvent, useState } from "react";
+import React, { DragEvent, useState } from "react";
+import { Box, Modal, Typography, Button } from '@mui/material';
+import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 
 interface FileDropAttributes {
   selectedProduct: string[];
@@ -12,6 +14,12 @@ export function FileDrop({
   console.log("Source:" + selectedSource);
   const [isOver, setIsOver] = useState(false);
   const [files, setFiles] = useState<File[]>([]);
+  const [openModal, setOpenModal] = useState(false);
+  const [newFileName, setNewFilename] = useState("");
+
+  const handleCloseModal = () => {
+    setOpenModal(false);
+  }
 
   // Define the event handlers
   const handleDragOver = (event: DragEvent<HTMLDivElement>) => {
@@ -38,12 +46,11 @@ export function FileDrop({
 
       reader.onloadend = () => {
         const newFilename =
-          selectedProduct[0] + "__" + selectedSource[0] + "__" + file.name; // Append "abc" to the original filename
-        const newFile = new File([file], newFilename, { type: file.type }); // Create a new File object
+          selectedProduct[0] + "__" + selectedSource[0] + "__" + file.name; 
+        const newFile = new File([file], newFilename, { type: file.type }); 
 
-        console.log("=> onloadend:");
-        console.log("Filename:", file.name); // Print the filename
-        console.log("File:", file); // Print the filename
+        console.log("Filename:", file.name); 
+        console.log("File:", file); // can use lastModified to see if same file / uploaded alr
         console.log(reader);
         console.log(reader.result);
 
@@ -67,7 +74,8 @@ export function FileDrop({
         })
           .then((response) => {
             if (!response.ok) {
-              throw new Error("Network response was not ok");
+            setOpenModal(true);
+            throw new Error("Network response was not ok");
             }
             return response.json(); // or response.text() if the response is not JSON
           })
@@ -97,13 +105,32 @@ export function FileDrop({
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        height: "50px",
-        width: "300px",
+        height: "600px",
+        width: "100%",
         border: "1px dotted",
-        backgroundColor: isOver ? "lightgray" : "white",
+        backgroundColor: isOver ? "gray" : "lightgray",
       }}
     >
-      Drag and drop some files here
+      <CloudUploadIcon sx={{ color: 'grey'}} fontSize="large" />
+      Drag and drop .csv/.xls files here
+      <Modal
+        open={openModal}
+        onClose={handleCloseModal}
+        aria-labelledby="modal-title"
+        aria-describedby="modal-description"
+      >
+        <Box sx={{ p: 2, bgcolor: 'background.paper', margin: 'auto', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', position: 'absolute' }}>
+          <Typography id="modal-title" variant="h6" component="h2">
+            Uploaded successfully:{files.map((file, index) => (
+              <React.Fragment key={index}>
+                <br /> 
+                {selectedProduct[0] + "__" + selectedSource[0] + "__" + file.name}
+              </React.Fragment>
+            ))}
+          </Typography>
+          <Button onClick={handleCloseModal}>Close</Button>
+        </Box>
+      </Modal>
     </div>
   );
 }

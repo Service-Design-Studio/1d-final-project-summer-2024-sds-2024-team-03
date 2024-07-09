@@ -28,8 +28,25 @@
 /tmp/storage/*
 !/tmp/storage/
 !/tmp/storage/.keep
-
 /public/assets
+
+# Ignore coverage output of test suites
+# /coverage
+
+# Ignore RSpec reports
+# /spec/reports
+
+# Ignore Cucumber reports
+# /features/reports
+
+# Ignore JUnit/XML reports
+# **/*.xml
+
+# Ignore Python related files
+*.pyc
+__pycache__
+*.pyo
+*.pyd
 
 # Ignore master key for decrypting credentials and more.
 /config/master.key

@@ -14,7 +14,10 @@ const mockSetSelectedSource = jest.fn();
 const mockSetSelectedMenu = jest.fn();
 
 describe("Dashboard Components", () => {
-  fetchMock.mockResponses(
+    // Suppress errors, logs
+    jest.spyOn(global.console, 'error').mockImplementation(() => jest.fn());
+    jest.spyOn(global.console, 'log').mockImplementation(() => jest.fn());
+    fetchMock.mockResponses(
     // Calendar
     [
       JSON.stringify({
