@@ -405,6 +405,7 @@ DEPENDENCIES
   capybara
   cucumber-rails
   database_cleaner
+  database_cleaner-active_record
   debug
   factory_bot_rails
   google-cloud-storage
@@ -415,6 +416,7 @@ DEPENDENCIES
   rack-cors
   rails (~> 7.1.3, >= 7.1.3.4)
   rails-controller-testing
+  rspec-mocks
   rspec-rails
   selenium-webdriver
   simplecov

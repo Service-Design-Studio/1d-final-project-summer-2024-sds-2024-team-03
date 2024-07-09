@@ -73,9 +73,11 @@ group :test do
   gem "capybara"
   gem "selenium-webdriver"
   gem 'rspec-rails'
+  gem 'rspec-mocks'
   gem 'webmock'
   gem 'cucumber-rails', require: false
   gem 'database_cleaner'
+  gem 'database_cleaner-active_record'
   gem 'simplecov'
   gem 'rails-controller-testing'
 
