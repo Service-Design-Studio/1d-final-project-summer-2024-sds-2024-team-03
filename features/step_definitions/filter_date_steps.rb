@@ -19,6 +19,24 @@ Then(/the "To" date filled up with date now in the format of "DD\/MM\/YYYY"/) do
   expect(find("#to-date").value).to eq to_date
 end
 
+# Scenario: Today's date is circled
+Given(/I have the "To" calendar dropdown opened/) do
+  sleep 1
+  dropdown_button = find('#to-date + .MuiInputAdornment-root button', match: :first)
+  unless page.has_css?('.MuiPaper-root.MuiPickersPopper-paper', visible: true)
+    dropdown_button.click
+    expect(page).to have_css('.MuiPaper-root.MuiPickersPopper-paper', visible: true)
+  end
+end
+
+Then(/today's date is circled/) do
+  today_date = Date.today
+  circled_date_element = find('.MuiPickersDay-root.Mui-selected')
+  circled_date_text = circled_date_element.text.strip
+  circled_date_full = Date.parse("#{circled_date_text}/#{today_date.month}/#{today_date.year}")
+  expect(circled_date_full).to eq today_date
+end
+
 # Scenario: Clickable and unclickable dates based on earliest date
 When(/^I select the earliest date$/) do
   earliest_date = Date.parse(@dates[:earliest_date])
@@ -64,7 +82,7 @@ Then(/any clickable dates are later than or equal to the earliest date among all
   end
 end
 
-# Scenario: Clickable and unclickable dates based on latest date
+# Scenario: Clickable and unclickable dates based on today or latest date
 When(/^I select the latest date$/) do
   latest_date = Date.parse(@dates[:latest_date])
   latest_date_text = latest_date.strftime("%d/%m/%Y")
@@ -172,6 +190,19 @@ When(/I click away from the calendar dropdown/) do
   find("header").click
 end
 
+# Scenario: Selected date is circled on calendar dropdown
+When(/I reopen the calendar dropdown/) do
+  step 'I click on the "From" dropdown button'
+end
+
+Then(/selected date is circled/) do
+  selected_date = Date.parse("#{@clicked_date}/#{Time.now.month}/#{Time.now.year}")
+  circled_date_element = find('.MuiPickersDay-root.Mui-selected')
+  circled_date_text = circled_date_element.text.strip
+  circled_date_full = Date.parse("#{circled_date_text}/#{selected_date.month}/#{selected_date.year}")
+  expect(circled_date_full).to eq selected_date
+end
+
 # Scenario: Reset selection by refreshing
 Given(/I have selected a time period/) do
   step 'I select a date'
@@ -182,15 +213,6 @@ When(/I refresh the page/) do
 end
 
 # Scenario: Disable invalid date range (From later than To)
-Given(/I have the "To" calendar dropdown opened/) do
-  sleep 1
-  dropdown_button = find('#to-date + .MuiInputAdornment-root button', match: :first)
-  unless page.has_css?('.MuiPaper-root.MuiPickersPopper-paper', visible: true)
-    dropdown_button.click
-    expect(page).to have_css('.MuiPaper-root.MuiPickersPopper-paper', visible: true)
-  end
-end
-
 Then(/any unclickable from-dates are later than to-date/) do
   to_date_value = find("#to-date").value
   to_date = Date.parse(to_date_value)

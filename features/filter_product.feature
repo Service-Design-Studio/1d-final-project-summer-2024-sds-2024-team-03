@@ -10,6 +10,23 @@ Scenario: Hovering on a product dropdown option updates its color
   And I hover over the product dropdown option
   Then the product dropdown option should be highlighted on hover
 
+Scenario: Selecting a product colors it red and adds it to the listbox
+  Given I am on the Dashboard page
+  And there are products in the dataset
+  When I click on the "Products" dropdown button
+  And I select a product
+  Then the selected product dropdown option should be red
+  And the selected product is added to the listbox
+
+Scenario: Deselecting a product resets its color and removes it from the listbox
+  Given I am on the Dashboard page
+  And there are products in the dataset
+  When I click on the "Products" dropdown button
+  And I select a product
+  And I deselect the same product
+  Then the deselected product dropdown option should be reverted to white
+  And the deselected product is removed from the listbox
+
 Scenario: Available product dropdown options
   Given I am on the Dashboard page
   When I click on the "Products" dropdown button

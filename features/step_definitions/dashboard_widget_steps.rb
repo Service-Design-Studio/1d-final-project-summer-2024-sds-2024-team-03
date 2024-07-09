@@ -20,6 +20,28 @@ Given(/I am on the Dashboard page/) do
   visit root_path
 end
 
+Then(/^(.*) score is colored (.*)$/) do |sentiment, color|
+  # Find the element with the specified sentiment text
+  element = find("p.MuiTypography-root.MuiTypography-body1.css-9l3uo3", text: /#{sentiment}/)
+  style = element[:style]
+
+  # Verify that the style contains the expected color
+  case color
+    when "red"
+      expect(style).to include("color: red")
+    when "orange"
+      expect(style).to include("color: orange")
+    when "grey"
+      expect(style).to include("color: grey")
+    when "green"
+      expect(style).to include("color: green")
+    when "darkgreen"
+      expect(style).to include("color: darkgreen")
+    else
+      raise "Unknown color: #{color}"
+  end
+end
+
 And(/All Products are selected/) do
   select_all_products
 end
@@ -41,7 +63,6 @@ When(/the date is set from '(.*)' to '(.*)'/) do |start_date, end_date|
 end
 
 Then(/I should see the overall sentiment score as '(.*)'/) do |expected_score|
-  sleep(2)
   full_text = find('#overall-sentiment-score').text
   actual_score = full_text.split("\n")[1]
   expect(actual_score).to eq(expected_score)
@@ -93,10 +114,9 @@ def select_all_products
   # Ensure the dropdown is visible and interactable
   dropdown = find('#filter-product')
   dropdown.click  # Open the dropdown to see the options
-  sleep(2)
 
   # Wait for options to be visible
-  page.has_css?('.filter-product-option')
+  page.has_css?('.filter-product-option', wait: 1) 
 
   # Select all options by clicking each one
   all('.filter-product-option').each do |option|
@@ -114,11 +134,11 @@ end
 def select_products(products)
   # Ensure the dropdown is visible and interactable
   dropdown = find('#filter-product')
-  using_wait_time(10) do
+  using_wait_time(2) do
     expect(page).not_to have_css('.MuiBackdrop-root')
   end
   dropdown.click  # Open the dropdown to see the options
-  expect(page).to have_css('.MuiMenuItem-root', wait: 10)
+  expect(page).to have_css('.MuiMenuItem-root', wait: 1)
 
   # Loop through each product, find it in the dropdown by text, and click to select
   products.each do |product|
@@ -134,16 +154,15 @@ end
 def select_all_sources
   # Open the dropdown for sources
   find('#filter-source').click
-  sleep(2)
 
-  page.has_css?('.filter-source-option')
+  page.has_css?('.filter-source-option', wait: 1)
 
   # Select all options by clicking each one
   all('.filter-source-option').each do |option|
     option.click
   end
 
-  # Optionally, click outside the dropdown to close it
+  # Close dropdown by clicking outside of it
   find('body').click
 end
 
@@ -151,31 +170,27 @@ end
 def select_sources(sources)
   # Ensure the dropdown is interactable
   dropdown = find('#filter-source')
-  using_wait_time(10) do
+  using_wait_time(2) do
     expect(page).not_to have_css('.MuiBackdrop-root')
   end
   dropdown.click  # Open the dropdown
-  expect(page).to have_css('.MuiMenuItem-root', wait: 10)
+  expect(page).to have_css('.MuiMenuItem-root', wait: 1)
 
   # Iterate through the sources to select
   sources.each do |source|
-    # Use the text of the source to find and click the corresponding option
     find('.MuiMenuItem-root', text: source, match: :prefer_exact).click
   end
 
-  # Close the dropdown by clicking outside of it
+  # Close dropdown by clicking outside of it
   find('body').click
 end
 
 
 def set_date_range(start_date, end_date)
-  sleep(0.2)
   # Fill in the 'From Date' input
   find('#from-date').set(start_date)
-  sleep(0.2)
   # Fill in the 'To Date' input
   find('#to-date').set(end_date)
-  sleep(0.2)
   # Additional actions like submitting the form or clicking away to trigger any validations or updates can be added here
   find('header').click # to close date picker if it stays open
 end
