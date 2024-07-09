@@ -178,7 +178,7 @@ Given(/I have selected a time period/) do
 end
 
 When(/I refresh the page/) do
-  visit root_path
+  visit current_path
 end
 
 # Scenario: Disable invalid date range (From later than To)

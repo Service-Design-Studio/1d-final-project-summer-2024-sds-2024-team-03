@@ -1,4 +1,7 @@
 Feature: Product filter dropdown for Dashboard
+  As a customer experience team member,
+  I want to filter the data by products
+  So that I can curate product-specific insights
 
 Scenario: Hovering on a product dropdown option updates its color
   Given I am on the Dashboard page
