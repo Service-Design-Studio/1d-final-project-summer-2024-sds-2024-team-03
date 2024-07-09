@@ -1,4 +1,7 @@
 Feature: Hamburger menu functionality for Dashboard
+  As a customer experience team member,
+  I want to quickly navigate to other pages while my filter selection of time, products and sources are saved
+  So that I can quickly access other pages with the same filter settings
 
 Scenario: Expansion of hamburger menu
   Given I am on <page>

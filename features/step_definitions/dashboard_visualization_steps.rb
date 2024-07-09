@@ -42,7 +42,7 @@ When(/the date is set from '(.*)' to '(.*)'/) do |start_date, end_date|
 end
 
 Then(/I should see the overall sentiment score as '(.*)'/) do |expected_score|
-  sleep(7)
+  sleep(2)
   full_text = find('#overall-sentiment-score').text
   actual_score = full_text.split("\n")[1]
   expect(actual_score).to eq(expected_score)
@@ -67,7 +67,7 @@ def select_all_products
   # Ensure the dropdown is visible and interactable
   dropdown = find('#filter-product')
   dropdown.click  # Open the dropdown to see the options
-  sleep(4)
+  sleep(2)
 
   # Wait for options to be visible
   page.has_css?('.filter-product-option')
@@ -108,7 +108,7 @@ end
 def select_all_sources
   # Open the dropdown for sources
   find('#filter-source').click
-  sleep(4)
+  sleep(2)
 
   page.has_css?('.filter-source-option')
 

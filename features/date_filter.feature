@@ -1,4 +1,7 @@
 Feature: Date filter dropdown for Dashboard
+  As a Customer Experience Team Member,
+  I want to select different time periods to visualize VOCs.
+  So that I can analyze dynamic, time-sensitive data to ensure the most relevant data is used in our decision-making processes
 
 Scenario: View time period
   Given I am on the Dashboard page

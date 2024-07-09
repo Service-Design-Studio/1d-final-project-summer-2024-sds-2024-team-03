@@ -5,6 +5,9 @@
 # files.
 
 
+# require 'simplecov'
+# SimpleCov.start 'rails'
+
 require 'cucumber/rails'
 require 'capybara/cucumber'
 require 'selenium-webdriver'
@@ -18,7 +21,7 @@ Capybara.register_driver :chrome do |app|
 end
 
 Capybara.default_driver = :chrome
-Capybara.app_host = 'http://127.0.0.1:3000/feedbacks'
+Capybara.app_host = 'http://127.0.0.1:3000'
 
 
 # By default, any exception happening in your Rails application will bubble up
