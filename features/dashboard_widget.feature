@@ -16,6 +16,14 @@ Background: Data has been added to the database
   |10/01/2024 |Needs improvement             |Unsecured Loans |application process      |Others           |Unsatisfied |2.1            |Product Survey          |
   Then 10 seed feedback should exist
 
+Scenario: Sentiment distribution score is appropriately colored
+  Given I am on the Dashboard page
+  Then Frustrated score is colored red
+  And Unsatisfied score is colored orange
+  And Neutral score is colored grey
+  And Satisfied score is colored green
+  And Excited score is colored darkgreen
+
 Scenario: No selection of products
   Given I am on the Dashboard page
   When no Products dropdown options are selected
