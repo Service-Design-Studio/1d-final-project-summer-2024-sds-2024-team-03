@@ -38,7 +38,6 @@ end
 
 When(/the date is set from '(.*)' to '(.*)'/) do |start_date, end_date|
   set_date_range(start_date, end_date)
-
 end
 
 Then(/I should see the overall sentiment score as '(.*)'/) do |expected_score|
@@ -46,18 +45,45 @@ Then(/I should see the overall sentiment score as '(.*)'/) do |expected_score|
   full_text = find('#overall-sentiment-score').text
   actual_score = full_text.split("\n")[1]
   expect(actual_score).to eq(expected_score)
+end
 
+Then(/I should see the percentage change as '(.*)'/) do |expected_change|
+  # Find the element containing the percentage change text
+  element = find('h6.MuiTypography-subtitle1', text: expected_change)
+  
+  # Verify the text content
+  expect(element).to have_text(expected_change)
+  
+  # Verify the color based on the class attribute
+  class_attribute = element[:class]
+  
+  if expected_change.include?("Increase")
+    expect(class_attribute).to include('css-1p46rei') # Assuming this class indicates green color
+  elsif expected_change.include?("Decrease")
+    expect(class_attribute).to include('css-s5aq4g') # Assuming this class indicates red color
+  elsif expected_change.include?("Not Applicable")
+    expect(class_attribute).to include('css-1gcnt69') # Assuming this class indicates red color
+  end
 end
 
 Then(/I should see the distribution of sentiment as '(.*)'/) do |expected_distribution|
   # Find the element containing the sentiment distribution
   full_text = find('#sentiment-distribution').text
-
   # Extract the numerical values from the string, including zeros
   actual_distribution = full_text.scan(/\b(\d+\.\d+|\d+(?=%))/).flatten.join(', ')
-
   # Compare the extracted numbers with the expected distribution
   expect(actual_distribution).to eq(expected_distribution)
+end
+
+Then(/I should see the distribution of sentiment add up to '(.*)'/) do |distribution_sum|
+  full_text = find('#sentiment-distribution').text
+  actual_distribution = full_text.scan(/\b(\d+\.\d+|\d+(?=%))/).flatten.join(', ')
+  actual_values = actual_distribution.split(', ').map(&:to_f)
+
+  expected_sum = distribution_sum.to_f
+  tolerance = 0.11 # account for rounding error
+
+  expect((actual_values.sum - expected_sum).abs).to be <= tolerance
 end
 
 
@@ -85,7 +111,6 @@ def select_all_products
 end
 
 
-
 def select_products(products)
   # Ensure the dropdown is visible and interactable
   dropdown = find('#filter-product')
@@ -104,6 +129,7 @@ def select_products(products)
   # This step depends on whether your dropdown closes automatically upon selection or not
   find('body').click(x: 0, y: 200)
 end
+
 
 def select_all_sources
   # Open the dropdown for sources
