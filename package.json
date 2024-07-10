@@ -4,8 +4,10 @@
     "@testing-library/jest-dom": "^6.4.6",
     "@testing-library/react": "^16.0.0",
     "jest-fetch-mock": "^3.0.3",
+    "papaparse": "^5.4.1",
     "webpack": "^4.46.0",
     "webpack-cli": "^3.3.12",
+    "xlsx": "^0.18.5",
     "yarn": "^1.22.22"
   },
   "devDependencies": {

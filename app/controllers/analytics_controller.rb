@@ -1,5 +1,6 @@
 class AnalyticsController < ApplicationController
   layout 'jbaaam'
+  skip_before_action :verify_authenticity_token, only: [:uploads]
   #before_action :set_analytic, only: %i[ show edit update destroy ]
   
   def uploads
