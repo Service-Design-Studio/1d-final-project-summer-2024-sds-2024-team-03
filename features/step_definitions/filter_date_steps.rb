@@ -21,7 +21,7 @@ end
 
 # Scenario: Today's date is circled
 Given(/I have the "To" calendar dropdown opened/) do
-  sleep 1
+  sleep(0.1)
   dropdown_button = find('#to-date + .MuiInputAdornment-root button', match: :first)
   unless page.has_css?('.MuiPaper-root.MuiPickersPopper-paper', visible: true)
     dropdown_button.click
@@ -46,7 +46,7 @@ When(/^I select the earliest date$/) do
 end
 
 When(/I have the "From" calendar dropdown opened/) do
-  sleep 1
+  sleep(0.1)
   dropdown_button = find('#from-date + .MuiInputAdornment-root button', match: :first)
   unless page.has_css?('.MuiPaper-root.MuiPickersPopper-paper', visible: true)
     dropdown_button.click

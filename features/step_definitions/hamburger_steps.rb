@@ -19,10 +19,10 @@ end
 
 Then(/the hamburger menu should expand out to reveal "(.*?)", "(.*?)", "(.*?)", "(.*?)"/) do |dashboard, analytics, actions, upload|
   within('.MuiList-root.MuiList-padding') do
-    expect(page).to have_css('.MuiListItemText-primary', text: dashboard, wait: 10)
-    expect(page).to have_css('.MuiListItemText-primary', text: analytics, wait: 10)
-    expect(page).to have_css('.MuiListItemText-primary', text: actions, wait: 10)
-    expect(page).to have_css('.MuiListItemText-primary', text: upload, wait: 10)
+    expect(page).to have_css('.MuiListItemText-primary', text: dashboard, wait: 1)
+    expect(page).to have_css('.MuiListItemText-primary', text: analytics, wait: 1)
+    expect(page).to have_css('.MuiListItemText-primary', text: actions, wait: 1)
+    expect(page).to have_css('.MuiListItemText-primary', text: upload, wait: 1)
   end
 end
 

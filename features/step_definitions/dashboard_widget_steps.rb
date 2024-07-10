@@ -1,14 +1,14 @@
 Given(/the following feedback exists/) do |feedback_table|
   feedback_table.hashes.each do |feedback|
-      Analytic.create(
-        date: feedback['date'],
-        feedback: feedback['feedback'],
-        product: feedback['product'],
-        subcategory: feedback['subcategory'],
-        sentiment: feedback['sentiment'],
-        sentiment_score: feedback['sentiment_score'],
-        source: feedback['source']
-      )
+    Analytic.create(
+      date: feedback['date'],
+      feedback: feedback['feedback'],
+      product: feedback['product'],
+      subcategory: feedback['subcategory'],
+      sentiment: feedback['sentiment'],
+      sentiment_score: feedback['sentiment_score'],
+      source: feedback['source']
+    )
   end
 end
 
@@ -56,6 +56,14 @@ end
 
 And(/the sources selected are: '(.*)'/) do |sources|
   select_sources(sources.split(', '))
+end
+
+When(/All Dates are selected/) do
+  earliest_date = Date.parse(@dates[:earliest_date])
+  earliest_date_text = earliest_date.strftime("%d/%m/%Y")
+  latest_date = Date.parse(@dates[:latest_date])
+  latest_date_text = latest_date.strftime("%d/%m/%Y")
+  set_date_range(earliest_date_text, latest_date_text)
 end
 
 When(/the date is set from '(.*)' to '(.*)'/) do |start_date, end_date|
@@ -107,6 +115,17 @@ Then(/I should see the distribution of sentiment add up to '(.*)'/) do |distribu
   expect((actual_values.sum - expected_sum).abs).to be <= tolerance
 end
 
+# Scenario: Clicking on sentiment score widget redirects to Analytics page
+  When(/I click on '(.*)' widget/) do |widget_id|
+    find("##{widget_id}").click
+  end
+
+  Then(/I should be redirected to '(.*)' page/) do |expected_title|
+    page_title = find('h1')
+    actual_title = page_title.text.strip
+    expect(actual_title).to eq(expected_title)
+  end
+
 
 
 # helper methods
@@ -134,7 +153,7 @@ end
 def select_products(products)
   # Ensure the dropdown is visible and interactable
   dropdown = find('#filter-product')
-  using_wait_time(2) do
+  using_wait_time(1) do
     expect(page).not_to have_css('.MuiBackdrop-root')
   end
   dropdown.click  # Open the dropdown to see the options
@@ -170,7 +189,7 @@ end
 def select_sources(sources)
   # Ensure the dropdown is interactable
   dropdown = find('#filter-source')
-  using_wait_time(2) do
+  using_wait_time(1) do
     expect(page).not_to have_css('.MuiBackdrop-root')
   end
   dropdown.click  # Open the dropdown
