@@ -29,6 +29,7 @@ Scenario: Deselecting a product resets its color and removes it from the listbox
 
 Scenario: Available product dropdown options
   Given I am on the Dashboard page
+  And there are products in the dataset
   When I click on the "Products" dropdown button
   Then I should see all 18 products arranged alphabetically as dropdown options
 

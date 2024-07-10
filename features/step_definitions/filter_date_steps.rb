@@ -6,7 +6,8 @@ require 'uri'
 
 # Scenario: View time period
 Given(/the earliest and latest dates are available/) do
-  @dates = get_earliest_and_latest_dates
+  url = "#{Capybara.app_host}"
+  @dates = get_earliest_and_latest_dates(url)
 end
 
 Then(/the "From" date should be filled up with the date 1 week ago from now in the format of "DD\/MM\/YYYY"/) do
@@ -277,8 +278,8 @@ end
 
 
 # Helper methods
-def get_earliest_and_latest_dates
-  url = URI("http://localhost:3000/analytics/get_earliest_latest_dates")
+def get_earliest_and_latest_dates(base_url)
+  url = URI("#{base_url}/analytics/get_earliest_latest_dates")
   response = Net::HTTP.get(url)
   data = JSON.parse(response, symbolize_names: true)
   { earliest_date: data[:earliest_date], latest_date: data[:latest_date] }

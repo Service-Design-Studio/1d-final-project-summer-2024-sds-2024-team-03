@@ -6,7 +6,8 @@ require 'uri'
 
 # Scenario: Hovering on a source dropdown option updates its color
 Given(/there are sources in the dataset/) do
-  @sources = get_sources_from_dataset
+  url = "#{Capybara.app_host}"
+  @sources = get_sources_from_dataset(url)
 end
 
 When(/I click on the "Sources" dropdown button/) do
@@ -70,9 +71,12 @@ And(/I deselect the same source/) do
 end
 
 # Scenario: Available source dropdown options
-Then(/I should see all sources arranged alphabetically as dropdown options/) do
-  options = all('.filter-source-option').map(&:text)
+Then(/I should see all (\d+) sources arranged alphabetically as dropdown options/) do |count|
+  expected_sources = @sources.reject(&:empty?)
+  options = all('.filter-source-option').map(&:text).reject(&:empty?)
   expect(options).to eq options.sort
+  expect(options.size).to eq count.to_i
+  expect(options).to match_array(expected_sources)
 end
 
 # Scenario: No selection of source dropdown option
@@ -92,22 +96,10 @@ end
 
 
 # Helper methods
-def get_sources_from_dataset
-  url_prefix = 'http://localhost:3000'  # URL prefix is the same for both environments
-
-  uri = URI("#{url_prefix}/analytics/filter_sources")
-
-  begin
-    response = Net::HTTP.get_response(uri)
-
-    unless response.is_a?(Net::HTTPSuccess)
-      raise "Failed to fetch sources: #{response.message}"
-    end
-
-    JSON.parse(response.body).map(&:to_s).sort  # Parse JSON response and sort sources
-  rescue Errno::ECONNREFUSED => e
-    raise "Connection refused: #{e.message}. Check if the server is running and the URL is correct."
-  rescue SocketError => e
-    raise "Socket error: #{e.message}. Check the URL and network connectivity."
-  end
+def get_sources_from_dataset(base_url)
+  url = URI("#{base_url}/analytics/filter_sources")
+  response = Net::HTTP.get_response(url)
+  data = JSON.parse(response.body).map(&:to_s).sort
+rescue StandardError => e
+  raise "Failed to fetch products: #{e.message}"
 end
