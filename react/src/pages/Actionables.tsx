@@ -31,7 +31,7 @@ export default function Dashboard({
 }: DashboardProps) {
   return (
     <>
-      <h1>Actionable</h1>
+      <h1>Actionables</h1>
       <Box sx={{ flexGrow: 1 }}>
         <Grid container spacing={2}>
           <Grid xs={3}>
