@@ -1,10 +1,63 @@
+## Test Upload File with CURL
+
+Based on the routes.rb:
+
+```rb
+resources :analytics do
+    get 'get_earliest_latest_dates', on: :collection
+    get 'filter_products', on: :collection
+    get 'filter_sources', on: :collection
+    get 'get_sentiment_scores', on: :collection
+    get 'get_overall_sentiment_scores', on: :collection
+    get 'get_sentiments_sorted', on: :collection
+    get 'get_sentiments_distribution', on: :collection
+    post 'uploads', on: :collection # Added upload action as a collection route
+
+  end
+```
+
+Test the above RESTFUL(identify api end point by a URL pattern) api calls by:
+
+```bash
+curl -X GET http://127.0.0.1:3000/analytics/get_earliest_latest_dates
+curl -X GET http://127.0.0.1:3000/analytics/filter_products
+curl -X GET http://127.0.0.1:3000/analytics/filter_sources
+curl -X GET "http://127.0.0.1:3000/analytics/get_overall_sentiment_scores?fromDate=25/06/2024&toDate=02/07/2024&product=DBS%20Treasure&source=Product%20Survey"
+curl -X GET "http://127.0.0.1:3000/analytics/get_sentiments_distribution?fromDate=02/07/2024&toDate=09/07/2024&product=DBS%20Treasure&source=Product%20Survey"
+
+curl -X POST \
+     -H "Content-Type: multipart/form-data" \
+     -F "file=@README.md" \
+     http://127.0.0.1:3000/analytics/uploads
+```
+
+not used yet:
+
+```bash
+curl -X GET http://127.0.0.1:3000/analytics/get_sentiments_sorted
+curl -X GET http://127.0.0.1:3000/analytics/get_sentiment_scores
+```
+
+CRUD: currently no C, U or D for sprint2 (analytics)
+
+## Backend Unit Testing with Rspec
+
+1. To generate the rspeccode
+
+```bash
+bundle exec rspec
+```
+
+2. To generate code coverage
+   coverage/index.html
+
 ## Frontend Unit Testing with JestJS
 
 1. **Navigate to 'react' directory and Install Necessary Libraries:**
 
-    ```bash
-    npm i jest-environment-jsdom @babel/core @babel/preset-env @babel/preset-typescript @types/jest @types/testing-library__jest-dom babel-jest jest-fetch-mock ts-jest
-    ```
+   ```bash
+   npm i jest-environment-jsdom @babel/core @babel/preset-env @babel/preset-typescript @types/jest @types/testing-library__jest-dom babel-jest jest-fetch-mock ts-jest
+   ```
 
 2. **Initialize files**
 
@@ -77,7 +130,7 @@ tsconfig.json
 
 3. **Write tests**
 
-    Eg. for Dashboard.tsx, write tests in Dashboard.test.tsx
+   Eg. for Dashboard.tsx, write tests in Dashboard.test.tsx
 
 4. **Run Tests**
 
