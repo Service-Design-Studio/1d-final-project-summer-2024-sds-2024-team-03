@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useEffect, useState } from "react";
 import { styled } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
@@ -27,7 +27,6 @@ import Dashboard from "./pages/Dashboard";
 import Analytics from "./pages/Analytics";
 import Actionables from "./pages/Actionables";
 import UploadData from "./pages/UploadData";
-import { useState } from "react";
 
 const drawerWidth = 240;
 const theme = createTheme({
@@ -88,12 +87,23 @@ const DrawerHeader = styled("div")(({ theme }) => ({
 }));
 
 export default function MainApp() {
+
+  const getInitialState = () => {
+    const savedState = localStorage.getItem("selectedMenu");
+    return savedState ? savedState : "dashboard";
+  };
+
   const [open, setOpen] = React.useState(false);
-  const [selectedMenu, setSelectedMenu] = useState("dashboard");
+  const [selectedMenu, setSelectedMenu] = useState(getInitialState);
   const [fromDate, setFromDate] = useState(dayjs().subtract(1, "week"));
   const [toDate, setToDate] = useState(dayjs());
   const [selectedProduct, setSelectedProduct] = React.useState<string[]>([]);
   const [selectedSource, setSelectedSource] = React.useState<string[]>([]);
+
+  useEffect(() => {
+    localStorage.setItem("selectedMenu", selectedMenu);
+    console.log(`selectedMenu: ${localStorage.getItem("selectedMenu")}`)
+  }, [selectedMenu]);
 
   const handleDrawerOpen = () => {
     setOpen(true);
