@@ -16,10 +16,6 @@ Then(/(.*) seed feedback should exist/) do |n_seeds|
   expect(Analytic.count).to eq(n_seeds.to_i)
 end
 
-Given(/I am on the Dashboard page/) do
-  visit root_path
-end
-
 Then(/^(.*) score is colored (.*)$/) do |sentiment, color|
   # Find the element with the specified sentiment text
   element = find("p.MuiTypography-root.MuiTypography-body1.css-9l3uo3", text: /#{sentiment}/)
