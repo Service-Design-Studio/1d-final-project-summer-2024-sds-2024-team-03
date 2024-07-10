@@ -29,8 +29,9 @@ Scenario: Deselecting a source resets its color and removes it from the listbox
 
 Scenario: Available source dropdown options
   Given I am on the Dashboard page
+  And there are sources in the dataset
   When I click on the "Sources" dropdown button
-  Then I should see all sources arranged alphabetically as dropdown options
+  Then I should see all 5 sources arranged alphabetically as dropdown options
 
 Scenario: No selection of source dropdown option 
   Given I am on the Dashboard page
