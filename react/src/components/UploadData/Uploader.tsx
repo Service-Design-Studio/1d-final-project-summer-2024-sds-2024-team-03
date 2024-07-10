@@ -185,6 +185,7 @@ export function FileDrop({
 
   return (
     <div
+      data-testid="drop-zone"
       onDragOver={handleDragOver}
       onDragLeave={handleDragLeave}
       onDrop={handleDrop}
@@ -198,16 +199,16 @@ export function FileDrop({
         backgroundColor: isOver ? "gray" : "lightgray",
       }}
     >
-      <CloudUploadIcon sx={{ color: 'grey'}} fontSize="large" />
-      Drag and drop .csv/.xls files here
+      <CloudUploadIcon sx={{ color: 'gray'}} fontSize="large" />
+      Drag and drop .csv/.xls* files here
       <Modal
         open={openModal}
         onClose={handleCloseModal}
-        aria-labelledby="modal-title"
+        aria-labelledby="modal-content"
         aria-describedby="modal-description"
       >
         <Box sx={{ p: 2, bgcolor: 'background.paper', margin: 'auto', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', position: 'absolute' }}>
-          <Typography id="modal-title" variant="h6" component="h2">
+          <Typography id="modal-content" variant="h6" component="h2">
             {modalContent ? modalContent : (<>
         Uploaded successfully:
         {files.map((file, index) => (

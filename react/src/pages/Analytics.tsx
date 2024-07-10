@@ -8,7 +8,7 @@ import FilterSource from "../components/FilterSource";
 import Grid from "@mui/material/Unstable_Grid2";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 
-interface DashboardProps {
+interface AnalyticsProps {
   setFromDate: React.Dispatch<React.SetStateAction<Dayjs>>;
   fromDate: Dayjs;
   setToDate: React.Dispatch<React.SetStateAction<Dayjs>>;
@@ -19,7 +19,7 @@ interface DashboardProps {
   setSelectedSource: React.Dispatch<React.SetStateAction<string[]>>;
 }
 
-export default function Dashboard({
+export default function Analytics({
   setFromDate,
   fromDate,
   setToDate,
@@ -28,7 +28,7 @@ export default function Dashboard({
   setSelectedProduct,
   selectedSource,
   setSelectedSource,
-}: DashboardProps) {
+}: AnalyticsProps) {
   return (
     <>
       <h1>Analytics</h1>
