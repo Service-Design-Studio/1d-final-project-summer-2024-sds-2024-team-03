@@ -1,33 +1,25 @@
 {
   "RSpec": {
     "coverage": {
-      "/Users/adelainesuhendro/git/JBAAAM-main/app/helpers/analytics_helper.rb": {
+      "C:/Users/Matthew/Desktop/sds/1d-final-project-summer-2024-sds-2024-team-03/app/helpers/analytics_helper.rb": {
         "lines": [
           1,
           null
         ]
       },
-      "/Users/adelainesuhendro/git/JBAAAM-main/app/helpers/application_helper.rb": {
+      "C:/Users/Matthew/Desktop/sds/1d-final-project-summer-2024-sds-2024-team-03/app/helpers/application_helper.rb": {
         "lines": [
           1,
           null
         ]
       },
-      "/Users/adelainesuhendro/git/JBAAAM-main/app/helpers/feedbacks_helper.rb": {
+      "C:/Users/Matthew/Desktop/sds/1d-final-project-summer-2024-sds-2024-team-03/app/helpers/feedbacks_helper.rb": {
         "lines": [
           1,
           null
         ]
       },
-      "/Users/adelainesuhendro/git/JBAAAM-main/app/channels/application_cable/channel.rb": {
-        "lines": [
-          1,
-          1,
-          null,
-          null
-        ]
-      },
-      "/Users/adelainesuhendro/git/JBAAAM-main/app/channels/application_cable/connection.rb": {
+      "C:/Users/Matthew/Desktop/sds/1d-final-project-summer-2024-sds-2024-team-03/app/channels/application_cable/channel.rb": {
         "lines": [
           1,
           1,
@@ -35,37 +27,45 @@
           null
         ]
       },
-      "/Users/adelainesuhendro/git/JBAAAM-main/app/controllers/analytics_controller.rb": {
+      "C:/Users/Matthew/Desktop/sds/1d-final-project-summer-2024-sds-2024-team-03/app/channels/application_cable/connection.rb": {
+        "lines": [
+          1,
+          1,
+          null,
+          null
+        ]
+      },
+      "C:/Users/Matthew/Desktop/sds/1d-final-project-summer-2024-sds-2024-team-03/app/controllers/analytics_controller.rb": {
         "lines": [
           1,
           1,
           null,
           null,
           1,
+          2,
+          null,
+          2,
           1,
-          null,
           1,
-          0,
-          0,
-          null,
-          0,
-          0,
-          null,
-          1,
-          null,
-          null,
           null,
           1,
           1,
           null,
-          null,
-          null,
-          0,
-          null,
+          1,
           null,
           null,
           null,
-          0,
+          1,
+          1,
+          null,
+          null,
+          null,
+          1,
+          null,
+          null,
+          null,
+          null,
+          1,
           null,
           null,
           1,
@@ -111,7 +111,7 @@
           null,
           null,
           null,
-          0,
+          1,
           null,
           null,
           null,
@@ -150,13 +150,13 @@
           null
         ]
       },
-      "/Users/adelainesuhendro/git/JBAAAM-main/app/controllers/application_controller.rb": {
+      "C:/Users/Matthew/Desktop/sds/1d-final-project-summer-2024-sds-2024-team-03/app/controllers/application_controller.rb": {
         "lines": [
           1,
           null
         ]
       },
-      "/Users/adelainesuhendro/git/JBAAAM-main/app/jobs/application_job.rb": {
+      "C:/Users/Matthew/Desktop/sds/1d-final-project-summer-2024-sds-2024-team-03/app/jobs/application_job.rb": {
         "lines": [
           1,
           null,
@@ -167,7 +167,7 @@
           null
         ]
       },
-      "/Users/adelainesuhendro/git/JBAAAM-main/app/mailers/application_mailer.rb": {
+      "C:/Users/Matthew/Desktop/sds/1d-final-project-summer-2024-sds-2024-team-03/app/mailers/application_mailer.rb": {
         "lines": [
           1,
           1,
@@ -175,7 +175,7 @@
           null
         ]
       },
-      "/Users/adelainesuhendro/git/JBAAAM-main/app/models/analytic.rb": {
+      "C:/Users/Matthew/Desktop/sds/1d-final-project-summer-2024-sds-2024-team-03/app/models/analytic.rb": {
         "lines": [
           1,
           1,
@@ -188,14 +188,14 @@
           null
         ]
       },
-      "/Users/adelainesuhendro/git/JBAAAM-main/app/models/application_record.rb": {
+      "C:/Users/Matthew/Desktop/sds/1d-final-project-summer-2024-sds-2024-team-03/app/models/application_record.rb": {
         "lines": [
           1,
           1,
           null
         ]
       },
-      "/Users/adelainesuhendro/git/JBAAAM-main/app/services/GoogleCloudStorageService.rb": {
+      "C:/Users/Matthew/Desktop/sds/1d-final-project-summer-2024-sds-2024-team-03/app/services/GoogleCloudStorageService.rb": {
         "lines": [
           null,
           1,
@@ -215,6 +215,6 @@
         ]
       }
     },
-    "timestamp": 1720514617
+    "timestamp": 1720545539
   }
 }

@@ -72,7 +72,7 @@ class AnalyticsController < ApplicationController
                                 .where("TO_DATE(date, 'DD/MM/YYYY') BETWEEN TO_DATE(?, 'DD/MM/YYYY') AND TO_DATE(?, 'DD/MM/YYYY')", params[:fromDate], params[:toDate])
                                 .where(product: products)
                                 .where(source: sources)
-                                .order('CAST(sentiment_score AS numeric) DESC')
+                                .order(Arel.sql('CAST(sentiment_score AS numeric) DESC'))
     render json: @sentiments_sorted
   end
   

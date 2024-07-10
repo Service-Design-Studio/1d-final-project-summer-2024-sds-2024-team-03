@@ -16,9 +16,27 @@ Scenario: Expansion of hamburger menu
   | Actionables |
   | Upload Data |
 
-Scenario: Selections of filter carry over when going to analytics or actionables page
+Scenario: Page title reflects selected page
+  Given I am on the Dashboard page
+  When I select a <page> on the hamburger menu from Dashboard page
+  Then the page I am currently on shows the correct page title
+
+  Examples:
+  | page       |
+  | Analytics  |
+  | Actionables |
+  | Upload Data |
+
+Scenario: Selections of filter carry over when going to Analytics page
   Given I am on the Dashboard page
   When I select "Contact Center" and "Remittance" for the Products
   And I select "Product Survey" and "Call Centre" for the Sources
-  When I click on "Analytics" in the Hamburger Menu
-  Then I should be redirected to the Analytics Page with the same selected products and sources.
+  And I click on "Analytics" in the Hamburger Menu
+  Then I should be redirected to the selected page with the same selected products and sources.
+
+Scenario: Selections of filter carry over when going to Actionables page
+  Given I am on the Dashboard page
+  When I select "General Insurance" and "Payments" for the Products
+  And I select "5 Star Review" and "Social Media" for the Sources
+  And I click on "Actionables" in the Hamburger Menu
+  Then I should be redirected to the selected page with the same selected products and sources.

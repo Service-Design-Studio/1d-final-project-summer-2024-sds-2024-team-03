@@ -25,6 +25,50 @@ Then(/the source dropdown option should be highlighted on hover/) do
   expect(dropdown_option[:class]).to include('hovered')
 end
 
+# Scenario: Clicking a source dropdown option colors it red and adds it to the listbox
+And(/I select a source/) do
+  source = find('.filter-source-option', match: :first)
+  source.click
+  @selectedsource = source.text.strip
+end
+
+Then(/the (.*) source dropdown option should be (.*)/) do |selectdeselect, color|
+  # Find the dropdown option based on @selectedsource
+  source_option = find('.filter-source-option', text: @selectedsource, visible: true)
+
+  case color
+  when 'red'
+    # Verify that the selected source has Mui-selected class
+    expect(source_option[:class]).to include('Mui-selected')
+  when 'reverted to white'
+    # Verify that the selected source does not have Mui-selected class
+    expect(source_option[:class]).not_to include('Mui-selected')
+  end
+end
+
+Then(/the (.*) source is (.*) the listbox/) do |selectdeselect, addremove|
+  find('body').click
+  # Find all source values currently in the listbox
+  source_value = all('.filter-source-value').map(&:text)
+  
+  if selectdeselect == 'selected' && addremove == 'added to'
+    # Ensure the selected source is in the listbox
+    expect(source_value).to include(@selectedsource)
+  elsif selectdeselect == 'deselected' && addremove == 'removed from'
+    # Ensure the deselected source is not in the listbox
+    expect(source_value).not_to include(@selectedsource)
+  else
+    # Handle unsupported combinations
+    raise "Unsupported combination: #{selectdeselect}, #{addremove}"
+  end
+end
+
+# Scenario: Unclicking a selected source dropdown option resets its color and removes it from the listbox
+And(/I deselect the same source/) do
+  raise "No source selected" unless @selectedsource
+  find('.filter-source-option', text: @selectedsource).click
+end
+
 # Scenario: Available source dropdown options
 Then(/I should see all sources arranged alphabetically as dropdown options/) do
   options = all('.filter-source-option').map(&:text)
@@ -49,7 +93,7 @@ end
 
 # Helper methods
 def get_sources_from_dataset
-  url_prefix = 'http://localhost:3000'  # URL prefix is the same for both environments
+  url_prefix = "#{Capybara.app_host}"  # URL prefix is the same for both environments
 
   uri = URI("#{url_prefix}/analytics/filter_sources")
 

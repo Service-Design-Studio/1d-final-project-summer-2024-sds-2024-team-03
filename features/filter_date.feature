@@ -9,6 +9,11 @@ Scenario: View time period
   Then the "From" date should be filled up with the date 1 week ago from now in the format of "DD/MM/YYYY"
   And the "To" date filled up with date now in the format of "DD/MM/YYYY"
 
+Scenario: Today's date is circled
+  Given I am on the Dashboard page
+  When I have the "To" calendar dropdown opened
+  Then today's date is circled
+
 Scenario: Clickable and unclickable dates based on earliest date
   Given I am on the Dashboard page
   And the earliest and latest dates are available
@@ -17,7 +22,7 @@ Scenario: Clickable and unclickable dates based on earliest date
   Then any unclickable dates are earlier than the earliest date among all sources
   And any clickable dates are later than or equal to the earliest date among all sources
 
-Scenario: Clickable and unclickable dates based on latest date
+Scenario: Clickable and unclickable dates based on today or latest date
   Given I am on the Dashboard page
   And the earliest and latest dates are available
   When I select the latest date
@@ -43,6 +48,13 @@ Scenario: Calendar dropdown closes on clicking away
   And I have the "From" calendar dropdown opened
   When I click away from the calendar dropdown
   Then the calendar dropdown should close
+
+Scenario: Selected date is circled on calendar dropdown
+  Given I am on the Dashboard page
+  When I click on the "From" dropdown button
+  And I select a date
+  And I reopen the calendar dropdown
+  Then selected date is circled
 
 Scenario: Reset selection by refreshing
   Given I am on the Dashboard page
