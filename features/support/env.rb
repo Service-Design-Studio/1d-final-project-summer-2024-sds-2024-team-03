@@ -6,7 +6,9 @@
 
 
 # require 'simplecov'
+# puts "Starting SimpleCov"
 # SimpleCov.start 'rails'
+# puts "SimpleCov started"
 
 require 'cucumber/rails'
 require 'capybara/cucumber'
