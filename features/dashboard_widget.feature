@@ -62,12 +62,23 @@ Scenario: Only selecting Call Centre as the source for all dates and products
   And I should see the distribution of sentiment as '22.6, 28.4, 19.8, 20.0, 9.2'
   And I should see the distribution of sentiment add up to '100'
 
-Scenario: All Products Sources Selected for all dates
+Scenario: All Products Sources Selected for All Dates
   Given I am on the Dashboard page
-  When the date is set from '01/01/2024' to '10/01/2024'
+  And the earliest and latest dates are available
+  When All Dates are selected
   And All Sources are selected
   And All Products are selected
-  Then I should see the overall sentiment score as '2.2/5'
-  And I should see the percentage change as '↑ 5.9% Increase'
-  And I should see the distribution of sentiment as '28.6, 23.8, 27.0, 15.9, 4.8'
+  Then I should see the overall sentiment score as '2.5/5'
+  And I should see the percentage change as '↓ -13.8% Decrease'
+  And I should see the distribution of sentiment as '21.1, 29.3, 20.6, 19.9, 9.1'
   And I should see the distribution of sentiment add up to '100'
+
+Scenario: Clicking on sentiment score widget redirects to Analytics page
+  Given I am on the Dashboard page
+  When I click on 'overall-sentiment-score' widget
+  Then I should be redirected to 'Analytics' page
+
+Scenario: Clicking on sentiment distribution widget redirects to Analytics page
+  Given I am on the Dashboard page
+  When I click on 'sentiment-distribution' widget
+  Then I should be redirected to 'Analytics' page
