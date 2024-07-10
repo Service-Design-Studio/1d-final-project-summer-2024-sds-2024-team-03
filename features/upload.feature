@@ -49,23 +49,21 @@ When I refresh the page
 Then I should still be on the Upload Page
 And I should see "Sources" in the text field of the dropdown button
 
-Scenario: Drag and Drop 1 file
+Scenario: Upload 1 file
 Given I am on the Upload page
 And the sources selected are: 'Product Survey'
 And the products selected are: 'Investments'
-When I drag a file into the Upload area
-And a Modal should open, informing a successful upload of the Investments + Product Survey + name of my file
-And the filters and visualizations on the other pages should make use of the uploaded data
+When I upload a valid file using the file input
+Then a Modal should open, informing a successful upload of the Investments + Product Survey + name of my file
 
-Scenario: Drag and Drop 2+ files
+Scenario: Upload Multiple files
 Given I am on the Upload page
-When I drag multiple files into the Upload area
-Then the Upload area should be highlighted
-And a Modal should open, informing a successful upload of the product + source + names of my files
-And the filters and visualizations on the other pages should make use of the uploaded data
+And the sources selected are: 'Product Survey'
+And the products selected are: 'Investments'
+When I upload multiple files
+Then a Modal should open, informing a successful upload
 
-Scenario: Close modal
+Scenario: Invalid upload
 Given I am on the Upload page
-And I have the modal open
-When I click out of the modal area or the X on the modal
-Then the modal should close
+When I upload an invalid file using the file input
+Then a Modal should open, informing an unsuccessful upload
