@@ -94,7 +94,7 @@ end
 
 # Helper methods
 def get_products_from_dataset
-  url_prefix = 'http://localhost:3000'  # URL prefix is the same for both environments
+  url_prefix = "#{Capybara.app_host}"  # URL prefix is the same for both environments
 
   uri = URI("#{url_prefix}/analytics/filter_products")
 
