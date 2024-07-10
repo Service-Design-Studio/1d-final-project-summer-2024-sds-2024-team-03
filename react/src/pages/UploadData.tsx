@@ -4,34 +4,34 @@ import FilterProduct from "../components/FilterProduct";
 import FilterSource from "../components/FilterSource";
 import { FileDrop } from "../components/UploadData/Uploader";
 
-interface DashboardProps {
+interface UploadDataProps {
   selectedProduct: string[];
   setSelectedProduct: React.Dispatch<React.SetStateAction<string[]>>;
   selectedSource: string[];
   setSelectedSource: React.Dispatch<React.SetStateAction<string[]>>;
 }
 
-export default function Dashboard({
+export default function UploadData({
   selectedProduct,
   setSelectedProduct,
   selectedSource,
   setSelectedSource,
-}: DashboardProps) {
+}: UploadDataProps) {
   
 
   return (
     <>
       <h1>Upload Data</h1>
       <Box sx={{ flexGrow: 1 }}>
-        <Grid container spacing={2}>
-          <Grid xs={6}>
+        <Grid container>
+          <Grid xs={6} item>
             <FilterProduct
               selectedProduct={selectedProduct}
               setSelectedProduct={setSelectedProduct}
               multiple={false}
             />
           </Grid>
-          <Grid xs={6}>
+          <Grid xs={6} item>
             <FilterSource
               selectedSource={selectedSource}
               setSelectedSource={setSelectedSource}
