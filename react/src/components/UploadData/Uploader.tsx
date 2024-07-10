@@ -62,6 +62,155 @@ export function FileDrop({
     setIsOver(false);
   };
 
+  const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const files = event.target.files ? Array.from(event.target.files) : [];
+    processFiles(files);
+  };
+
+  const processFiles = (files: File[]) => {
+    setFiles(files);
+    files.forEach((file) => {
+      processFile(file);
+    });
+    // The rest of the logic from handleDrop that processes files
+    // Ensure to replace the direct usage of droppedFiles with the files parameter
+  };
+
+  const processFile = (file: File) => {
+    const ext = file.name.match(/\.([^\.]+)$/);
+    if (ext && !["csv"].includes(ext[1]) && !/^xls/i.test(ext[1])) {
+      setModalContent("Error: Invalid file extension.");
+      setOpenModal(true);
+    } else {
+      const reader = new FileReader();
+
+      reader.onloadend = () => {
+        let isValid = false;
+
+        if (ext && ext[1] === "csv") {
+          const csvData = reader.result as string;
+          const parsed = Papa.parse(csvData, { header: true });
+          let columns: string[] = [];
+          if (parsed.meta && parsed.meta.fields) {
+            columns = parsed.meta.fields.map((col: string) =>
+              col.trim().toLowerCase()
+            );
+            const columnsSet = new Set(columns);
+            let dateColumnName =
+              parsed.meta.fields.find(
+                (col: string) => col.trim().toLowerCase() === "date"
+              ) || "";
+            isValid =
+              requiredCols.every((col) => columnsSet.has(col)) &&
+              validateDateFormat(
+                parsed.data.map((obj: any) => obj[dateColumnName])
+              );
+          }
+
+          if (!isValid) {
+            setModalContent("Error: Invalid data.");
+            setOpenModal(true);
+            return;
+          }
+        } else if (ext && ext[1].startsWith("xls")) {
+          const data = new Uint8Array(reader.result as ArrayBuffer);
+          const workbook = XLSX.read(data, { type: "array" });
+          const firstSheetName = workbook.SheetNames[0];
+          const worksheet = workbook.Sheets[firstSheetName];
+          const sheetData = XLSX.utils.sheet_to_json(worksheet, {
+            header: 1,
+          });
+          const columns = (sheetData[0] as string[]).map((col: string) =>
+            col.trim().toLowerCase()
+          );
+          const columnsSet = new Set(columns);
+          const transformedData = sheetData.slice(1).map((row: any) => {
+            // Produces Eg. {feedback: ..., date: ...}
+            const obj: { [key: string]: string } = {};
+            row.forEach((val: string, idx: number) => {
+              obj[columns[idx]] = val;
+            });
+            return obj;
+          });
+          let dateColumnName =
+            columns.find((col) => col.trim().toLowerCase() === "date") || "";
+          isValid =
+            requiredCols.every((col) => columnsSet.has(col)) &&
+            validateDateFormat(
+              transformedData.map((obj: any) =>
+                convertExcelTimestampToDate(obj[dateColumnName])
+              )
+            );
+
+          if (!isValid) {
+            setModalContent("Error: Invalid data.");
+            setOpenModal(true);
+            return;
+          }
+        }
+
+        if (isValid) {
+          const newFilename =
+            selectedProduct[0] + "__" + selectedSource[0] + "__" + file.name;
+          const newFile = new File([file], newFilename, {
+            type: file.type,
+          });
+
+          console.log("Filename:", file.name);
+          console.log("File:", file);
+          console.log(reader);
+          console.log(reader.result);
+
+          // Create FormData and append the file
+          const formData = new FormData();
+          const csrfMetaTag = document.querySelector('meta[name="csrf-token"]');
+
+          // Check if the csrfMetaTag is not null before accessing its attributes
+          const csrfToken = csrfMetaTag
+            ? csrfMetaTag.getAttribute("content")
+            : "";
+
+          formData.append("file", newFile);
+          console.log("X-CSRF-Token", csrfToken);
+          const urlPrefix =
+            process.env.NODE_ENV === "development"
+              ? "http://localhost:3000"
+              : "";
+
+          fetch(`${urlPrefix}/analytics/uploads`, {
+            method: "POST",
+            body: formData,
+            headers: csrfToken ? { "X-CSRF-Token": csrfToken } : {},
+          })
+            .then((response) => {
+              if (!response.ok) {
+                throw new Error("Network response was not ok");
+              }
+              return response.json(); // or response.text() if the response is not JSON
+            })
+            .then((data) => {
+              console.log("Success:", data);
+            })
+            .catch((error) => {
+              console.error("Error:", error);
+            });
+          setModalContent("");
+          setOpenModal(true);
+        }
+      };
+      reader.onerror = () => {
+        console.error("There was an issue reading the file.");
+      };
+
+      // reader.readAsDataURL(file);
+      if (ext && ext[1] === "csv") {
+        reader.readAsText(file);
+      } else if (ext && ext[1].startsWith("xls")) {
+        reader.readAsArrayBuffer(file);
+      }
+    }
+  };
+
   const handleDrop = (event: DragEvent<HTMLDivElement>) => {
     event.preventDefault();
     setIsOver(false);
@@ -76,145 +225,7 @@ export function FileDrop({
     } else {
       // Use FileReader to read file content
       droppedFiles.forEach((file) => {
-        const ext = file.name.match(/\.([^\.]+)$/);
-        if (ext && !["csv"].includes(ext[1]) && !/^xls/i.test(ext[1])) {
-          setModalContent("Error: Invalid file extension.");
-          setOpenModal(true);
-        } else {
-          const reader = new FileReader();
-
-          reader.onloadend = () => {
-            let isValid = false;
-
-            if (ext && ext[1] === "csv") {
-              const csvData = reader.result as string;
-              const parsed = Papa.parse(csvData, { header: true });
-              let columns: string[] = [];
-              if (parsed.meta && parsed.meta.fields) {
-                columns = parsed.meta.fields.map((col: string) =>
-                  col.trim().toLowerCase()
-                );
-                const columnsSet = new Set(columns);
-                let dateColumnName =
-                  parsed.meta.fields.find(
-                    (col: string) => col.trim().toLowerCase() === "date"
-                  ) || "";
-                isValid =
-                  requiredCols.every((col) => columnsSet.has(col)) &&
-                  validateDateFormat(
-                    parsed.data.map((obj: any) => obj[dateColumnName])
-                  );
-              }
-
-              if (!isValid) {
-                setModalContent("Error: Invalid data.");
-                setOpenModal(true);
-                return;
-              }
-            } else if (ext && ext[1].startsWith("xls")) {
-              const data = new Uint8Array(reader.result as ArrayBuffer);
-              const workbook = XLSX.read(data, { type: "array" });
-              const firstSheetName = workbook.SheetNames[0];
-              const worksheet = workbook.Sheets[firstSheetName];
-              const sheetData = XLSX.utils.sheet_to_json(worksheet, {
-                header: 1,
-              });
-              const columns = (sheetData[0] as string[]).map((col: string) =>
-                col.trim().toLowerCase()
-              );
-              const columnsSet = new Set(columns);
-              const transformedData = sheetData.slice(1).map((row: any) => {
-                // Produces Eg. {feedback: ..., date: ...}
-                const obj: { [key: string]: string } = {};
-                row.forEach((val: string, idx: number) => {
-                  obj[columns[idx]] = val;
-                });
-                return obj;
-              });
-              let dateColumnName =
-                columns.find((col) => col.trim().toLowerCase() === "date") ||
-                "";
-              isValid =
-                requiredCols.every((col) => columnsSet.has(col)) &&
-                validateDateFormat(
-                  transformedData.map((obj: any) =>
-                    convertExcelTimestampToDate(obj[dateColumnName])
-                  )
-                );
-
-              if (!isValid) {
-                setModalContent("Error: Invalid data.");
-                setOpenModal(true);
-                return;
-              }
-            }
-
-            if (isValid) {
-              const newFilename =
-                selectedProduct[0] +
-                "__" +
-                selectedSource[0] +
-                "__" +
-                file.name;
-              const newFile = new File([file], newFilename, {
-                type: file.type,
-              });
-
-              console.log("Filename:", file.name);
-              console.log("File:", file);
-              console.log(reader);
-              console.log(reader.result);
-
-              // Create FormData and append the file
-              const formData = new FormData();
-              const csrfMetaTag = document.querySelector(
-                'meta[name="csrf-token"]'
-              );
-
-              // Check if the csrfMetaTag is not null before accessing its attributes
-              const csrfToken = csrfMetaTag
-                ? csrfMetaTag.getAttribute("content")
-                : "";
-
-              formData.append("file", newFile);
-              console.log("X-CSRF-Token", csrfToken);
-              const urlPrefix =
-                process.env.NODE_ENV === "development"
-                  ? "http://localhost:3000"
-                  : "";
-
-              fetch(`${urlPrefix}/analytics/uploads`, {
-                method: "POST",
-                body: formData,
-                headers: csrfToken ? { "X-CSRF-Token": csrfToken } : {},
-              })
-                .then((response) => {
-                  if (!response.ok) {
-                    throw new Error("Network response was not ok");
-                  }
-                  return response.json(); // or response.text() if the response is not JSON
-                })
-                .then((data) => {
-                  console.log("Success:", data);
-                })
-                .catch((error) => {
-                  console.error("Error:", error);
-                });
-              setModalContent("");
-              setOpenModal(true);
-            }
-          };
-          reader.onerror = () => {
-            console.error("There was an issue reading the file.");
-          };
-
-          // reader.readAsDataURL(file);
-          if (ext && ext[1] === "csv") {
-            reader.readAsText(file);
-          } else if (ext && ext[1].startsWith("xls")) {
-            reader.readAsArrayBuffer(file);
-          }
-        }
+        processFile(file);
       });
     }
   };
@@ -235,6 +246,22 @@ export function FileDrop({
         backgroundColor: isOver ? "gray" : "lightgray",
       }}
     >
+      <input
+        type="file"
+        id="fileInput"
+        style={{ display: "none" }}
+        multiple
+        onChange={handleFileSelect}
+        accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
+      />
+      <Button
+        variant="contained"
+        component="label"
+        htmlFor="fileInput"
+        startIcon={<CloudUploadIcon />}
+      >
+        Select Files
+      </Button>
       <CloudUploadIcon sx={{ color: "gray" }} fontSize="large" />
       Drag and drop .csv/.xls* files here
       <Modal
