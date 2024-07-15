@@ -40,3 +40,7 @@ gcloud run deploy --image gcr.io/jbaaam/jbaaam --platform managed
 ```bash
 export GOOGLE_APPLICATION_CREDENTIALS="./jbaaam-upload-key.json"
 ```
+
+Common errors
+1. "Not ready and cannot serve traffic. The user-provided container failed to start and listen on the port"
+   - Related to Postgresql db deployment, happens after every new table created/destroyed in Postgresql, go to gcloud sql and connect to "internal gcloud"
