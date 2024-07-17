@@ -13,6 +13,20 @@ Given(/I am on (Dashboard|Analytics|Actionables|Upload Data)/) do |page|
   end
 end
 
+Given(/I am on the (.*) page/) do |page|
+  case page
+  when 'Dashboard'
+    visit root_path
+  else
+    visit root_path
+    find('#nav-hamburger').click
+    within('.MuiList-root.MuiList-padding') do
+      find('.MuiListItemText-primary', text: page).click
+    end
+    find('.MuiButtonBase-root.MuiIconButton-root.MuiIconButton-sizeMedium.css-1yxmbwk').click
+  end
+end
+
 When(/I select the hamburger menu/) do
   find('#nav-hamburger').click
 end
@@ -50,6 +64,20 @@ Then(/the page I am currently on shows the correct page title/) do
     'Overview Dashboard'
   else
     @clicked_page
+  end
+
+  expect(actual_title).to eq(expected_title)
+end
+
+Then(/I should still be on the (.*) page/) do |page|
+  page_title = find('h1')
+  actual_title = page_title.text.strip
+
+  expected_title =
+  if page == 'Dashboard'
+    'Overview Dashboard'
+  else
+    page
   end
 
   expect(actual_title).to eq(expected_title)
