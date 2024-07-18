@@ -107,6 +107,7 @@ export default function SentimentScoreGraph({
                 .then((response) => response.json())
                 .then((data: Record<string, string>[]) => {
                     if (data) {
+                        setNoData(false);
                         console.log(data);
                         console.log(
                             data.sort(
@@ -160,8 +161,6 @@ export default function SentimentScoreGraph({
                                 }
                             )
                         );
-                    } else {
-                        setNoData(true);
                     }
                 });
         } else {
@@ -171,6 +170,7 @@ export default function SentimentScoreGraph({
                 .then((response) => response.json())
                 .then((data: Record<string, string>[]) => {
                     if (data) {
+                        setNoData(false);
                         setSentimentScores([
                             {
                                 id: "all",
@@ -187,8 +187,6 @@ export default function SentimentScoreGraph({
                                     })),
                             },
                         ]);
-                    } else {
-                        setNoData(true);
                     }
                 });
         }
@@ -237,10 +235,10 @@ export default function SentimentScoreGraph({
                         component="h3"
                         sx={{marginRight: 2, width: "50%"}}
                     >
-                        Sentiment vs Time trend for{" "}
+                        Sentiment vs Time trend for
                         {selectedSubcategory
-                            ? selectedSubcategory
-                            : "selected Subcategories"}
+                            ? ` ${selectedSubcategory}`
+                            : " selected Subcategories"}
                     </Typography>
                     <FormControl sx={{m: 0, width: "20%"}}>
                         <InputLabel id="detailed-sentimentscoregraph-filter-subcategory-label">
