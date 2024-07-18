@@ -8,23 +8,39 @@ interface SentimentDistributionProps {
   toDate: Dayjs;
   selectedProduct: string[];
   selectedSource: string[];
-  setSelectedMenu:React.Dispatch<React.SetStateAction<string>>;
+  setSelectedMenu: React.Dispatch<React.SetStateAction<string>>;
 }
 
 export default function SentimentDistribution({
-fromDate, toDate, selectedProduct, selectedSource, setSelectedMenu
+  fromDate,
+  toDate,
+  selectedProduct,
+  selectedSource,
+  setSelectedMenu,
 }: SentimentDistributionProps) {
-  const fromDate_string = fromDate.format('DD/MM/YYYY')
-  const toDate_string = toDate.format('DD/MM/YYYY')
-  const [sentimentDistribution, setSentimentDistribution] = useState<Record<string, string>>({});
-  const order: Record<string, string> = { "Excited": "darkgreen", "Satisfied": "green", "Neutral": "grey", "Unsatisfied": "orange", "Frustrated": "red" };
+  const fromDate_string = fromDate.format("DD/MM/YYYY");
+  const toDate_string = toDate.format("DD/MM/YYYY");
+  const [sentimentDistribution, setSentimentDistribution] = useState<
+    Record<string, string>
+  >({});
+  const order: Record<string, string> = {
+    Excited: "darkgreen",
+    Satisfied: "green",
+    Neutral: "grey",
+    Unsatisfied: "orange",
+    Frustrated: "red",
+  };
 
   useEffect(() => {
     const urlPrefix =
-      process.env.NODE_ENV === "development" ? "http://localhost:3000" : "";
-    fetch(`${urlPrefix}/analytics/get_sentiments_distribution?fromDate=${fromDate_string}&toDate=${toDate_string}&product=${selectedProduct}&source=${selectedSource}`)
+      process.env.NODE_ENV === "development"
+        ? "http://localhost:3000"
+        : "https://jbaaam-yl5rojgcbq-et.a.run.app";
+    fetch(
+      `${urlPrefix}/analytics/get_sentiments_distribution?fromDate=${fromDate_string}&toDate=${toDate_string}&product=${selectedProduct}&source=${selectedSource}`
+    )
       .then((response) => response.json())
-      .then((data: {sentiment: string, count: number}[]) => {
+      .then((data: { sentiment: string; count: number }[]) => {
         const totalSentiments = data.reduce((sum, item) => sum + item.count, 0);
         const sentimentPercentages: Record<string, string> = {};
         data.forEach((item) => {
@@ -32,14 +48,13 @@ fromDate, toDate, selectedProduct, selectedSource, setSelectedMenu
           sentimentPercentages[item.sentiment] = percentage;
         });
         setSentimentDistribution(sentimentPercentages);
-      })
-
+      });
   }, [fromDate, toDate, selectedProduct, selectedSource]);
 
   const theme = useTheme();
 
   return (
-      <ButtonBase
+    <ButtonBase
       component={Paper}
       sx={{
         display: "flex",
@@ -51,17 +66,29 @@ fromDate, toDate, selectedProduct, selectedSource, setSelectedMenu
         flex: 1,
         cursor: "pointer",
         "&:hover": {
-          backgroundColor: "#f0f0f0", 
+          backgroundColor: "#f0f0f0",
         },
       }}
       id="sentiment-distribution"
-      onClick={() => setSelectedMenu("analytics")} >
-      <Typography variant="h6" color="grey">Distribution of Sentiment</Typography>
-      {Object.entries(order).reverse().map(([sentiment, sentimentColor]) => (
-        <Typography key={sentiment} variant="body1" style={{ color: sentimentColor }}>
-          {sentimentDistribution[sentiment] ? `${sentimentDistribution[sentiment]}% ` : '0% '}{sentiment}
-        </Typography>
-      ))}
+      onClick={() => setSelectedMenu("analytics")}
+    >
+      <Typography variant="h6" color="grey">
+        Distribution of Sentiment
+      </Typography>
+      {Object.entries(order)
+        .reverse()
+        .map(([sentiment, sentimentColor]) => (
+          <Typography
+            key={sentiment}
+            variant="body1"
+            style={{ color: sentimentColor }}
+          >
+            {sentimentDistribution[sentiment]
+              ? `${sentimentDistribution[sentiment]}% `
+              : "0% "}
+            {sentiment}
+          </Typography>
+        ))}
     </ButtonBase>
   );
 }

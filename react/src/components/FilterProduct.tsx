@@ -1,6 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { Theme, useTheme } from "@mui/material/styles";
-import { Box, Grid, OutlinedInput, InputLabel, MenuItem, FormControl} from "@mui/material";
+import {
+  Box,
+  Grid,
+  OutlinedInput,
+  InputLabel,
+  MenuItem,
+  FormControl,
+} from "@mui/material";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import Chip from "@mui/material/Chip";
 
@@ -30,7 +37,9 @@ export default function FilterProduct({
 
   useEffect(() => {
     const urlPrefix =
-      process.env.NODE_ENV === "development" ? "http://localhost:3000" : "";
+      process.env.NODE_ENV === "development"
+        ? "http://localhost:3000"
+        : "https://jbaaam-yl5rojgcbq-et.a.run.app";
     fetch(`${urlPrefix}/analytics/filter_products`)
       .then((response) => response.json())
       .then((data) => setProducts(data.sort()));
@@ -48,8 +57,8 @@ export default function FilterProduct({
   };
 
   return (
-        <Grid item xs={3}>
-          <FormControl sx={{ m: 0, width: "100%" }}>
+    <Grid item xs={3}>
+      <FormControl sx={{ m: 0, width: "100%" }}>
         <InputLabel id="filter-product-label">Products</InputLabel>
         <Select
           labelId="filter-product-label"

@@ -7,47 +7,53 @@ import dayjs from "dayjs";
 fetchMock.enableMocks();
 
 const mockSetSelectedMenu = jest.fn();
-const urlPrefix = process.env.NODE_ENV === "development" ? "http://localhost:3000" : "";
-const response = [ { "date": "02/05/2024", "sentiment_score": "2.5238095238095238" } ]
-const fromDate ="01/04/2024"
-const toDate = "01/07/2024"
-const selectedProduct = ["Cards"]
-const selectedSource = ["Call Centre"]
+const urlPrefix =
+  process.env.NODE_ENV === "development"
+    ? "http://localhost:3000"
+    : "https://jbaaam-yl5rojgcbq-et.a.run.app";
+const response = [
+  { date: "02/05/2024", sentiment_score: "2.5238095238095238" },
+];
+const fromDate = "01/04/2024";
+const toDate = "01/07/2024";
+const selectedProduct = ["Cards"];
+const selectedSource = ["Call Centre"];
 
 const renderSentimentScoreGraph = (props = {}) =>
   render(
-      <SentimentScoreGraph
-        fromDate={dayjs(dayjs(fromDate).format("DD/MM/YYYY"))}
-        toDate={dayjs(dayjs(toDate).format("DD/MM/YYYY"))}
-        selectedProduct={selectedProduct}
-        selectedSource={selectedSource}
-        isDetailed={false}
-        setSelectedMenu={mockSetSelectedMenu}
-        {...props}
-      />
+    <SentimentScoreGraph
+      fromDate={dayjs(dayjs(fromDate).format("DD/MM/YYYY"))}
+      toDate={dayjs(dayjs(toDate).format("DD/MM/YYYY"))}
+      selectedProduct={selectedProduct}
+      selectedSource={selectedSource}
+      isDetailed={false}
+      setSelectedMenu={mockSetSelectedMenu}
+      {...props}
+    />
   );
 
 describe("SentimentScoreGraph Component", () => {
   beforeEach(() => {
-    jest.spyOn(global.console, 'error').mockImplementation(() => jest.fn());
-    jest.spyOn(global.console, 'log').mockImplementation(() => jest.fn());
-    fetchMock.resetMocks()
-    fetchMock.mockResponseOnce(
-        JSON.stringify(response),
-        { status: 200 },
-    )
-});
+    jest.spyOn(global.console, "error").mockImplementation(() => jest.fn());
+    jest.spyOn(global.console, "log").mockImplementation(() => jest.fn());
+    fetchMock.resetMocks();
+    fetchMock.mockResponseOnce(JSON.stringify(response), { status: 200 });
+  });
 
   it("should render correctly", () => {
     renderSentimentScoreGraph();
-    expect(screen.getByText(/Sentiment vs Time trend for Product\(s\) \(All Subcategories\)/i)).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        /Sentiment vs Time trend for Product\(s\) \(All Subcategories\)/i
+      )
+    ).toBeInTheDocument();
   });
 
   it("should fetch overall sentiment scores data on mount when on Dashboard", async () => {
     renderSentimentScoreGraph();
     await waitFor(() => {
       expect(fetch).toHaveBeenCalledWith(
-         `${urlPrefix}/analytics/get_overall_sentiment_scores?fromDate=${fromDate}&toDate=${toDate}&product=${selectedProduct}&source=${selectedSource}`
+        `${urlPrefix}/analytics/get_overall_sentiment_scores?fromDate=${fromDate}&toDate=${toDate}&product=${selectedProduct}&source=${selectedSource}`
       );
     });
   });
@@ -76,11 +82,8 @@ describe("SentimentScoreGraph Component", () => {
   // });
 
   it("should handle empty data gracefully", async () => {
-    fetchMock.resetMocks()
-    fetchMock.mockResponseOnce(
-      JSON.stringify([]),
-      { status: 200 },
-  )
+    fetchMock.resetMocks();
+    fetchMock.mockResponseOnce(JSON.stringify([]), { status: 200 });
 
     renderSentimentScoreGraph();
     await waitFor(() => {
