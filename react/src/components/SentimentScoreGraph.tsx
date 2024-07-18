@@ -41,8 +41,9 @@ export default function SentimentScoreGraph({
     const fromDate_string = fromDate.format("DD/MM/YYYY");
     const toDate_string = toDate.format("DD/MM/YYYY");
     type DataPoint = {
-        date: string;
-        score: number;
+        // Coordinates mandated by nivo library, cannot change to Eg. date, score
+        x: string;
+        y: number;
     };
 
     type DataSet = {
@@ -106,7 +107,7 @@ export default function SentimentScoreGraph({
             )
                 .then((response) => response.json())
                 .then((data: Record<string, string>[]) => {
-                    if (data) {
+                    if (data.length > 0) {
                         setNoData(false);
                         console.log(data);
                         console.log(
@@ -154,8 +155,8 @@ export default function SentimentScoreGraph({
                                                     convertDate(b.date)
                                             )
                                             .map(({date, sentiment_score}) => ({
-                                                date: formatDate(date),
-                                                score: sentiment_score,
+                                                x: formatDate(date),
+                                                y: sentiment_score,
                                             })),
                                     };
                                 }
@@ -169,7 +170,7 @@ export default function SentimentScoreGraph({
             )
                 .then((response) => response.json())
                 .then((data: Record<string, string>[]) => {
-                    if (data) {
+                    if (data.length > 0) {
                         setNoData(false);
                         setSentimentScores([
                             {
@@ -182,8 +183,8 @@ export default function SentimentScoreGraph({
                                             convertDate(b.date)
                                     )
                                     .map(({date, sentiment_score}) => ({
-                                        date: formatDate(date),
-                                        score: parseFloat(sentiment_score),
+                                        x: formatDate(date),
+                                        y: parseFloat(sentiment_score),
                                     })),
                             },
                         ]);
