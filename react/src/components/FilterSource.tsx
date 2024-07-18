@@ -45,7 +45,9 @@ export default function FilterSource({
 
   useEffect(() => {
     const urlPrefix =
-      process.env.NODE_ENV === "development" ? "http://localhost:3000" : "";
+      process.env.NODE_ENV === "development"
+        ? "http://localhost:3000"
+        : "https://jbaaam-yl5rojgcbq-et.a.run.app";
     fetch(`${urlPrefix}/analytics/filter_sources`)
       .then((response) => response.json())
       .then((data) => setSources(data.sort()));

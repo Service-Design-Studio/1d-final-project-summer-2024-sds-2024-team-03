@@ -7,33 +7,32 @@ import dayjs from "dayjs";
 fetchMock.enableMocks();
 
 const mockSetSelectedMenu = jest.fn();
-const urlPrefix = process.env.NODE_ENV === "development" ? "http://localhost:3000" : "";
+const urlPrefix =
+  process.env.NODE_ENV === "development"
+    ? "http://localhost:3000"
+    : "https://jbaaam-yl5rojgcbq-et.a.run.app";
 const curr_response = [
-    { date: "01/04/2024", sentiment_score: "3.5123213" },
-    { date: "01/07/2024", sentiment_score: "4.023434" }
-  ]
+  { date: "01/04/2024", sentiment_score: "3.5123213" },
+  { date: "01/07/2024", sentiment_score: "4.023434" },
+];
 const prev_response = [
-    { date: "01/01/2024", sentiment_score: "2.5546456" },
-    { date: "01/04/2024", sentiment_score: "3.0689879" }
-  ]
-  const selectedProduct = ["Cards"]
-  const selectedSource = ["Call Centre"]
+  { date: "01/01/2024", sentiment_score: "2.5546456" },
+  { date: "01/04/2024", sentiment_score: "3.0689879" },
+];
+const selectedProduct = ["Cards"];
+const selectedSource = ["Call Centre"];
 
 describe("OverallSentimentScore Component", () => {
   beforeEach(() => {
-    jest.spyOn(global.console, 'error').mockImplementation(() => jest.fn());
-    jest.spyOn(global.console, 'log').mockImplementation(() => jest.fn());
-    fetchMock.resetMocks()
+    jest.spyOn(global.console, "error").mockImplementation(() => jest.fn());
+    jest.spyOn(global.console, "log").mockImplementation(() => jest.fn());
+    fetchMock.resetMocks();
     fetchMock.mockResponses(
-        [JSON.stringify(curr_response),
-        { status: 200 }],
-        [
-            JSON.stringify(prev_response),
-            { status: 200 }
-          ],
-    )
+      [JSON.stringify(curr_response), { status: 200 }],
+      [JSON.stringify(prev_response), { status: 200 }]
+    );
     render(
-        <OverallSentimentScore
+      <OverallSentimentScore
         fromDate={dayjs(dayjs(curr_response[0]["date"]).format("DD/MM/YYYY"))}
         toDate={dayjs(dayjs(curr_response[1]["date"]).format("DD/MM/YYYY"))}
         selectedProduct={selectedProduct}
@@ -41,9 +40,9 @@ describe("OverallSentimentScore Component", () => {
         setSelectedMenu={mockSetSelectedMenu}
       />
     );
-});
+  });
 
-it("should render correctly", () => {
+  it("should render correctly", () => {
     expect(screen.getByText(/Overall Sentiment Score/i)).toBeInTheDocument();
   });
 
@@ -73,15 +72,11 @@ it("should render correctly", () => {
   });
 
   it("should display 'Not Applicable' if no change data", async () => {
-    fetchMock.resetMocks()
+    fetchMock.resetMocks();
     fetchMock.mockResponses(
-        [JSON.stringify(curr_response),
-        { status: 200 }],
-        [
-            JSON.stringify([]),
-            { status: 200 }
-          ],
-    )
+      [JSON.stringify(curr_response), { status: 200 }],
+      [JSON.stringify([]), { status: 200 }]
+    );
 
     await waitFor(() => {
       expect(screen.getByText(/Not Applicable/i)).toBeInTheDocument();
