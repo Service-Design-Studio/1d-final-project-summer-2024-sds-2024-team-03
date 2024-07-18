@@ -527,6 +527,7 @@ export default function SentimentScoreGraph({
                                     legendOffset: 36,
                                     legendPosition: "middle",
                                     truncateTickAt: 0,
+                                    tickValues: getTickValues(sentimentScores),
                                 }}
                                 axisLeft={{
                                     tickSize: 5,
