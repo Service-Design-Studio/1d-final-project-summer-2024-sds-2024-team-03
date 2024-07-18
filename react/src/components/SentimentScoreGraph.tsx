@@ -95,7 +95,8 @@ export default function SentimentScoreGraph({
 
         sentimentScores.forEach((dataSet) => {
             dataSet.data.forEach(({x}) => {
-                const [day, month, year] = x.split("/");
+                const [day, month, year] = x.split(" ");
+                console.log(day, month, year);
                 months.add(`${month}/${year}`);
                 years.add(year);
             });
@@ -108,16 +109,18 @@ export default function SentimentScoreGraph({
             const [monthB, yearB] = b.split("/").map(Number);
             return yearA - yearB || monthA - monthB;
         });
-
+        console.log(months);
+        console.log(sortedMonths);
         const optionsWithYear: Intl.DateTimeFormatOptions = {
             month: "short",
             year: "2-digit",
         };
         const optionsWithoutYear: Intl.DateTimeFormatOptions = {month: "short"};
 
-        return sortedMonths.map((monthYear) => {
+        return sortedMonths.map((monthYear: string) => {
             const [month, year] = monthYear.split("/");
             const date = new Date(`20${year}-${month}-01`);
+            console.log(date);
             const options = showYears ? optionsWithYear : optionsWithoutYear;
             return new Intl.DateTimeFormat("en-GB", options).format(date);
         });
