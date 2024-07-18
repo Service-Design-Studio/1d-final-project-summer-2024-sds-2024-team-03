@@ -90,13 +90,13 @@ export default function SentimentScoreGraph({
     };
 
     const getTickValues = (sentimentScores: DataSet[]): string[] => {
+        console.log(sentimentScores);
         const months = new Set<string>();
         const years = new Set<string>();
 
         sentimentScores.forEach((dataSet) => {
             dataSet.data.forEach(({x}) => {
                 const [day, month, year] = x.split(" ");
-                console.log(day, month, year);
                 months.add(`${month}/${year}`);
                 years.add(year);
             });
@@ -109,8 +109,7 @@ export default function SentimentScoreGraph({
             const [monthB, yearB] = b.split("/").map(Number);
             return yearA - yearB || monthA - monthB;
         });
-        console.log(months);
-        console.log(sortedMonths);
+
         const optionsWithYear: Intl.DateTimeFormatOptions = {
             month: "short",
             year: "2-digit",
@@ -120,7 +119,6 @@ export default function SentimentScoreGraph({
         return sortedMonths.map((monthYear: string) => {
             const [month, year] = monthYear.split("/");
             const date = new Date(`20${year}-${month}-01`);
-            console.log(date);
             const options = showYears ? optionsWithYear : optionsWithoutYear;
             return new Intl.DateTimeFormat("en-GB", options).format(date);
         });
@@ -164,7 +162,7 @@ export default function SentimentScoreGraph({
                                 selectedSubcategory.includes(item.subcategory)
                             // && selectedFeedbackcategory.includes(item.feedback_category)
                         );
-                        const filteredDataGroupedBySubcategory =
+                        const filteredDataGroupedByFeedbackcategory =
                             filteredData.reduce((acc, item) => {
                                 console.log(item);
                                 if (!acc[item.feedback_category]) {
@@ -181,7 +179,7 @@ export default function SentimentScoreGraph({
 
                         setSentimentScores(
                             Object.entries(
-                                filteredDataGroupedBySubcategory
+                                filteredDataGroupedByFeedbackcategory
                             ).map(
                                 ([feedback_category, date_sentiment_score]) => {
                                     return {
@@ -204,6 +202,7 @@ export default function SentimentScoreGraph({
                             )
                         );
                     } else {
+                        setNoData(true);
                         setSentimentScores([]);
                     }
                 });
@@ -232,6 +231,7 @@ export default function SentimentScoreGraph({
                             },
                         ]);
                     } else {
+                        setNoData(true);
                         setSentimentScores([]);
                     }
                 });
@@ -378,7 +378,11 @@ export default function SentimentScoreGraph({
                                     bottom: 40,
                                     left: 40,
                                 }}
-                                xScale={{type: "point"}}
+                                xScale={{
+                                    type: "time",
+                                    format: "%b %y",
+                                    precision: "month",
+                                }}
                                 yScale={{
                                     type: "linear",
                                     min: "auto",
@@ -510,7 +514,11 @@ export default function SentimentScoreGraph({
                                     bottom: 40,
                                     left: 40,
                                 }}
-                                xScale={{type: "point"}}
+                                xScale={{
+                                    type: "time",
+                                    format: "%b %y",
+                                    precision: "month",
+                                }}
                                 yScale={{
                                     type: "linear",
                                     min: "auto",
