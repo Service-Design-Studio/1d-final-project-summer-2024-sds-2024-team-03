@@ -54,14 +54,12 @@ export default function SentimentScoreGraph({
 
     const [sentimentScores, setSentimentScores] = useState<DataSet[]>([]);
     const [selectedSubcategory, setSelectedSubcategory] = useState<string>("");
-    const [selectedFeedbackcategory, setSelectedFeedbackcategories] = useState<
-        string[]
-    >([]);
+    const [selectedFeedbackcategories, setSelectedFeedbackcategories] =
+        useState<string[]>([]);
     const [graphSubcategories, setGraphSubcategories] = useState<string[]>([]);
     const [graphFeedbackcategories, setGraphFeedbackcategories] = useState<
         string[]
     >([]);
-    const [noData, setNoData] = useState<boolean>(true);
 
     const theme = useTheme();
 
@@ -109,7 +107,6 @@ export default function SentimentScoreGraph({
             target: {value},
         } = event;
         setSelectedFeedbackcategories(
-            // On autofill we get a stringified value.
             typeof value === "string" ? value.split(",") : value
         );
     };
@@ -119,6 +116,8 @@ export default function SentimentScoreGraph({
             process.env.NODE_ENV === "development"
                 ? "http://localhost:3000"
                 : "https://jbaaam-yl5rojgcbq-et.a.run.app";
+        if (!selectedSubcategory || selectedFeedbackcategories.length === 0)
+            setSentimentScores([]);
         if (isDetailed) {
             fetch(
                 `${urlPrefix}/analytics/get_sentiment_scores?fromDate=${fromDate_string}&toDate=${toDate_string}&product=${selectedProduct}&source=${selectedSource}`
@@ -126,7 +125,6 @@ export default function SentimentScoreGraph({
                 .then((response) => response.json())
                 .then((data: Record<string, string>[]) => {
                     if (data.length > 0) {
-                        setNoData(false);
                         setGraphSubcategories(
                             Array.from(
                                 new Set(
@@ -149,7 +147,7 @@ export default function SentimentScoreGraph({
                         );
                         const filteredData = filteredSubcategories.filter(
                             (item) =>
-                                selectedFeedbackcategory.includes(
+                                selectedFeedbackcategories.includes(
                                     item.feedback_category
                                 )
                         );
@@ -222,7 +220,6 @@ export default function SentimentScoreGraph({
                             )
                         );
                     } else {
-                        setNoData(true);
                         setSentimentScores([]);
                     }
                 });
@@ -233,7 +230,6 @@ export default function SentimentScoreGraph({
                 .then((response) => response.json())
                 .then((data: Record<string, string>[]) => {
                     if (data.length > 0) {
-                        setNoData(false);
                         setSentimentScores([
                             {
                                 id: "all",
@@ -251,7 +247,6 @@ export default function SentimentScoreGraph({
                             },
                         ]);
                     } else {
-                        setNoData(true);
                         setSentimentScores([]);
                     }
                 });
@@ -322,17 +317,19 @@ export default function SentimentScoreGraph({
                                     label="subcategory"
                                 />
                             }
-                            renderValue={(selected) => (
-                                <Box
-                                    sx={{
-                                        display: "flex",
-                                        flexWrap: "wrap",
-                                        gap: 0.5,
-                                    }}
-                                >
-                                    <Chip key={selected} label={selected} />
-                                </Box>
-                            )}
+                            renderValue={(selected) =>
+                                selected && (
+                                    <Box
+                                        sx={{
+                                            display: "flex",
+                                            flexWrap: "wrap",
+                                            gap: 0.5,
+                                        }}
+                                    >
+                                        <Chip key={selected} label={selected} />
+                                    </Box>
+                                )
+                            }
                             MenuProps={MenuProps}
                         >
                             {graphSubcategories.map((subcategory: string) => (
@@ -353,7 +350,7 @@ export default function SentimentScoreGraph({
                             labelId="detailed-sentimentscoregraph-filter-feedbackcategory-label"
                             id="detailed-sentimentscoregraph-filter-feedbackcategory"
                             multiple
-                            value={selectedFeedbackcategory}
+                            value={selectedFeedbackcategories}
                             onChange={handleFeedbackcategoryChange}
                             input={
                                 <OutlinedInput
@@ -389,7 +386,7 @@ export default function SentimentScoreGraph({
                         </Select>
                     </FormControl>
                 </Box>
-                {noData ? (
+                {sentimentScores.length === 0 ? (
                     <Typography variant="body2" color="grey">
                         No data
                     </Typography>
@@ -403,91 +400,89 @@ export default function SentimentScoreGraph({
                             height: 200,
                         }}
                     >
-                        {sentimentScores.length > 0 && (
-                            <ResponsiveLine
-                                data={sentimentScores}
-                                margin={{
-                                    top: 20,
-                                    right: 20,
-                                    bottom: 80,
-                                    left: 40,
-                                }}
-                                xScale={{
-                                    type: "time",
-                                    format: "%d %b %y",
-                                    precision: "day",
-                                }}
-                                xFormat={`time:%d %b %y`}
-                                yScale={{
-                                    type: "linear",
-                                    min: "auto",
-                                    max: "auto",
-                                    stacked: false,
-                                    reverse: false,
-                                }}
-                                yFormat=" >+.1f"
-                                curve="linear"
-                                axisTop={null}
-                                axisRight={null}
-                                axisBottom={{
-                                    tickSize: 5,
-                                    tickPadding: 5,
-                                    tickRotation: 0,
-                                    legend: "",
-                                    legendOffset: 36,
-                                    legendPosition: "middle",
-                                    truncateTickAt: 0,
-                                    format: "%b '%y",
-                                    tickValues: "every 1 month",
-                                }}
-                                axisLeft={{
-                                    tickSize: 5,
-                                    tickPadding: 5,
-                                    tickRotation: 0,
-                                    legend: "",
-                                    legendOffset: -40,
-                                    legendPosition: "middle",
-                                    truncateTickAt: 0,
-                                }}
-                                enableGridX={false}
-                                colors={{scheme: "category10"}}
-                                pointSize={8}
-                                pointColor={{theme: "background"}}
-                                pointBorderWidth={2}
-                                pointBorderColor={{from: "serieColor"}}
-                                pointLabel="data.yFormatted"
-                                pointLabelYOffset={-12}
-                                enableTouchCrosshair={true}
-                                useMesh={true}
-                                legends={[
-                                    {
-                                        anchor: "bottom",
-                                        direction: "row",
-                                        justify: false,
-                                        translateX: 0,
-                                        translateY: 50,
-                                        itemsSpacing: 20,
-                                        itemDirection: "left-to-right",
-                                        itemWidth: 80,
-                                        itemHeight: 10,
-                                        itemOpacity: 0.75,
-                                        symbolSize: 12,
-                                        symbolShape: "circle",
-                                        symbolBorderColor: "rgba(0, 0, 0, .5)",
-                                        effects: [
-                                            {
-                                                on: "hover",
-                                                style: {
-                                                    itemBackground:
-                                                        "rgba(0, 0, 0, .03)",
-                                                    itemOpacity: 1,
-                                                },
+                        <ResponsiveLine
+                            data={sentimentScores}
+                            margin={{
+                                top: 20,
+                                right: 20,
+                                bottom: 80,
+                                left: 40,
+                            }}
+                            xScale={{
+                                type: "time",
+                                format: "%d %b %y",
+                                precision: "day",
+                            }}
+                            xFormat={`time:%d %b %y`}
+                            yScale={{
+                                type: "linear",
+                                min: "auto",
+                                max: "auto",
+                                stacked: false,
+                                reverse: false,
+                            }}
+                            yFormat=" >+.1f"
+                            curve="linear"
+                            axisTop={null}
+                            axisRight={null}
+                            axisBottom={{
+                                tickSize: 5,
+                                tickPadding: 5,
+                                tickRotation: 0,
+                                legend: "",
+                                legendOffset: 36,
+                                legendPosition: "middle",
+                                truncateTickAt: 0,
+                                format: "%b '%y",
+                                tickValues: "every 1 month",
+                            }}
+                            axisLeft={{
+                                tickSize: 5,
+                                tickPadding: 5,
+                                tickRotation: 0,
+                                legend: "",
+                                legendOffset: -40,
+                                legendPosition: "middle",
+                                truncateTickAt: 0,
+                            }}
+                            enableGridX={false}
+                            colors={{scheme: "category10"}}
+                            pointSize={8}
+                            pointColor={{theme: "background"}}
+                            pointBorderWidth={2}
+                            pointBorderColor={{from: "serieColor"}}
+                            pointLabel="data.yFormatted"
+                            pointLabelYOffset={-12}
+                            enableTouchCrosshair={true}
+                            useMesh={true}
+                            legends={[
+                                {
+                                    anchor: "bottom",
+                                    direction: "row",
+                                    justify: false,
+                                    translateX: 0,
+                                    translateY: 50,
+                                    itemsSpacing: 20,
+                                    itemDirection: "left-to-right",
+                                    itemWidth: 80,
+                                    itemHeight: 10,
+                                    itemOpacity: 0.75,
+                                    symbolSize: 12,
+                                    symbolShape: "circle",
+                                    symbolBorderColor: "rgba(0, 0, 0, .5)",
+                                    effects: [
+                                        {
+                                            on: "hover",
+                                            style: {
+                                                itemBackground:
+                                                    "rgba(0, 0, 0, .03)",
+                                                itemOpacity: 1,
                                             },
-                                        ],
-                                    },
-                                ]}
-                            />
-                        )}
+                                        },
+                                    ],
+                                },
+                            ]}
+                        />
                     </Box>
                 )}
             </Paper>
@@ -527,7 +522,7 @@ export default function SentimentScoreGraph({
                 >
                     Sentiment vs Time trend for Product(s) (All Subcategories)
                 </Typography>
-                {noData ? (
+                {sentimentScores.length === 0 ? (
                     <Typography variant="body2" color="grey">
                         No data
                     </Typography>
@@ -541,64 +536,62 @@ export default function SentimentScoreGraph({
                             height: 200,
                         }}
                     >
-                        {sentimentScores.length > 0 && (
-                            <ResponsiveLine
-                                data={sentimentScores}
-                                margin={{
-                                    top: 20,
-                                    right: 20,
-                                    bottom: 40,
-                                    left: 40,
-                                }}
-                                xScale={{
-                                    type: "time",
-                                    format: "%d %b %y",
-                                    precision: "day",
-                                }}
-                                xFormat={`time:%d %b %y`}
-                                yScale={{
-                                    type: "linear",
-                                    min: "auto",
-                                    max: "auto",
-                                    stacked: false,
-                                    reverse: false,
-                                }}
-                                yFormat=" >+.1f"
-                                curve="linear"
-                                axisTop={null}
-                                axisRight={null}
-                                axisBottom={{
-                                    tickSize: 5,
-                                    tickPadding: 5,
-                                    tickRotation: 0,
-                                    legend: "",
-                                    legendOffset: 36,
-                                    legendPosition: "middle",
-                                    truncateTickAt: 0,
-                                    format: "%b '%y",
-                                    tickValues: "every 1 month",
-                                }}
-                                axisLeft={{
-                                    tickSize: 5,
-                                    tickPadding: 5,
-                                    tickRotation: 0,
-                                    legend: "",
-                                    legendOffset: -40,
-                                    legendPosition: "middle",
-                                    truncateTickAt: 0,
-                                }}
-                                enableGridX={false}
-                                colors={{scheme: "category10"}}
-                                pointSize={8}
-                                pointColor={{theme: "background"}}
-                                pointBorderWidth={2}
-                                pointBorderColor={{from: "serieColor"}}
-                                pointLabel="data.yFormatted"
-                                pointLabelYOffset={-12}
-                                enableTouchCrosshair={true}
-                                useMesh={true}
-                            />
-                        )}
+                        <ResponsiveLine
+                            data={sentimentScores}
+                            margin={{
+                                top: 20,
+                                right: 20,
+                                bottom: 40,
+                                left: 40,
+                            }}
+                            xScale={{
+                                type: "time",
+                                format: "%d %b %y",
+                                precision: "day",
+                            }}
+                            xFormat={`time:%d %b %y`}
+                            yScale={{
+                                type: "linear",
+                                min: "auto",
+                                max: "auto",
+                                stacked: false,
+                                reverse: false,
+                            }}
+                            yFormat=" >+.1f"
+                            curve="linear"
+                            axisTop={null}
+                            axisRight={null}
+                            axisBottom={{
+                                tickSize: 5,
+                                tickPadding: 5,
+                                tickRotation: 0,
+                                legend: "",
+                                legendOffset: 36,
+                                legendPosition: "middle",
+                                truncateTickAt: 0,
+                                format: "%b '%y",
+                                tickValues: "every 1 month",
+                            }}
+                            axisLeft={{
+                                tickSize: 5,
+                                tickPadding: 5,
+                                tickRotation: 0,
+                                legend: "",
+                                legendOffset: -40,
+                                legendPosition: "middle",
+                                truncateTickAt: 0,
+                            }}
+                            enableGridX={false}
+                            colors={{scheme: "category10"}}
+                            pointSize={8}
+                            pointColor={{theme: "background"}}
+                            pointBorderWidth={2}
+                            pointBorderColor={{from: "serieColor"}}
+                            pointLabel="data.yFormatted"
+                            pointLabelYOffset={-12}
+                            enableTouchCrosshair={true}
+                            useMesh={true}
+                        />
                     </Box>
                 )}
             </ButtonBase>
