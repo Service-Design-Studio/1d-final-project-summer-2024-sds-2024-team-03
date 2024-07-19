@@ -1,11 +1,9 @@
-import * as React from "react";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { Box, Grid, Paper, Typography, Divider } from "@mui/material";
+import React, {useState, useEffect} from "react";
+import { Box, Paper, Typography, Divider } from "@mui/material";
 import dayjs, { Dayjs } from "dayjs";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import Calendar from "../components/Calendar";
 import FilterProduct from "../components/FilterProduct";
 import FilterSource from "../components/FilterSource";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import OverallSentimentScore from "../components/Dashboard/OverallSentimentScore";
 import SentimentDistribution from "../components/Dashboard/SentimentDistribution";
 import SentimentScoreGraph from "../components/SentimentScoreGraph";
@@ -46,45 +44,22 @@ export default function Dashboard({
       gap: 2,
       justifyContent: 'flex-start'
     }}>
-      <Box sx={{ flexBasis: { xs: '100%', sm: '25%' }, flexGrow: 1 }}>
-        <LocalizationProvider dateAdapter={AdapterDayjs}>
-          <DatePicker
-            format="DD/MM/YYYY"
-            label="From"
-            value={dayjs(fromDate)}
-            sx={{ width: "100%" }}
-            onChange={(newValue) => {
-              console.log(newValue)
-              setFromDate(
-                newValue ? newValue : dayjs().subtract(1, 'week')
-              );
-            }}
-          />
-        </LocalizationProvider>
+      <Box sx={{ flexBasis: { xs: '100%', sm: '40%' }, flexGrow: 1 }}>
+        <Calendar
+          fromDate={fromDate}
+          setFromDate={setFromDate}
+          toDate={toDate}
+          setToDate={setToDate}
+        />
       </Box>
-      <Box sx={{ flexBasis: { xs: '100%', sm: '25%' }, flexGrow: 1 }}>
-        <LocalizationProvider dateAdapter={AdapterDayjs}>
-          <DatePicker
-            format="DD/MM/YYYY"
-            label="To"
-            value={dayjs(toDate)}
-            sx={{ width: "100%" }}
-            onChange={(newValue) => {
-              setToDate(
-                newValue ? newValue: dayjs()
-              );
-            }}
-          />
-        </LocalizationProvider>
-      </Box>
-      <Box sx={{ flexBasis: { xs: '100%', sm: '25%' }, flexGrow: 1 }}>
+      <Box sx={{ flexBasis: { xs: '100%', sm: '30%' }, flexGrow: 1 }}>
         <FilterProduct
           selectedProduct={selectedProduct}
           setSelectedProduct={setSelectedProduct}
           multiple={true}
         />
       </Box>
-      <Box sx={{ flexBasis: { xs: '100%', sm: '25%' }, flexGrow: 1 }}>
+      <Box sx={{ flexBasis: { xs: '100%', sm: '30%' }, flexGrow: 1 }}>
         <FilterSource
           selectedSource={selectedSource}
           setSelectedSource={setSelectedSource}
