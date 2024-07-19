@@ -97,7 +97,9 @@ export default function SentimentScoreGraph({
         const {
             target: {value},
         } = event;
-        setSelectedSubcategory(value);
+        setSelectedSubcategory((prevValue) =>
+            prevValue === value ? "" : value
+        );
     };
 
     const handleFeedbackcategoryChange = (
@@ -126,16 +128,27 @@ export default function SentimentScoreGraph({
                     if (data.length > 0) {
                         setNoData(false);
                         setGraphSubcategories(
-                            data.map(({subcategory}) => subcategory)
+                            Array.from(
+                                new Set(
+                                    data.map(({subcategory}) => subcategory)
+                                )
+                            )
+                        );
+                        const filteredSubcategories = data.filter((item) =>
+                            selectedSubcategory.includes(item.subcategory)
                         );
                         setGraphFeedbackcategories(
-                            data.map(({feedback_category}) => feedback_category)
+                            Array.from(
+                                new Set(
+                                    filteredSubcategories.map(
+                                        ({feedback_category}) =>
+                                            feedback_category
+                                    )
+                                )
+                            )
                         );
-                        const filteredData = data.filter(
+                        const filteredData = filteredSubcategories.filter(
                             (item) =>
-                                selectedSubcategory.includes(
-                                    item.subcategory
-                                ) &&
                                 selectedFeedbackcategory.includes(
                                     item.feedback_category
                                 )
@@ -329,9 +342,12 @@ export default function SentimentScoreGraph({
                             ))}
                         </Select>
                     </FormControl>
-                    <FormControl sx={{m: 0, width: "20%"}}>
+                    <FormControl
+                        sx={{m: 0, width: "20%"}}
+                        disabled={!selectedSubcategory}
+                    >
                         <InputLabel id="detailed-sentimentscoregraph-filter-feedbackcategory-label">
-                            Subcategories
+                            Feedback Categories
                         </InputLabel>
                         <Select
                             labelId="detailed-sentimentscoregraph-filter-feedbackcategory-label"
