@@ -73,12 +73,21 @@ export default function SentimentCategoriesGraph({
         const date = new Date(year, month - 1, day);
         const options: Intl.DateTimeFormatOptions = {
             day: "numeric",
-            month: "long",
+            month: "short",
+            year: "2-digit",
         };
-        const formattedDate = new Intl.DateTimeFormat("en-US", options).format(
+        const formattedDate = new Intl.DateTimeFormat("en-GB", options).format(
             date
         );
         return formattedDate;
+    };
+
+    const feedbackcategoryHashToHue = (feedbackcategory: string) => {
+        let hash = 0;
+        for (let i = 0; i < feedbackcategory.length; i++) {
+            hash = feedbackcategory.charCodeAt(i) + ((hash << 5) - hash);
+        }
+        return hash % 360;
     };
 
     const handleSubcategoryChange = (event: SelectChangeEvent<string>) => {
@@ -110,13 +119,6 @@ export default function SentimentCategoriesGraph({
                 .then((data: Record<string, string>[]) => {
                     if (data.length > 0) {
                         setNoData(false);
-                        console.log(data);
-                        console.log(
-                            data.sort(
-                                (a, b) =>
-                                    convertDate(a.date) - convertDate(b.date)
-                            )
-                        );
                         setGraphSubcategories(
                             data.map(({subcategory}) => subcategory)
                         );
@@ -126,9 +128,8 @@ export default function SentimentCategoriesGraph({
                                 selectedSubcategory.includes(item.subcategory)
                             // && selectedFeedbackcategory.includes(item.feedback_category)
                         );
-                        const filteredDataGroupedBySubcategory =
+                        const filteredDataGroupedByFeedbackcategory =
                             filteredData.reduce((acc, item) => {
-                                console.log(item);
                                 if (!acc[item.feedback_category]) {
                                     acc[item.feedback_category] = [];
                                 }
@@ -143,12 +144,14 @@ export default function SentimentCategoriesGraph({
 
                         setSentimentScores(
                             Object.entries(
-                                filteredDataGroupedBySubcategory
+                                filteredDataGroupedByFeedbackcategory
                             ).map(
                                 ([feedback_category, date_sentiment_score]) => {
                                     return {
                                         id: feedback_category,
-                                        color: "hsl(8, 70%, 50%)",
+                                        color: `hsl(${feedbackcategoryHashToHue(
+                                            feedback_category
+                                        )}, 70%, 50%)`,
                                         data: date_sentiment_score
                                             .sort(
                                                 (a, b) =>
@@ -163,6 +166,9 @@ export default function SentimentCategoriesGraph({
                                 }
                             )
                         );
+                    } else {
+                        setNoData(true);
+                        setSentimentScores([]);
                     }
                 });
         } else {
@@ -189,6 +195,9 @@ export default function SentimentCategoriesGraph({
                                     })),
                             },
                         ]);
+                    } else {
+                        setNoData(true);
+                        setSentimentScores([]);
                     }
                 });
         }
@@ -255,7 +264,7 @@ export default function SentimentCategoriesGraph({
                             input={
                                 <OutlinedInput
                                     id="detailed-sentimentscoregraph-select-subcategory"
-                                    label="product"
+                                    label="subcategory"
                                 />
                             }
                             renderValue={(selected) => (
@@ -331,15 +340,20 @@ export default function SentimentCategoriesGraph({
                                 margin={{
                                     top: 20,
                                     right: 20,
-                                    bottom: 40,
+                                    bottom: 80,
                                     left: 40,
                                 }}
-                                xScale={{type: "point"}}
+                                xScale={{
+                                    type: "time",
+                                    format: "%d %b %y",
+                                    precision: "day",
+                                }}
+                                xFormat={`time:%d %b %y`}
                                 yScale={{
                                     type: "linear",
                                     min: "auto",
                                     max: "auto",
-                                    stacked: true,
+                                    stacked: false,
                                     reverse: false,
                                 }}
                                 yFormat=" >+.1f"
@@ -354,6 +368,8 @@ export default function SentimentCategoriesGraph({
                                     legendOffset: 36,
                                     legendPosition: "middle",
                                     truncateTickAt: 0,
+                                    format: "%b '%y",
+                                    tickValues: "every 1 month",
                                 }}
                                 axisLeft={{
                                     tickSize: 5,
@@ -376,15 +392,15 @@ export default function SentimentCategoriesGraph({
                                 useMesh={true}
                                 legends={[
                                     {
-                                        anchor: "bottom-right",
-                                        direction: "column",
+                                        anchor: "bottom",
+                                        direction: "row",
                                         justify: false,
-                                        translateX: 100,
-                                        translateY: 0,
-                                        itemsSpacing: 0,
+                                        translateX: 0,
+                                        translateY: 50,
+                                        itemsSpacing: 20,
                                         itemDirection: "left-to-right",
                                         itemWidth: 80,
-                                        itemHeight: 20,
+                                        itemHeight: 10,
                                         itemOpacity: 0.75,
                                         symbolSize: 12,
                                         symbolShape: "circle",

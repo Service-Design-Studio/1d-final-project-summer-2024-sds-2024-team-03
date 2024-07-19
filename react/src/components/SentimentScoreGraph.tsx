@@ -130,20 +130,50 @@ export default function SentimentScoreGraph({
                         const filteredDataGroupedByFeedbackcategory =
                             filteredData.reduce((acc, item) => {
                                 if (!acc[item.feedback_category]) {
-                                    acc[item.feedback_category] = [];
+                                    acc[item.feedback_category] = {};
                                 }
-                                acc[item.feedback_category].push({
-                                    date: item.date,
-                                    sentiment_score: parseFloat(
-                                        item.sentiment_score as string
-                                    ),
+                                if (!acc[item.feedback_category][item.date]) {
+                                    acc[item.feedback_category][item.date] = [];
+                                }
+                                acc[item.feedback_category][item.date].push(
+                                    parseFloat(item.sentiment_score as string)
+                                );
+                                return acc;
+                            }, {} as Record<string, Record<string, number[]>>);
+
+                        const avgDataGroupedByFeedbackcategory = Object.entries(
+                            filteredDataGroupedByFeedbackcategory
+                        ).reduce(
+                            (
+                                acc,
+                                [feedbackcategory, date_sentiment_scores]
+                            ) => {
+                                acc[feedbackcategory] = Object.entries(
+                                    date_sentiment_scores
+                                ).map(([date, sentiment_scores]) => {
+                                    const totalScore = sentiment_scores.reduce(
+                                        (sum, sentiment_scores) =>
+                                            sum + sentiment_scores,
+                                        0
+                                    );
+                                    const averageScore =
+                                        totalScore / sentiment_scores.length;
+                                    return {
+                                        date,
+                                        sentiment_score: averageScore,
+                                    };
                                 });
                                 return acc;
-                            }, {} as Record<string, {date: string; sentiment_score: number}[]>);
+                            },
+                            {} as Record<
+                                string,
+                                {date: string; sentiment_score: number}[]
+                            >
+                        );
 
                         setSentimentScores(
                             Object.entries(
-                                filteredDataGroupedByFeedbackcategory
+                                avgDataGroupedByFeedbackcategory
                             ).map(
                                 ([feedback_category, date_sentiment_score]) => {
                                     return {
