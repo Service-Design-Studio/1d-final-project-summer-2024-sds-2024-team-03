@@ -257,6 +257,7 @@ export default function SentimentScoreGraph({
         selectedProduct,
         selectedSource,
         selectedSubcategory,
+        selectedFeedbackcategories,
     ]);
 
     /* Must have parent container with a defined size */
@@ -358,19 +359,21 @@ export default function SentimentScoreGraph({
                                     label="feedbackcategory"
                                 />
                             }
-                            renderValue={(selected) => (
-                                <Box
-                                    sx={{
-                                        display: "flex",
-                                        flexWrap: "wrap",
-                                        gap: 0.5,
-                                    }}
-                                >
-                                    {selected.map((value) => (
-                                        <Chip key={value} label={value} />
-                                    ))}
-                                </Box>
-                            )}
+                            renderValue={(selected) =>
+                                selected && (
+                                    <Box
+                                        sx={{
+                                            display: "flex",
+                                            flexWrap: "wrap",
+                                            gap: 0.5,
+                                        }}
+                                    >
+                                        {selected.map((value) => (
+                                            <Chip key={value} label={value} />
+                                        ))}
+                                    </Box>
+                                )
+                            }
                             MenuProps={MenuProps}
                         >
                             {graphFeedbackcategories.map(
@@ -464,7 +467,7 @@ export default function SentimentScoreGraph({
                                     translateY: 50,
                                     itemsSpacing: 20,
                                     itemDirection: "left-to-right",
-                                    itemWidth: 80,
+                                    itemWidth: 120,
                                     itemHeight: 10,
                                     itemOpacity: 0.75,
                                     symbolSize: 12,
