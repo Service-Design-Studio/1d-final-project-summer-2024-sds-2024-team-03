@@ -88,7 +88,7 @@ export default function SentimentScoreGraph({
         for (let i = 0; i < feedbackcategory.length; i++) {
             hash = feedbackcategory.charCodeAt(i) + ((hash << 5) - hash);
         }
-        return hash % 360;
+        return Math.abs(hash) % 360;
     };
 
     const handleSubcategoryChange = (event: SelectChangeEvent<string>) => {
@@ -136,6 +136,8 @@ export default function SentimentScoreGraph({
                         const filteredSubcategories = data.filter((item) =>
                             selectedSubcategory.includes(item.subcategory)
                         );
+                        console.log("filteredSubcategories");
+                        console.log(filteredSubcategories);
                         setGraphFeedbackcategories(
                             Array.from(
                                 new Set(
@@ -152,6 +154,8 @@ export default function SentimentScoreGraph({
                                     item.feedback_category
                                 )
                         );
+                        console.log("filteredData");
+                        console.log(filteredData);
                         const filteredDataGroupedByFeedbackcategory =
                             filteredData.reduce((acc, item) => {
                                 if (!acc[item.feedback_category]) {
@@ -165,7 +169,8 @@ export default function SentimentScoreGraph({
                                 );
                                 return acc;
                             }, {} as Record<string, Record<string, number[]>>);
-
+                        console.log("filteredDataGroupedByFeedbackcategory");
+                        console.log(filteredDataGroupedByFeedbackcategory);
                         const avgDataGroupedByFeedbackcategory = Object.entries(
                             filteredDataGroupedByFeedbackcategory
                         ).reduce(
