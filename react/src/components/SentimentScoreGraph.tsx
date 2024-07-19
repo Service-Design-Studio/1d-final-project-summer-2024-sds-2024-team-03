@@ -90,7 +90,6 @@ export default function SentimentScoreGraph({
     };
 
     const getTickValues = (sentimentScores: DataSet[]): string[] => {
-        console.log(sentimentScores);
         const months = new Set<string>();
         const years = new Set<string>();
 
@@ -379,9 +378,7 @@ export default function SentimentScoreGraph({
                                     left: 40,
                                 }}
                                 xScale={{
-                                    type: "time",
-                                    format: "%b %y",
-                                    precision: "month",
+                                    type: "linear",
                                 }}
                                 yScale={{
                                     type: "linear",
@@ -515,9 +512,7 @@ export default function SentimentScoreGraph({
                                     left: 40,
                                 }}
                                 xScale={{
-                                    type: "time",
-                                    format: "%b %y",
-                                    precision: "month",
+                                    type: "linear",
                                 }}
                                 yScale={{
                                     type: "linear",
