@@ -90,6 +90,7 @@ export default function SentimentScoreGraph({
     };
 
     const getTickValues = (sentimentScores: DataSet[]): string[] => {
+        console.log(sentimentScores);
         const months = new Set<string>();
         const years = new Set<string>();
 
@@ -163,7 +164,6 @@ export default function SentimentScoreGraph({
                         );
                         const filteredDataGroupedByFeedbackcategory =
                             filteredData.reduce((acc, item) => {
-                                console.log(item);
                                 if (!acc[item.feedback_category]) {
                                     acc[item.feedback_category] = [];
                                 }
@@ -298,7 +298,7 @@ export default function SentimentScoreGraph({
                             input={
                                 <OutlinedInput
                                     id="detailed-sentimentscoregraph-select-subcategory"
-                                    label="product"
+                                    label="subcategory"
                                 />
                             }
                             renderValue={(selected) => (
@@ -378,7 +378,9 @@ export default function SentimentScoreGraph({
                                     left: 40,
                                 }}
                                 xScale={{
-                                    type: "linear",
+                                    type: "time",
+                                    format: "%d %b",
+                                    precision: "day",
                                 }}
                                 yScale={{
                                     type: "linear",
@@ -399,7 +401,8 @@ export default function SentimentScoreGraph({
                                     legendOffset: 36,
                                     legendPosition: "middle",
                                     truncateTickAt: 0,
-                                    tickValues: getTickValues(sentimentScores),
+                                    format: "%b",
+                                    tickValues: "every 1 month",
                                 }}
                                 axisLeft={{
                                     tickSize: 5,
@@ -422,7 +425,7 @@ export default function SentimentScoreGraph({
                                 useMesh={true}
                                 legends={[
                                     {
-                                        anchor: "bottom-right",
+                                        anchor: "top-right",
                                         direction: "column",
                                         justify: false,
                                         translateX: 100,
@@ -512,7 +515,7 @@ export default function SentimentScoreGraph({
                                     left: 40,
                                 }}
                                 xScale={{
-                                    type: "linear",
+                                    type: "point",
                                 }}
                                 yScale={{
                                     type: "linear",
