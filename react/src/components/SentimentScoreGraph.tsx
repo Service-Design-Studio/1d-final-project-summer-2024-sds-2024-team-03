@@ -54,10 +54,12 @@ export default function SentimentScoreGraph({
 
     const [sentimentScores, setSentimentScores] = useState<DataSet[]>([]);
     const [selectedSubcategory, setSelectedSubcategory] = useState<string>("");
-    // const [selectedFeedbackcategory, setSelectedFeedbackcategory] = useState<string>("");
+    const [selectedFeedbackcategories, setSelectedFeedbackcategories] =
+        useState<string[]>([]);
     const [graphSubcategories, setGraphSubcategories] = useState<string[]>([]);
-    // const [graphFeedbackcategories, setGraphFeedbackcategories] = useState<string[]>([]);
-    const [noData, setNoData] = useState<boolean>(true);
+    const [graphFeedbackcategories, setGraphFeedbackcategories] = useState<
+        string[]
+    >([]);
 
     const theme = useTheme();
 
@@ -89,62 +91,33 @@ export default function SentimentScoreGraph({
         return hash % 360;
     };
 
-    const getTickValues = (sentimentScores: DataSet[]): string[] => {
-        console.log(sentimentScores);
-        const months = new Set<string>();
-        const years = new Set<string>();
-
-        sentimentScores.forEach((dataSet) => {
-            dataSet.data.forEach(({x}) => {
-                const [day, month, year] = x.split(" ");
-                months.add(`${month}/${year}`);
-                years.add(year);
-            });
-        });
-
-        const showYears = years.size > 1;
-
-        const sortedMonths = Array.from(months).sort((a, b) => {
-            const [monthA, yearA] = a.split("/").map(Number);
-            const [monthB, yearB] = b.split("/").map(Number);
-            return yearA - yearB || monthA - monthB;
-        });
-
-        const optionsWithYear: Intl.DateTimeFormatOptions = {
-            month: "short",
-            year: "2-digit",
-        };
-        const optionsWithoutYear: Intl.DateTimeFormatOptions = {month: "short"};
-
-        return sortedMonths.map((monthYear: string) => {
-            const [month, year] = monthYear.split("/");
-            const date = new Date(`20${year}-${month}-01`);
-            const options = showYears ? optionsWithYear : optionsWithoutYear;
-            return new Intl.DateTimeFormat("en-GB", options).format(date);
-        });
-    };
-
     const handleSubcategoryChange = (event: SelectChangeEvent<string>) => {
         const {
             target: {value},
         } = event;
-        setSelectedSubcategory(value);
+        setSelectedSubcategory((prevValue) =>
+            prevValue === value ? "" : value
+        );
     };
 
-    // const handleFeedbackcategoryChange = (
-    //   event: SelectChangeEvent<string>
-    // ) => {
-    //   const {
-    //     target: { value },
-    //   } = event;
-    //   setGraphFeedbackcategories(value);
-    // };
+    const handleFeedbackcategoryChange = (
+        event: SelectChangeEvent<string[]>
+    ) => {
+        const {
+            target: {value},
+        } = event;
+        setSelectedFeedbackcategories(
+            typeof value === "string" ? value.split(",") : value
+        );
+    };
 
     useEffect(() => {
         const urlPrefix =
             process.env.NODE_ENV === "development"
                 ? "http://localhost:3000"
                 : "https://jbaaam-yl5rojgcbq-et.a.run.app";
+        if (!selectedSubcategory || selectedFeedbackcategories.length === 0)
+            setSentimentScores([]);
         if (isDetailed) {
             fetch(
                 `${urlPrefix}/analytics/get_sentiment_scores?fromDate=${fromDate_string}&toDate=${toDate_string}&product=${selectedProduct}&source=${selectedSource}`
@@ -152,34 +125,79 @@ export default function SentimentScoreGraph({
                 .then((response) => response.json())
                 .then((data: Record<string, string>[]) => {
                     if (data.length > 0) {
-                        setNoData(false);
                         setGraphSubcategories(
-                            data.map(({subcategory}) => subcategory)
+                            Array.from(
+                                new Set(
+                                    data.map(({subcategory}) => subcategory)
+                                )
+                            )
                         );
-                        // setGraphFeedbackcategories(data.map( ({ feedback_category }) => feedback_category ));
-                        const filteredData = data.filter(
+                        const filteredSubcategories = data.filter((item) =>
+                            selectedSubcategory.includes(item.subcategory)
+                        );
+                        setGraphFeedbackcategories(
+                            Array.from(
+                                new Set(
+                                    filteredSubcategories.map(
+                                        ({feedback_category}) =>
+                                            feedback_category
+                                    )
+                                )
+                            )
+                        );
+                        const filteredData = filteredSubcategories.filter(
                             (item) =>
-                                selectedSubcategory.includes(item.subcategory)
-                            // && selectedFeedbackcategory.includes(item.feedback_category)
+                                selectedFeedbackcategories.includes(
+                                    item.feedback_category
+                                )
                         );
                         const filteredDataGroupedByFeedbackcategory =
                             filteredData.reduce((acc, item) => {
-                                console.log(item);
                                 if (!acc[item.feedback_category]) {
-                                    acc[item.feedback_category] = [];
+                                    acc[item.feedback_category] = {};
                                 }
-                                acc[item.feedback_category].push({
-                                    date: item.date,
-                                    sentiment_score: parseFloat(
-                                        item.sentiment_score as string
-                                    ),
+                                if (!acc[item.feedback_category][item.date]) {
+                                    acc[item.feedback_category][item.date] = [];
+                                }
+                                acc[item.feedback_category][item.date].push(
+                                    parseFloat(item.sentiment_score as string)
+                                );
+                                return acc;
+                            }, {} as Record<string, Record<string, number[]>>);
+
+                        const avgDataGroupedByFeedbackcategory = Object.entries(
+                            filteredDataGroupedByFeedbackcategory
+                        ).reduce(
+                            (
+                                acc,
+                                [feedbackcategory, date_sentiment_scores]
+                            ) => {
+                                acc[feedbackcategory] = Object.entries(
+                                    date_sentiment_scores
+                                ).map(([date, sentiment_scores]) => {
+                                    const totalScore = sentiment_scores.reduce(
+                                        (sum, sentiment_scores) =>
+                                            sum + sentiment_scores,
+                                        0
+                                    );
+                                    const averageScore =
+                                        totalScore / sentiment_scores.length;
+                                    return {
+                                        date,
+                                        sentiment_score: averageScore,
+                                    };
                                 });
                                 return acc;
-                            }, {} as Record<string, {date: string; sentiment_score: number}[]>);
+                            },
+                            {} as Record<
+                                string,
+                                {date: string; sentiment_score: number}[]
+                            >
+                        );
 
                         setSentimentScores(
                             Object.entries(
-                                filteredDataGroupedByFeedbackcategory
+                                avgDataGroupedByFeedbackcategory
                             ).map(
                                 ([feedback_category, date_sentiment_score]) => {
                                     return {
@@ -202,7 +220,6 @@ export default function SentimentScoreGraph({
                             )
                         );
                     } else {
-                        setNoData(true);
                         setSentimentScores([]);
                     }
                 });
@@ -213,7 +230,6 @@ export default function SentimentScoreGraph({
                 .then((response) => response.json())
                 .then((data: Record<string, string>[]) => {
                     if (data.length > 0) {
-                        setNoData(false);
                         setSentimentScores([
                             {
                                 id: "all",
@@ -231,7 +247,6 @@ export default function SentimentScoreGraph({
                             },
                         ]);
                     } else {
-                        setNoData(true);
                         setSentimentScores([]);
                     }
                 });
@@ -242,6 +257,7 @@ export default function SentimentScoreGraph({
         selectedProduct,
         selectedSource,
         selectedSubcategory,
+        selectedFeedbackcategories,
     ]);
 
     /* Must have parent container with a defined size */
@@ -299,20 +315,22 @@ export default function SentimentScoreGraph({
                             input={
                                 <OutlinedInput
                                     id="detailed-sentimentscoregraph-select-subcategory"
-                                    label="product"
+                                    label="subcategory"
                                 />
                             }
-                            renderValue={(selected) => (
-                                <Box
-                                    sx={{
-                                        display: "flex",
-                                        flexWrap: "wrap",
-                                        gap: 0.5,
-                                    }}
-                                >
-                                    <Chip key={selected} label={selected} />
-                                </Box>
-                            )}
+                            renderValue={(selected) =>
+                                selected && (
+                                    <Box
+                                        sx={{
+                                            display: "flex",
+                                            flexWrap: "wrap",
+                                            gap: 0.5,
+                                        }}
+                                    >
+                                        <Chip key={selected} label={selected} />
+                                    </Box>
+                                )
+                            }
                             MenuProps={MenuProps}
                         >
                             {graphSubcategories.map((subcategory: string) => (
@@ -322,40 +340,56 @@ export default function SentimentScoreGraph({
                             ))}
                         </Select>
                     </FormControl>
-                    {/* <FormControl sx={{ m: 0, width: "20%" }}>
-          <InputLabel id="detailed-sentimentscoregraph-filter-subcategory-label">
-            Subcategories
-          </InputLabel>
-          <Select
-            labelId="detailed-sentimentscoregraph-filter-subcategory-label"
-            id="detailed-sentimentscoregraph-filter-subcategory"
-            multiple
-            value={graphSubcategories}
-            onChange={handleSubcategoryChange}
-            input={
-              <OutlinedInput
-                id="detailed-sentimentscoregraph-select-subcategory"
-                label="subcategory"
-              />
-            }
-            renderValue={(selected) => (
-              <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
-                {selected.map((value) => (
-                  <Chip key={value} label={value} />
-                ))}
-              </Box>
-            )}
-            MenuProps={MenuProps}
-          >
-            {graphSubcategories.map((subcategpry: string) => (
-              <MenuItem key={subcategpry} value={subcategpry}>
-                {subcategpry}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl> */}
+                    <FormControl
+                        sx={{m: 0, width: "20%"}}
+                        disabled={!selectedSubcategory}
+                    >
+                        <InputLabel id="detailed-sentimentscoregraph-filter-feedbackcategory-label">
+                            Feedback Categories
+                        </InputLabel>
+                        <Select
+                            labelId="detailed-sentimentscoregraph-filter-feedbackcategory-label"
+                            id="detailed-sentimentscoregraph-filter-feedbackcategory"
+                            multiple
+                            value={selectedFeedbackcategories}
+                            onChange={handleFeedbackcategoryChange}
+                            input={
+                                <OutlinedInput
+                                    id="detailed-sentimentscoregraph-select-feedbackcategory"
+                                    label="feedbackcategory"
+                                />
+                            }
+                            renderValue={(selected) =>
+                                selected && (
+                                    <Box
+                                        sx={{
+                                            display: "flex",
+                                            flexWrap: "wrap",
+                                            gap: 0.5,
+                                        }}
+                                    >
+                                        {selected.map((value) => (
+                                            <Chip key={value} label={value} />
+                                        ))}
+                                    </Box>
+                                )
+                            }
+                            MenuProps={MenuProps}
+                        >
+                            {graphFeedbackcategories.map(
+                                (feedbackcategory: string) => (
+                                    <MenuItem
+                                        key={feedbackcategory}
+                                        value={feedbackcategory}
+                                    >
+                                        {feedbackcategory}
+                                    </MenuItem>
+                                )
+                            )}
+                        </Select>
+                    </FormControl>
                 </Box>
-                {noData ? (
+                {sentimentScores.length === 0 ? (
                     <Typography variant="body2" color="grey">
                         No data
                     </Typography>
@@ -369,89 +403,89 @@ export default function SentimentScoreGraph({
                             height: 200,
                         }}
                     >
-                        {sentimentScores.length > 0 && (
-                            <ResponsiveLine
-                                data={sentimentScores}
-                                margin={{
-                                    top: 20,
-                                    right: 20,
-                                    bottom: 40,
-                                    left: 40,
-                                }}
-                                xScale={{
-                                    type: "time",
-                                    format: "%b %y",
-                                    precision: "month",
-                                }}
-                                yScale={{
-                                    type: "linear",
-                                    min: "auto",
-                                    max: "auto",
-                                    stacked: true,
-                                    reverse: false,
-                                }}
-                                yFormat=" >+.1f"
-                                curve="linear"
-                                axisTop={null}
-                                axisRight={null}
-                                axisBottom={{
-                                    tickSize: 5,
-                                    tickPadding: 5,
-                                    tickRotation: 0,
-                                    legend: "",
-                                    legendOffset: 36,
-                                    legendPosition: "middle",
-                                    truncateTickAt: 0,
-                                    tickValues: getTickValues(sentimentScores),
-                                }}
-                                axisLeft={{
-                                    tickSize: 5,
-                                    tickPadding: 5,
-                                    tickRotation: 0,
-                                    legend: "",
-                                    legendOffset: -40,
-                                    legendPosition: "middle",
-                                    truncateTickAt: 0,
-                                }}
-                                enableGridX={false}
-                                colors={{scheme: "category10"}}
-                                pointSize={8}
-                                pointColor={{theme: "background"}}
-                                pointBorderWidth={2}
-                                pointBorderColor={{from: "serieColor"}}
-                                pointLabel="data.yFormatted"
-                                pointLabelYOffset={-12}
-                                enableTouchCrosshair={true}
-                                useMesh={true}
-                                legends={[
-                                    {
-                                        anchor: "bottom-right",
-                                        direction: "column",
-                                        justify: false,
-                                        translateX: 100,
-                                        translateY: 0,
-                                        itemsSpacing: 0,
-                                        itemDirection: "left-to-right",
-                                        itemWidth: 80,
-                                        itemHeight: 20,
-                                        itemOpacity: 0.75,
-                                        symbolSize: 12,
-                                        symbolShape: "circle",
-                                        symbolBorderColor: "rgba(0, 0, 0, .5)",
-                                        effects: [
-                                            {
-                                                on: "hover",
-                                                style: {
-                                                    itemBackground:
-                                                        "rgba(0, 0, 0, .03)",
-                                                    itemOpacity: 1,
-                                                },
+                        <ResponsiveLine
+                            data={sentimentScores}
+                            margin={{
+                                top: 20,
+                                right: 20,
+                                bottom: 80,
+                                left: 40,
+                            }}
+                            xScale={{
+                                type: "time",
+                                format: "%d %b %y",
+                                precision: "day",
+                            }}
+                            xFormat={`time:%d %b %y`}
+                            yScale={{
+                                type: "linear",
+                                min: "auto",
+                                max: "auto",
+                                stacked: false,
+                                reverse: false,
+                            }}
+                            yFormat=" >+.1f"
+                            curve="linear"
+                            axisTop={null}
+                            axisRight={null}
+                            axisBottom={{
+                                tickSize: 5,
+                                tickPadding: 5,
+                                tickRotation: 0,
+                                legend: "",
+                                legendOffset: 36,
+                                legendPosition: "middle",
+                                truncateTickAt: 0,
+                                format: "%b '%y",
+                                tickValues: "every 1 month",
+                            }}
+                            axisLeft={{
+                                tickSize: 5,
+                                tickPadding: 5,
+                                tickRotation: 0,
+                                legend: "",
+                                legendOffset: -40,
+                                legendPosition: "middle",
+                                truncateTickAt: 0,
+                            }}
+                            enableGridX={false}
+                            colors={{scheme: "category10"}}
+                            pointSize={8}
+                            pointColor={{theme: "background"}}
+                            pointBorderWidth={2}
+                            pointBorderColor={{from: "serieColor"}}
+                            pointLabel="data.yFormatted"
+                            pointLabelYOffset={-12}
+                            enableTouchCrosshair={true}
+                            useMesh={true}
+                            legends={[
+                                {
+                                    anchor: "bottom",
+                                    direction: "row",
+                                    justify: false,
+                                    translateX: 0,
+                                    translateY: 50,
+                                    itemsSpacing: 20,
+                                    itemDirection: "left-to-right",
+                                    itemWidth: 120,
+                                    itemHeight: 10,
+                                    itemOpacity: 0.75,
+                                    symbolSize: 12,
+                                    symbolShape: "circle",
+                                    symbolBorderColor: "rgba(0, 0, 0, .5)",
+                                    effects: [
+                                        {
+                                            on: "hover",
+                                            style: {
+                                                itemBackground:
+                                                    "rgba(0, 0, 0, .03)",
+                                                itemOpacity: 1,
                                             },
-                                        ],
-                                    },
-                                ]}
-                            />
-                        )}
+                                        },
+                                    ],
+                                },
+                            ]}
+                        />
                     </Box>
                 )}
             </Paper>
@@ -491,7 +525,7 @@ export default function SentimentScoreGraph({
                 >
                     Sentiment vs Time trend for Product(s) (All Subcategories)
                 </Typography>
-                {noData ? (
+                {sentimentScores.length === 0 ? (
                     <Typography variant="body2" color="grey">
                         No data
                     </Typography>
@@ -505,62 +539,62 @@ export default function SentimentScoreGraph({
                             height: 200,
                         }}
                     >
-                        {sentimentScores.length > 0 && (
-                            <ResponsiveLine
-                                data={sentimentScores}
-                                margin={{
-                                    top: 20,
-                                    right: 20,
-                                    bottom: 40,
-                                    left: 40,
-                                }}
-                                xScale={{
-                                    type: "time",
-                                    format: "%b %y",
-                                    precision: "month",
-                                }}
-                                yScale={{
-                                    type: "linear",
-                                    min: "auto",
-                                    max: "auto",
-                                    stacked: true,
-                                    reverse: false,
-                                }}
-                                yFormat=" >+.1f"
-                                curve="linear"
-                                axisTop={null}
-                                axisRight={null}
-                                axisBottom={{
-                                    tickSize: 5,
-                                    tickPadding: 5,
-                                    tickRotation: 0,
-                                    legend: "",
-                                    legendOffset: 36,
-                                    legendPosition: "middle",
-                                    truncateTickAt: 0,
-                                    tickValues: getTickValues(sentimentScores),
-                                }}
-                                axisLeft={{
-                                    tickSize: 5,
-                                    tickPadding: 5,
-                                    tickRotation: 0,
-                                    legend: "",
-                                    legendOffset: -40,
-                                    legendPosition: "middle",
-                                    truncateTickAt: 0,
-                                }}
-                                enableGridX={false}
-                                colors={{scheme: "category10"}}
-                                pointSize={8}
-                                pointColor={{theme: "background"}}
-                                pointBorderWidth={2}
-                                pointBorderColor={{from: "serieColor"}}
-                                pointLabel="data.yFormatted"
-                                pointLabelYOffset={-12}
-                                enableTouchCrosshair={true}
-                                useMesh={true}
-                            />
-                        )}
+                        <ResponsiveLine
+                            data={sentimentScores}
+                            margin={{
+                                top: 20,
+                                right: 20,
+                                bottom: 40,
+                                left: 40,
+                            }}
+                            xScale={{
+                                type: "time",
+                                format: "%d %b %y",
+                                precision: "day",
+                            }}
+                            xFormat={`time:%d %b %y`}
+                            yScale={{
+                                type: "linear",
+                                min: "auto",
+                                max: "auto",
+                                stacked: false,
+                                reverse: false,
+                            }}
+                            yFormat=" >+.1f"
+                            curve="linear"
+                            axisTop={null}
+                            axisRight={null}
+                            axisBottom={{
+                                tickSize: 5,
+                                tickPadding: 5,
+                                tickRotation: 0,
+                                legend: "",
+                                legendOffset: 36,
+                                legendPosition: "middle",
+                                truncateTickAt: 0,
+                                format: "%b '%y",
+                                tickValues: "every 1 month",
+                            }}
+                            axisLeft={{
+                                tickSize: 5,
+                                tickPadding: 5,
+                                tickRotation: 0,
+                                legend: "",
+                                legendOffset: -40,
+                                legendPosition: "middle",
+                                truncateTickAt: 0,
+                            }}
+                            enableGridX={false}
+                            colors={{scheme: "category10"}}
+                            pointSize={8}
+                            pointColor={{theme: "background"}}
+                            pointBorderWidth={2}
+                            pointBorderColor={{from: "serieColor"}}
+                            pointLabel="data.yFormatted"
+                            pointLabelYOffset={-12}
+                            enableTouchCrosshair={true}
+                            useMesh={true}
+                        />
                     </Box>
                 )}
             </ButtonBase>
