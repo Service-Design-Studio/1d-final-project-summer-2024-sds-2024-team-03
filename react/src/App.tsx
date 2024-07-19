@@ -1,249 +1,168 @@
 import React, { useEffect, useState } from "react";
 import { styled } from "@mui/material/styles";
 import Box from "@mui/material/Box";
-import Container from "@mui/material/Container";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
-import Drawer from "@mui/material/Drawer";
-import dayjs, { Dayjs } from "dayjs";
+import { createTheme, ThemeProvider, Theme } from "@mui/material/styles";
+import dayjs from "dayjs";
 import CssBaseline from "@mui/material/CssBaseline";
-import MuiAppBar, { AppBarProps as MuiAppBarProps } from "@mui/material/AppBar";
+import MuiAppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
-import List from "@mui/material/List";
-import Typography from "@mui/material/Typography";
-import Divider from "@mui/material/Divider";
-import IconButton from "@mui/material/IconButton";
-import MenuIcon from "@mui/icons-material/Menu";
-import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
-import ChevronRightIcon from "@mui/icons-material/ChevronRight";
-import ListItem from "@mui/material/ListItem";
-import ListItemButton from "@mui/material/ListItemButton";
-import ListItemIcon from "@mui/material/ListItemIcon";
-import ListItemText from "@mui/material/ListItemText";
-import DashboardIcon from "@mui/icons-material/Dashboard";
-import BarChartIcon from "@mui/icons-material/BarChart";
-import ListAltIcon from "@mui/icons-material/ListAlt";
-import CloudUploadIcon from "@mui/icons-material/CloudUpload";
+// import Typography from "@mui/material/Typography";
+import Button from "@mui/material/Button";
 import Dashboard from "./pages/Dashboard";
 import Analytics from "./pages/Analytics";
 import Actionables from "./pages/Actionables";
 import UploadData from "./pages/UploadData";
+import Brightness4Icon from '@mui/icons-material/Brightness4';
+import WbSunnyIcon from '@mui/icons-material/WbSunny';
+import dbsLogo from "./dbs_logo.png";
 
-const drawerWidth = 240;
-const theme = createTheme({
+// Define your themes with explicit primary color
+const darkTheme = createTheme({
   palette: {
+    mode: 'dark', // Enable dark mode
     primary: {
-      main: "#8D1927",
+      main: "#FD0606", // Red color for dark theme
     },
   },
 });
 
-const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })<{
-  open?: boolean;
-}>(({ theme, open }) => ({
+const lightTheme = createTheme({
+  palette: {
+    mode: 'light', // Enable light mode
+    primary: {
+      main: "#8D1927", // Red color for light theme
+    },
+  },
+});
+
+const Main = styled("main")(({ theme }: { theme: Theme }) => ({
   flexGrow: 1,
   padding: theme.spacing(3),
-  transition: theme.transitions.create("margin", {
-    easing: theme.transitions.easing.sharp,
-    duration: theme.transitions.duration.leavingScreen,
-  }),
-  marginLeft: `-${drawerWidth}px`,
-  ...(open && {
-    transition: theme.transitions.create("margin", {
-      easing: theme.transitions.easing.easeOut,
-      duration: theme.transitions.duration.enteringScreen,
-    }),
-    marginLeft: 0,
-  }),
+  marginTop: 64, // Adjust this value based on your AppBar height
 }));
 
-interface AppBarProps extends MuiAppBarProps {
-  open?: boolean;
-}
-
-const AppBar = styled(MuiAppBar, {
-  shouldForwardProp: (prop) => prop !== "open",
-})<AppBarProps>(({ theme, open }) => ({
-  transition: theme.transitions.create(["margin", "width"], {
-    easing: theme.transitions.easing.sharp,
-    duration: theme.transitions.duration.leavingScreen,
-  }),
-  ...(open && {
-    width: `calc(100% - ${drawerWidth}px)`,
-    marginLeft: `${drawerWidth}px`,
-    transition: theme.transitions.create(["margin", "width"], {
-      easing: theme.transitions.easing.easeOut,
-      duration: theme.transitions.duration.enteringScreen,
-    }),
-  }),
-}));
-
-const DrawerHeader = styled("div")(({ theme }) => ({
+const AppBarContent = styled(Box)(({ theme }: { theme: Theme }) => ({
   display: "flex",
+  justifyContent: "space-between",
   alignItems: "center",
-  padding: theme.spacing(0, 1),
-  // necessary for content to be below app bar
-  ...theme.mixins.toolbar,
-  justifyContent: "flex-end",
+  width: "100%",
+  maxWidth: "1200px", // Adjust based on your preferred maximum width
+  margin: "0 auto",
+  paddingLeft: theme.spacing(2),
+  paddingRight: theme.spacing(2),
 }));
 
 export default function MainApp() {
+  // State for managing dark theme
+  const [darkMode, setDarkMode] = useState(false);
 
   const getInitialState = () => {
     const savedState = localStorage.getItem("selectedMenu");
     return savedState ? savedState : "dashboard";
   };
 
-  const [open, setOpen] = React.useState(false);
   const [selectedMenu, setSelectedMenu] = useState(getInitialState);
   const [fromDate, setFromDate] = useState(dayjs().subtract(1, "week"));
   const [toDate, setToDate] = useState(dayjs());
-  const [selectedProduct, setSelectedProduct] = React.useState<string[]>([]);
-  const [selectedSource, setSelectedSource] = React.useState<string[]>([]);
+  const [selectedProduct, setSelectedProduct] = useState<string[]>([]);
+  const [selectedSource, setSelectedSource] = useState<string[]>([]);
 
   useEffect(() => {
     localStorage.setItem("selectedMenu", selectedMenu);
-    console.log(`selectedMenu: ${localStorage.getItem("selectedMenu")}`)
   }, [selectedMenu]);
 
-  const handleDrawerOpen = () => {
-    setOpen(true);
-  };
+  const menuItems = [
+    { name: "Dashboard", key: "dashboard" },
+    { name: "Analytics", key: "analytics" },
+    { name: "Actionables", key: "actionables" },
+    { name: "Upload Data", key: "upload data" },
+  ];
 
-  const handleDrawerClose = () => {
-    setOpen(false);
+  // Function to toggle dark mode
+  const toggleDarkMode = () => {
+    setDarkMode(!darkMode);
   };
 
   return (
-    <ThemeProvider theme={theme}>
+    <ThemeProvider theme={darkMode ? darkTheme : lightTheme}>
       <Box sx={{ display: "flex" }}>
         <CssBaseline />
-        <AppBar position="fixed" open={open}>
+        <MuiAppBar position="fixed">
           <Toolbar>
-            <IconButton
-              id="nav-hamburger"
-              color="inherit"
-              aria-label="open drawer"
-              onClick={handleDrawerOpen}
-              edge="start"
-              sx={{ mr: 2, ...(open && { display: "none" }) }}
-            >
-              <MenuIcon />
-            </IconButton>
-            <Typography variant="h6" noWrap component="div">
-              VOCUS x JBAAAM
-            </Typography>
+            <AppBarContent>
+              <img src={dbsLogo} alt="DBS Logo" style={{ height: 30 }} />
+              <Box sx={{ display: "flex", gap: 4 }}>
+                {menuItems.map((item) => (
+                  <Button
+                    key={item.key}
+                    color="inherit"
+                    onClick={() => setSelectedMenu(item.key)}
+                    sx={{
+                      backgroundColor: selectedMenu === item.key ? "rgba(255, 255, 255, 0.1)" : "transparent",
+                      '&:hover': {
+                        backgroundColor: "rgba(255, 255, 255, 0.2)",
+                      },
+                    }}
+                  >
+                    {item.name}
+                  </Button>
+                ))}
+                {/* Dark/light mode toggle button */}
+                <Button color="inherit" onClick={toggleDarkMode}>
+                  {darkMode ? <Brightness4Icon /> : <WbSunnyIcon />}
+                </Button>
+              </Box>
+            </AppBarContent>
           </Toolbar>
-        </AppBar>
-        <Drawer
-          sx={{
-            width: drawerWidth,
-            flexShrink: 0,
-            "& .MuiDrawer-paper": {
-              width: drawerWidth,
-              boxSizing: "border-box",
-            },
-          }}
-          variant="persistent"
-          anchor="left"
-          open={open}
-        >
-          <DrawerHeader>
-            <IconButton onClick={handleDrawerClose}>
-              {theme.direction === "ltr" ? (
-                <ChevronLeftIcon />
-              ) : (
-                <ChevronRightIcon />
-              )}
-            </IconButton>
-          </DrawerHeader>
-          <Divider />
-          <List>
-            {Object.entries({
-              Dashboard: DashboardIcon,
-              Analytics: BarChartIcon,
-              Actionables: ListAltIcon,
-              "Upload Data": CloudUploadIcon,
-            }).map(([page, Icon]) => (
-              <ListItem key={page} disablePadding>
-                <ListItemButton
-                  onClick={() => setSelectedMenu(page.toLowerCase())}
-                  className={
-                    selectedMenu === page.toLowerCase()
-                      ? "menu-item-active"
-                      : "menu-item"
-                  }
-                  sx={{
-                    backgroundColor:
-                      selectedMenu === page.toLowerCase() ? "grey" : "inherit",
-                  }}
-                >
-                  <ListItemIcon>
-                    <Icon />
-                  </ListItemIcon>
-                  <ListItemText primary={page} />
-                </ListItemButton>
-              </ListItem>
-            ))}
-          </List>
-        </Drawer>
-        <React.Fragment>
-          <CssBaseline />
-          <Container maxWidth="lg">
-            <Main open={open}>
-              <DrawerHeader />
-              {selectedMenu === "dashboard" && (
-                <>
-                  <Dashboard
-                    setFromDate={setFromDate}
-                    fromDate={fromDate}
-                    setToDate={setToDate}
-                    toDate={toDate}
-                    selectedProduct={selectedProduct}
-                    setSelectedProduct={setSelectedProduct}
-                    selectedSource={selectedSource}
-                    setSelectedSource={setSelectedSource}
-                    setSelectedMenu={setSelectedMenu}
-                  />
-                </>
-              )}
-              {selectedMenu === "analytics" && (
-                <Analytics
-                  setFromDate={setFromDate}
-                  fromDate={fromDate}
-                  setToDate={setToDate}
-                  toDate={toDate}
-                  selectedProduct={selectedProduct}
-                  setSelectedProduct={setSelectedProduct}
-                  selectedSource={selectedSource}
-                  setSelectedSource={setSelectedSource}
-                />
-              )}
-              {selectedMenu === "actionables" && (
-                <Actionables
-                  setFromDate={setFromDate}
-                  fromDate={fromDate}
-                  setToDate={setToDate}
-                  toDate={toDate}
-                  selectedProduct={selectedProduct}
-                  setSelectedProduct={setSelectedProduct}
-                  selectedSource={selectedSource}
-                  setSelectedSource={setSelectedSource}
-                />
-              )}
-              {selectedMenu === "upload data" && (
-                <UploadData
-                  selectedProduct={selectedProduct}
-                  setSelectedProduct={setSelectedProduct}
-                  selectedSource={selectedSource}
-                  setSelectedSource={setSelectedSource}
-                />
-              )}
-            </Main>
-          </Container>
-        </React.Fragment>
+        </MuiAppBar>
+        <Main theme={darkMode ? darkTheme : lightTheme}>
+          {selectedMenu === "dashboard" && (
+            <Dashboard
+              setFromDate={setFromDate}
+              fromDate={fromDate}
+              setToDate={setToDate}
+              toDate={toDate}
+              selectedProduct={selectedProduct}
+              setSelectedProduct={setSelectedProduct}
+              selectedSource={selectedSource}
+              setSelectedSource={setSelectedSource}
+              setSelectedMenu={setSelectedMenu}
+            />
+          )}
+          {selectedMenu === "analytics" && (
+            <Analytics
+              setFromDate={setFromDate}
+              fromDate={fromDate}
+              setToDate={setToDate}
+              toDate={toDate}
+              selectedProduct={selectedProduct}
+              setSelectedProduct={setSelectedProduct}
+              selectedSource={selectedSource}
+              setSelectedSource={setSelectedSource}
+            />
+          )}
+          {selectedMenu === "actionables" && (
+            <Actionables
+              setFromDate={setFromDate}
+              fromDate={fromDate}
+              setToDate={setToDate}
+              toDate={toDate}
+              selectedProduct={selectedProduct}
+              setSelectedProduct={setSelectedProduct}
+              selectedSource={selectedSource}
+              setSelectedSource={setSelectedSource}
+            />
+          )}
+          {selectedMenu === "upload data" && (
+            <UploadData
+              selectedProduct={selectedProduct}
+              setSelectedProduct={setSelectedProduct}
+              selectedSource={selectedSource}
+              setSelectedSource={setSelectedSource}
+            />
+          )}
+        </Main>
       </Box>
     </ThemeProvider>
   );
 }
-
-export {};
