@@ -89,41 +89,6 @@ export default function SentimentScoreGraph({
         return hash % 360;
     };
 
-    const getTickValues = (sentimentScores: DataSet[]): string[] => {
-        console.log(sentimentScores);
-        const months = new Set<string>();
-        const years = new Set<string>();
-
-        sentimentScores.forEach((dataSet) => {
-            dataSet.data.forEach(({x}) => {
-                const [day, month, year] = x.split(" ");
-                months.add(`${month}/${year}`);
-                years.add(year);
-            });
-        });
-
-        const showYears = years.size > 1;
-
-        const sortedMonths = Array.from(months).sort((a, b) => {
-            const [monthA, yearA] = a.split("/").map(Number);
-            const [monthB, yearB] = b.split("/").map(Number);
-            return yearA - yearB || monthA - monthB;
-        });
-
-        const optionsWithYear: Intl.DateTimeFormatOptions = {
-            month: "short",
-            year: "2-digit",
-        };
-        const optionsWithoutYear: Intl.DateTimeFormatOptions = {month: "short"};
-
-        return sortedMonths.map((monthYear: string) => {
-            const [month, year] = monthYear.split("/");
-            const date = new Date(`20${year}-${month}-01`);
-            const options = showYears ? optionsWithYear : optionsWithoutYear;
-            return new Intl.DateTimeFormat("en-GB", options).format(date);
-        });
-    };
-
     const handleSubcategoryChange = (event: SelectChangeEvent<string>) => {
         const {
             target: {value},
@@ -374,19 +339,20 @@ export default function SentimentScoreGraph({
                                 margin={{
                                     top: 20,
                                     right: 20,
-                                    bottom: 40,
+                                    bottom: 80,
                                     left: 40,
                                 }}
                                 xScale={{
                                     type: "time",
-                                    format: "%d %b",
+                                    format: "%d %b %y",
                                     precision: "day",
                                 }}
+                                xFormat={`time:%d %b %y`}
                                 yScale={{
                                     type: "linear",
                                     min: "auto",
                                     max: "auto",
-                                    stacked: true,
+                                    stacked: false,
                                     reverse: false,
                                 }}
                                 yFormat=" >+.1f"
@@ -401,7 +367,7 @@ export default function SentimentScoreGraph({
                                     legendOffset: 36,
                                     legendPosition: "middle",
                                     truncateTickAt: 0,
-                                    format: "%b",
+                                    format: "%b '%y",
                                     tickValues: "every 1 month",
                                 }}
                                 axisLeft={{
@@ -425,15 +391,15 @@ export default function SentimentScoreGraph({
                                 useMesh={true}
                                 legends={[
                                     {
-                                        anchor: "top-right",
-                                        direction: "column",
+                                        anchor: "bottom",
+                                        direction: "row",
                                         justify: false,
-                                        translateX: 100,
-                                        translateY: 0,
-                                        itemsSpacing: 0,
+                                        translateX: 0,
+                                        translateY: 50,
+                                        itemsSpacing: 20,
                                         itemDirection: "left-to-right",
                                         itemWidth: 80,
-                                        itemHeight: 20,
+                                        itemHeight: 10,
                                         itemOpacity: 0.75,
                                         symbolSize: 12,
                                         symbolShape: "circle",
@@ -515,13 +481,16 @@ export default function SentimentScoreGraph({
                                     left: 40,
                                 }}
                                 xScale={{
-                                    type: "point",
+                                    type: "time",
+                                    format: "%d %b %y",
+                                    precision: "day",
                                 }}
+                                xFormat={`time:%d %b %y`}
                                 yScale={{
                                     type: "linear",
                                     min: "auto",
                                     max: "auto",
-                                    stacked: true,
+                                    stacked: false,
                                     reverse: false,
                                 }}
                                 yFormat=" >+.1f"
@@ -536,7 +505,8 @@ export default function SentimentScoreGraph({
                                     legendOffset: 36,
                                     legendPosition: "middle",
                                     truncateTickAt: 0,
-                                    tickValues: getTickValues(sentimentScores),
+                                    format: "%b '%y",
+                                    tickValues: "every 1 month",
                                 }}
                                 axisLeft={{
                                     tickSize: 5,
