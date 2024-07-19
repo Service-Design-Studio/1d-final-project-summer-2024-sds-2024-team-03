@@ -83,46 +83,46 @@ export default function OverallSentimentScore({
   return (
     <div>
       <ButtonBase
-        component={Paper}
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "center",
-          p: 2,
-          borderRadius: 2,
-          flex: 1,
-          cursor: "pointer",
-          "&:hover": {
-            backgroundColor: "#f0f0f0",
-          },
-        }}
-        id="overall-sentiment-score"
-        onClick={() => setSelectedMenu("analytics")}
-      >
-        <Typography variant="h6" color="grey">
-          Overall Sentiment Score
-        </Typography>
-        <Typography variant="h4" color="black">
-          {overallSentimentScore ? overallSentimentScore : 0}/5
-        </Typography>
-        <Typography
-          variant="subtitle1"
-          color={
-            overallSentimentScoreChange && overallSentimentScoreChange > 0
-              ? "darkgreen"
-              : overallSentimentScoreChange && overallSentimentScoreChange < 0
-              ? "red"
-              : "grey"
-          }
-        >
-          {overallSentimentScoreChange && overallSentimentScoreChange > 0
-            ? `↑ ${overallSentimentScoreChange}% Increase`
+      component={Paper}
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        p: 2,
+        borderRadius: 2,
+        flex: 1,
+        cursor: "pointer",
+        height: '100%',
+        "&:hover": {
+          backgroundColor: "#f0f0f0", 
+        },
+      }}
+      id="overall-sentiment-score"
+        onClick={() => setSelectedMenu("analytics")} >
+      <Typography variant="h6" color="grey">
+        Overall Sentiment Score
+      </Typography>
+      <Typography variant="h4" color="black">
+        {overallSentimentScore ? overallSentimentScore : 0}/5
+      </Typography>
+      <Typography
+        variant="subtitle1"
+        color={
+          overallSentimentScoreChange && overallSentimentScoreChange > 0
+            ? "darkgreen"
             : overallSentimentScoreChange && overallSentimentScoreChange < 0
-            ? `↓ ${overallSentimentScoreChange}% Decrease`
-            : `Not Applicable`}
-        </Typography>
-      </ButtonBase>
-    </div>
+            ? "red"
+            : "grey"
+        }
+      >
+        {overallSentimentScoreChange && overallSentimentScoreChange > 0
+          ? `↑ ${overallSentimentScoreChange}% Increase`
+          : overallSentimentScoreChange && overallSentimentScoreChange < 0
+          ? `↓ ${overallSentimentScoreChange}% Decrease`
+          : `Not Applicable`}
+      </Typography>
+    </ButtonBase>
+  </div>
   );
 }

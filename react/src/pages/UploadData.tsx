@@ -17,36 +17,42 @@ export default function UploadData({
   selectedSource,
   setSelectedSource,
 }: UploadDataProps) {
-  
 
   return (
-    <>
+    <Box sx={{ maxWidth: 'lg', mx: 'auto', px: 2 }}>
       <h1>Upload Data</h1>
-      <Box sx={{ flexGrow: 1 }}>
-        <Grid container>
-          <Grid xs={6} item>
+      <Box sx={{ 
+        display: 'flex', 
+        flexDirection: 'column', 
+        gap: 2 
+      }}>
+        <Box sx={{ 
+          display: 'flex', 
+          flexDirection: { xs: 'column', sm: 'row' }, 
+          gap: 2,
+          justifyContent: 'flex-start'
+        }}>
+          <Box sx={{ width: { xs: '100%', sm: '200px' } }}>
             <FilterProduct
               selectedProduct={selectedProduct}
               setSelectedProduct={setSelectedProduct}
               multiple={false}
             />
-          </Grid>
-          <Grid xs={6} item>
+          </Box>
+          <Box sx={{ width: { xs: '100%', sm: '200px' } }}>
             <FilterSource
               selectedSource={selectedSource}
               setSelectedSource={setSelectedSource}
               multiple={false}
             />
-          </Grid>
-          <Grid xs={12}>
-            <FileDrop
-              selectedProduct={selectedProduct}
-              selectedSource={selectedSource}
-            />
-            </Grid>
-        </Grid>
+          </Box>
+        </Box>
+        <FileDrop
+          selectedProduct={selectedProduct}
+          selectedSource={selectedSource}
+        />
       </Box>
-    </>
+    </Box>
   );
 }
 

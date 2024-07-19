@@ -54,7 +54,8 @@ export default function SentimentDistribution({
   const theme = useTheme();
 
   return (
-    <ButtonBase
+    <div>
+      <ButtonBase
       component={Paper}
       sx={{
         display: "flex",
@@ -65,6 +66,7 @@ export default function SentimentDistribution({
         borderRadius: 2,
         flex: 1,
         cursor: "pointer",
+        height: '100%',
         "&:hover": {
           backgroundColor: "#f0f0f0",
         },
@@ -90,5 +92,6 @@ export default function SentimentDistribution({
           </Typography>
         ))}
     </ButtonBase>
+  </div>
   );
 }
