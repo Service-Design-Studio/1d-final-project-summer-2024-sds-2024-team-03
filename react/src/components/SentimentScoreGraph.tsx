@@ -54,9 +54,13 @@ export default function SentimentScoreGraph({
 
     const [sentimentScores, setSentimentScores] = useState<DataSet[]>([]);
     const [selectedSubcategory, setSelectedSubcategory] = useState<string>("");
-    // const [selectedFeedbackcategory, setSelectedFeedbackcategory] = useState<string>("");
+    const [selectedFeedbackcategory, setSelectedFeedbackcategories] = useState<
+        string[]
+    >([]);
     const [graphSubcategories, setGraphSubcategories] = useState<string[]>([]);
-    // const [graphFeedbackcategories, setGraphFeedbackcategories] = useState<string[]>([]);
+    const [graphFeedbackcategories, setGraphFeedbackcategories] = useState<
+        string[]
+    >([]);
     const [noData, setNoData] = useState<boolean>(true);
 
     const theme = useTheme();
@@ -96,14 +100,17 @@ export default function SentimentScoreGraph({
         setSelectedSubcategory(value);
     };
 
-    // const handleFeedbackcategoryChange = (
-    //   event: SelectChangeEvent<string>
-    // ) => {
-    //   const {
-    //     target: { value },
-    //   } = event;
-    //   setGraphFeedbackcategories(value);
-    // };
+    const handleFeedbackcategoryChange = (
+        event: SelectChangeEvent<string[]>
+    ) => {
+        const {
+            target: {value},
+        } = event;
+        setSelectedFeedbackcategories(
+            // On autofill we get a stringified value.
+            typeof value === "string" ? value.split(",") : value
+        );
+    };
 
     useEffect(() => {
         const urlPrefix =
@@ -121,11 +128,17 @@ export default function SentimentScoreGraph({
                         setGraphSubcategories(
                             data.map(({subcategory}) => subcategory)
                         );
-                        // setGraphFeedbackcategories(data.map( ({ feedback_category }) => feedback_category ));
+                        setGraphFeedbackcategories(
+                            data.map(({feedback_category}) => feedback_category)
+                        );
                         const filteredData = data.filter(
                             (item) =>
-                                selectedSubcategory.includes(item.subcategory)
-                            // && selectedFeedbackcategory.includes(item.feedback_category)
+                                selectedSubcategory.includes(
+                                    item.subcategory
+                                ) &&
+                                selectedFeedbackcategory.includes(
+                                    item.feedback_category
+                                )
                         );
                         const filteredDataGroupedByFeedbackcategory =
                             filteredData.reduce((acc, item) => {
@@ -316,38 +329,49 @@ export default function SentimentScoreGraph({
                             ))}
                         </Select>
                     </FormControl>
-                    {/* <FormControl sx={{ m: 0, width: "20%" }}>
-          <InputLabel id="detailed-sentimentscoregraph-filter-subcategory-label">
-            Subcategories
-          </InputLabel>
-          <Select
-            labelId="detailed-sentimentscoregraph-filter-subcategory-label"
-            id="detailed-sentimentscoregraph-filter-subcategory"
-            multiple
-            value={graphSubcategories}
-            onChange={handleSubcategoryChange}
-            input={
-              <OutlinedInput
-                id="detailed-sentimentscoregraph-select-subcategory"
-                label="subcategory"
-              />
-            }
-            renderValue={(selected) => (
-              <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
-                {selected.map((value) => (
-                  <Chip key={value} label={value} />
-                ))}
-              </Box>
-            )}
-            MenuProps={MenuProps}
-          >
-            {graphSubcategories.map((subcategpry: string) => (
-              <MenuItem key={subcategpry} value={subcategpry}>
-                {subcategpry}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl> */}
+                    <FormControl sx={{m: 0, width: "20%"}}>
+                        <InputLabel id="detailed-sentimentscoregraph-filter-feedbackcategory-label">
+                            Subcategories
+                        </InputLabel>
+                        <Select
+                            labelId="detailed-sentimentscoregraph-filter-feedbackcategory-label"
+                            id="detailed-sentimentscoregraph-filter-feedbackcategory"
+                            multiple
+                            value={selectedFeedbackcategory}
+                            onChange={handleFeedbackcategoryChange}
+                            input={
+                                <OutlinedInput
+                                    id="detailed-sentimentscoregraph-select-feedbackcategory"
+                                    label="feedbackcategory"
+                                />
+                            }
+                            renderValue={(selected) => (
+                                <Box
+                                    sx={{
+                                        display: "flex",
+                                        flexWrap: "wrap",
+                                        gap: 0.5,
+                                    }}
+                                >
+                                    {selected.map((value) => (
+                                        <Chip key={value} label={value} />
+                                    ))}
+                                </Box>
+                            )}
+                            MenuProps={MenuProps}
+                        >
+                            {graphFeedbackcategories.map(
+                                (feedbackcategory: string) => (
+                                    <MenuItem
+                                        key={feedbackcategory}
+                                        value={feedbackcategory}
+                                    >
+                                        {feedbackcategory}
+                                    </MenuItem>
+                                )
+                            )}
+                        </Select>
+                    </FormControl>
                 </Box>
                 {noData ? (
                     <Typography variant="body2" color="grey">
