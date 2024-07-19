@@ -28,8 +28,9 @@ export default function Analytics({
     selectedSource,
     setSelectedSource,
 }: AnalyticsProps) {
+
     return (
-        <>
+        <Box sx={{ maxWidth: 'lg', mx: 'auto', px: 2 }}>
             <h1>Analytics</h1>
             <Box sx={{flexGrow: 1, flexDirection: "row"}}>
                 <Grid container>
@@ -56,7 +57,7 @@ export default function Analytics({
                 selectedSource={selectedSource}
                 isDetailed={true}
             />
-        </>
+        </Box>
     );
 }
 

@@ -28,7 +28,7 @@ export default function Actionables({
     setSelectedSource,
 }: ActionablesProps) {
     return (
-        <>
+        <Box sx={{ maxWidth: 'lg', mx: 'auto', px: 2 }}>
             <h1>Actionables</h1>
             <Box sx={{flexGrow: 1, flexDirection: "row"}}>
                 <Grid container>
@@ -48,7 +48,7 @@ export default function Actionables({
                     />
                 </Grid>
             </Box>
-        </>
+        </Box>
     );
 }
 
