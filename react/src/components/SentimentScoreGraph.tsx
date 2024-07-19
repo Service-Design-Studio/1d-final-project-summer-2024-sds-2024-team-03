@@ -134,7 +134,7 @@ export default function SentimentScoreGraph({
                             )
                         );
                         const filteredSubcategories = data.filter((item) =>
-                            selectedSubcategory.includes(item.subcategory)
+                            item.subcategory.includes(selectedSubcategory)
                         );
                         console.log("filteredSubcategories");
                         console.log(filteredSubcategories);

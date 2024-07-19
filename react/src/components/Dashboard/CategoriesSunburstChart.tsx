@@ -92,7 +92,6 @@ export default function CategoriesSunburstChart({
                         string,
                         AverageSentimentScore
                     >();
-                    console.log(data);
                     data.forEach(
                         ({
                             product,
@@ -186,15 +185,6 @@ export default function CategoriesSunburstChart({
                     );
                     console.log(Array.from(productMap.values()));
                     console.log(Array.from(avgSentimentScoresMap.values()));
-                    console.log(
-                        Array.from(avgSentimentScoresMap.values()).find(
-                            (score: AverageSentimentScore) =>
-                                score.product === "Cards" &&
-                                score.subcategory ===
-                                    "Credit Card Fraud/Scam" &&
-                                score.feedback_category === "Fee Related"
-                        )!.averageSentimentScore
-                    );
                 } else {
                     setComponents([]);
                     setAverageSentimentScores([]);
