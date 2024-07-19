@@ -1,14 +1,15 @@
 import React, {useEffect, useState} from "react";
 import {Theme, useTheme} from "@mui/material/styles";
-import {Paper, Typography, ButtonBase} from "@mui/material";
-import dayjs, {Dayjs} from "dayjs";
+import {Paper, Box, Typography, ButtonBase} from "@mui/material";
+import {Dayjs} from "dayjs";
+import {ResponsiveSunburst} from "@nivo/sunburst";
 
 interface CategoriesSunburstChartProps {
     fromDate: Dayjs;
     toDate: Dayjs;
     selectedProduct: string[];
     selectedSource: string[];
-    setSelectedMenu: React.Dispatch<React.SetStateAction<string>>;
+    setSelectedMenu?: React.Dispatch<React.SetStateAction<string>>;
 }
 
 export default function CategoriesSunburstChart({
@@ -20,10 +21,60 @@ export default function CategoriesSunburstChart({
 }: CategoriesSunburstChartProps) {
     const fromDate_string = fromDate.format("DD/MM/YYYY");
     const toDate_string = toDate.format("DD/MM/YYYY");
-    const [overallSentimentScore, setOverallSentimentScore] =
-        useState<number>(0);
-    const [overallSentimentScoreChange, setOverallSentimentScoreChange] =
-        useState<number>(0);
+    interface FeedbackCategory {
+        category: string;
+        color: string;
+        mentions: number;
+    }
+
+    interface Subcategory {
+        category: string;
+        color: string;
+        children: FeedbackCategory[];
+    }
+
+    interface Product {
+        category: string;
+        color: string;
+        children: Subcategory[];
+    }
+
+    interface AverageSentimentScore {
+        product: string;
+        subcategory: string;
+        feedback_category: string;
+        averageSentimentScore: number;
+        totalSentimentScore: number;
+        mentions: number;
+    }
+
+    const [components, setComponents] = useState<Product[]>([]);
+    const [averageSentimentScores, setAverageSentimentScores] = useState<
+        AverageSentimentScore[]
+    >([]);
+    const theme = useTheme();
+
+    const feedbackcategoryHashToHue = (feedbackcategory: string) => {
+        let hash = 0;
+        for (let i = 0; i < feedbackcategory.length; i++) {
+            hash = feedbackcategory.charCodeAt(i) + ((hash << 5) - hash);
+        }
+        return hash % 360;
+    };
+
+    const getAverageSentimentScore = (
+        product: string,
+        subcategory: string,
+        feedback_category: string
+    ): number | 0 => {
+        const avgSentimentScore = averageSentimentScores.find(
+            (score) =>
+                score.product === product &&
+                score.subcategory === subcategory &&
+                score.feedback_category === feedback_category
+        );
+        return avgSentimentScore ? avgSentimentScore.averageSentimentScore : 0;
+    };
 
     useEffect(() => {
         const urlPrefix =
@@ -31,64 +82,135 @@ export default function CategoriesSunburstChart({
                 ? "http://localhost:3000"
                 : "https://jbaaam-yl5rojgcbq-et.a.run.app";
         fetch(
-            `${urlPrefix}/analytics/get_overall_sentiment_scores?fromDate=${fromDate_string}&toDate=${toDate_string}&product=${selectedProduct}&source=${selectedSource}`
+            `${urlPrefix}/analytics/get_sentiment_scores?fromDate=${fromDate_string}&toDate=${toDate_string}&product=${selectedProduct}&source=${selectedSource}`
         )
             .then((response) => response.json())
             .then((data: Record<string, string>[]) => {
-                console.log(`CURR:`);
-                console.log(data);
-                const dates: string[] = data.map((item) => item.date as string);
-                const totalScore = data.reduce((sum, item) => {
-                    const score = parseFloat(item.sentiment_score as string);
-                    return sum + (isNaN(score) ? 0 : score);
-                }, 0);
-                const avgScore = totalScore / dates.length;
-                console.log(avgScore);
-                setOverallSentimentScore(parseFloat(avgScore.toFixed(1)));
+                if (data.length > 0) {
+                    const productMap = new Map<string, Product>();
+                    const avgSentimentScoresMap = new Map<
+                        string,
+                        AverageSentimentScore
+                    >();
+                    console.log(data);
+                    data.forEach(
+                        ({
+                            product,
+                            subcategory,
+                            feedback_category,
+                            sentiment_score,
+                        }) => {
+                            const score = parseFloat(sentiment_score);
+                            const key = `${product}_${subcategory}_${feedback_category}`;
 
-                const prevFromDate_string = dayjs(fromDate)
-                    .subtract(dayjs(toDate).diff(dayjs(fromDate), "day"), "day")
-                    .format("DD/MM/YYYY");
-                fetch(
-                    `${urlPrefix}/analytics/get_overall_sentiment_scores?fromDate=${prevFromDate_string}&toDate=${fromDate_string}&product=${selectedProduct}&source=${selectedSource}`
-                )
-                    .then((response) => response.json())
-                    .then((data: Record<string, string>[]) => {
-                        console.log(`PREV:`);
-                        console.log(data);
-                        const dates: string[] = data.map(
-                            (item) => item.date as string
-                        );
-                        const totalScore = data.reduce((sum, item) => {
-                            const score = parseFloat(
-                                item.sentiment_score as string
+                            if (!avgSentimentScoresMap.has(key)) {
+                                avgSentimentScoresMap.set(key, {
+                                    product,
+                                    subcategory,
+                                    feedback_category,
+                                    averageSentimentScore: 0,
+                                    totalSentimentScore: 0,
+                                    mentions: 0,
+                                });
+                            }
+
+                            const avgSentimentScore =
+                                avgSentimentScoresMap.get(key)!;
+                            avgSentimentScore.totalSentimentScore += score;
+                            avgSentimentScore.mentions += 1;
+                            avgSentimentScore.averageSentimentScore =
+                                avgSentimentScore.totalSentimentScore /
+                                avgSentimentScore.mentions;
+
+                            if (!productMap.has(product)) {
+                                productMap.set(product, {
+                                    category: product,
+                                    color: `hsl(${feedbackcategoryHashToHue(
+                                        product
+                                    )}, 70%, 50%)`,
+                                    children: [],
+                                });
+                            }
+
+                            const productNode = productMap.get(product);
+                            const subcategoryMap = productNode!.children;
+
+                            let subcategoryNode = subcategoryMap.find(
+                                (child) => child.category === subcategory
                             );
-                            return sum + (isNaN(score) ? 0 : score);
-                        }, 0);
-                        const prevAvgScore = totalScore / dates.length;
-                        const prevOverallSentimentScore = prevAvgScore;
-                        console.log(prevOverallSentimentScore);
-                        // increase/decrease from prevOverallSentimentScore -> overallSentimentScore
-                        if (prevOverallSentimentScore !== 0) {
-                            setOverallSentimentScoreChange(
-                                parseFloat(
-                                    (
-                                        (100 *
-                                            (avgScore -
-                                                prevOverallSentimentScore)) /
-                                        prevOverallSentimentScore
-                                    ).toFixed(1)
-                                )
+                            if (!subcategoryNode) {
+                                subcategoryNode = {
+                                    category: subcategory,
+                                    color: `hsl(${feedbackcategoryHashToHue(
+                                        subcategory
+                                    )}, 70%, 50%)`,
+                                    children: [],
+                                };
+                                subcategoryMap.push(subcategoryNode);
+                            }
+
+                            const feedbackMap = subcategoryNode.children;
+                            let feedbackNode = feedbackMap.find(
+                                (child) => child.category === feedback_category
                             );
+                            if (!feedbackNode) {
+                                feedbackNode = {
+                                    category: feedback_category,
+                                    color: `hsl(${feedbackcategoryHashToHue(
+                                        feedback_category
+                                    )}, 70%, 50%)`,
+                                    mentions: 0,
+                                };
+                                feedbackMap.push(feedbackNode);
+                            }
+
+                            // feedbackNode.totalSentimentScore +=
+                            //     parseFloat(sentiment_score);
+                            feedbackNode.mentions += 1;
                         }
-                    });
+                    );
+
+                    // productMap.forEach((product) => {
+                    //     product.children.forEach((subcategory) => {
+                    //         subcategory.children.forEach((feedback) => {
+                    //             feedback.averageSentimentScore =
+                    //                 feedback.totalSentimentScore /
+                    //                 feedback.mentions;
+                    //         });
+                    //     });
+                    // });
+
+                    setComponents(Array.from(productMap.values()));
+                    setAverageSentimentScores(
+                        Array.from(avgSentimentScoresMap.values())
+                    );
+                    console.log(Array.from(productMap.values()));
+                    console.log(Array.from(avgSentimentScoresMap.values()));
+                    console.log(
+                        getAverageSentimentScore(
+                            "Cards",
+                            "Credit Card Fraud/Scam",
+                            "Fee Related"
+                        )
+                    );
+                } else {
+                    setComponents([]);
+                    setAverageSentimentScores([]);
+                }
             });
     }, [fromDate, toDate, selectedProduct, selectedSource]);
 
-    const theme = useTheme();
-
+    /* Must have parent container with a defined size */
     return (
-        <div>
+        <Box
+            sx={{
+                display: "flex",
+                gap: 2,
+                mt: 2,
+                width: "100%",
+                flexDirection: "row",
+            }}
+        >
             <ButtonBase
                 component={Paper}
                 sx={{
@@ -104,36 +226,85 @@ export default function CategoriesSunburstChart({
                         backgroundColor: "#f0f0f0",
                     },
                 }}
-                id="overall-sentiment-score"
-                onClick={() => setSelectedMenu("analytics")}
+                id="overall-categoriessunburstchart"
+                onClick={() => setSelectedMenu!("analytics")}
             >
-                <Typography variant="h6" color="grey">
-                    Overall Sentiment Score
-                </Typography>
-                <Typography variant="h4" color="black">
-                    {overallSentimentScore ? overallSentimentScore : 0}/5
-                </Typography>
-                <Typography
-                    variant="subtitle1"
-                    color={
-                        overallSentimentScoreChange &&
-                        overallSentimentScoreChange > 0
-                            ? "darkgreen"
-                            : overallSentimentScoreChange &&
-                              overallSentimentScoreChange < 0
-                            ? "red"
-                            : "grey"
-                    }
+                <Box
+                    sx={{
+                        display: "flex",
+                        gap: 2,
+                        mt: 2,
+                        width: "100%",
+                        flexDirection: "row",
+                    }}
                 >
-                    {overallSentimentScoreChange &&
-                    overallSentimentScoreChange > 0
-                        ? `↑ ${overallSentimentScoreChange}% Increase`
-                        : overallSentimentScoreChange &&
-                          overallSentimentScoreChange < 0
-                        ? `↓ ${overallSentimentScoreChange}% Decrease`
-                        : `Not Applicable`}
-                </Typography>
+                    <Typography
+                        variant="h6"
+                        component="h3"
+                        sx={{marginRight: 2, width: "50%"}}
+                    >
+                        Sentiment vs Categories
+                    </Typography>
+                </Box>
+                {components.length === 0 ? (
+                    <Typography variant="body2" color="grey">
+                        No data
+                    </Typography>
+                ) : (
+                    <Box
+                        sx={{
+                            display: "flex",
+                            gap: 2,
+                            mt: 2,
+                            width: "100%",
+                            height: 200,
+                        }}
+                    >
+                        <ResponsiveSunburst
+                            data={{
+                                category: "nivo",
+                                color: "hsl(265, 70%, 50%)",
+                                children: components,
+                            }}
+                            margin={{top: 10, right: 10, bottom: 10, left: 10}}
+                            id="category"
+                            value="mentions"
+                            cornerRadius={2}
+                            borderColor={{theme: "background"}}
+                            colors={{scheme: "paired"}}
+                            childColor={{
+                                from: "color",
+                                modifiers: [["brighter", 0.1]],
+                            }}
+                            enableArcLabels={true}
+                            arcLabelsSkipAngle={15}
+                            arcLabelsTextColor={{
+                                from: "color",
+                                modifiers: [["darker", 1.4]],
+                            }}
+                            // tooltip={(e) =>
+                            //     t.createElement(
+                            //         l,
+                            //         {style: {color: e.color}},
+                            //         t.createElement(u, null, "id"),
+                            //         t.createElement(c, null, e.id),
+                            //         t.createElement(u, null, "value"),
+                            //         t.createElement(c, null, e.value),
+                            //         t.createElement(u, null, "percentage"),
+                            //         t.createElement(
+                            //             c,
+                            //             null,
+                            //             Math.round(100 * e.percentage) / 100,
+                            //             "%"
+                            //         ),
+                            //         t.createElement(u, null, "color"),
+                            //         t.createElement(c, null, e.color)
+                            //     )
+                            // }
+                        />
+                    </Box>
+                )}
             </ButtonBase>
-        </div>
+        </Box>
     );
 }

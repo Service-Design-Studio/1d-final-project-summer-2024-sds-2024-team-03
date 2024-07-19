@@ -98,6 +98,7 @@ export default function SentimentScoreGraph({
         setSelectedSubcategory((prevValue) =>
             prevValue === value ? "" : value
         );
+        setSelectedFeedbackcategories([]);
     };
 
     const handleFeedbackcategoryChange = (
@@ -281,7 +282,7 @@ export default function SentimentScoreGraph({
                     borderRadius: 2,
                     flex: 1,
                 }}
-                id="overall-sentimentscoregraph"
+                id="detailed-sentimentscoregraph"
             >
                 <Box
                     sx={{
@@ -318,19 +319,17 @@ export default function SentimentScoreGraph({
                                     label="subcategory"
                                 />
                             }
-                            renderValue={(selected) =>
-                                selected && (
-                                    <Box
-                                        sx={{
-                                            display: "flex",
-                                            flexWrap: "wrap",
-                                            gap: 0.5,
-                                        }}
-                                    >
-                                        <Chip key={selected} label={selected} />
-                                    </Box>
-                                )
-                            }
+                            renderValue={(selected) => (
+                                <Box
+                                    sx={{
+                                        display: "flex",
+                                        flexWrap: "wrap",
+                                        gap: 0.5,
+                                    }}
+                                >
+                                    <Chip key={selected} label={selected} />
+                                </Box>
+                            )}
                             MenuProps={MenuProps}
                         >
                             {graphSubcategories.map((subcategory: string) => (
@@ -359,21 +358,19 @@ export default function SentimentScoreGraph({
                                     label="feedbackcategory"
                                 />
                             }
-                            renderValue={(selected) =>
-                                selected && (
-                                    <Box
-                                        sx={{
-                                            display: "flex",
-                                            flexWrap: "wrap",
-                                            gap: 0.5,
-                                        }}
-                                    >
-                                        {selected.map((value) => (
-                                            <Chip key={value} label={value} />
-                                        ))}
-                                    </Box>
-                                )
-                            }
+                            renderValue={(selected) => (
+                                <Box
+                                    sx={{
+                                        display: "flex",
+                                        flexWrap: "wrap",
+                                        gap: 0.5,
+                                    }}
+                                >
+                                    {selected.map((value) => (
+                                        <Chip key={value} label={value} />
+                                    ))}
+                                </Box>
+                            )}
                             MenuProps={MenuProps}
                         >
                             {graphFeedbackcategories.map(
