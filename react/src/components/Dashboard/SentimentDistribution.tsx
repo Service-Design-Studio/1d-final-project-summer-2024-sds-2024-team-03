@@ -39,6 +39,7 @@ fromDate, toDate, selectedProduct, selectedSource, setSelectedMenu
   const theme = useTheme();
 
   return (
+    <div>
       <ButtonBase
       component={Paper}
       sx={{
@@ -50,6 +51,7 @@ fromDate, toDate, selectedProduct, selectedSource, setSelectedMenu
         borderRadius: 2,
         flex: 1,
         cursor: "pointer",
+        height: '100%',
         "&:hover": {
           backgroundColor: "#f0f0f0", 
         },
@@ -63,5 +65,6 @@ fromDate, toDate, selectedProduct, selectedSource, setSelectedMenu
         </Typography>
       ))}
     </ButtonBase>
+  </div>
   );
 }

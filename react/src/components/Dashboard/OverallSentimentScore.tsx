@@ -73,6 +73,7 @@ fromDate, toDate, selectedProduct, selectedSource, setSelectedMenu
         borderRadius: 2,
         flex: 1,
         cursor: "pointer",
+        height: '100%',
         "&:hover": {
           backgroundColor: "#f0f0f0", 
         },
@@ -102,6 +103,6 @@ fromDate, toDate, selectedProduct, selectedSource, setSelectedMenu
           : `Not Applicable`}
       </Typography>
     </ButtonBase>
-    </div>
+  </div>
   );
 }
