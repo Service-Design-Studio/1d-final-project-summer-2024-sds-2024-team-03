@@ -92,7 +92,7 @@ export default function CategoriesSunburstChart({
                         string,
                         AverageSentimentScore
                     >();
-
+                    console.log(data);
                     data.forEach(
                         ({
                             product,
@@ -125,7 +125,9 @@ export default function CategoriesSunburstChart({
                             if (!productMap.has(product)) {
                                 productMap.set(product, {
                                     category: product,
-                                    color: "hsl(189, 70%, 50%)",
+                                    color: `hsl(${feedbackcategoryHashToHue(
+                                        product
+                                    )}, 70%, 50%)`,
                                     children: [],
                                 });
                             }
@@ -139,7 +141,9 @@ export default function CategoriesSunburstChart({
                             if (!subcategoryNode) {
                                 subcategoryNode = {
                                     category: subcategory,
-                                    color: "hsl(189, 70%, 50%)",
+                                    color: `hsl(${feedbackcategoryHashToHue(
+                                        subcategory
+                                    )}, 70%, 50%)`,
                                     children: [],
                                 };
                                 subcategoryMap.push(subcategoryNode);
@@ -152,7 +156,9 @@ export default function CategoriesSunburstChart({
                             if (!feedbackNode) {
                                 feedbackNode = {
                                     category: feedback_category,
-                                    color: "hsl(189, 70%, 50%)",
+                                    color: `hsl(${feedbackcategoryHashToHue(
+                                        feedback_category
+                                    )}, 70%, 50%)`,
                                     mentions: 0,
                                 };
                                 feedbackMap.push(feedbackNode);
@@ -174,8 +180,6 @@ export default function CategoriesSunburstChart({
                     //     });
                     // });
 
-                    console.log(productMap);
-                    console.log(avgSentimentScoresMap);
                     setComponents(Array.from(productMap.values()));
                     setAverageSentimentScores(
                         Array.from(avgSentimentScoresMap.values())
@@ -184,7 +188,7 @@ export default function CategoriesSunburstChart({
                     console.log(Array.from(avgSentimentScoresMap.values()));
                     console.log(
                         getAverageSentimentScore(
-                            "cards",
+                            "Cards",
                             "Credit Card Fraud/Scam",
                             "Fee Related"
                         )
@@ -242,65 +246,64 @@ export default function CategoriesSunburstChart({
                         Sentiment vs Categories
                     </Typography>
                 </Box>
-                {/* {components.length === 0 ? (
+                {components.length === 0 ? (
                     <Typography variant="body2" color="grey">
                         No data
                     </Typography>
-                ) :  */}
-                (
-                <Box
-                    sx={{
-                        display: "flex",
-                        gap: 2,
-                        mt: 2,
-                        width: "100%",
-                        height: 200,
-                    }}
-                >
-                    <ResponsiveSunburst
-                        data={{
-                            category: "nivo",
-                            color: "hsl(265, 70%, 50%)",
-                            children: components,
+                ) : (
+                    <Box
+                        sx={{
+                            display: "flex",
+                            gap: 2,
+                            mt: 2,
+                            width: "100%",
+                            height: 200,
                         }}
-                        margin={{top: 10, right: 10, bottom: 10, left: 10}}
-                        id="category"
-                        value="mentions"
-                        cornerRadius={2}
-                        borderColor={{theme: "background"}}
-                        colors={{scheme: "paired"}}
-                        childColor={{
-                            from: "color",
-                            modifiers: [["brighter", 0.1]],
-                        }}
-                        enableArcLabels={true}
-                        arcLabelsSkipAngle={15}
-                        arcLabelsTextColor={{
-                            from: "color",
-                            modifiers: [["darker", 1.4]],
-                        }}
-                        // tooltip={(e) =>
-                        //     t.createElement(
-                        //         l,
-                        //         {style: {color: e.color}},
-                        //         t.createElement(u, null, "id"),
-                        //         t.createElement(c, null, e.id),
-                        //         t.createElement(u, null, "value"),
-                        //         t.createElement(c, null, e.value),
-                        //         t.createElement(u, null, "percentage"),
-                        //         t.createElement(
-                        //             c,
-                        //             null,
-                        //             Math.round(100 * e.percentage) / 100,
-                        //             "%"
-                        //         ),
-                        //         t.createElement(u, null, "color"),
-                        //         t.createElement(c, null, e.color)
-                        //     )
-                        // }
-                    />
-                </Box>
-                ){/* } */}
+                    >
+                        <ResponsiveSunburst
+                            data={{
+                                category: "nivo",
+                                color: "hsl(265, 70%, 50%)",
+                                children: components,
+                            }}
+                            margin={{top: 10, right: 10, bottom: 10, left: 10}}
+                            id="category"
+                            value="mentions"
+                            cornerRadius={2}
+                            borderColor={{theme: "background"}}
+                            colors={{scheme: "paired"}}
+                            childColor={{
+                                from: "color",
+                                modifiers: [["brighter", 0.1]],
+                            }}
+                            enableArcLabels={true}
+                            arcLabelsSkipAngle={15}
+                            arcLabelsTextColor={{
+                                from: "color",
+                                modifiers: [["darker", 1.4]],
+                            }}
+                            // tooltip={(e) =>
+                            //     t.createElement(
+                            //         l,
+                            //         {style: {color: e.color}},
+                            //         t.createElement(u, null, "id"),
+                            //         t.createElement(c, null, e.id),
+                            //         t.createElement(u, null, "value"),
+                            //         t.createElement(c, null, e.value),
+                            //         t.createElement(u, null, "percentage"),
+                            //         t.createElement(
+                            //             c,
+                            //             null,
+                            //             Math.round(100 * e.percentage) / 100,
+                            //             "%"
+                            //         ),
+                            //         t.createElement(u, null, "color"),
+                            //         t.createElement(c, null, e.color)
+                            //     )
+                            // }
+                        />
+                    </Box>
+                )}
             </ButtonBase>
         </Box>
     );

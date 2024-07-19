@@ -319,19 +319,17 @@ export default function SentimentScoreGraph({
                                     label="subcategory"
                                 />
                             }
-                            renderValue={(selected) =>
-                                selected !== selectedSubcategory && (
-                                    <Box
-                                        sx={{
-                                            display: "flex",
-                                            flexWrap: "wrap",
-                                            gap: 0.5,
-                                        }}
-                                    >
-                                        <Chip key={selected} label={selected} />
-                                    </Box>
-                                )
-                            }
+                            renderValue={(selected) => (
+                                <Box
+                                    sx={{
+                                        display: "flex",
+                                        flexWrap: "wrap",
+                                        gap: 0.5,
+                                    }}
+                                >
+                                    <Chip key={selected} label={selected} />
+                                </Box>
+                            )}
                             MenuProps={MenuProps}
                         >
                             {graphSubcategories.map((subcategory: string) => (
