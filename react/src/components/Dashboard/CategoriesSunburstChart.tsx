@@ -381,10 +381,10 @@ export default function CategoriesSunburstChart({
                                         backgroundColor: `hsl(${feedbackcategoryHashToHue(
                                             category.feedback_category
                                         )}, 70%, 50%)`,
-                                        mr: 1,
+                                        flexShrink: 0
                                     }}
                                 />
-                                <Typography variant="body2">
+                                <Typography variant="body2" sx={{ml: 1}}>
                                     {category.product} &gt;{" "}
                                     {category.subcategory} &gt;{" "}
                                     {category.feedback_category}
@@ -410,7 +410,7 @@ export default function CategoriesSunburstChart({
                                     ),
                                 }}
                             >
-                                {category.averageSentimentScore.toFixed(1)}/5.0
+                                {category.averageSentimentScore.toFixed(1)} / 5.0
                             </Typography>
                         </React.Fragment>
                     ))}

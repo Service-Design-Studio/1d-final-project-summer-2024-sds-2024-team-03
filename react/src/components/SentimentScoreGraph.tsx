@@ -17,6 +17,8 @@ const MenuProps = {
         style: {
             maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
             width: 250,
+            borderRadius: 18,
+            marginTop: '18px'
         },
     },
 };
@@ -296,7 +298,7 @@ export default function SentimentScoreGraph({
                         component="h3"
                         sx={{marginRight: 2, width: "50%"}}
                     >
-                        Sentiment vs Time trend for
+                        Sentiment vs Time Trend for
                         {selectedSubcategory
                             ? ` ${selectedSubcategory}`
                             : " selected Subcategories"}
@@ -315,6 +317,9 @@ export default function SentimentScoreGraph({
                                 <OutlinedInput
                                     id="detailed-sentimentscoregraph-select-subcategory"
                                     label="subcategory"
+                                    sx={{
+                                        borderRadius: 4
+                                    }}
                                 />
                             }
                             renderValue={(selected) => (
@@ -354,6 +359,9 @@ export default function SentimentScoreGraph({
                                 <OutlinedInput
                                     id="detailed-sentimentscoregraph-select-feedbackcategory"
                                     label="feedbackcategory"
+                                    sx={{
+                                        borderRadius: 4
+                                    }}
                                 />
                             }
                             renderValue={(selected) => (
