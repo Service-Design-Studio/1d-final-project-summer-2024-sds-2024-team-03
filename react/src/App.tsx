@@ -24,7 +24,7 @@ const darkTheme = createTheme({
       main: "#FD0606", // Red color for dark theme
     },
     secondary: {
-      main: "#A01B6D", // Red color for light theme
+      main: "#FD0606", // Red color for light theme
     },
   },
 });
@@ -33,10 +33,13 @@ const lightTheme = createTheme({
   palette: {
     mode: "light", // Enable light mode
     primary: {
-      main: "#8D1927", // Red color for light theme
+      main: "#000000", // Red color for light theme
+    },
+    background: {
+      default: "#f5f5f5", // Explicitly set the background color to grey
     },
     secondary: {
-      main: "#5f0f40", // Red color for light theme
+      main: "#8D1927", // Red color for light theme
     },
   },
 });

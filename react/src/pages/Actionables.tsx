@@ -64,6 +64,7 @@ export default function Actionables({
           flexDirection: { xs: "column", sm: "row" },
           gap: 2,
           justifyContent: "flex-start",
+          mb: 7,
         }}
       >
         <Box sx={{ flexBasis: { xs: "100%", sm: "40%" }, flexGrow: 1 }}>
@@ -90,12 +91,12 @@ export default function Actionables({
         </Box>
       </Box>
       <Box sx={{ flexGrow: 1 }}>
-        <Grid container spacing={2} sx={{ mt: 2 }}>
+        <Grid container spacing={2}>
           <Grid item xs={4}>
             <Chip
               icon={<NewReleasesTwoToneIcon />}
               label="NEW"
-              color="primary"
+              color="secondary"
               variant="outlined"
               sx={{ mb: 2 }}
             />

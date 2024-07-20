@@ -136,8 +136,6 @@ export default function SentimentScoreGraph({
                         const filteredSubcategories = data.filter((item) =>
                             item.subcategory.includes(selectedSubcategory)
                         );
-                        console.log("filteredSubcategories");
-                        console.log(filteredSubcategories);
                         setGraphFeedbackcategories(
                             Array.from(
                                 new Set(
@@ -154,8 +152,6 @@ export default function SentimentScoreGraph({
                                     item.feedback_category
                                 )
                         );
-                        console.log("filteredData");
-                        console.log(filteredData);
                         const filteredDataGroupedByFeedbackcategory =
                             filteredData.reduce((acc, item) => {
                                 if (!acc[item.feedback_category]) {
@@ -169,8 +165,6 @@ export default function SentimentScoreGraph({
                                 );
                                 return acc;
                             }, {} as Record<string, Record<string, number[]>>);
-                        console.log("filteredDataGroupedByFeedbackcategory");
-                        console.log(filteredDataGroupedByFeedbackcategory);
                         const avgDataGroupedByFeedbackcategory = Object.entries(
                             filteredDataGroupedByFeedbackcategory
                         ).reduce(
@@ -272,7 +266,6 @@ export default function SentimentScoreGraph({
             sx={{
                 display: "flex",
                 gap: 2,
-                mt: 2,
                 width: "100%",
                 flexDirection: "row",
             }}
@@ -284,7 +277,7 @@ export default function SentimentScoreGraph({
                     alignItems: "center",
                     justifyContent: "center",
                     p: 2,
-                    borderRadius: 2,
+                    borderRadius: 4,
                     flex: 1,
                 }}
                 id="detailed-sentimentscoregraph"
@@ -497,7 +490,6 @@ export default function SentimentScoreGraph({
             sx={{
                 display: "flex",
                 gap: 2,
-                mt: 2,
                 width: "100%",
                 flexDirection: "column",
             }}
@@ -510,11 +502,12 @@ export default function SentimentScoreGraph({
                     alignItems: "center",
                     justifyContent: "center",
                     p: 2,
-                    borderRadius: 2,
+                    borderRadius: 4,
                     flex: 1,
                     cursor: "pointer",
+                    backgroundColor: theme.palette.mode === 'dark' ? "#151515" : "#ffffff",
                     "&:hover": {
-                        backgroundColor: "#f0f0f0",
+                      backgroundColor: theme.palette.mode === 'dark' ? "#1a1a1a" : "#f9f9f9",
                     },
                 }}
                 id="overall-sentimentscoregraph"
