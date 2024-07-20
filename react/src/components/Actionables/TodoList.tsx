@@ -70,6 +70,7 @@ export default function CustomizedAccordions() {
           aria-controls="panel1d-content"
           id="panel1d-header"
           expandIcon={<ExpandMoreIcon />}
+          style={{ borderTopLeftRadius: 18, borderTopRightRadius: 18 }}
         >
           <Box display="flex" alignItems="center" width="100%">
             <Typography>To Fix</Typography>
@@ -143,6 +144,7 @@ export default function CustomizedAccordions() {
           aria-controls="panel3d-content"
           id="panel3d-header"
           expandIcon={<ExpandMoreIcon />}
+          style={{ borderBottomLeftRadius: expanded === "panel4" ? 0 : 18, borderBottomRightRadius: expanded === "panel4" ? 0 : 18, transition: "border-radius 0.5s ease" }}
         >
           <Box display="flex" alignItems="center" width="100%">
             <Typography>To Amplify</Typography>
