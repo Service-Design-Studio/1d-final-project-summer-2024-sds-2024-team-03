@@ -110,11 +110,12 @@ export default function Dashboard({
                         sx={{
                             display: "flex",
                             justifyContent: "space-between",
-                            alignItems: "center",
+                            alignItems: "top",
                             flexDirection: "row",
+                            gap: 1
                         }}
                     >
-                        <Box sx={{textAlign: "center"}}>
+                        <Box sx={{ flex: "1 1 25%", textAlign: "center" }}>
                             <Typography
                                 variant="body1"
                                 sx={{fontWeight: "bold"}}
@@ -122,11 +123,11 @@ export default function Dashboard({
                                 To Promote
                             </Typography>
                             <Typography variant="body2" color="grey">
-                                maintain user-friendly staff
+                                Maintain user-friendly staff
                             </Typography>
                         </Box>
                         <Divider orientation="vertical" flexItem />
-                        <Box sx={{textAlign: "center"}}>
+                        <Box sx={{ flex: "1 1 25%", textAlign: "center" }}>
                             <Typography
                                 variant="body1"
                                 sx={{fontWeight: "bold"}}
@@ -138,7 +139,7 @@ export default function Dashboard({
                             </Typography>
                         </Box>
                         <Divider orientation="vertical" flexItem />
-                        <Box sx={{textAlign: "center"}}>
+                        <Box sx={{ flex: "1 1 25%", textAlign: "center" }}>
                             <Typography
                                 variant="body1"
                                 sx={{fontWeight: "bold"}}
@@ -150,7 +151,7 @@ export default function Dashboard({
                             </Typography>
                         </Box>
                         <Divider orientation="vertical" flexItem />
-                        <Box sx={{textAlign: "center"}}>
+                        <Box sx={{ flex: "1 1 25%", textAlign: "center" }}>
                             <Typography
                                 variant="body1"
                                 sx={{fontWeight: "bold"}}
@@ -158,7 +159,7 @@ export default function Dashboard({
                                 To Fix
                             </Typography>
                             <Typography variant="body2" color="grey">
-                                Paylah! break downs
+                                PayLah! disruptions
                             </Typography>
                         </Box>
                     </Box>

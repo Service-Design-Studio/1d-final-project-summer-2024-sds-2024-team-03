@@ -296,7 +296,7 @@ export default function SentimentScoreGraph({
                         component="h3"
                         sx={{marginRight: 2, width: "50%"}}
                     >
-                        Sentiment vs Time trend for
+                        Sentiment vs Time Trend for
                         {selectedSubcategory
                             ? ` ${selectedSubcategory}`
                             : " selected Subcategories"}
