@@ -1,6 +1,7 @@
 import React, { DragEvent, useState } from "react";
 import { Box, Modal, Typography, Button } from "@mui/material";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
+import { useTheme } from '@mui/material/styles';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import Papa from "papaparse";
@@ -230,6 +231,8 @@ export function FileDrop({
     }
   };
 
+  const theme = useTheme();
+
   return (
     <div
       data-testid="drop-zone"
@@ -243,7 +246,8 @@ export function FileDrop({
         height: "600px",
         width: "100%",
         border: "1px dotted",
-        backgroundColor: isOver ? "gray" : "lightgray",
+        borderRadius: 18,
+        backgroundColor: theme.palette.mode === 'dark' ? "#222" : "#ccc",
       }}
     >
       <input
@@ -254,16 +258,27 @@ export function FileDrop({
         onChange={handleFileSelect}
         accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
       />
-      <Button
-        variant="contained"
-        component="label"
-        htmlFor="fileInput"
-        startIcon={<CloudUploadIcon />}
-      >
-        Select Files
-      </Button>
-      <CloudUploadIcon sx={{ color: "gray" }} fontSize="large" />
-      Drag and drop .csv/.xls* files here
+      <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 2 }}>
+        <CloudUploadIcon sx={{ color: "gray", fontSize: "8rem" }} />
+        <Typography sx={{ fontSize: "1.6rem" }} >
+          Drag and drop CSV or XLS files here
+        </Typography>
+        <Typography sx={{ m: 3 , fontSize: "1.2rem", fontWeight: 'bold' }}>
+          OR
+        </Typography>
+        <Button variant="contained" component="label" htmlFor="fileInput"
+        sx={{ 
+          borderRadius: 8,
+          fontSize: "1.2rem",
+          backgroundColor: "#777",
+          padding: "0.5rem 2rem",
+          '&:hover': {
+            backgroundColor: "#444"
+          }
+          }}>
+          Select Files
+        </Button>
+      </Box>
       <Modal
         open={openModal}
         onClose={handleCloseModal}

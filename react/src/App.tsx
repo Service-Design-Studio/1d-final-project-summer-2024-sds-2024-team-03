@@ -30,7 +30,10 @@ const lightTheme = createTheme({
   palette: {
     mode: 'light', // Enable light mode
     primary: {
-      main: "#8D1927", // Red color for light theme
+      main: "#000000", // Red color for light theme
+    },
+    background: {
+      default: "#f5f5f5", // Explicitly set the background color to grey
     },
   },
 });

@@ -97,12 +97,13 @@ export default function OverallSentimentScore({
                     alignItems: "center",
                     justifyContent: "center",
                     p: 2,
-                    borderRadius: 2,
+                    borderRadius: 4,
                     flex: 1,
                     cursor: "pointer",
                     height: "100%",
+                    backgroundColor: theme.palette.mode === 'dark' ? "#151515" : "#ffffff",
                     "&:hover": {
-                        backgroundColor: "#f0f0f0",
+                      backgroundColor: theme.palette.mode === 'dark' ? "#1a1a1a" : "#f9f9f9",
                     },
                 }}
                 id="overall-sentiment-score"
@@ -111,7 +112,7 @@ export default function OverallSentimentScore({
                 <Typography variant="h6" color="grey">
                     Overall Sentiment Score
                 </Typography>
-                <Typography variant="h4" color="black">
+                <Typography variant="h4">
                     {overallSentimentScore ? overallSentimentScore : 0}/5
                 </Typography>
                 <Typography

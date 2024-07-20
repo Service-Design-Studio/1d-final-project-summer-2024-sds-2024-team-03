@@ -38,6 +38,7 @@ export default function Actionables({
           flexDirection: { xs: "column", sm: "row" },
           gap: 2,
           justifyContent: "flex-start",
+          mb: 7
         }}
       >
         <Box sx={{ flexBasis: { xs: "100%", sm: "40%" }, flexGrow: 1 }}>

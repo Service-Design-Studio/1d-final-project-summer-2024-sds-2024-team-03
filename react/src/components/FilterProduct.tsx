@@ -59,7 +59,9 @@ export default function FilterProduct({
     return (
         <Grid item xs={3}>
             <FormControl sx={{m: 0, width: "100%"}}>
-                <InputLabel id="filter-product-label">Products</InputLabel>
+                <InputLabel 
+                    id="filter-product-label" sx={{ fontWeight: 'bold' }} >Products
+                </InputLabel>
                 <Select
                     labelId="filter-product-label"
                     id="filter-product"
@@ -67,7 +69,7 @@ export default function FilterProduct({
                     value={selectedProduct}
                     onChange={handleChange}
                     input={
-                        <OutlinedInput id="select-product" label="product" />
+                        <OutlinedInput id="select-product" label="product" sx={{ borderRadius: 4 }}/>
                     }
                     renderValue={(selected) => (
                         <Box sx={{display: "flex", flexWrap: "wrap", gap: 0.5}}>
