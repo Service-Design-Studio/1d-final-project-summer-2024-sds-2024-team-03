@@ -65,24 +65,24 @@ export default function Actionables({
         </Box>
       </Box>
       <Box sx={{ flexGrow: 1 }}>
-        <Grid container spacing={2} sx={{ mt: 2 }}>
+        <Grid container spacing={2}>
           <Grid item xs={4}>
             <Typography
               variant="h5"
               component="h2"
               align="center"
-              sx={{ color: "red", fontWeight: "bold" }}
+              sx={{ color: "red", fontWeight: "bold", mb: 2 }}
             >
               NEW
             </Typography>
-            <Todo />
+            <Todo/>
           </Grid>
           <Grid item xs={4}>
             <Typography
               variant="h5"
               component="h2"
               align="center"
-              sx={{ color: "orange", fontWeight: "bold" }}
+              sx={{ color: "orange", fontWeight: "bold", mb: 2 }}
             >
               IN PROGRESS
             </Typography>
@@ -93,7 +93,7 @@ export default function Actionables({
               variant="h5"
               component="h2"
               align="center"
-              sx={{ color: "green", fontWeight: "bold" }}
+              sx={{ color: "green", fontWeight: "bold", mb: 2 }}
             >
               DONE
             </Typography>
