@@ -28,7 +28,7 @@ interface ActionablesProps {
 }
 
 const fabStyle = {
-  position: "absolute",
+  position: "fixed",
   bottom: 64,
   right: 64,
 };
