@@ -5,7 +5,11 @@ React application wil call the microservice (which is developed in Rails) and it
 
 Another Microservice is developed in GCloud Function (linking to python models)
 
-Definition of Microservice: Rails(deployed in GCloud Run, ) independently deployable, React(deployed in GCloud storage) independently deployable, Python(deployed in GCloud Function) independently deployable
+Definition of Microservice:
+
+1. "perform a related set of operations": only one function, Rails is to call APIs, React for frontend, Python for backend model
+2. "independently deployed and operated": Rails(deployed in GCloud Run, ) independently deployable, React(deployed in GCloud storage) independently deployable, Python(deployed in GCloud Function) independently deployable
+3. "readily incorporated with other external services": Rails can connect to frontend through APIs
 
 How to prove independently deployable: Have 3 different autodeploy on Git
 
