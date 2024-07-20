@@ -4,9 +4,17 @@ import dayjs, { Dayjs } from "dayjs";
 import FilterProduct from "../components/FilterProduct";
 import FilterSource from "../components/FilterSource";
 import Grid from "@mui/material/Grid";
-import Typography from "@mui/material/Typography";
 import Calendar from "../components/Calendar";
-import Todo from "../components/Todo";
+import Todo from "../components/Actionables/TodoList";
+import Chip from "@mui/material/Chip";
+import NewReleasesTwoToneIcon from "@mui/icons-material/NewReleasesTwoTone";
+import RotateRightTwoToneIcon from "@mui/icons-material/RotateRightTwoTone";
+import CheckCircleTwoToneIcon from "@mui/icons-material/CheckCircleTwoTone";
+import Zoom from "@mui/material/Zoom";
+import Fab from "@mui/material/Fab";
+import AddIcon from "@mui/icons-material/Add";
+import { SxProps } from "@mui/system";
+import { useTheme } from "@mui/material/styles";
 
 interface ActionablesProps {
   setFromDate: React.Dispatch<React.SetStateAction<Dayjs>>;
@@ -19,6 +27,19 @@ interface ActionablesProps {
   setSelectedSource: React.Dispatch<React.SetStateAction<string[]>>;
 }
 
+const fabStyle = {
+  position: "fixed",
+  bottom: 64,
+  right: 64,
+};
+
+const fab = {
+  color: "primary" as "primary",
+  sx: fabStyle as SxProps,
+  icon: <AddIcon />,
+  label: "Add",
+};
+
 export default function Actionables({
   setFromDate,
   fromDate,
@@ -29,6 +50,11 @@ export default function Actionables({
   selectedSource,
   setSelectedSource,
 }: ActionablesProps) {
+  const theme = useTheme();
+  const transitionDuration = {
+    enter: theme.transitions.duration.enteringScreen,
+    exit: theme.transitions.duration.leavingScreen,
+  };
   return (
     <Box sx={{ maxWidth: "lg", mx: "auto", px: 2 }}>
       <h1>Actionables</h1>
@@ -38,7 +64,7 @@ export default function Actionables({
           flexDirection: { xs: "column", sm: "row" },
           gap: 2,
           justifyContent: "flex-start",
-          mb: 7
+          mb: 7,
         }}
       >
         <Box sx={{ flexBasis: { xs: "100%", sm: "40%" }, flexGrow: 1 }}>
@@ -67,40 +93,63 @@ export default function Actionables({
       <Box sx={{ flexGrow: 1 }}>
         <Grid container spacing={2}>
           <Grid item xs={4}>
-            <Typography
-              variant="h5"
-              component="h2"
-              align="center"
-              sx={{ color: "red", fontWeight: "bold", mb: 2 }}
-            >
-              NEW
-            </Typography>
-            <Todo/>
-          </Grid>
-          <Grid item xs={4}>
-            <Typography
-              variant="h5"
-              component="h2"
-              align="center"
-              sx={{ color: "orange", fontWeight: "bold", mb: 2 }}
-            >
-              IN PROGRESS
-            </Typography>
+            <Chip
+              icon={<NewReleasesTwoToneIcon />}
+              label="NEW"
+              color="secondary"
+              variant="outlined"
+              sx={{ mb: 2 }}
+            />
+
             <Todo />
           </Grid>
           <Grid item xs={4}>
-            <Typography
-              variant="h5"
-              component="h2"
-              align="center"
-              sx={{ color: "green", fontWeight: "bold", mb: 2 }}
-            >
-              DONE
-            </Typography>
+            <Chip
+              icon={<RotateRightTwoToneIcon />}
+              label="IN PROGRESS"
+              variant="outlined"
+              sx={{
+                mb: 2,
+                color: "#DA5707",
+                borderColor: "#DA5707",
+                "& .MuiChip-icon": {
+                  color: "#DA5707",
+                },
+              }}
+            />
+            <Todo />
+          </Grid>
+          <Grid item xs={4}>
+            <Chip
+              icon={<CheckCircleTwoToneIcon />}
+              label="DONE"
+              variant="outlined"
+              sx={{
+                mb: 2,
+                color: "#208306",
+                borderColor: "#208306",
+                "& .MuiChip-icon": {
+                  color: "#208306",
+                },
+              }}
+            />
             <Todo />
           </Grid>
         </Grid>
       </Box>
+      <Zoom
+        key={fab.color}
+        in={true}
+        timeout={transitionDuration}
+        style={{
+          transitionDelay: `${transitionDuration.exit}ms`,
+        }}
+        unmountOnExit
+      >
+        <Fab sx={fab.sx} aria-label={fab.label} color={fab.color}>
+          {fab.icon}
+        </Fab>
+      </Zoom>
     </Box>
   );
 }

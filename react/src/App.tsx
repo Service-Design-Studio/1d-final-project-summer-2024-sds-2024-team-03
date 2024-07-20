@@ -1,5 +1,5 @@
-import React, {useEffect, useState} from "react";
-import {styled} from "@mui/material/styles";
+import React, { useEffect, useState } from "react";
+import { styled } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import { createTheme, ThemeProvider, Theme } from "@mui/material/styles";
 import dayjs from "dayjs";
@@ -12,28 +12,34 @@ import Dashboard from "./pages/Dashboard";
 import Analytics from "./pages/Analytics";
 import Actionables from "./pages/Actionables";
 import UploadData from "./pages/UploadData";
-import Brightness4Icon from '@mui/icons-material/Brightness4';
-import WbSunnyIcon from '@mui/icons-material/WbSunny';
+import Brightness4Icon from "@mui/icons-material/Brightness4";
+import WbSunnyIcon from "@mui/icons-material/WbSunny";
 import dbsLogo from "./dbs_logo.png";
 
 // Define your themes with explicit primary color
 const darkTheme = createTheme({
   palette: {
-    mode: 'dark', // Enable dark mode
+    mode: "dark", // Enable dark mode
     primary: {
       main: "#FD0606", // Red color for dark theme
+    },
+    secondary: {
+      main: "#FD0606", // Red color for light theme
     },
   },
 });
 
 const lightTheme = createTheme({
   palette: {
-    mode: 'light', // Enable light mode
+    mode: "light", // Enable light mode
     primary: {
       main: "#000000", // Red color for light theme
     },
     background: {
       default: "#f5f5f5", // Explicitly set the background color to grey
+    },
+    secondary: {
+      main: "#8D1927", // Red color for light theme
     },
   },
 });
@@ -101,8 +107,11 @@ export default function MainApp() {
                     color="inherit"
                     onClick={() => setSelectedMenu(item.key)}
                     sx={{
-                      backgroundColor: selectedMenu === item.key ? "rgba(255, 255, 255, 0.1)" : "transparent",
-                      '&:hover': {
+                      backgroundColor:
+                        selectedMenu === item.key
+                          ? "rgba(255, 255, 255, 0.1)"
+                          : "transparent",
+                      "&:hover": {
                         backgroundColor: "rgba(255, 255, 255, 0.2)",
                       },
                     }}
