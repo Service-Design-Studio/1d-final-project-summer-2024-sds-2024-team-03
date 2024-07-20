@@ -24,12 +24,14 @@ export default function UploadData({
       <Box sx={{ 
         display: 'flex', 
         flexDirection: 'column', 
-        gap: 2 
+        gap: 2,
+        mb: 7
       }}>
         <Box sx={{ 
           display: 'flex', 
           flexDirection: { xs: 'column', sm: 'row' }, 
           gap: 2,
+          mb: 7,
           justifyContent: 'flex-start'
         }}>
           <Box sx={{ width: { xs: '100%', sm: '200px' } }}>

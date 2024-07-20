@@ -44,7 +44,7 @@ export default function Dashboard({
       gap: 2,
       justifyContent: 'flex-start'
     }}>
-      <Box sx={{ flexBasis: { xs: '100%', sm: '40%' }, flexGrow: 1 }}>
+      <Box sx={{ flexBasis: { xs: '100%', sm: '40%' }, flexGrow: 1, mb: 7 }}>
         <Calendar
           fromDate={fromDate}
           setFromDate={setFromDate}
@@ -69,7 +69,7 @@ export default function Dashboard({
     </Box>
   
     {/* If dates, products, sources not selected yet, all these should not show / be disabled */}
-    <Box sx={{ py: 5, display: 'flex', gap: 2, mt: 2, alignItems: 'stretch', flexDirection: 'row'}}>
+    <Box sx={{ display: 'flex', gap: 2, alignItems: 'stretch', flexDirection: 'row'}}>
       <OverallSentimentScore
         fromDate = {fromDate}
         toDate = {toDate}
@@ -86,7 +86,7 @@ export default function Dashboard({
         setSelectedMenu = {setSelectedMenu}
       />
 
-      <Paper sx={{ p: 2, borderRadius: 2, flex: 2, display: 'flex', flexDirection: 'column', justifyContent: 'center', height: 200 }}>
+      <Paper sx={{ p: 2, borderRadius: 4, flex: 2, display: 'flex', flexDirection: 'column', justifyContent: 'center', height: 200 }}>
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexDirection: 'row'}}>
           <Box sx={{ textAlign: 'center' }}>
             <Typography variant="body1" sx={{ fontWeight: 'bold' }}>To Promote</Typography>
