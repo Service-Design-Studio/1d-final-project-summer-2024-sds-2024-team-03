@@ -7,6 +7,9 @@ import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import Calendar from "../components/Calendar";
 import Todo from "../components/Todo";
+import Chip from "@mui/material/Chip";
+import NewReleasesTwoToneIcon from "@mui/icons-material/NewReleasesTwoTone";
+import RotateRightTwoToneIcon from "@mui/icons-material/RotateRightTwoTone";
 
 interface ActionablesProps {
   setFromDate: React.Dispatch<React.SetStateAction<Dayjs>>;
@@ -66,36 +69,45 @@ export default function Actionables({
       <Box sx={{ flexGrow: 1 }}>
         <Grid container spacing={2} sx={{ mt: 2 }}>
           <Grid item xs={4}>
-            <Typography
-              variant="h5"
-              component="h2"
-              align="center"
-              sx={{ color: "red", fontWeight: "bold" }}
-            >
-              NEW
-            </Typography>
+            <Chip
+              icon={<NewReleasesTwoToneIcon />}
+              label="NEW"
+              color="primary"
+              variant="outlined"
+              sx={{ mb: 2 }}
+            />
             <Todo />
           </Grid>
           <Grid item xs={4}>
-            <Typography
-              variant="h5"
-              component="h2"
-              align="center"
-              sx={{ color: "orange", fontWeight: "bold" }}
-            >
-              IN PROGRESS
-            </Typography>
+            <Chip
+              icon={<RotateRightTwoToneIcon />}
+              label="IN PROGRESS"
+              variant="outlined"
+              sx={{
+                mb: 2,
+                color: "#DA5707",
+                borderColor: "#DA5707",
+                "& .MuiChip-icon": {
+                  color: "#DA5707",
+                },
+              }}
+            />
             <Todo />
           </Grid>
           <Grid item xs={4}>
-            <Typography
-              variant="h5"
-              component="h2"
-              align="center"
-              sx={{ color: "green", fontWeight: "bold" }}
-            >
-              DONE
-            </Typography>
+            <Chip
+              icon={<RotateRightTwoToneIcon />}
+              label="DONE"
+              variant="outlined"
+              sx={{
+                mb: 2,
+                color: "#208306",
+                borderColor: "#208306",
+                "& .MuiChip-icon": {
+                  color: "#208306",
+                },
+              }}
+            />
             <Todo />
           </Grid>
         </Grid>
