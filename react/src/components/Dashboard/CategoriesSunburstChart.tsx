@@ -12,6 +12,14 @@ interface CategoriesSunburstChartProps {
     setSelectedMenu?: React.Dispatch<React.SetStateAction<string>>;
 }
 
+const ORDER: Record<string, string> = {
+    Excited: "darkgreen",
+    Satisfied: "green",
+    Neutral: "grey",
+    Unsatisfied: "orange",
+    Frustrated: "red",
+};
+
 export default function CategoriesSunburstChart({
     fromDate,
     toDate,
@@ -52,14 +60,28 @@ export default function CategoriesSunburstChart({
     const [averageSentimentScores, setAverageSentimentScores] = useState<
         AverageSentimentScore[]
     >([]);
+
+    const getColorByOrder = (
+        score: number,
+        order: Record<string, string>
+    ): string => {
+        if (score <= 1) return order["Frustrated"];
+        if (score <= 2) return order["Unsatisfied"];
+        if (score <= 3) return order["Neutral"];
+        if (score <= 4) return order["Satisfied"];
+        return order["Excited"];
+    };
     const theme = useTheme();
 
     const feedbackcategoryHashToHue = (feedbackcategory: string) => {
         let hash = 0;
-        for (let i = 0; i < feedbackcategory.length; i++) {
-            hash = feedbackcategory.charCodeAt(i) + ((hash << 5) - hash);
+        if (feedbackcategory) {
+            for (let i = 0; i < feedbackcategory.length; i++) {
+                hash = feedbackcategory.charCodeAt(i) + ((hash << 5) - hash);
+            }
+            return Math.abs(hash) % 360;
         }
-        return Math.abs(hash) % 360;
+        return 0;
     };
 
     const getAverageSentimentScore = (
@@ -75,6 +97,10 @@ export default function CategoriesSunburstChart({
         );
         return avgSentimentScore ? avgSentimentScore.averageSentimentScore : 0;
     };
+
+    const topCategories = averageSentimentScores
+        .sort((a, b) => b.mentions - a.mentions)
+        .slice(0, 3);
 
     useEffect(() => {
         const urlPrefix =
@@ -234,7 +260,7 @@ export default function CategoriesSunburstChart({
                     <Typography
                         variant="h6"
                         component="h3"
-                        sx={{marginRight: 2, width: "50%"}}
+                        sx={{marginRight: 2, width: "100%"}}
                     >
                         Sentiment vs Categories
                     </Typography>
@@ -259,22 +285,24 @@ export default function CategoriesSunburstChart({
                                 color: "hsl(265, 70%, 50%)",
                                 children: components,
                             }}
-                            margin={{top: 10, right: 10, bottom: 10, left: 10}}
                             id="category"
                             value="mentions"
                             cornerRadius={2}
-                            borderColor={{theme: "background"}}
+                            borderWidth={3}
+                            borderColor={{theme: "grid.line.stroke"}}
                             colors={{scheme: "paired"}}
+                            // To make use of hsl from each component
+                            // inheritColorFromParent={false}
                             childColor={{
                                 from: "color",
-                                modifiers: [["brighter", 0.1]],
+                                modifiers: [["brighter", 0.3]],
                             }}
-                            enableArcLabels={true}
-                            arcLabelsSkipAngle={15}
-                            arcLabelsTextColor={{
-                                from: "color",
-                                modifiers: [["darker", 1.4]],
-                            }}
+                            enableArcLabels={false}
+                            // category or %
+                            // arcLabel="id/formattedValue"
+                            arcLabelsRadiusOffset={0.35}
+                            arcLabelsSkipAngle={60}
+                            arcLabelsTextColor={{theme: "labels.text.fill"}}
                             // tooltip={(e) =>
                             //     t.createElement(
                             //         l,
@@ -297,6 +325,97 @@ export default function CategoriesSunburstChart({
                         />
                     </Box>
                 )}
+                <Box
+                    sx={{
+                        display: "grid",
+                        gridTemplateColumns: "1fr 1fr 1fr",
+                        gap: 2,
+                        mt: 2,
+                        width: "100%",
+                        alignItems: "center",
+                    }}
+                >
+                    <Typography
+                        variant="body2"
+                        color="textSecondary"
+                        component="div"
+                        sx={{gridColumn: "1 / span 1"}}
+                    >
+                        CATEGORIES
+                    </Typography>
+                    <Typography
+                        variant="body2"
+                        color="textSecondary"
+                        component="div"
+                        sx={{textAlign: "center", gridColumn: "2 / span 1"}}
+                    >
+                        TOTAL MENTIONS
+                    </Typography>
+                    <Typography
+                        variant="body2"
+                        color="textSecondary"
+                        component="div"
+                        sx={{textAlign: "right", gridColumn: "3 / span 1"}}
+                    >
+                        AVG SENTIMENT
+                    </Typography>
+                    <Box
+                        sx={{
+                            gridColumn: "1 / span 3",
+                            borderBottom: "1px solid #ccc",
+                        }}
+                    />
+                    {topCategories.map((category, index) => (
+                        <React.Fragment key={index}>
+                            <Box
+                                sx={{
+                                    display: "flex",
+                                    alignItems: "center",
+                                    gridColumn: "1 / span 1",
+                                }}
+                            >
+                                <Box
+                                    sx={{
+                                        width: 12,
+                                        height: 12,
+                                        borderRadius: "50%",
+                                        backgroundColor: `hsl(${feedbackcategoryHashToHue(
+                                            category.feedback_category
+                                        )}, 70%, 50%)`,
+                                        mr: 1,
+                                    }}
+                                />
+                                <Typography variant="body2">
+                                    {category.product} &gt;{" "}
+                                    {category.subcategory} &gt;{" "}
+                                    {category.feedback_category}
+                                </Typography>
+                            </Box>
+                            <Typography
+                                variant="body2"
+                                sx={{
+                                    gridColumn: "2 / span 1",
+                                    textAlign: "center",
+                                }}
+                            >
+                                {category.mentions}
+                            </Typography>
+                            <Typography
+                                variant="body2"
+                                sx={{
+                                    gridColumn: "3 / span 1",
+                                    textAlign: "right",
+                                    color: getColorByOrder(
+                                        category.averageSentimentScore,
+                                        ORDER
+                                    ),
+                                }}
+                            >
+                                {category.averageSentimentScore.toFixed(1)}/5.0
+                            </Typography>
+                        </React.Fragment>
+                    ))}
+                </Box>
             </ButtonBase>
         </Box>
     );
