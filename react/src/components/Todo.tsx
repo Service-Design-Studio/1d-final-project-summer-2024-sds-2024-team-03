@@ -19,6 +19,7 @@ const Accordion = styled((props: AccordionProps) => (
   "&::before": {
     display: "none",
   },
+  backgroundColor: theme.palette.mode === 'dark' ? "#333" : "#fff"
 }));
 
 const AccordionSummary = styled((props: AccordionSummaryProps) => (
@@ -57,14 +58,15 @@ export default function CustomizedAccordions() {
       <Accordion
         expanded={expanded === "panel1"}
         onChange={handleChange("panel1")}
+        style={{ borderTopLeftRadius: 18, borderTopRightRadius: 18 }}
       >
         <AccordionSummary
           aria-controls="panel1d-content"
           id="panel1d-header"
-          style={{ backgroundColor: "#E6B0AA" }}
+          style={{ backgroundColor: "#E6B0AA", borderTopLeftRadius: 18, borderTopRightRadius: 18 }}
           expandIcon={<ExpandMoreIcon style={{ color: "black" }} />}
         >
-          <Typography style={{ color: "black" }}>To Fix</Typography>
+          <Typography style={{ color: "black", fontWeight: 'bold' }}>To Fix</Typography>
         </AccordionSummary>
         <AccordionDetails>
           <Typography>
@@ -85,7 +87,7 @@ export default function CustomizedAccordions() {
           style={{ backgroundColor: "#DCEFFD" }}
           expandIcon={<ExpandMoreIcon style={{ color: "black" }} />}
         >
-          <Typography style={{ color: "black" }}>To Keep In Mind</Typography>
+          <Typography style={{ color: "black", fontWeight: 'bold' }}>To Keep In Mind</Typography>
         </AccordionSummary>
         <AccordionDetails>
           <Typography>
@@ -106,7 +108,7 @@ export default function CustomizedAccordions() {
           style={{ backgroundColor: "#DEF7DE" }}
           expandIcon={<ExpandMoreIcon style={{ color: "black" }} />}
         >
-          <Typography style={{ color: "black" }}>To Promote</Typography>
+          <Typography style={{ color: "black", fontWeight: 'bold' }}>To Promote</Typography>
         </AccordionSummary>
         <AccordionDetails>
           <Typography>
@@ -120,14 +122,15 @@ export default function CustomizedAccordions() {
       <Accordion
         expanded={expanded === "panel4"}
         onChange={handleChange("panel4")}
+        style={{ borderBottomLeftRadius: 18, borderBottomRightRadius: 18 }}
       >
         <AccordionSummary
           aria-controls="panel3d-content"
           id="panel3d-header"
-          style={{ backgroundColor: "#FDFBDC" }}
+          style={{ backgroundColor: "#FDFBDC", borderBottomLeftRadius: expanded === "panel4" ? 0 : 18, borderBottomRightRadius: expanded === "panel4" ? 0 : 18, transition: "border-radius 0.3s ease" }}
           expandIcon={<ExpandMoreIcon style={{ color: "black" }} />}
         >
-          <Typography style={{ color: "black" }}>To Amplify</Typography>
+          <Typography style={{ color: "black", fontWeight: 'bold' }}>To Amplify</Typography>
         </AccordionSummary>
         <AccordionDetails>
           <Typography>
