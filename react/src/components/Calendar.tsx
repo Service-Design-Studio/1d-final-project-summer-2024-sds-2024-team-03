@@ -40,16 +40,25 @@ export default function Calendar({
   }, []);
 
   return (
-    <Grid item xs={6} sx={{ display: "flex", flexDirection: "row" }}>
+    <Grid item xs={6} sx={{ display: "flex", flexDirection: "row", gap: 2 }}>
       <LocalizationProvider dateAdapter={AdapterDayjs}>
         <DatePicker
           slotProps={{
             textField: {
               required: true,
               id: "from-date",
+              sx: { 
+                '& .MuiOutlinedInput-root': {
+                  borderRadius: 4,
+                fontWeight: 'bold',
+                color: theme.palette.mode === 'dark' ? '#bbb' : '#555',
+                }
+              },
+              InputLabelProps: {
+                sx: { fontWeight: 'bold' }}
             },
           }}
-          format="DD/MM/YYYY"
+          format="DD-MM-YYYY"
           label="From"
           value={dayjs(fromDate)}
           sx={{ width: "100%" }}
@@ -70,9 +79,18 @@ export default function Calendar({
             textField: {
               required: true,
               id: "to-date",
+              sx: { 
+                '& .MuiOutlinedInput-root': {
+                  borderRadius: 4,
+                fontWeight: 'bold',
+                color: theme.palette.mode === 'dark' ? '#bbb' : '#555',
+                }
+              },
+              InputLabelProps: {
+                sx: { fontWeight: 'bold' }}
             },
           }}
-          format="DD/MM/YYYY"
+          format="DD-MM-YYYY"
           label="To"
           value={dayjs(toDate)}
           sx={{ width: "100%" }}

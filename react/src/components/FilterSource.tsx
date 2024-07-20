@@ -59,14 +59,16 @@ export default function FilterSource({
     return (
         <Grid item xs={3}>
             <FormControl sx={{m: 0, width: "100%"}}>
-                <InputLabel id="filter-source-label">Sources</InputLabel>
+                <InputLabel id="filter-source-label" sx={{fontWeight: 'bold'}} >Sources</InputLabel>
                 <Select
                     labelId="filter-source-label"
                     id="filter-source"
                     multiple={multiple} // Pass the `multiple` prop to the Select component
                     value={selectedSource}
                     onChange={handleChange}
-                    input={<OutlinedInput id="select-source" label="source" />}
+                    input={
+                        <OutlinedInput id="select-source" label="source" sx={{ borderRadius: 4 }} />
+                    }
                     renderValue={(selected) => (
                         <Box sx={{display: "flex", flexWrap: "wrap", gap: 0.5}}>
                             {selected.map((value) => (
