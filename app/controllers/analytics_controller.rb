@@ -41,7 +41,7 @@ class AnalyticsController < ApplicationController
   end
 
   def get_sentiment_scores
-    # SentimentScoreGraph (detailed)
+    # SentimentScoreGraph (detailed), Sunburst
     products = params[:product].split(',')
     sources = params[:source].split(',')
     @sentiment_scores = Analytic.select(:sentiment_score, :date, :product, :subcategory, :feedback_category)
@@ -53,6 +53,7 @@ class AnalyticsController < ApplicationController
   
 
   def get_overall_sentiment_scores
+    # Overview
     products = params[:product].split(',')
     sources = params[:source].split(',')
     @overall_sentiment_scores = Analytic.select(:date, 'CAST(AVG(CAST(sentiment_score AS numeric)) AS text) AS sentiment_score')

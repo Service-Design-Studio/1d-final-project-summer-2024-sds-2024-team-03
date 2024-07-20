@@ -98,7 +98,7 @@ end
 def get_products_from_dataset(base_url)
   url = URI("#{base_url}/analytics/filter_products")
   response = Net::HTTP.get_response(url)
-  data = JSON.parse(response.body).map(&:to_s).sort
+  JSON.parse(response.body).map(&:to_s).sort
 rescue StandardError => e
   raise "Failed to fetch products: #{e.message}"
 end
