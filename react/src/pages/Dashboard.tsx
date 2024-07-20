@@ -42,6 +42,7 @@ export default function Dashboard({
                     display: "flex",
                     flexDirection: {xs: "column", sm: "row"},
                     gap: 2,
+                    mb: 7,
                     justifyContent: "flex-start",
                 }}
             >
@@ -72,10 +73,8 @@ export default function Dashboard({
             {/* If dates, products, sources not selected yet, all these should not show / be disabled */}
             <Box
                 sx={{
-                    py: 5,
                     display: "flex",
                     gap: 2,
-                    mt: 2,
                     alignItems: "stretch",
                     flexDirection: "row",
                 }}
@@ -171,10 +170,12 @@ export default function Dashboard({
                 sx={{
                     display: "flex",
                     width: "100%",
+                    alignItems: "stretch",
                     gap: 2,
+                    mt: 2
                 }}
             >
-                <Box sx={{flex: 6}}>
+                <Box sx={{flex: 6, display: "flex", alignItems: "stretch" }}>
                     <SentimentScoreGraph
                         fromDate={fromDate}
                         toDate={toDate}
@@ -184,7 +185,7 @@ export default function Dashboard({
                         setSelectedMenu={setSelectedMenu}
                     />
                 </Box>
-                <Box sx={{flex: 4}}>
+                <Box sx={{flex: 4, display: "flex", alignItems: "stretch" }}>
                     <CategoriesSunburstChart
                         fromDate={fromDate}
                         toDate={toDate}

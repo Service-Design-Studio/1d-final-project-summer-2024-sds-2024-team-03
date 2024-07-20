@@ -224,7 +224,6 @@ export default function CategoriesSunburstChart({
             sx={{
                 display: "flex",
                 gap: 2,
-                mt: 2,
                 width: "100%",
                 flexDirection: "row",
             }}

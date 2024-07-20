@@ -266,7 +266,6 @@ export default function SentimentScoreGraph({
             sx={{
                 display: "flex",
                 gap: 2,
-                mt: 2,
                 width: "100%",
                 flexDirection: "row",
             }}
@@ -491,7 +490,6 @@ export default function SentimentScoreGraph({
             sx={{
                 display: "flex",
                 gap: 2,
-                mt: 2,
                 width: "100%",
                 flexDirection: "column",
             }}
