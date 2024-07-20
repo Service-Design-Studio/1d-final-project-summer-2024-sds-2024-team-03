@@ -4,12 +4,17 @@ import dayjs, { Dayjs } from "dayjs";
 import FilterProduct from "../components/FilterProduct";
 import FilterSource from "../components/FilterSource";
 import Grid from "@mui/material/Grid";
-import Typography from "@mui/material/Typography";
 import Calendar from "../components/Calendar";
-import Todo from "../components/Todo";
+import Todo from "../components/Actionables/TodoList";
 import Chip from "@mui/material/Chip";
 import NewReleasesTwoToneIcon from "@mui/icons-material/NewReleasesTwoTone";
 import RotateRightTwoToneIcon from "@mui/icons-material/RotateRightTwoTone";
+import CheckCircleTwoToneIcon from "@mui/icons-material/CheckCircleTwoTone";
+import Zoom from "@mui/material/Zoom";
+import Fab from "@mui/material/Fab";
+import AddIcon from "@mui/icons-material/Add";
+import { SxProps } from "@mui/system";
+import { useTheme } from "@mui/material/styles";
 
 interface ActionablesProps {
   setFromDate: React.Dispatch<React.SetStateAction<Dayjs>>;
@@ -22,6 +27,19 @@ interface ActionablesProps {
   setSelectedSource: React.Dispatch<React.SetStateAction<string[]>>;
 }
 
+const fabStyle = {
+  position: "absolute",
+  bottom: 64,
+  right: 64,
+};
+
+const fab = {
+  color: "primary" as "primary",
+  sx: fabStyle as SxProps,
+  icon: <AddIcon />,
+  label: "Add",
+};
+
 export default function Actionables({
   setFromDate,
   fromDate,
@@ -32,6 +50,11 @@ export default function Actionables({
   selectedSource,
   setSelectedSource,
 }: ActionablesProps) {
+  const theme = useTheme();
+  const transitionDuration = {
+    enter: theme.transitions.duration.enteringScreen,
+    exit: theme.transitions.duration.leavingScreen,
+  };
   return (
     <Box sx={{ maxWidth: "lg", mx: "auto", px: 2 }}>
       <h1>Actionables</h1>
@@ -76,6 +99,7 @@ export default function Actionables({
               variant="outlined"
               sx={{ mb: 2 }}
             />
+
             <Todo />
           </Grid>
           <Grid item xs={4}>
@@ -96,7 +120,7 @@ export default function Actionables({
           </Grid>
           <Grid item xs={4}>
             <Chip
-              icon={<RotateRightTwoToneIcon />}
+              icon={<CheckCircleTwoToneIcon />}
               label="DONE"
               variant="outlined"
               sx={{
@@ -112,6 +136,19 @@ export default function Actionables({
           </Grid>
         </Grid>
       </Box>
+      <Zoom
+        key={fab.color}
+        in={true}
+        timeout={transitionDuration}
+        style={{
+          transitionDelay: `${transitionDuration.exit}ms`,
+        }}
+        unmountOnExit
+      >
+        <Fab sx={fab.sx} aria-label={fab.label} color={fab.color}>
+          {fab.icon}
+        </Fab>
+      </Zoom>
     </Box>
   );
 }

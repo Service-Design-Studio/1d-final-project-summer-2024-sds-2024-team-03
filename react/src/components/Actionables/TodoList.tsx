@@ -13,6 +13,7 @@ import BuildCircleTwoToneIcon from "@mui/icons-material/BuildCircleTwoTone";
 import NotificationsActiveTwoToneIcon from "@mui/icons-material/NotificationsActiveTwoTone";
 import MovingIcon from "@mui/icons-material/Moving";
 import CampaignTwoToneIcon from "@mui/icons-material/CampaignTwoTone";
+import TodoCard from "./TodoCard";
 
 const Accordion = styled((props: AccordionProps) => (
   <MuiAccordion disableGutters elevation={0} square {...props} />
@@ -77,12 +78,8 @@ export default function CustomizedAccordions() {
           </Box>
         </AccordionSummary>
         <AccordionDetails>
-          <Typography>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse
-            malesuada lacus ex, sit amet blandit leo lobortis eget. Lorem ipsum
-            dolor sit amet, consectetur adipiscing elit. Suspendisse malesuada
-            lacus ex, sit amet blandit leo lobortis eget.
-          </Typography>
+          <TodoCard />
+          <TodoCard />
         </AccordionDetails>
       </Accordion>
       <Accordion
