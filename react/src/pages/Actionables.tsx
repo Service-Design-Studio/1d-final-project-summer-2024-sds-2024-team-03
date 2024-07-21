@@ -10,11 +10,8 @@ import Chip from "@mui/material/Chip";
 import NewReleasesTwoToneIcon from "@mui/icons-material/NewReleasesTwoTone";
 import RotateRightTwoToneIcon from "@mui/icons-material/RotateRightTwoTone";
 import CheckCircleTwoToneIcon from "@mui/icons-material/CheckCircleTwoTone";
-import Zoom from "@mui/material/Zoom";
-import Fab from "@mui/material/Fab";
-import AddIcon from "@mui/icons-material/Add";
-import { SxProps } from "@mui/system";
 import { useTheme } from "@mui/material/styles";
+import DialogAddAction from "../components/Actionables/DialogAddAction";
 
 interface ActionablesProps {
   setFromDate: React.Dispatch<React.SetStateAction<Dayjs>>;
@@ -26,19 +23,6 @@ interface ActionablesProps {
   selectedSource: string[];
   setSelectedSource: React.Dispatch<React.SetStateAction<string[]>>;
 }
-
-const fabStyle = {
-  position: "fixed",
-  bottom: 64,
-  right: 64,
-};
-
-const fab = {
-  color: "primary" as "primary",
-  sx: fabStyle as SxProps,
-  icon: <AddIcon />,
-  label: "Add",
-};
 
 export default function Actionables({
   setFromDate,
@@ -137,19 +121,8 @@ export default function Actionables({
           </Grid>
         </Grid>
       </Box>
-      <Zoom
-        key={fab.color}
-        in={true}
-        timeout={transitionDuration}
-        style={{
-          transitionDelay: `${transitionDuration.exit}ms`,
-        }}
-        unmountOnExit
-      >
-        <Fab sx={fab.sx} aria-label={fab.label} color={fab.color}>
-          {fab.icon}
-        </Fab>
-      </Zoom>
+
+      <DialogAddAction />
     </Box>
   );
 }

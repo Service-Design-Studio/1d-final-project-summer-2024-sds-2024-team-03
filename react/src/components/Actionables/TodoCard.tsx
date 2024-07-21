@@ -16,6 +16,8 @@ import NewReleasesTwoToneIcon from "@mui/icons-material/NewReleasesTwoTone";
 import RotateRightTwoToneIcon from "@mui/icons-material/RotateRightTwoTone";
 import CheckCircleTwoToneIcon from "@mui/icons-material/CheckCircleTwoTone";
 
+import DialogAnalytics from "./DialogAnalytics";
+
 const bull = (
   <Box
     component="span"
@@ -99,9 +101,7 @@ const MyCard: React.FC<MyCardProps> = ({
           >
             Change Status
           </Button>
-          <Button size="small" variant="contained" color="secondary">
-            View Analytics
-          </Button>
+          <DialogAnalytics />
           <Menu
             id="demo-positioned-menu"
             aria-labelledby="demo-positioned-button"

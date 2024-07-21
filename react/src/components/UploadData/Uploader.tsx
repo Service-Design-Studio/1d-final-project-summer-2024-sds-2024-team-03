@@ -1,7 +1,7 @@
 import React, { DragEvent, useState } from "react";
 import { Box, Modal, Typography, Button } from "@mui/material";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
-import { useTheme } from '@mui/material/styles';
+import { useTheme } from "@mui/material/styles";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import Papa from "papaparse";
@@ -246,8 +246,10 @@ export function FileDrop({
         height: "600px",
         width: "100%",
         borderRadius: 18,
-        backgroundColor: theme.palette.mode === 'dark' ? "#222" : "#ccc",
-        boxShadow: `inset 0 0 20px ${theme.palette.mode === 'dark' ? '#555' : '#aaa'}`,
+        backgroundColor: theme.palette.mode === "dark" ? "#222" : "#ccc",
+        boxShadow: `inset 0 0 20px ${
+          theme.palette.mode === "dark" ? "#555" : "#aaa"
+        }`,
       }}
     >
       <input
@@ -258,24 +260,35 @@ export function FileDrop({
         onChange={handleFileSelect}
         accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
       />
-      <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 2 }}>
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          gap: 2,
+        }}
+      >
         <CloudUploadIcon sx={{ color: "gray", fontSize: "8rem" }} />
-        <Typography sx={{ fontSize: "1.4rem" }} >
+        <Typography sx={{ fontSize: "1.4rem" }}>
           Drag and drop CSV or XLS files here
         </Typography>
-        <Typography sx={{ m: 3 , fontSize: "1.2rem", fontWeight: 'bold' }}>
+        <Typography sx={{ m: 3, fontSize: "1.2rem", fontWeight: "bold" }}>
           OR
         </Typography>
-        <Button variant="contained" component="label" htmlFor="fileInput"
-        sx={{ 
-          borderRadius: 8,
-          fontSize: "1.1rem",
-          backgroundColor: "#777",
-          padding: "0.5rem 2rem",
-          '&:hover': {
-            backgroundColor: "#444"
-          }
-          }}>
+        <Button
+          variant="contained"
+          component="label"
+          htmlFor="fileInput"
+          sx={{
+            borderRadius: 8,
+            fontSize: "1.1rem",
+            backgroundColor: "#8D1927",
+            padding: "0.5rem 2rem",
+            "&:hover": {
+              backgroundColor: "#444",
+            },
+          }}
+        >
           Select Files
         </Button>
       </Box>
