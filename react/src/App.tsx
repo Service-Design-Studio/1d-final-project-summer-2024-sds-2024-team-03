@@ -115,13 +115,15 @@ export default function MainApp() {
           <Toolbar>
             <AppBarContent>
               <img src={dbsLogo} alt="DBS Logo" style={{ height: 30 }} />
-              <Box sx={{ display: "flex", gap: 4 }}>
+              <Box sx={{ display: "flex", gap: 2 }}>
                 {menuItems.map((item) => (
                   <Button
                     key={item.key}
                     color="inherit"
                     onClick={() => setSelectedMenu(item.key)}
                     sx={{
+                      borderRadius: 4,
+                      padding: "0rem 1rem",
                       backgroundColor:
                         selectedMenu === item.key
                           ? "rgba(255, 255, 255, 0.2)"
@@ -135,7 +137,7 @@ export default function MainApp() {
                   </Button>
                 ))}
                 {/* Dark/light mode toggle button */}
-                <Button color="inherit" onClick={toggleDarkMode}>
+                <Button color="inherit" onClick={toggleDarkMode} sx={{borderRadius: 4}}>
                   {darkMode ? <Brightness4Icon /> : <WbSunnyIcon />}
                 </Button>
               </Box>

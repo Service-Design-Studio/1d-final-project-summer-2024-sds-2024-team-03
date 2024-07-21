@@ -247,7 +247,7 @@ export function FileDrop({
         width: "100%",
         borderRadius: 18,
         backgroundColor: theme.palette.mode === 'dark' ? "#222" : "#ccc",
-        boxShadow: `inset 0 0 20px ${theme.palette.mode === 'dark' ? '#transparent' : '#aaa'}`,
+        boxShadow: `inset 0 0 20px ${theme.palette.mode === 'dark' ? '#555' : '#aaa'}`,
       }}
     >
       <input
