@@ -136,7 +136,7 @@ export default function SentimentCategoriesGraph({
             if (negative) {
                 for (let i = 0; i < aValues.length; i++) {
                     if (bValues[i] !== aValues[i]) {
-                        return bValues[i] - aValues[i];
+                        return aValues[i] - bValues[i];
                     }
                 }
             } else {
@@ -521,116 +521,115 @@ export default function SentimentCategoriesGraph({
                         )}
                     </Select>
                 </FormControl>
-                {/* {bars.length === 0 ? (
+                {bars.length === 0 ? (
                     <Typography variant="body2" color="grey">
                         No data
                     </Typography>
-                ) : */}
-                ({" "}
-                <Box
-                    sx={{
-                        display: "flex",
-                        gap: 2,
-                        mt: 2,
-                        width: "100%",
-                        height: 200,
-                    }}
-                >
-                    <ResponsiveBar
-                        data={sortBySentiment(bars).slice(0, 5)}
-                        keys={Object.keys(ORDER).reverse()}
-                        colors={Object.values(ORDER).reverse()}
-                        indexBy="category"
-                        margin={{
-                            top: 10,
-                            right: 50,
-                            bottom: 50,
-                            left: 200,
+                ) : (
+                    <Box
+                        sx={{
+                            display: "flex",
+                            gap: 2,
+                            mt: 2,
+                            width: "100%",
+                            height: 200,
                         }}
-                        padding={0.3}
-                        minValue={0}
-                        maxValue={100}
-                        layout="horizontal"
-                        valueScale={{type: "linear"}}
-                        indexScale={{type: "band", round: true}}
-                        defs={[
-                            {
-                                id: "dots",
-                                type: "patternDots",
-                                background: "inherit",
-                                color: "#38bcb2",
-                                size: 4,
-                                padding: 1,
-                                stagger: true,
-                            },
-                            {
-                                id: "lines",
-                                type: "patternLines",
-                                background: "inherit",
-                                color: "#eed312",
-                                rotation: -45,
-                                lineWidth: 6,
-                                spacing: 10,
-                            },
-                        ]}
-                        // fill={[
-                        //     {
-                        //         match: {
-                        //             id: "Frustrated",
-                        //         },
-                        //         id: "dots",
-                        //     },
-                        //     {
-                        //         match: {
-                        //             id: "Neutral",
-                        //         },
-                        //         id: "lines",
-                        //     },
-                        // ]}
-                        borderColor={{
-                            from: "color",
-                            modifiers: [["darker", 1.6]],
-                        }}
-                        axisTop={null}
-                        axisRight={null}
-                        axisBottom={{
-                            tickSize: 5,
-                            tickPadding: 5,
-                            tickRotation: 0,
-                            legend: "Percent",
-                            legendPosition: "middle",
-                            legendOffset: 32,
-                            truncateTickAt: 0,
-                        }}
-                        axisLeft={{
-                            tickSize: 5,
-                            tickPadding: 5,
-                            tickRotation: 0,
-                            legend: "",
-                            legendPosition: "middle",
-                            legendOffset: -40,
-                            truncateTickAt: 0,
-                        }}
-                        enableGridX={true}
-                        labelSkipWidth={12}
-                        labelSkipHeight={12}
-                        labelTextColor={{
-                            from: "color",
-                            modifiers: [["darker", 1.6]],
-                        }}
-                        legends={[]}
-                        role="application"
-                        ariaLabel="Sentiment Categorisation"
-                        barAriaLabel={(e) =>
-                            e.id +
-                            ": " +
-                            e.formattedValue +
-                            " for Subcategory: " +
-                            e.indexValue
-                        }
-                    />
-                </Box>
-                ){/* } */}
+                    >
+                        <ResponsiveBar
+                            data={sortBySentiment(bars).slice(0, 5)}
+                            keys={Object.keys(ORDER).reverse()}
+                            colors={Object.values(ORDER).reverse()}
+                            indexBy="category"
+                            margin={{
+                                top: 10,
+                                right: 50,
+                                bottom: 50,
+                                left: 200,
+                            }}
+                            padding={0.3}
+                            minValue={0}
+                            maxValue={100}
+                            layout="horizontal"
+                            valueScale={{type: "linear"}}
+                            indexScale={{type: "band", round: true}}
+                            defs={[
+                                {
+                                    id: "dots",
+                                    type: "patternDots",
+                                    background: "inherit",
+                                    color: "#38bcb2",
+                                    size: 4,
+                                    padding: 1,
+                                    stagger: true,
+                                },
+                                {
+                                    id: "lines",
+                                    type: "patternLines",
+                                    background: "inherit",
+                                    color: "#eed312",
+                                    rotation: -45,
+                                    lineWidth: 6,
+                                    spacing: 10,
+                                },
+                            ]}
+                            // fill={[
+                            //     {
+                            //         match: {
+                            //             id: "Frustrated",
+                            //         },
+                            //         id: "dots",
+                            //     },
+                            //     {
+                            //         match: {
+                            //             id: "Neutral",
+                            //         },
+                            //         id: "lines",
+                            //     },
+                            // ]}
+                            borderColor={{
+                                from: "color",
+                                modifiers: [["darker", 1.6]],
+                            }}
+                            axisTop={null}
+                            axisRight={null}
+                            axisBottom={{
+                                tickSize: 5,
+                                tickPadding: 5,
+                                tickRotation: 0,
+                                legend: "Percent",
+                                legendPosition: "middle",
+                                legendOffset: 32,
+                                truncateTickAt: 0,
+                            }}
+                            axisLeft={{
+                                tickSize: 5,
+                                tickPadding: 5,
+                                tickRotation: 0,
+                                legend: "",
+                                legendPosition: "middle",
+                                legendOffset: -40,
+                                truncateTickAt: 0,
+                            }}
+                            enableGridX={true}
+                            labelSkipWidth={12}
+                            labelSkipHeight={12}
+                            labelTextColor={{
+                                from: "color",
+                                modifiers: [["darker", 1.6]],
+                            }}
+                            legends={[]}
+                            role="application"
+                            ariaLabel="Sentiment Categorisation"
+                            barAriaLabel={(e) =>
+                                e.id +
+                                ": " +
+                                e.formattedValue +
+                                " for Subcategory: " +
+                                e.indexValue
+                            }
+                        />
+                    </Box>
+                )}
             </Paper>
         </Box>
     ) : (
@@ -687,116 +686,115 @@ export default function SentimentCategoriesGraph({
                         >
                             Top 5 Positive Categories
                         </Typography>
-                        {/* {bars.length === 0 ? (
-                    <Typography variant="body2" color="grey">
-                        No data
-                    </Typography>
-                ) :  */}
-                        (
-                        <Box
-                            sx={{
-                                display: "flex",
-                                gap: 2,
-                                mt: 2,
-                                height: 200,
-                            }}
-                        >
-                            <ResponsiveBar
-                                data={sortBySentiment(bars).slice(0, 5)}
-                                keys={Object.keys(ORDER).reverse()}
-                                colors={Object.values(ORDER).reverse()}
-                                indexBy="category"
-                                margin={{
-                                    top: 10,
-                                    right: 50,
-                                    bottom: 50,
-                                    left: 200,
+                        {bars.length === 0 ? (
+                            <Typography variant="body2" color="grey">
+                                No data
+                            </Typography>
+                        ) : (
+                            <Box
+                                sx={{
+                                    display: "flex",
+                                    gap: 2,
+                                    mt: 2,
+                                    height: 200,
                                 }}
-                                padding={0.3}
-                                minValue={0}
-                                maxValue={100}
-                                layout="horizontal"
-                                valueScale={{type: "linear"}}
-                                indexScale={{type: "band", round: true}}
-                                defs={[
-                                    {
-                                        id: "dots",
-                                        type: "patternDots",
-                                        background: "inherit",
-                                        color: "#38bcb2",
-                                        size: 4,
-                                        padding: 1,
-                                        stagger: true,
-                                    },
-                                    {
-                                        id: "lines",
-                                        type: "patternLines",
-                                        background: "inherit",
-                                        color: "#eed312",
-                                        rotation: -45,
-                                        lineWidth: 6,
-                                        spacing: 10,
-                                    },
-                                ]}
-                                // fill={[
-                                //     {
-                                //         match: {
-                                //             id: "Frustrated",
-                                //         },
-                                //         id: "dots",
-                                //     },
-                                //     {
-                                //         match: {
-                                //             id: "Neutral",
-                                //         },
-                                //         id: "lines",
-                                //     },
-                                // ]}
-                                borderColor={{
-                                    from: "color",
-                                    modifiers: [["darker", 1.6]],
-                                }}
-                                axisTop={null}
-                                axisRight={null}
-                                axisBottom={{
-                                    tickSize: 5,
-                                    tickPadding: 5,
-                                    tickRotation: 0,
-                                    legend: "Percent",
-                                    legendPosition: "middle",
-                                    legendOffset: 32,
-                                    truncateTickAt: 0,
-                                }}
-                                axisLeft={{
-                                    tickSize: 5,
-                                    tickPadding: 5,
-                                    tickRotation: 0,
-                                    legend: "",
-                                    legendPosition: "middle",
-                                    legendOffset: -40,
-                                    truncateTickAt: 0,
-                                }}
-                                enableGridX={true}
-                                labelSkipWidth={12}
-                                labelSkipHeight={12}
-                                labelTextColor={{
-                                    from: "color",
-                                    modifiers: [["darker", 1.6]],
-                                }}
-                                legends={[]}
-                                role="application"
-                                ariaLabel="Sentiment Categorisation"
-                                barAriaLabel={(e) =>
-                                    e.id +
-                                    ": " +
-                                    e.formattedValue +
-                                    " for Subcategory: " +
-                                    e.indexValue
-                                }
-                            />
-                        </Box>
+                            >
+                                <ResponsiveBar
+                                    data={sortBySentiment(bars).slice(0, 5)}
+                                    keys={Object.keys(ORDER).reverse()}
+                                    colors={Object.values(ORDER).reverse()}
+                                    indexBy="category"
+                                    margin={{
+                                        top: 10,
+                                        right: 50,
+                                        bottom: 50,
+                                        left: 200,
+                                    }}
+                                    padding={0.3}
+                                    minValue={0}
+                                    maxValue={100}
+                                    layout="horizontal"
+                                    valueScale={{type: "linear"}}
+                                    indexScale={{type: "band", round: true}}
+                                    defs={[
+                                        {
+                                            id: "dots",
+                                            type: "patternDots",
+                                            background: "inherit",
+                                            color: "#38bcb2",
+                                            size: 4,
+                                            padding: 1,
+                                            stagger: true,
+                                        },
+                                        {
+                                            id: "lines",
+                                            type: "patternLines",
+                                            background: "inherit",
+                                            color: "#eed312",
+                                            rotation: -45,
+                                            lineWidth: 6,
+                                            spacing: 10,
+                                        },
+                                    ]}
+                                    // fill={[
+                                    //     {
+                                    //         match: {
+                                    //             id: "Frustrated",
+                                    //         },
+                                    //         id: "dots",
+                                    //     },
+                                    //     {
+                                    //         match: {
+                                    //             id: "Neutral",
+                                    //         },
+                                    //         id: "lines",
+                                    //     },
+                                    // ]}
+                                    borderColor={{
+                                        from: "color",
+                                        modifiers: [["darker", 1.6]],
+                                    }}
+                                    axisTop={null}
+                                    axisRight={null}
+                                    axisBottom={{
+                                        tickSize: 5,
+                                        tickPadding: 5,
+                                        tickRotation: 0,
+                                        legend: "Percent",
+                                        legendPosition: "middle",
+                                        legendOffset: 32,
+                                        truncateTickAt: 0,
+                                    }}
+                                    axisLeft={{
+                                        tickSize: 5,
+                                        tickPadding: 5,
+                                        tickRotation: 0,
+                                        legend: "",
+                                        legendPosition: "middle",
+                                        legendOffset: -40,
+                                        truncateTickAt: 0,
+                                    }}
+                                    enableGridX={true}
+                                    labelSkipWidth={12}
+                                    labelSkipHeight={12}
+                                    labelTextColor={{
+                                        from: "color",
+                                        modifiers: [["darker", 1.6]],
+                                    }}
+                                    legends={[]}
+                                    role="application"
+                                    ariaLabel="Sentiment Categorisation"
+                                    barAriaLabel={(e) =>
+                                        e.id +
+                                        ": " +
+                                        e.formattedValue +
+                                        " for Subcategory: " +
+                                        e.indexValue
+                                    }
+                                />
+                            </Box>
+                        )}
                     </Box>
-                    ){/* } */}
                     <Divider
                         orientation="vertical"
                         flexItem
@@ -810,116 +808,118 @@ export default function SentimentCategoriesGraph({
                         >
                             Top 5 Negative Categories
                         </Typography>
-                        {/* {bars.length === 0 ? (
-                    <Typography variant="body2" color="grey">
-                        No data
-                    </Typography>
-                ) :  */}
-                        (
-                        <Box
-                            sx={{
-                                display: "flex",
-                                gap: 2,
-                                mt: 2,
-                                height: 200,
-                            }}
-                        >
-                            <ResponsiveBar
-                                data={sortBySentiment(bars, true).slice(0, 5)}
-                                keys={Object.keys(ORDER).reverse()}
-                                colors={Object.values(ORDER).reverse()}
-                                indexBy="category"
-                                margin={{
-                                    top: 10,
-                                    right: 50,
-                                    bottom: 50,
-                                    left: 200,
+                        {bars.length === 0 ? (
+                            <Typography variant="body2" color="grey">
+                                No data
+                            </Typography>
+                        ) : (
+                            <Box
+                                sx={{
+                                    display: "flex",
+                                    gap: 2,
+                                    mt: 2,
+                                    height: 200,
                                 }}
-                                padding={0.3}
-                                minValue={0}
-                                maxValue={100}
-                                layout="horizontal"
-                                valueScale={{type: "linear"}}
-                                indexScale={{type: "band", round: true}}
-                                defs={[
-                                    {
-                                        id: "dots",
-                                        type: "patternDots",
-                                        background: "inherit",
-                                        color: "#38bcb2",
-                                        size: 4,
-                                        padding: 1,
-                                        stagger: true,
-                                    },
-                                    {
-                                        id: "lines",
-                                        type: "patternLines",
-                                        background: "inherit",
-                                        color: "#eed312",
-                                        rotation: -45,
-                                        lineWidth: 6,
-                                        spacing: 10,
-                                    },
-                                ]}
-                                // fill={[
-                                //     {
-                                //         match: {
-                                //             id: "Frustrated",
-                                //         },
-                                //         id: "dots",
-                                //     },
-                                //     {
-                                //         match: {
-                                //             id: "Neutral",
-                                //         },
-                                //         id: "lines",
-                                //     },
-                                // ]}
-                                borderColor={{
-                                    from: "color",
-                                    modifiers: [["darker", 1.6]],
-                                }}
-                                axisTop={null}
-                                axisRight={null}
-                                axisBottom={{
-                                    tickSize: 5,
-                                    tickPadding: 5,
-                                    tickRotation: 0,
-                                    legend: "Percent",
-                                    legendPosition: "middle",
-                                    legendOffset: 32,
-                                    truncateTickAt: 0,
-                                }}
-                                axisLeft={{
-                                    tickSize: 5,
-                                    tickPadding: 5,
-                                    tickRotation: 0,
-                                    legend: "",
-                                    legendPosition: "middle",
-                                    legendOffset: -40,
-                                    truncateTickAt: 0,
-                                }}
-                                enableGridX={true}
-                                labelSkipWidth={12}
-                                labelSkipHeight={12}
-                                labelTextColor={{
-                                    from: "color",
-                                    modifiers: [["darker", 1.6]],
-                                }}
-                                legends={[]}
-                                role="application"
-                                ariaLabel="Sentiment Categorisation"
-                                barAriaLabel={(e) =>
-                                    e.id +
-                                    ": " +
-                                    e.formattedValue +
-                                    " for Subcategory: " +
-                                    e.indexValue
-                                }
-                            />
-                        </Box>
+                            >
+                                <ResponsiveBar
+                                    data={sortBySentiment(bars, true).slice(
+                                        0,
+                                        5
+                                    )}
+                                    keys={Object.keys(ORDER).reverse()}
+                                    colors={Object.values(ORDER).reverse()}
+                                    indexBy="category"
+                                    margin={{
+                                        top: 10,
+                                        right: 50,
+                                        bottom: 50,
+                                        left: 200,
+                                    }}
+                                    padding={0.3}
+                                    minValue={0}
+                                    maxValue={100}
+                                    layout="horizontal"
+                                    valueScale={{type: "linear"}}
+                                    indexScale={{type: "band", round: true}}
+                                    defs={[
+                                        {
+                                            id: "dots",
+                                            type: "patternDots",
+                                            background: "inherit",
+                                            color: "#38bcb2",
+                                            size: 4,
+                                            padding: 1,
+                                            stagger: true,
+                                        },
+                                        {
+                                            id: "lines",
+                                            type: "patternLines",
+                                            background: "inherit",
+                                            color: "#eed312",
+                                            rotation: -45,
+                                            lineWidth: 6,
+                                            spacing: 10,
+                                        },
+                                    ]}
+                                    // fill={[
+                                    //     {
+                                    //         match: {
+                                    //             id: "Frustrated",
+                                    //         },
+                                    //         id: "dots",
+                                    //     },
+                                    //     {
+                                    //         match: {
+                                    //             id: "Neutral",
+                                    //         },
+                                    //         id: "lines",
+                                    //     },
+                                    // ]}
+                                    borderColor={{
+                                        from: "color",
+                                        modifiers: [["darker", 1.6]],
+                                    }}
+                                    axisTop={null}
+                                    axisRight={null}
+                                    axisBottom={{
+                                        tickSize: 5,
+                                        tickPadding: 5,
+                                        tickRotation: 0,
+                                        legend: "Percent",
+                                        legendPosition: "middle",
+                                        legendOffset: 32,
+                                        truncateTickAt: 0,
+                                    }}
+                                    axisLeft={{
+                                        tickSize: 5,
+                                        tickPadding: 5,
+                                        tickRotation: 0,
+                                        legend: "",
+                                        legendPosition: "middle",
+                                        legendOffset: -40,
+                                        truncateTickAt: 0,
+                                    }}
+                                    enableGridX={true}
+                                    labelSkipWidth={12}
+                                    labelSkipHeight={12}
+                                    labelTextColor={{
+                                        from: "color",
+                                        modifiers: [["darker", 1.6]],
+                                    }}
+                                    legends={[]}
+                                    role="application"
+                                    ariaLabel="Sentiment Categorisation"
+                                    barAriaLabel={(e) =>
+                                        e.id +
+                                        ": " +
+                                        e.formattedValue +
+                                        " for Subcategory: " +
+                                        e.indexValue
+                                    }
+                                />
+                            </Box>
+                        )}
                     </Box>
-                    ){/* } */}
                 </Box>
             </ButtonBase>
         </Box>
