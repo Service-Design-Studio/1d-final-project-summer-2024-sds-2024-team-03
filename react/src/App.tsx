@@ -33,7 +33,7 @@ const lightTheme = createTheme({
   palette: {
     mode: "light", // Enable light mode
     primary: {
-      main: "#000000", // Red color for light theme
+      main: "#000000", // Black color for light theme
     },
     background: {
       default: "#e9e9eb", // Explicitly set the background color to grey
@@ -47,7 +47,7 @@ const lightTheme = createTheme({
 const Main = styled("main")(({ theme }: { theme: Theme }) => ({
   flexGrow: 1,
   padding: theme.spacing(3),
-  marginTop: 75, // Adjust this value based on your AppBar height
+  marginTop: 86, // Adjust this value based on your AppBar height
 }));
 
 const AppBarContent = styled(Box)(({ theme }: { theme: Theme }) => ({
@@ -60,6 +60,21 @@ const AppBarContent = styled(Box)(({ theme }: { theme: Theme }) => ({
   paddingLeft: theme.spacing(2),
   paddingRight: theme.spacing(2),
 }));
+
+const Footer = styled("footer")(({ theme }: { theme: Theme }) => ({
+  backgroundColor: theme.palette.mode === 'dark' ? "#252525" : "#000000",
+  color: "#ffffff", // White text
+  textAlign: "center",
+  padding: theme.spacing(2),
+  width: "100%",
+  marginTop: 70,
+}));
+
+const FooterText = styled("div")({
+  marginTop: 8, 
+  marginBottom: 8,// Add margin above the text
+  fontSize: '1.1rem'
+});
 
 export default function MainApp() {
   // State for managing dark theme
@@ -94,7 +109,7 @@ export default function MainApp() {
 
   return (
     <ThemeProvider theme={darkMode ? darkTheme : lightTheme}>
-      <Box sx={{ display: "flex" }}>
+      <Box sx={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
         <CssBaseline />
         <MuiAppBar position="fixed">
           <Toolbar>
@@ -109,10 +124,10 @@ export default function MainApp() {
                     sx={{
                       backgroundColor:
                         selectedMenu === item.key
-                          ? "rgba(255, 255, 255, 0.1)"
+                          ? "rgba(255, 255, 255, 0.2)"
                           : "transparent",
                       "&:hover": {
-                        backgroundColor: "rgba(255, 255, 255, 0.2)",
+                        backgroundColor: "rgba(255, 255, 255, 0.3)",
                       },
                     }}
                   >
@@ -174,6 +189,11 @@ export default function MainApp() {
             />
           )}
         </Main>
+        <Footer>
+          <FooterText>
+            © DBS 2024
+          </FooterText>
+        </Footer>
       </Box>
     </ThemeProvider>
   );
