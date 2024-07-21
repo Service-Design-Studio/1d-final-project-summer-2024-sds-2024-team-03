@@ -1,0 +1,2 @@
+class Actionable < ApplicationRecord
+end

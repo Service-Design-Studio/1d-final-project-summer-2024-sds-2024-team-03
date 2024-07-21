@@ -5,7 +5,7 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
-import TableAnalytics from "./TableAnalytics";
+import ListAnalytics from "./ListAnalytics";
 
 export default function ScrollDialog() {
   const [open, setOpen] = React.useState(false);
@@ -54,7 +54,7 @@ export default function ScrollDialog() {
         open={open}
         onClose={handleClose}
         scroll={scroll}
-        maxWidth="lg"
+        maxWidth="md"
         aria-labelledby="scroll-dialog-title"
         aria-describedby="scroll-dialog-description"
       >
@@ -65,7 +65,7 @@ export default function ScrollDialog() {
             ref={descriptionElementRef}
             tabIndex={-1}
           >
-            <TableAnalytics />
+            <ListAnalytics />
           </DialogContentText>
         </DialogContent>
         <DialogActions>

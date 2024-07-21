@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  resources :actionables
   #root to: redirect('/feedbacks')
   #root "feedbacks#index" #path with nothing
 
