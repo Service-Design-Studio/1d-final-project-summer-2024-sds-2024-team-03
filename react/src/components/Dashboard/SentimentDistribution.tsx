@@ -69,8 +69,10 @@ export default function SentimentDistribution({
         height: '100%',
         boxShadow: '0px 0px 20px rgba(0, 0, 0, 0.1)',
         backgroundColor: theme.palette.mode === 'dark' ? "#151515" : "#ffffff",
+        transition: "transform 0.3s ease-in-out",
         "&:hover": {
           backgroundColor: theme.palette.mode === 'dark' ? "#1a1a1a" : "#f9f9f9",
+          transform: "scale(1.03)"
         },
       }}
       id="sentiment-distribution"
