@@ -128,9 +128,10 @@ export default function SentimentScoreGraph({
             setGraphSubcategories(
               Array.from(new Set(data.map(({ subcategory }) => subcategory)))
             );
-            const filteredSubcategories = data.filter((item) =>
-              item.subcategory.includes(selectedSubcategory)
-            );
+            const filteredSubcategories = data.filter((item) => {
+              if (item.subcategory)
+                return item.subcategory.includes(selectedSubcategory);
+            });
             setGraphFeedbackcategories(
               Array.from(
                 new Set(
@@ -140,9 +141,12 @@ export default function SentimentScoreGraph({
                 )
               )
             );
-            const filteredData = filteredSubcategories.filter((item) =>
-              selectedFeedbackcategories.includes(item.feedback_category)
-            );
+            const filteredData = filteredSubcategories.filter((item) => {
+              if (item.feedback_category)
+                return selectedFeedbackcategories.includes(
+                  item.feedback_category
+                );
+            });
             const filteredDataGroupedByFeedbackcategory = filteredData.reduce(
               (acc, item) => {
                 if (!acc[item.feedback_category]) {
@@ -310,11 +314,21 @@ export default function SentimentScoreGraph({
               )}
               MenuProps={MenuProps}
             >
-              {graphSubcategories.map((subcategory: string) => (
-                <MenuItem key={subcategory} value={subcategory}>
-                  {subcategory}
+              {graphSubcategories.length > 0 ? (
+                graphSubcategories.map((subcategory: string) => (
+                  <MenuItem
+                    key={subcategory}
+                    value={subcategory}
+                    className="subcategory-option"
+                  >
+                    {subcategory}
+                  </MenuItem>
+                ))
+              ) : (
+                <MenuItem disabled>
+                  No subcategories for selected time period
                 </MenuItem>
-              ))}
+              )}
             </Select>
           </FormControl>
           <FormControl
