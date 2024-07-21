@@ -104,6 +104,7 @@ export default function Dashboard({
                         flexDirection: "column",
                         justifyContent: "center",
                         height: 200,
+                        boxShadow: '0px 0px 20px rgba(0, 0, 0, 0.1)'
                     }}
                 >
                     <Box

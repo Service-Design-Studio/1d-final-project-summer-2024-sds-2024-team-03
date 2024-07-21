@@ -280,6 +280,7 @@ export default function SentimentScoreGraph({
                     justifyContent: "center",
                     p: 2,
                     borderRadius: 4,
+                    boxShadow: '0px 0px 20px rgba(0, 0, 0, 0.1)',
                     flex: 1,
                 }}
                 id="detailed-sentimentscoregraph"
@@ -318,7 +319,7 @@ export default function SentimentScoreGraph({
                                     id="detailed-sentimentscoregraph-select-subcategory"
                                     label="subcategory"
                                     sx={{
-                                        borderRadius: 4
+                                        borderRadius: 4,
                                     }}
                                 />
                             }
@@ -513,6 +514,7 @@ export default function SentimentScoreGraph({
                     borderRadius: 4,
                     flex: 1,
                     cursor: "pointer",
+                    boxShadow: '0px 0px 20px rgba(0, 0, 0, 0.1)',
                     backgroundColor: theme.palette.mode === 'dark' ? "#151515" : "#ffffff",
                     "&:hover": {
                       backgroundColor: theme.palette.mode === 'dark' ? "#1a1a1a" : "#f9f9f9",
