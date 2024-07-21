@@ -281,6 +281,10 @@ export default function SentimentScoreGraph({
                     p: 2,
                     borderRadius: 4,
                     boxShadow: '0px 0px 20px rgba(0, 0, 0, 0.1)',
+                    transition: "transform 0.3s ease-in-out",
+                    "&:hover": {
+                      transform: "scaleX(1.015) scaleY(1.03)"
+                    },
                     flex: 1,
                 }}
                 id="detailed-sentimentscoregraph"
@@ -516,8 +520,10 @@ export default function SentimentScoreGraph({
                     cursor: "pointer",
                     boxShadow: '0px 0px 20px rgba(0, 0, 0, 0.1)',
                     backgroundColor: theme.palette.mode === 'dark' ? "#151515" : "#ffffff",
+                    transition: "transform 0.3s ease-in-out",
                     "&:hover": {
                       backgroundColor: theme.palette.mode === 'dark' ? "#1a1a1a" : "#f9f9f9",
+                      transform: "scaleX(1.015) scaleY(1.03)"
                     },
                 }}
                 id="overall-sentimentscoregraph"
