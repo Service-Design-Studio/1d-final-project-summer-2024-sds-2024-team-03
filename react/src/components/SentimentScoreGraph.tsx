@@ -18,7 +18,7 @@ const MenuProps = {
             maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
             width: 250,
             borderRadius: 18,
-            marginTop: '18px'
+            marginTop: "18px",
         },
     },
 };
@@ -135,9 +135,12 @@ export default function SentimentScoreGraph({
                                 )
                             )
                         );
-                        const filteredSubcategories = data.filter((item) =>
-                            item.subcategory.includes(selectedSubcategory)
-                        );
+                        const filteredSubcategories = data.filter((item) => {
+                            if (item.subcategory)
+                                return item.subcategory.includes(
+                                    selectedSubcategory
+                                );
+                        });
                         setGraphFeedbackcategories(
                             Array.from(
                                 new Set(
@@ -149,10 +152,12 @@ export default function SentimentScoreGraph({
                             )
                         );
                         const filteredData = filteredSubcategories.filter(
-                            (item) =>
-                                selectedFeedbackcategories.includes(
-                                    item.feedback_category
-                                )
+                            (item) => {
+                                if (item.feedback_category)
+                                    return selectedFeedbackcategories.includes(
+                                        item.feedback_category
+                                    );
+                            }
                         );
                         const filteredDataGroupedByFeedbackcategory =
                             filteredData.reduce((acc, item) => {
@@ -280,10 +285,10 @@ export default function SentimentScoreGraph({
                     justifyContent: "center",
                     p: 2,
                     borderRadius: 4,
-                    boxShadow: '0px 0px 20px rgba(0, 0, 0, 0.1)',
+                    boxShadow: "0px 0px 20px rgba(0, 0, 0, 0.1)",
                     transition: "transform 0.3s ease-in-out",
                     "&:hover": {
-                      transform: "scaleX(1.015) scaleY(1.03)"
+                        transform: "scaleX(1.015) scaleY(1.03)",
                     },
                     flex: 1,
                 }}
@@ -365,7 +370,7 @@ export default function SentimentScoreGraph({
                                     id="detailed-sentimentscoregraph-select-feedbackcategory"
                                     label="feedbackcategory"
                                     sx={{
-                                        borderRadius: 4
+                                        borderRadius: 4,
                                     }}
                                 />
                             }
@@ -518,12 +523,16 @@ export default function SentimentScoreGraph({
                     borderRadius: 4,
                     flex: 1,
                     cursor: "pointer",
-                    boxShadow: '0px 0px 20px rgba(0, 0, 0, 0.1)',
-                    backgroundColor: theme.palette.mode === 'dark' ? "#151515" : "#ffffff",
+                    boxShadow: "0px 0px 20px rgba(0, 0, 0, 0.1)",
+                    backgroundColor:
+                        theme.palette.mode === "dark" ? "#151515" : "#ffffff",
                     transition: "transform 0.3s ease-in-out",
                     "&:hover": {
-                      backgroundColor: theme.palette.mode === 'dark' ? "#1a1a1a" : "#f9f9f9",
-                      transform: "scaleX(1.015) scaleY(1.03)"
+                        backgroundColor:
+                            theme.palette.mode === "dark"
+                                ? "#1a1a1a"
+                                : "#f9f9f9",
+                        transform: "scaleX(1.015) scaleY(1.03)",
                     },
                 }}
                 id="overall-sentimentscoregraph"
