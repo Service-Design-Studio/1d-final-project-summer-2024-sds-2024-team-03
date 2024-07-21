@@ -183,7 +183,8 @@ export default function SentimentCategoriesGraph({
 
                             return {
                                 category: key,
-                                Frustrated: frustratedRecords.length / total,
+                                Frustrated:
+                                    (100 * frustratedRecords.length) / total,
                                 FrustratedColor: getColorByOrder(
                                     frustratedRecords.reduce(
                                         (sum, score) => sum + score,
@@ -191,7 +192,8 @@ export default function SentimentCategoriesGraph({
                                     ) / frustratedRecords.length || 0,
                                     ORDER
                                 ),
-                                Unsatisfied: unsatisfiedRecords.length / total,
+                                Unsatisfied:
+                                    (100 * unsatisfiedRecords.length) / total,
                                 UnsatisfiedColor: getColorByOrder(
                                     unsatisfiedRecords.reduce(
                                         (sum, score) => sum + score,
@@ -199,7 +201,7 @@ export default function SentimentCategoriesGraph({
                                     ) / unsatisfiedRecords.length || 0,
                                     ORDER
                                 ),
-                                Neutral: neutralRecords.length / total,
+                                Neutral: (100 * neutralRecords.length) / total,
                                 NeutralColor: getColorByOrder(
                                     neutralRecords.reduce(
                                         (sum, score) => sum + score,
@@ -207,7 +209,8 @@ export default function SentimentCategoriesGraph({
                                     ) / neutralRecords.length || 0,
                                     ORDER
                                 ),
-                                Satisfied: satisfiedRecords.length / total,
+                                Satisfied:
+                                    (100 * satisfiedRecords.length) / total,
                                 SatisfiedColor: getColorByOrder(
                                     satisfiedRecords.reduce(
                                         (sum, score) => sum + score,
@@ -215,7 +218,7 @@ export default function SentimentCategoriesGraph({
                                     ) / satisfiedRecords.length || 0,
                                     ORDER
                                 ),
-                                Excited: excitedRecords.length / total,
+                                Excited: (100 * excitedRecords.length) / total,
                                 ExcitedColor: getColorByOrder(
                                     excitedRecords.reduce(
                                         (sum, score) => sum + score,
@@ -310,7 +313,8 @@ export default function SentimentCategoriesGraph({
 
                             return {
                                 category: key,
-                                Frustrated: frustratedRecords.length / total,
+                                Frustrated:
+                                    (100 * frustratedRecords.length) / total,
                                 FrustratedColor: getColorByOrder(
                                     frustratedRecords.reduce(
                                         (sum, score) => sum + score,
@@ -318,7 +322,8 @@ export default function SentimentCategoriesGraph({
                                     ) / frustratedRecords.length || 0,
                                     ORDER
                                 ),
-                                Unsatisfied: unsatisfiedRecords.length / total,
+                                Unsatisfied:
+                                    (100 * unsatisfiedRecords.length) / total,
                                 UnsatisfiedColor: getColorByOrder(
                                     unsatisfiedRecords.reduce(
                                         (sum, score) => sum + score,
@@ -326,7 +331,7 @@ export default function SentimentCategoriesGraph({
                                     ) / unsatisfiedRecords.length || 0,
                                     ORDER
                                 ),
-                                Neutral: neutralRecords.length / total,
+                                Neutral: (100 * neutralRecords.length) / total,
                                 NeutralColor: getColorByOrder(
                                     neutralRecords.reduce(
                                         (sum, score) => sum + score,
@@ -334,7 +339,8 @@ export default function SentimentCategoriesGraph({
                                     ) / neutralRecords.length || 0,
                                     ORDER
                                 ),
-                                Satisfied: satisfiedRecords.length / total,
+                                Satisfied:
+                                    (100 * satisfiedRecords.length) / total,
                                 SatisfiedColor: getColorByOrder(
                                     satisfiedRecords.reduce(
                                         (sum, score) => sum + score,
@@ -342,7 +348,7 @@ export default function SentimentCategoriesGraph({
                                     ) / satisfiedRecords.length || 0,
                                     ORDER
                                 ),
-                                Excited: excitedRecords.length / total,
+                                Excited: (100 * excitedRecords.length) / total,
                                 ExcitedColor: getColorByOrder(
                                     excitedRecords.reduce(
                                         (sum, score) => sum + score,
@@ -482,10 +488,10 @@ export default function SentimentCategoriesGraph({
                         keys={Object.keys(ORDER)}
                         indexBy="category"
                         margin={{
-                            top: 50,
-                            right: 100,
+                            top: 10,
+                            right: 50,
                             bottom: 50,
-                            left: 100,
+                            left: 200,
                         }}
                         padding={0.3}
                         minValue={0}
@@ -643,14 +649,14 @@ export default function SentimentCategoriesGraph({
                             }}
                         >
                             <ResponsiveBar
-                                data={bars.reverse().slice(0, 5)}
+                                data={bars.slice(0, 5)}
                                 keys={Object.keys(ORDER)}
                                 indexBy="category"
                                 margin={{
-                                    top: 50,
-                                    right: 100,
+                                    top: 10,
+                                    right: 50,
                                     bottom: 50,
-                                    left: 100,
+                                    left: 200,
                                 }}
                                 padding={0.3}
                                 minValue={0}
@@ -766,14 +772,14 @@ export default function SentimentCategoriesGraph({
                             }}
                         >
                             <ResponsiveBar
-                                data={bars.slice(0, 5)}
+                                data={bars.reverse().slice(0, 5)}
                                 keys={Object.keys(ORDER)}
                                 indexBy="category"
                                 margin={{
-                                    top: 50,
-                                    right: 100,
+                                    top: 10,
+                                    right: 50,
                                     bottom: 50,
-                                    left: 100,
+                                    left: 200,
                                 }}
                                 padding={0.3}
                                 minValue={0}

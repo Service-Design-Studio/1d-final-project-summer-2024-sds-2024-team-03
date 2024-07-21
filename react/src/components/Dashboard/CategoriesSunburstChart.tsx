@@ -288,7 +288,7 @@ export default function CategoriesSunburstChart({
                         <ResponsiveSunburst
                             data={{
                                 category: "nivo",
-                                color: "hsl(265, 70%, 50%)",
+                                color: "hsl(0, 70%, 50%)",
                                 children: components,
                             }}
                             id="category"
