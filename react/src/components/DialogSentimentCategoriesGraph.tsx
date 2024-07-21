@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from "react";
 import {styled} from "@mui/material/styles";
 import {
+    Paper,
     Button,
     Dialog,
     DialogProps,
@@ -15,7 +16,6 @@ import {
     TableHead,
     TableRow,
 } from "@mui/material";
-import TableSentimentCategoriesGraph from "./TableSentimentCategoriesGraph";
 
 const StyledTableCell = styled(TableCell)(({theme}) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -61,7 +61,50 @@ export default function ScrollDialog() {
     }, [open]);
 
     useEffect(() => {}, [open]);
+    function createData(
+        Date: string,
+        Feedback: string,
+        Product: string,
+        Subcategory: string,
+        Source: string,
+        Feedbackcategory: string,
+        Sentiment: string,
+        SentimentScore: number
+    ) {
+        return {
+            Date,
+            Feedback,
+            Product,
+            Subcategory,
+            Source,
+            Feedbackcategory,
+            Sentiment,
+            SentimentScore,
+        };
+    }
 
+    const rows = [
+        createData(
+            "11/0/2023",
+            "Paynow not working",
+            "Digital Banking App",
+            "Paynow",
+            "Social Media",
+            "Payment Error",
+            "Unhappy",
+            1.0
+        ),
+        createData(
+            "11/0/2023",
+            "Paynow not working",
+            "Digital Banking App",
+            "Paynow",
+            "Social Media",
+            "Payment Error",
+            "Unhappy",
+            1.0
+        ),
+    ];
     return (
         <React.Fragment>
             <Button onClick={handleClickOpen("paper")}>View Analytics</Button>
@@ -90,7 +133,72 @@ export default function ScrollDialog() {
                         ref={descriptionElementRef}
                         tabIndex={-1}
                     >
-                        <TableSentimentCategoriesGraph />
+                        <TableContainer component={Paper}>
+                            <Table
+                                sx={{minWidth: 700}}
+                                aria-label="customized table"
+                            >
+                                <TableHead>
+                                    <TableRow>
+                                        <StyledTableCell>Date</StyledTableCell>
+                                        <StyledTableCell align="right">
+                                            Feedback
+                                        </StyledTableCell>
+                                        <StyledTableCell align="right">
+                                            Product
+                                        </StyledTableCell>
+                                        <StyledTableCell align="right">
+                                            Subcategory
+                                        </StyledTableCell>
+                                        <StyledTableCell align="right">
+                                            Source
+                                        </StyledTableCell>
+                                        <StyledTableCell align="right">
+                                            Feedback Category
+                                        </StyledTableCell>
+                                        <StyledTableCell align="right">
+                                            Sentiment
+                                        </StyledTableCell>
+                                        <StyledTableCell align="right">
+                                            Sentiment Score
+                                        </StyledTableCell>
+                                    </TableRow>
+                                </TableHead>
+                                <TableBody>
+                                    {rows.map((row) => (
+                                        <StyledTableRow key={row.Date}>
+                                            <StyledTableCell
+                                                component="th"
+                                                scope="row"
+                                            >
+                                                {row.Date}
+                                            </StyledTableCell>
+                                            <StyledTableCell align="right">
+                                                {row.Feedback}
+                                            </StyledTableCell>
+                                            <StyledTableCell align="right">
+                                                {row.Product}
+                                            </StyledTableCell>
+                                            <StyledTableCell align="right">
+                                                {row.Subcategory}
+                                            </StyledTableCell>
+                                            <StyledTableCell align="right">
+                                                {row.Source}
+                                            </StyledTableCell>
+                                            <StyledTableCell align="right">
+                                                {row.Feedbackcategory}
+                                            </StyledTableCell>
+                                            <StyledTableCell align="right">
+                                                {row.Sentiment}
+                                            </StyledTableCell>
+                                            <StyledTableCell align="right">
+                                                {row.SentimentScore}
+                                            </StyledTableCell>
+                                        </StyledTableRow>
+                                    ))}
+                                </TableBody>
+                            </Table>
+                        </TableContainer>
                     </DialogContentText>
                 </DialogContent>
             </Dialog>
