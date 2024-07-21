@@ -36,7 +36,7 @@ const lightTheme = createTheme({
       main: "#000000", // Red color for light theme
     },
     background: {
-      default: "#f5f5f5", // Explicitly set the background color to grey
+      default: "#e9e9eb", // Explicitly set the background color to grey
     },
     secondary: {
       main: "#8D1927", // Red color for light theme
@@ -47,7 +47,7 @@ const lightTheme = createTheme({
 const Main = styled("main")(({ theme }: { theme: Theme }) => ({
   flexGrow: 1,
   padding: theme.spacing(3),
-  marginTop: 64, // Adjust this value based on your AppBar height
+  marginTop: 75, // Adjust this value based on your AppBar height
 }));
 
 const AppBarContent = styled(Box)(({ theme }: { theme: Theme }) => ({
