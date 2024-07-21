@@ -133,9 +133,12 @@ export default function SentimentScoreGraph({
                                 )
                             )
                         );
-                        const filteredSubcategories = data.filter((item) =>
-                            item.subcategory.includes(selectedSubcategory)
-                        );
+                        const filteredSubcategories = data.filter((item) => {
+                            if (item.subcategory)
+                                return item.subcategory.includes(
+                                    selectedSubcategory
+                                );
+                        });
                         setGraphFeedbackcategories(
                             Array.from(
                                 new Set(
@@ -147,10 +150,12 @@ export default function SentimentScoreGraph({
                             )
                         );
                         const filteredData = filteredSubcategories.filter(
-                            (item) =>
-                                selectedFeedbackcategories.includes(
-                                    item.feedback_category
-                                )
+                            (item) => {
+                                if (item.feedback_category)
+                                    return selectedFeedbackcategories.includes(
+                                        item.feedback_category
+                                    );
+                            }
                         );
                         const filteredDataGroupedByFeedbackcategory =
                             filteredData.reduce((acc, item) => {
@@ -507,9 +512,13 @@ export default function SentimentScoreGraph({
                     borderRadius: 4,
                     flex: 1,
                     cursor: "pointer",
-                    backgroundColor: theme.palette.mode === 'dark' ? "#151515" : "#ffffff",
+                    backgroundColor:
+                        theme.palette.mode === "dark" ? "#151515" : "#ffffff",
                     "&:hover": {
-                      backgroundColor: theme.palette.mode === 'dark' ? "#1a1a1a" : "#f9f9f9",
+                        backgroundColor:
+                            theme.palette.mode === "dark"
+                                ? "#1a1a1a"
+                                : "#f9f9f9",
                     },
                 }}
                 id="overall-sentimentscoregraph"
