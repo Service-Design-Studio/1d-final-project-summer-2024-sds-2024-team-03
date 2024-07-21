@@ -41,10 +41,10 @@ class AnalyticsController < ApplicationController
   end
 
   def get_sentiment_scores
-    # SentimentScoreGraph (detailed), Sunburst
+    # SentimentScoreGraph (detailed), Sunburst, SentimentCategoriesGraph
     products = params[:product].split(',')
     sources = params[:source].split(',')
-    @sentiment_scores = Analytic.select(:sentiment_score, :date, :product, :subcategory, :feedback_category)
+    @sentiment_scores = Analytic.select(:sentiment_score, :date, :product, :subcategory, :feedback_category, :feedback, :source)
                                 .where("TO_DATE(date, 'DD/MM/YYYY') BETWEEN TO_DATE(?, 'DD/MM/YYYY') AND TO_DATE(?, 'DD/MM/YYYY')", params[:fromDate], params[:toDate])
                                 .where(product: products)
                                 .where(source: sources)
