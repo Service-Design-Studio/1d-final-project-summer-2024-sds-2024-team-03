@@ -74,18 +74,18 @@ const AppBarContent = styled(Box)(({ theme }: { theme: Theme }) => ({
 }));
 
 const Footer = styled("footer")(({ theme }: { theme: Theme }) => ({
-  backgroundColor: theme.palette.mode === 'dark' ? "#252525" : "#000000",
+  backgroundColor: theme.palette.mode === "dark" ? "#252525" : "#000000",
   color: "#ffffff", // White text
   textAlign: "center",
-  padding: theme.spacing(2),
+  padding: theme.spacing(0.2),
   width: "100%",
   marginTop: 48,
 }));
 
 const FooterText = styled("div")({
-  marginTop: 8, 
-  marginBottom: 8,// Add margin above the text
-  fontSize: '1.1rem'
+  marginTop: 2,
+  marginBottom: 2, // Add margin above the text
+  fontSize: "1.1rem",
 });
 
 const StyledDrawer = styled(Drawer)(({ theme }: { theme: Theme }) => ({
@@ -128,14 +128,18 @@ export default function MainApp() {
   };
 
   const theme = darkMode ? darkTheme : lightTheme;
-  const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down("md"));
 
   return (
     <ThemeProvider theme={theme}>
-      <Box sx={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
+      <Box
+        sx={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}
+      >
         <CssBaseline />
         <MuiAppBar position="fixed" sx={{ height: 64 }}>
-          <Toolbar sx={{ height: "100%", display: "flex", alignItems: "center" }}>
+          <Toolbar
+            sx={{ height: "100%", display: "flex", alignItems: "center" }}
+          >
             <AppBarContent>
               <img src={dbsLogo} alt="DBS Logo" style={{ height: 30 }} />
               {isSmallScreen ? (
@@ -169,7 +173,11 @@ export default function MainApp() {
                       {item.name}
                     </Button>
                   ))}
-                  <Button color="inherit" onClick={toggleDarkMode} sx={{ borderRadius: 4 }}>
+                  <Button
+                    color="inherit"
+                    onClick={toggleDarkMode}
+                    sx={{ borderRadius: 4 }}
+                  >
                     {darkMode ? <Brightness4Icon /> : <WbSunnyIcon />}
                   </Button>
                 </Box>
@@ -178,8 +186,12 @@ export default function MainApp() {
           </Toolbar>
         </MuiAppBar>
 
-        <StyledDrawer anchor="left" open={drawerOpen} onClose={() => setDrawerOpen(false)}>
-          <List sx={{ width: 250, m:6 }}>
+        <StyledDrawer
+          anchor="left"
+          open={drawerOpen}
+          onClose={() => setDrawerOpen(false)}
+        >
+          <List sx={{ width: 250, m: 6 }}>
             {menuItems.map((item) => (
               <ListItem key={item.key} disablePadding>
                 <ListItemButton
@@ -192,7 +204,7 @@ export default function MainApp() {
                 </ListItemButton>
               </ListItem>
             ))}
-            <ListItem disablePadding >
+            <ListItem disablePadding>
               <ListItemButton onClick={toggleDarkMode}>
                 <ListItemText primary={darkMode ? "Light Mode" : "Dark Mode"} />
               </ListItemButton>
@@ -248,9 +260,7 @@ export default function MainApp() {
           )}
         </Main>
         <Footer>
-          <FooterText>
-            © DBS 2024
-          </FooterText>
+          <FooterText>© DBS 2024</FooterText>
         </Footer>
       </Box>
     </ThemeProvider>

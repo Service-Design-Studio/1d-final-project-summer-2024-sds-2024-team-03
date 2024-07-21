@@ -26,7 +26,7 @@ export default function SentimentDistribution({
   const order: Record<string, string> = {
     Excited: "darkgreen",
     Satisfied: "green",
-    Neutral: "grey",
+    Neutral: "blue",
     Unsatisfied: "orange",
     Frustrated: "red",
   };
@@ -56,46 +56,48 @@ export default function SentimentDistribution({
   return (
     <div>
       <ButtonBase
-      component={Paper}
-      sx={{
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
-        p: 2,
-        borderRadius: 4,
-        flex: 1,
-        cursor: "pointer",
-        height: '100%',
-        boxShadow: '0px 0px 20px rgba(0, 0, 0, 0.1)',
-        backgroundColor: theme.palette.mode === 'dark' ? "#151515" : "#ffffff",
-        transition: "transform 0.3s ease-in-out",
-        "&:hover": {
-          backgroundColor: theme.palette.mode === 'dark' ? "#1a1a1a" : "#f9f9f9",
-          transform: "scale(1.03)"
-        },
-      }}
-      id="sentiment-distribution"
-      onClick={() => setSelectedMenu("analytics")}
-    >
-      <Typography variant="h6" color="grey">
-        Distribution of Sentiment
-      </Typography>
-      {Object.entries(order)
-        .reverse()
-        .map(([sentiment, sentimentColor]) => (
-          <Typography
-            key={sentiment}
-            variant="body1"
-            style={{ color: sentimentColor }}
-          >
-            {sentimentDistribution[sentiment]
-              ? `${sentimentDistribution[sentiment]}% `
-              : "0% "}
-            {sentiment}
-          </Typography>
-        ))}
-    </ButtonBase>
-  </div>
+        component={Paper}
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          p: 2,
+          borderRadius: 4,
+          flex: 1,
+          cursor: "pointer",
+          height: "100%",
+          boxShadow: "0px 0px 20px rgba(0, 0, 0, 0.1)",
+          backgroundColor:
+            theme.palette.mode === "dark" ? "#151515" : "#ffffff",
+          transition: "transform 0.3s ease-in-out",
+          "&:hover": {
+            backgroundColor:
+              theme.palette.mode === "dark" ? "#1a1a1a" : "#f9f9f9",
+            transform: "scale(1.03)",
+          },
+        }}
+        id="sentiment-distribution"
+        onClick={() => setSelectedMenu("analytics")}
+      >
+        <Typography variant="h6" color="grey" style={{ fontWeight: "bold" }}>
+          Distribution of Sentiment
+        </Typography>
+        {Object.entries(order)
+          .reverse()
+          .map(([sentiment, sentimentColor]) => (
+            <Typography
+              key={sentiment}
+              variant="body1"
+              style={{ color: sentimentColor }}
+            >
+              {sentimentDistribution[sentiment]
+                ? `${sentimentDistribution[sentiment]}% `
+                : "0% "}
+              {sentiment}
+            </Typography>
+          ))}
+      </ButtonBase>
+    </div>
   );
 }

@@ -5,7 +5,7 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
-import TableSentimentCategoriesGraph from "./TableSentimentCategoriesGraph";
+import TableAnalytics from "./TableAnalytics";
 
 export default function ScrollDialog() {
   const [open, setOpen] = React.useState(false);
@@ -42,7 +42,14 @@ export default function ScrollDialog() {
 
   return (
     <React.Fragment>
-      <Button onClick={handleClickOpen("paper")}>View Analytics</Button>
+      <Button
+        onClick={handleClickOpen("paper")}
+        size="small"
+        variant="contained"
+        color="secondary"
+      >
+        View Analytics
+      </Button>
       <Dialog
         open={open}
         onClose={handleClose}
@@ -58,7 +65,7 @@ export default function ScrollDialog() {
             ref={descriptionElementRef}
             tabIndex={-1}
           >
-            <TableSentimentCategoriesGraph />
+            <TableAnalytics />
           </DialogContentText>
         </DialogContent>
         <DialogActions>

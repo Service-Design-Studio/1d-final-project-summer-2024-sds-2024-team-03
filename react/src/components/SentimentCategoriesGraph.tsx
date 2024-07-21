@@ -227,6 +227,7 @@ export default function SentimentCategoriesGraph({
             variant="h6"
             component="h3"
             sx={{ marginRight: 2, width: "50%" }}
+            style={{ fontWeight: "bold" }}
           >
             Sentiment vs Time trend for
             {selectedSubcategory
