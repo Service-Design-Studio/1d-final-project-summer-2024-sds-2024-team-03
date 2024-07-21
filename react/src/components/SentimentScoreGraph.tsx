@@ -345,11 +345,19 @@ export default function SentimentScoreGraph({
                             )}
                             MenuProps={MenuProps}
                         >
-                            {graphSubcategories.map((subcategory: string) => (
-                                <MenuItem key={subcategory} value={subcategory}>
-                                    {subcategory}
-                                </MenuItem>
-                            ))}
+                            {graphSubcategories.length > 0 ? (
+                                graphSubcategories.map((subcategory: string) => (
+                                    <MenuItem
+                                        key={subcategory}
+                                        value={subcategory}
+                                        className="subcategory-option"
+                                    >
+                                        {subcategory}
+                                    </MenuItem>
+                                ))
+                            ) : (
+                                <MenuItem disabled>No subcategories for selected time period</MenuItem>
+                            )}
                         </Select>
                     </FormControl>
                     <FormControl
