@@ -28,14 +28,14 @@ export default function UploadData({
         gap: 2,
         mb: 7
       }}>
-        <Box sx={{ width: { xs: '100%', sm: '200px' } }}>
+        <Box sx={{ width: { xs: '100%', sm: '30%' } }}>
           <FilterProduct
             selectedProduct={selectedProduct}
             setSelectedProduct={setSelectedProduct}
             multiple={false}
           />
         </Box>
-        <Box sx={{ width: { xs: '100%', sm: '200px' } }}>
+        <Box sx={{ width: { xs: '100%', sm: '30%' } }}>
           <FilterSource
             selectedSource={selectedSource}
             setSelectedSource={setSelectedSource}
