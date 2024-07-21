@@ -12,6 +12,7 @@ import Button from "@mui/material/Button";
 // for dropdown menu on smaller screens:
 import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
+import CloseIcon from "@mui/icons-material/Close";
 import Drawer from "@mui/material/Drawer";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
@@ -87,6 +88,13 @@ const FooterText = styled("div")({
   fontSize: '1.1rem'
 });
 
+const StyledDrawer = styled(Drawer)(({ theme }: { theme: Theme }) => ({
+  "& .MuiDrawer-paper": {
+    backgroundColor: "#000000", // Black background for the drawer
+    color: "#ffffff", // White text
+  },
+}));
+
 export default function MainApp() {
   // State for managing dark theme
   const [darkMode, setDarkMode] = useState(false);
@@ -134,10 +142,10 @@ export default function MainApp() {
                 <IconButton
                   color="inherit"
                   edge="start"
-                  onClick={() => setDrawerOpen(true)}
-                  sx={{ ml: 4 }}
+                  onClick={() => setDrawerOpen(!drawerOpen)}
+                  sx={{ ml: 2 }}
                 >
-                  <MenuIcon />
+                  {drawerOpen ? <CloseIcon /> : <MenuIcon />}
                 </IconButton>
               ) : (
                 <Box sx={{ display: "flex", gap: 2 }}>
@@ -170,8 +178,8 @@ export default function MainApp() {
           </Toolbar>
         </MuiAppBar>
 
-        <Drawer anchor="left" open={drawerOpen} onClose={() => setDrawerOpen(false)}>
-          <List sx={{ width: 250 }}>
+        <StyledDrawer anchor="left" open={drawerOpen} onClose={() => setDrawerOpen(false)}>
+          <List sx={{ width: 250, m:6 }}>
             {menuItems.map((item) => (
               <ListItem key={item.key} disablePadding>
                 <ListItemButton
@@ -184,13 +192,13 @@ export default function MainApp() {
                 </ListItemButton>
               </ListItem>
             ))}
-            <ListItem disablePadding>
+            <ListItem disablePadding >
               <ListItemButton onClick={toggleDarkMode}>
                 <ListItemText primary={darkMode ? "Light Mode" : "Dark Mode"} />
               </ListItemButton>
             </ListItem>
           </List>
-        </Drawer>
+        </StyledDrawer>
 
         <Main theme={theme}>
           {selectedMenu === "dashboard" && (
