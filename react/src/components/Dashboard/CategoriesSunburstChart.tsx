@@ -288,7 +288,7 @@ export default function CategoriesSunburstChart({
                         <ResponsiveSunburst
                             data={{
                                 category: "nivo",
-                                color: "hsl(0, 70%, 50%)",
+                                color: "hsl(265, 70%, 50%)",
                                 children: components,
                             }}
                             id="category"
@@ -296,9 +296,9 @@ export default function CategoriesSunburstChart({
                             cornerRadius={2}
                             borderWidth={3}
                             borderColor={{theme: "grid.line.stroke"}}
-                            colors={{scheme: "paired"}}
                             // To make use of hsl from each component
                             inheritColorFromParent={false}
+                            // colors={{scheme: "paired"}}
                             childColor={{
                                 from: "color",
                                 modifiers: [["brighter", 0.3]],

@@ -113,272 +113,587 @@ export default function SentimentCategoriesGraph({
         setSelectedSubcategory(value);
     };
 
+    const sortBySentiment = (
+        records: Bar[],
+        negative: boolean = false
+    ): Bar[] => {
+        return records.sort((a, b) => {
+            const aValues = [
+                a.Frustrated,
+                a.Unsatisfied,
+                a.Neutral,
+                a.Satisfied,
+                a.Excited,
+            ];
+            const bValues = [
+                b.Frustrated,
+                b.Unsatisfied,
+                b.Neutral,
+                b.Satisfied,
+                b.Excited,
+            ];
+
+            if (negative) {
+                for (let i = 0; i < aValues.length; i++) {
+                    if (bValues[i] !== aValues[i]) {
+                        return bValues[i] - aValues[i];
+                    }
+                }
+            } else {
+                // Highest to lowest no. of excited->satisfied->neutral->unsatisfied->frustrated
+                for (let i = 0; i < aValues.length; i++) {
+                    if (aValues[i] !== bValues[i]) {
+                        return bValues[i] - aValues[i];
+                    }
+                }
+            }
+            return 0;
+        });
+    };
+
     useEffect(() => {
         const urlPrefix =
             process.env.NODE_ENV === "development"
                 ? "http://localhost:3000"
                 : "https://jbaaam-yl5rojgcbq-et.a.run.app";
+        setBars([
+            {
+                category: "Debit Card > Staff Related",
+                Frustrated: 0,
+                FrustratedColor: "red",
+                Unsatisfied: 50,
+                UnsatisfiedColor: "orange",
+                Neutral: 50,
+                NeutralColor: "grey",
+                Satisfied: 0,
+                SatisfiedColor: "red",
+                Excited: 0,
+                ExcitedColor: "red",
+            },
+            {
+                category: "Debit Card > Fee Related",
+                Frustrated: 0,
+                FrustratedColor: "red",
+                Unsatisfied: 14.285714285714286,
+                UnsatisfiedColor: "orange",
+                Neutral: 28.571428571428573,
+                NeutralColor: "grey",
+                Satisfied: 42.857142857142854,
+                SatisfiedColor: "green",
+                Excited: 14.285714285714286,
+                ExcitedColor: "darkgreen",
+            },
+            {
+                category: "Debit Card > Application Related",
+                Frustrated: 37.5,
+                FrustratedColor: "red",
+                Unsatisfied: 0,
+                UnsatisfiedColor: "red",
+                Neutral: 37.5,
+                NeutralColor: "grey",
+                Satisfied: 12.5,
+                SatisfiedColor: "green",
+                Excited: 12.5,
+                ExcitedColor: "darkgreen",
+            },
+            {
+                category: "Credit Card > Fee Related",
+                Frustrated: 0,
+                FrustratedColor: "red",
+                Unsatisfied: 12.5,
+                UnsatisfiedColor: "orange",
+                Neutral: 12.5,
+                NeutralColor: "grey",
+                Satisfied: 50,
+                SatisfiedColor: "green",
+                Excited: 25,
+                ExcitedColor: "darkgreen",
+            },
+            {
+                category: "Credit Card > Staff Related",
+                Frustrated: 30,
+                FrustratedColor: "red",
+                Unsatisfied: 10,
+                UnsatisfiedColor: "orange",
+                Neutral: 20,
+                NeutralColor: "grey",
+                Satisfied: 10,
+                SatisfiedColor: "green",
+                Excited: 30,
+                ExcitedColor: "darkgreen",
+            },
+            {
+                category: "Others > Staff Related",
+                Frustrated: 0,
+                FrustratedColor: "red",
+                Unsatisfied: 0,
+                UnsatisfiedColor: "red",
+                Neutral: 0,
+                NeutralColor: "red",
+                Satisfied: 100,
+                SatisfiedColor: "green",
+                Excited: 0,
+                ExcitedColor: "red",
+            },
+            {
+                category: "technical difficulties > Fee Related",
+                Frustrated: 0,
+                FrustratedColor: "red",
+                Unsatisfied: 0,
+                UnsatisfiedColor: "red",
+                Neutral: 0,
+                NeutralColor: "red",
+                Satisfied: 0,
+                SatisfiedColor: "red",
+                Excited: 100,
+                ExcitedColor: "darkgreen",
+            },
+            {
+                category: "Credit Card > Application Related",
+                Frustrated: 10,
+                FrustratedColor: "red",
+                Unsatisfied: 10,
+                UnsatisfiedColor: "orange",
+                Neutral: 30,
+                NeutralColor: "grey",
+                Satisfied: 20,
+                SatisfiedColor: "green",
+                Excited: 30,
+                ExcitedColor: "darkgreen",
+            },
+            {
+                category: "Others > Fee Related",
+                Frustrated: 0,
+                FrustratedColor: "red",
+                Unsatisfied: 0,
+                UnsatisfiedColor: "red",
+                Neutral: 100,
+                NeutralColor: "grey",
+                Satisfied: 0,
+                SatisfiedColor: "red",
+                Excited: 0,
+                ExcitedColor: "red",
+            },
+            {
+                category: "Credit Card Application > Application Related",
+                Frustrated: 12.5,
+                FrustratedColor: "red",
+                Unsatisfied: 25,
+                UnsatisfiedColor: "orange",
+                Neutral: 16.666666666666668,
+                NeutralColor: "grey",
+                Satisfied: 12.5,
+                SatisfiedColor: "green",
+                Excited: 33.333333333333336,
+                ExcitedColor: "darkgreen",
+            },
+            {
+                category: "Credit Card Application > Staff Related",
+                Frustrated: 23.529411764705884,
+                FrustratedColor: "red",
+                Unsatisfied: 11.764705882352942,
+                UnsatisfiedColor: "orange",
+                Neutral: 23.529411764705884,
+                NeutralColor: "grey",
+                Satisfied: 17.647058823529413,
+                SatisfiedColor: "green",
+                Excited: 23.529411764705884,
+                ExcitedColor: "darkgreen",
+            },
+            {
+                category: "Credit Card Application > Fee Related",
+                Frustrated: 13.333333333333334,
+                FrustratedColor: "red",
+                Unsatisfied: 20,
+                UnsatisfiedColor: "orange",
+                Neutral: 20,
+                NeutralColor: "grey",
+                Satisfied: 20,
+                SatisfiedColor: "green",
+                Excited: 26.666666666666668,
+                ExcitedColor: "darkgreen",
+            },
+            {
+                category: "transaction issues > Fee Related",
+                Frustrated: 0,
+                FrustratedColor: "red",
+                Unsatisfied: 0,
+                UnsatisfiedColor: "red",
+                Neutral: 0,
+                NeutralColor: "red",
+                Satisfied: 100,
+                SatisfiedColor: "green",
+                Excited: 0,
+                ExcitedColor: "red",
+            },
+            {
+                category: "technical difficulties > Staff Related",
+                Frustrated: 0,
+                FrustratedColor: "red",
+                Unsatisfied: 0,
+                UnsatisfiedColor: "red",
+                Neutral: 100,
+                NeutralColor: "grey",
+                Satisfied: 0,
+                SatisfiedColor: "red",
+                Excited: 0,
+                ExcitedColor: "red",
+            },
+            {
+                category: "customer service issues > Application Related",
+                Frustrated: 0,
+                FrustratedColor: "red",
+                Unsatisfied: 0,
+                UnsatisfiedColor: "red",
+                Neutral: 0,
+                NeutralColor: "red",
+                Satisfied: 0,
+                SatisfiedColor: "red",
+                Excited: 100,
+                ExcitedColor: "darkgreen",
+            },
+            {
+                category: "card activation > Application Related",
+                Frustrated: 100,
+                FrustratedColor: "red",
+                Unsatisfied: 0,
+                UnsatisfiedColor: "red",
+                Neutral: 0,
+                NeutralColor: "red",
+                Satisfied: 0,
+                SatisfiedColor: "red",
+                Excited: 0,
+                ExcitedColor: "red",
+            },
+            {
+                category: "technical difficulties > Application Related",
+                Frustrated: 0,
+                FrustratedColor: "red",
+                Unsatisfied: 100,
+                UnsatisfiedColor: "orange",
+                Neutral: 0,
+                NeutralColor: "red",
+                Satisfied: 0,
+                SatisfiedColor: "red",
+                Excited: 0,
+                ExcitedColor: "red",
+            },
+            {
+                category: "general inquiry > Application Related",
+                Frustrated: 0,
+                FrustratedColor: "red",
+                Unsatisfied: 0,
+                UnsatisfiedColor: "red",
+                Neutral: 100,
+                NeutralColor: "grey",
+                Satisfied: 0,
+                SatisfiedColor: "red",
+                Excited: 0,
+                ExcitedColor: "red",
+            },
+            {
+                category: "compliments > Application Related",
+                Frustrated: 0,
+                FrustratedColor: "red",
+                Unsatisfied: 0,
+                UnsatisfiedColor: "red",
+                Neutral: 0,
+                NeutralColor: "red",
+                Satisfied: 100,
+                SatisfiedColor: "green",
+                Excited: 0,
+                ExcitedColor: "red",
+            },
+            {
+                category: "transaction issues > Application Related",
+                Frustrated: 0,
+                FrustratedColor: "red",
+                Unsatisfied: 0,
+                UnsatisfiedColor: "red",
+                Neutral: 100,
+                NeutralColor: "grey",
+                Satisfied: 0,
+                SatisfiedColor: "red",
+                Excited: 0,
+                ExcitedColor: "red",
+            },
+        ]);
+        // if (isDetailed) {
+        //     if (!selectedSubcategory) setBars([]);
+        //     fetch(
+        //         `${urlPrefix}/analytics/get_sentiment_scores?fromDate=${fromDate_string}&toDate=${toDate_string}&product=${selectedProduct}&source=${selectedSource}`
+        //     )
+        //         .then((response) => response.json())
+        //         .then((data: DataRecord[]) => {
+        //             if (data.length > 0) {
+        //                 setGraphSubcategories(
+        //                     Array.from(
+        //                         new Set(
+        //                             data.map(({subcategory}) => subcategory)
+        //                         )
+        //                     )
+        //                 );
+        //                 const filteredSubcategories = data.filter((item) => {
+        //                     if (item.subcategory)
+        //                         return item.subcategory.includes(
+        //                             selectedSubcategory
+        //                         );
+        //                 });
+        //                 const dataGroupedByFeedbackcategory: Record<
+        //                     string,
+        //                     DataRecord[]
+        //                 > = filteredSubcategories.reduce((acc, curr) => {
+        //                     const key = `${curr.subcategory} > ${curr.feedback_category}`;
+        //                     if (!acc[key]) {
+        //                         acc[key] = [];
+        //                     }
+        //                     acc[key].push(curr);
+        //                     return acc;
+        //                 }, {} as Record<string, DataRecord[]>);
 
-        if (isDetailed) {
-            if (!selectedSubcategory) setBars([]);
-            fetch(
-                `${urlPrefix}/analytics/get_sentiment_scores?fromDate=${fromDate_string}&toDate=${toDate_string}&product=${selectedProduct}&source=${selectedSource}`
-            )
-                .then((response) => response.json())
-                .then((data: DataRecord[]) => {
-                    if (data.length > 0) {
-                        setGraphSubcategories(
-                            Array.from(
-                                new Set(
-                                    data.map(({subcategory}) => subcategory)
-                                )
-                            )
-                        );
-                        const filteredSubcategories = data.filter((item) => {
-                            if (item.subcategory)
-                                return item.subcategory.includes(
-                                    selectedSubcategory
-                                );
-                        });
-                        const dataGroupedByFeedbackcategory: Record<
-                            string,
-                            DataRecord[]
-                        > = filteredSubcategories.reduce((acc, curr) => {
-                            const key = `${curr.subcategory} > ${curr.feedback_category}`;
-                            if (!acc[key]) {
-                                acc[key] = [];
-                            }
-                            acc[key].push(curr);
-                            return acc;
-                        }, {} as Record<string, DataRecord[]>);
+        //                 const barsData: Bar[] = Object.entries(
+        //                     dataGroupedByFeedbackcategory
+        //                 ).map(([key, records]) => {
+        //                     const total = records.length;
+        //                     const sentimentScores = records.map((r) =>
+        //                         parseFloat(r.sentiment_score)
+        //                     );
+        //                     const frustratedRecords = sentimentScores.filter(
+        //                         (score) => score <= 1
+        //                     );
+        //                     const unsatisfiedRecords = sentimentScores.filter(
+        //                         (score) => score <= 2 && score > 1
+        //                     );
+        //                     const neutralRecords = sentimentScores.filter(
+        //                         (score) => score <= 3 && score > 2
+        //                     );
+        //                     const satisfiedRecords = sentimentScores.filter(
+        //                         (score) => score <= 4 && score > 3
+        //                     );
+        //                     const excitedRecords = sentimentScores.filter(
+        //                         (score) => score > 4
+        //                     );
 
-                        const barsData: Bar[] = Object.entries(
-                            dataGroupedByFeedbackcategory
-                        ).map(([key, records]) => {
-                            const total = records.length;
-                            const sentimentScores = records.map((r) =>
-                                parseFloat(r.sentiment_score)
-                            );
-                            const frustratedRecords = sentimentScores.filter(
-                                (score) => score <= 1
-                            );
-                            const unsatisfiedRecords = sentimentScores.filter(
-                                (score) => score <= 2 && score > 1
-                            );
-                            const neutralRecords = sentimentScores.filter(
-                                (score) => score <= 3 && score > 2
-                            );
-                            const satisfiedRecords = sentimentScores.filter(
-                                (score) => score <= 4 && score > 3
-                            );
-                            const excitedRecords = sentimentScores.filter(
-                                (score) => score > 4
-                            );
+        //                     const averageScore =
+        //                         sentimentScores.reduce(
+        //                             (sum, score) => sum + score,
+        //                             0
+        //                         ) / total;
 
-                            const averageScore =
-                                sentimentScores.reduce(
-                                    (sum, score) => sum + score,
-                                    0
-                                ) / total;
+        //                     return {
+        //                         category: key,
+        //                         Frustrated: parseFloat(
+        //                             (
+        //                                 (100 * frustratedRecords.length) /
+        //                                 total
+        //                             ).toFixed(1)
+        //                         ),
+        //                         FrustratedColor: getColorByOrder(
+        //                             frustratedRecords.reduce(
+        //                                 (sum, score) => sum + score,
+        //                                 0
+        //                             ) / frustratedRecords.length || 0,
+        //                             ORDER
+        //                         ),
+        //                         Unsatisfied: parseFloat(
+        //                             (
+        //                                 (100 * unsatisfiedRecords.length) /
+        //                                 total
+        //                             ).toFixed(1)
+        //                         ),
+        //                         UnsatisfiedColor: getColorByOrder(
+        //                             unsatisfiedRecords.reduce(
+        //                                 (sum, score) => sum + score,
+        //                                 0
+        //                             ) / unsatisfiedRecords.length || 0,
+        //                             ORDER
+        //                         ),
+        //                         Neutral: parseFloat(
+        //                             (
+        //                                 (100 * neutralRecords.length) /
+        //                                 total
+        //                             ).toFixed(1)
+        //                         ),
+        //                         NeutralColor: getColorByOrder(
+        //                             neutralRecords.reduce(
+        //                                 (sum, score) => sum + score,
+        //                                 0
+        //                             ) / neutralRecords.length || 0,
+        //                             ORDER
+        //                         ),
+        //                         Satisfied: parseFloat(
+        //                             (
+        //                                 (100 * satisfiedRecords.length) /
+        //                                 total
+        //                             ).toFixed(1)
+        //                         ),
+        //                         SatisfiedColor: getColorByOrder(
+        //                             satisfiedRecords.reduce(
+        //                                 (sum, score) => sum + score,
+        //                                 0
+        //                             ) / satisfiedRecords.length || 0,
+        //                             ORDER
+        //                         ),
+        //                         Excited: parseFloat(
+        //                             (
+        //                                 (100 * excitedRecords.length) /
+        //                                 total
+        //                             ).toFixed(1)
+        //                         ),
+        //                         ExcitedColor: getColorByOrder(
+        //                             excitedRecords.reduce(
+        //                                 (sum, score) => sum + score,
+        //                                 0
+        //                             ) / excitedRecords.length || 0,
+        //                             ORDER
+        //                         ),
+        //                     };
+        //                 });
+        //                 console.log(barsData);
+        //                 setBars(barsData);
+        //             } else {
+        //                 setBars([]);
+        //             }
+        //         });
+        // } else {
+        //     fetch(
+        //         `${urlPrefix}/analytics/get_sentiment_scores?fromDate=${fromDate_string}&toDate=${toDate_string}&product=${selectedProduct}&source=${selectedSource}`
+        //     )
+        //         .then((response) => response.json())
+        //         .then((data: DataRecord[]) => {
+        //             if (data.length > 0) {
+        //                 // [
+        //                 //     {
+        //                 //         subcategory: "Card>Perks",
+        //                 //         "very angry": -29,
+        //                 //         "very angryColor": getColorByOrder(1.1, ORDER),
+        //                 //         sad: -11,
+        //                 //         sadColor: "hsl(130, 70%, 50%)",
+        //                 //         others: 24,
+        //                 //         othersColor: "hsl(222, 70%, 50%)",
+        //                 //         satisfied: 28,
+        //                 //         satisfiedColor: "hsl(125, 70%, 50%)",
+        //                 //         happy: 8,
+        //                 //         happyColor: "hsl(289, 70%, 50%)",
+        //                 //     },
+        //                 // ]
+        //                 const dataGroupedByFeedbackcategory: Record<
+        //                     string,
+        //                     DataRecord[]
+        //                 > = data.reduce((acc, curr) => {
+        //                     const key = `${curr.subcategory} > ${curr.feedback_category}`;
+        //                     if (!acc[key]) {
+        //                         acc[key] = [];
+        //                     }
+        //                     acc[key].push(curr);
+        //                     return acc;
+        //                 }, {} as Record<string, DataRecord[]>);
 
-                            return {
-                                category: key,
-                                Frustrated:
-                                    (100 * frustratedRecords.length) / total,
-                                FrustratedColor: getColorByOrder(
-                                    frustratedRecords.reduce(
-                                        (sum, score) => sum + score,
-                                        0
-                                    ) / frustratedRecords.length || 0,
-                                    ORDER
-                                ),
-                                Unsatisfied:
-                                    (100 * unsatisfiedRecords.length) / total,
-                                UnsatisfiedColor: getColorByOrder(
-                                    unsatisfiedRecords.reduce(
-                                        (sum, score) => sum + score,
-                                        0
-                                    ) / unsatisfiedRecords.length || 0,
-                                    ORDER
-                                ),
-                                Neutral: (100 * neutralRecords.length) / total,
-                                NeutralColor: getColorByOrder(
-                                    neutralRecords.reduce(
-                                        (sum, score) => sum + score,
-                                        0
-                                    ) / neutralRecords.length || 0,
-                                    ORDER
-                                ),
-                                Satisfied:
-                                    (100 * satisfiedRecords.length) / total,
-                                SatisfiedColor: getColorByOrder(
-                                    satisfiedRecords.reduce(
-                                        (sum, score) => sum + score,
-                                        0
-                                    ) / satisfiedRecords.length || 0,
-                                    ORDER
-                                ),
-                                Excited: (100 * excitedRecords.length) / total,
-                                ExcitedColor: getColorByOrder(
-                                    excitedRecords.reduce(
-                                        (sum, score) => sum + score,
-                                        0
-                                    ) / excitedRecords.length || 0,
-                                    ORDER
-                                ),
-                            };
-                        });
-                        console.log(barsData);
-                        // Highest to lowest
-                        const sortedBars = barsData.sort((a, b) => {
-                            const avgA =
-                                Object.values(a)
-                                    .filter((_, idx) => idx % 2 === 0)
-                                    .map((val) => val as number)
-                                    .reduce((sum, val) => sum + val, 0) / 5;
-                            const avgB =
-                                Object.values(b)
-                                    .filter((_, idx) => idx % 2 === 0)
-                                    .map((val) => val as number)
-                                    .reduce((sum, val) => sum + val, 0) / 5;
-                            return avgB - avgA;
-                        });
-                        setBars(sortedBars);
-                    } else {
-                        setBars([]);
-                    }
-                });
-        } else {
-            fetch(
-                `${urlPrefix}/analytics/get_sentiment_scores?fromDate=${fromDate_string}&toDate=${toDate_string}&product=${selectedProduct}&source=${selectedSource}`
-            )
-                .then((response) => response.json())
-                .then((data: DataRecord[]) => {
-                    if (data.length > 0) {
-                        // [
-                        //     {
-                        //         subcategory: "Card>Perks",
-                        //         "very angry": -29,
-                        //         "very angryColor": getColorByOrder(1.1, ORDER),
-                        //         sad: -11,
-                        //         sadColor: "hsl(130, 70%, 50%)",
-                        //         others: 24,
-                        //         othersColor: "hsl(222, 70%, 50%)",
-                        //         satisfied: 28,
-                        //         satisfiedColor: "hsl(125, 70%, 50%)",
-                        //         happy: 8,
-                        //         happyColor: "hsl(289, 70%, 50%)",
-                        //     },
-                        // ]
-                        const dataGroupedByFeedbackcategory: Record<
-                            string,
-                            DataRecord[]
-                        > = data.reduce((acc, curr) => {
-                            const key = `${curr.subcategory} > ${curr.feedback_category}`;
-                            if (!acc[key]) {
-                                acc[key] = [];
-                            }
-                            acc[key].push(curr);
-                            return acc;
-                        }, {} as Record<string, DataRecord[]>);
+        //                 const barsData: Bar[] = Object.entries(
+        //                     dataGroupedByFeedbackcategory
+        //                 ).map(([key, records]) => {
+        //                     const total = records.length;
+        //                     const sentimentScores = records.map((r) =>
+        //                         parseFloat(r.sentiment_score)
+        //                     );
+        //                     const frustratedRecords = sentimentScores.filter(
+        //                         (score) => score <= 1
+        //                     );
+        //                     const unsatisfiedRecords = sentimentScores.filter(
+        //                         (score) => score <= 2 && score > 1
+        //                     );
+        //                     const neutralRecords = sentimentScores.filter(
+        //                         (score) => score <= 3 && score > 2
+        //                     );
+        //                     const satisfiedRecords = sentimentScores.filter(
+        //                         (score) => score <= 4 && score > 3
+        //                     );
+        //                     const excitedRecords = sentimentScores.filter(
+        //                         (score) => score > 4
+        //                     );
 
-                        const barsData: Bar[] = Object.entries(
-                            dataGroupedByFeedbackcategory
-                        ).map(([key, records]) => {
-                            const total = records.length;
-                            const sentimentScores = records.map((r) =>
-                                parseFloat(r.sentiment_score)
-                            );
-                            const frustratedRecords = sentimentScores.filter(
-                                (score) => score <= 1
-                            );
-                            const unsatisfiedRecords = sentimentScores.filter(
-                                (score) => score <= 2 && score > 1
-                            );
-                            const neutralRecords = sentimentScores.filter(
-                                (score) => score <= 3 && score > 2
-                            );
-                            const satisfiedRecords = sentimentScores.filter(
-                                (score) => score <= 4 && score > 3
-                            );
-                            const excitedRecords = sentimentScores.filter(
-                                (score) => score > 4
-                            );
+        //                     const averageScore =
+        //                         sentimentScores.reduce(
+        //                             (sum, score) => sum + score,
+        //                             0
+        //                         ) / total;
 
-                            const averageScore =
-                                sentimentScores.reduce(
-                                    (sum, score) => sum + score,
-                                    0
-                                ) / total;
-
-                            return {
-                                category: key,
-                                Frustrated:
-                                    (100 * frustratedRecords.length) / total,
-                                FrustratedColor: getColorByOrder(
-                                    frustratedRecords.reduce(
-                                        (sum, score) => sum + score,
-                                        0
-                                    ) / frustratedRecords.length || 0,
-                                    ORDER
-                                ),
-                                Unsatisfied:
-                                    (100 * unsatisfiedRecords.length) / total,
-                                UnsatisfiedColor: getColorByOrder(
-                                    unsatisfiedRecords.reduce(
-                                        (sum, score) => sum + score,
-                                        0
-                                    ) / unsatisfiedRecords.length || 0,
-                                    ORDER
-                                ),
-                                Neutral: (100 * neutralRecords.length) / total,
-                                NeutralColor: getColorByOrder(
-                                    neutralRecords.reduce(
-                                        (sum, score) => sum + score,
-                                        0
-                                    ) / neutralRecords.length || 0,
-                                    ORDER
-                                ),
-                                Satisfied:
-                                    (100 * satisfiedRecords.length) / total,
-                                SatisfiedColor: getColorByOrder(
-                                    satisfiedRecords.reduce(
-                                        (sum, score) => sum + score,
-                                        0
-                                    ) / satisfiedRecords.length || 0,
-                                    ORDER
-                                ),
-                                Excited: (100 * excitedRecords.length) / total,
-                                ExcitedColor: getColorByOrder(
-                                    excitedRecords.reduce(
-                                        (sum, score) => sum + score,
-                                        0
-                                    ) / excitedRecords.length || 0,
-                                    ORDER
-                                ),
-                            };
-                        });
-                        console.log(barsData);
-                        // Highest to lowest
-                        const sortedBars = barsData.sort((a, b) => {
-                            const avgA =
-                                Object.values(a)
-                                    .filter((_, idx) => idx % 2 === 0)
-                                    .map((val) => val as number)
-                                    .reduce((sum, val) => sum + val, 0) / 5;
-                            const avgB =
-                                Object.values(b)
-                                    .filter((_, idx) => idx % 2 === 0)
-                                    .map((val) => val as number)
-                                    .reduce((sum, val) => sum + val, 0) / 5;
-                            return avgB - avgA;
-                        });
-                        setBars(sortedBars);
-                    } else {
-                        setBars([]);
-                    }
-                });
-        }
+        //                     return {
+        //                         category: key,
+        //                         Frustrated: parseFloat(
+        //                             (
+        //                                 (100 * frustratedRecords.length) /
+        //                                 total
+        //                             ).toFixed(1)
+        //                         ),
+        //                         FrustratedColor: getColorByOrder(
+        //                             frustratedRecords.reduce(
+        //                                 (sum, score) => sum + score,
+        //                                 0
+        //                             ) / frustratedRecords.length || 0,
+        //                             ORDER
+        //                         ),
+        //                         Unsatisfied: parseFloat(
+        //                             (
+        //                                 (100 * unsatisfiedRecords.length) /
+        //                                 total
+        //                             ).toFixed(1)
+        //                         ),
+        //                         UnsatisfiedColor: getColorByOrder(
+        //                             unsatisfiedRecords.reduce(
+        //                                 (sum, score) => sum + score,
+        //                                 0
+        //                             ) / unsatisfiedRecords.length || 0,
+        //                             ORDER
+        //                         ),
+        //                         Neutral: parseFloat(
+        //                             (
+        //                                 (100 * neutralRecords.length) /
+        //                                 total
+        //                             ).toFixed(1)
+        //                         ),
+        //                         NeutralColor: getColorByOrder(
+        //                             neutralRecords.reduce(
+        //                                 (sum, score) => sum + score,
+        //                                 0
+        //                             ) / neutralRecords.length || 0,
+        //                             ORDER
+        //                         ),
+        //                         Satisfied: parseFloat(
+        //                             (
+        //                                 (100 * satisfiedRecords.length) /
+        //                                 total
+        //                             ).toFixed(1)
+        //                         ),
+        //                         SatisfiedColor: getColorByOrder(
+        //                             satisfiedRecords.reduce(
+        //                                 (sum, score) => sum + score,
+        //                                 0
+        //                             ) / satisfiedRecords.length || 0,
+        //                             ORDER
+        //                         ),
+        //                         Excited: parseFloat(
+        //                             (
+        //                                 (100 * excitedRecords.length) /
+        //                                 total
+        //                             ).toFixed(1)
+        //                         ),
+        //                         ExcitedColor: getColorByOrder(
+        //                             excitedRecords.reduce(
+        //                                 (sum, score) => sum + score,
+        //                                 0
+        //                             ) / excitedRecords.length || 0,
+        //                             ORDER
+        //                         ),
+        //                     };
+        //                 });
+        //                 console.log(barsData);
+        //                 setBars(barsData);
+        //             } else {
+        //                 setBars([]);
+        //             }
+        //         });
+        // }
     }, [
         fromDate,
         toDate,
@@ -484,8 +799,9 @@ export default function SentimentCategoriesGraph({
                     }}
                 >
                     <ResponsiveBar
-                        data={bars.slice(0, 5)}
+                        data={sortBySentiment(bars).slice(0, 5)}
                         keys={Object.keys(ORDER)}
+                        colors={Object.values(ORDER)}
                         indexBy="category"
                         margin={{
                             top: 10,
@@ -499,7 +815,6 @@ export default function SentimentCategoriesGraph({
                         layout="horizontal"
                         valueScale={{type: "linear"}}
                         indexScale={{type: "band", round: true}}
-                        colors={{scheme: "red_yellow_blue"}}
                         defs={[
                             {
                                 id: "dots",
@@ -649,8 +964,9 @@ export default function SentimentCategoriesGraph({
                             }}
                         >
                             <ResponsiveBar
-                                data={bars.slice(0, 5)}
+                                data={sortBySentiment(bars).slice(0, 5)}
                                 keys={Object.keys(ORDER)}
+                                colors={Object.values(ORDER)}
                                 indexBy="category"
                                 margin={{
                                     top: 10,
@@ -664,7 +980,6 @@ export default function SentimentCategoriesGraph({
                                 layout="horizontal"
                                 valueScale={{type: "linear"}}
                                 indexScale={{type: "band", round: true}}
-                                colors={{scheme: "red_yellow_blue"}}
                                 defs={[
                                     {
                                         id: "dots",
@@ -772,8 +1087,9 @@ export default function SentimentCategoriesGraph({
                             }}
                         >
                             <ResponsiveBar
-                                data={bars.reverse().slice(0, 5)}
+                                data={sortBySentiment(bars, true).slice(0, 5)}
                                 keys={Object.keys(ORDER)}
+                                colors={Object.values(ORDER)}
                                 indexBy="category"
                                 margin={{
                                     top: 10,
@@ -787,7 +1103,6 @@ export default function SentimentCategoriesGraph({
                                 layout="horizontal"
                                 valueScale={{type: "linear"}}
                                 indexScale={{type: "band", round: true}}
-                                colors={{scheme: "red_yellow_blue"}}
                                 defs={[
                                     {
                                         id: "dots",
