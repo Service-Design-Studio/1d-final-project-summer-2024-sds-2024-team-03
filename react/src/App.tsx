@@ -8,13 +8,25 @@ import MuiAppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 // import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
+
+// for dropdown menu on smaller screens:
+import IconButton from "@mui/material/IconButton";
+import MenuIcon from "@mui/icons-material/Menu";
+import CloseIcon from "@mui/icons-material/Close";
+import Drawer from "@mui/material/Drawer";
+import List from "@mui/material/List";
+import ListItem from "@mui/material/ListItem";
+import ListItemButton from "@mui/material/ListItemButton";
+import ListItemText from "@mui/material/ListItemText";
+import useMediaQuery from "@mui/material/useMediaQuery";
+
+import Brightness4Icon from "@mui/icons-material/Brightness4";
+import WbSunnyIcon from "@mui/icons-material/WbSunny";
+import dbsLogo from "./dbs_logo.png";
 import Dashboard from "./pages/Dashboard";
 import Analytics from "./pages/Analytics";
 import Actionables from "./pages/Actionables";
 import UploadData from "./pages/UploadData";
-import Brightness4Icon from "@mui/icons-material/Brightness4";
-import WbSunnyIcon from "@mui/icons-material/WbSunny";
-import dbsLogo from "./dbs_logo.png";
 
 // Define your themes with explicit primary color
 const darkTheme = createTheme({
@@ -47,7 +59,7 @@ const lightTheme = createTheme({
 const Main = styled("main")(({ theme }: { theme: Theme }) => ({
   flexGrow: 1,
   padding: theme.spacing(3),
-  marginTop: 86, // Adjust this value based on your AppBar height
+  marginTop: 64, // Adjust this value based on your AppBar height
 }));
 
 const AppBarContent = styled(Box)(({ theme }: { theme: Theme }) => ({
@@ -67,7 +79,7 @@ const Footer = styled("footer")(({ theme }: { theme: Theme }) => ({
   textAlign: "center",
   padding: theme.spacing(2),
   width: "100%",
-  marginTop: 70,
+  marginTop: 48,
 }));
 
 const FooterText = styled("div")({
@@ -76,9 +88,17 @@ const FooterText = styled("div")({
   fontSize: '1.1rem'
 });
 
+const StyledDrawer = styled(Drawer)(({ theme }: { theme: Theme }) => ({
+  "& .MuiDrawer-paper": {
+    backgroundColor: "#000000", // Black background for the drawer
+    color: "#ffffff", // White text
+  },
+}));
+
 export default function MainApp() {
   // State for managing dark theme
   const [darkMode, setDarkMode] = useState(false);
+  const [drawerOpen, setDrawerOpen] = useState(false);
 
   const getInitialState = () => {
     const savedState = localStorage.getItem("selectedMenu");
@@ -107,44 +127,80 @@ export default function MainApp() {
     setDarkMode(!darkMode);
   };
 
+  const theme = darkMode ? darkTheme : lightTheme;
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
+
   return (
-    <ThemeProvider theme={darkMode ? darkTheme : lightTheme}>
+    <ThemeProvider theme={theme}>
       <Box sx={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
         <CssBaseline />
-        <MuiAppBar position="fixed">
-          <Toolbar>
+        <MuiAppBar position="fixed" sx={{ height: 64 }}>
+          <Toolbar sx={{ height: "100%", display: "flex", alignItems: "center" }}>
             <AppBarContent>
               <img src={dbsLogo} alt="DBS Logo" style={{ height: 30 }} />
-              <Box sx={{ display: "flex", gap: 2 }}>
-                {menuItems.map((item) => (
-                  <Button
-                    key={item.key}
-                    color="inherit"
-                    onClick={() => setSelectedMenu(item.key)}
-                    sx={{
-                      borderRadius: 4,
-                      padding: "0rem 1rem",
-                      backgroundColor:
-                        selectedMenu === item.key
-                          ? "rgba(255, 255, 255, 0.2)"
-                          : "transparent",
-                      "&:hover": {
-                        backgroundColor: "rgba(255, 255, 255, 0.3)",
-                      },
-                    }}
-                  >
-                    {item.name}
+              {isSmallScreen ? (
+                <IconButton
+                  color="inherit"
+                  edge="start"
+                  onClick={() => setDrawerOpen(!drawerOpen)}
+                  sx={{ ml: 2 }}
+                >
+                  {drawerOpen ? <CloseIcon /> : <MenuIcon />}
+                </IconButton>
+              ) : (
+                <Box sx={{ display: "flex", gap: 2 }}>
+                  {menuItems.map((item) => (
+                    <Button
+                      key={item.key}
+                      color="inherit"
+                      onClick={() => setSelectedMenu(item.key)}
+                      sx={{
+                        borderRadius: 4,
+                        padding: "0rem 1rem",
+                        backgroundColor:
+                          selectedMenu === item.key
+                            ? "rgba(255, 255, 255, 0.2)"
+                            : "transparent",
+                        "&:hover": {
+                          backgroundColor: "rgba(255, 255, 255, 0.3)",
+                        },
+                      }}
+                    >
+                      {item.name}
+                    </Button>
+                  ))}
+                  <Button color="inherit" onClick={toggleDarkMode} sx={{ borderRadius: 4 }}>
+                    {darkMode ? <Brightness4Icon /> : <WbSunnyIcon />}
                   </Button>
-                ))}
-                {/* Dark/light mode toggle button */}
-                <Button color="inherit" onClick={toggleDarkMode} sx={{borderRadius: 4}}>
-                  {darkMode ? <Brightness4Icon /> : <WbSunnyIcon />}
-                </Button>
-              </Box>
+                </Box>
+              )}
             </AppBarContent>
           </Toolbar>
         </MuiAppBar>
-        <Main theme={darkMode ? darkTheme : lightTheme}>
+
+        <StyledDrawer anchor="left" open={drawerOpen} onClose={() => setDrawerOpen(false)}>
+          <List sx={{ width: 250, m:6 }}>
+            {menuItems.map((item) => (
+              <ListItem key={item.key} disablePadding>
+                <ListItemButton
+                  onClick={() => {
+                    setSelectedMenu(item.key);
+                    setDrawerOpen(false);
+                  }}
+                >
+                  <ListItemText primary={item.name} />
+                </ListItemButton>
+              </ListItem>
+            ))}
+            <ListItem disablePadding >
+              <ListItemButton onClick={toggleDarkMode}>
+                <ListItemText primary={darkMode ? "Light Mode" : "Dark Mode"} />
+              </ListItemButton>
+            </ListItem>
+          </List>
+        </StyledDrawer>
+
+        <Main theme={theme}>
           {selectedMenu === "dashboard" && (
             <Dashboard
               setFromDate={setFromDate}
