@@ -21,6 +21,7 @@ const MenuProps = {
             borderRadius: 18,
             marginTop: '18px'
         },
+        sx: { boxShadow: '0px 0px 20px rgba(0, 0, 0, 0.1)' }
     },
 };
 
@@ -86,15 +87,19 @@ export default function FilterProduct({
                     )}
                     MenuProps={MenuProps}
                 >
-                    {products.map((product: string) => (
-                        <MenuItem
-                            key={product}
-                            value={product}
-                            className="filter-product-option"
-                        >
-                            {product}
-                        </MenuItem>
-                    ))}
+                    {products.length > 0 ? (
+                        products.map((product: string) => (
+                            <MenuItem
+                                key={product}
+                                value={product}
+                                className="filter-product-option"
+                            >
+                                {product}
+                            </MenuItem>
+                        ))
+                    ) : (
+                        <MenuItem disabled>No products for selected time period</MenuItem>
+                    )}
                 </Select>
             </FormControl>
         </Grid>
