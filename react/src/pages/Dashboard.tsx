@@ -104,7 +104,7 @@ export default function Dashboard({
                         flexDirection: "column",
                         justifyContent: "center",
                         height: 200,
-                        boxShadow: '0px 0px 20px rgba(0, 0, 0, 0.1)'
+                        boxShadow: "0px 0px 20px rgba(0, 0, 0, 0.1)",
                     }}
                 >
                     <Box
@@ -113,10 +113,10 @@ export default function Dashboard({
                             justifyContent: "space-between",
                             alignItems: "top",
                             flexDirection: "row",
-                            gap: 1
+                            gap: 1,
                         }}
                     >
-                        <Box sx={{ flex: "1 1 25%", textAlign: "center" }}>
+                        <Box sx={{flex: "1 1 25%", textAlign: "center"}}>
                             <Typography
                                 variant="body1"
                                 sx={{fontWeight: "bold"}}
@@ -128,7 +128,7 @@ export default function Dashboard({
                             </Typography>
                         </Box>
                         <Divider orientation="vertical" flexItem />
-                        <Box sx={{ flex: "1 1 25%", textAlign: "center" }}>
+                        <Box sx={{flex: "1 1 25%", textAlign: "center"}}>
                             <Typography
                                 variant="body1"
                                 sx={{fontWeight: "bold"}}
@@ -140,7 +140,7 @@ export default function Dashboard({
                             </Typography>
                         </Box>
                         <Divider orientation="vertical" flexItem />
-                        <Box sx={{ flex: "1 1 25%", textAlign: "center" }}>
+                        <Box sx={{flex: "1 1 25%", textAlign: "center"}}>
                             <Typography
                                 variant="body1"
                                 sx={{fontWeight: "bold"}}
@@ -152,7 +152,7 @@ export default function Dashboard({
                             </Typography>
                         </Box>
                         <Divider orientation="vertical" flexItem />
-                        <Box sx={{ flex: "1 1 25%", textAlign: "center" }}>
+                        <Box sx={{flex: "1 1 25%", textAlign: "center"}}>
                             <Typography
                                 variant="body1"
                                 sx={{fontWeight: "bold"}}
@@ -174,10 +174,10 @@ export default function Dashboard({
                     width: "100%",
                     alignItems: "stretch",
                     gap: 2,
-                    mt: 2
+                    mt: 2,
                 }}
             >
-                <Box sx={{flex: 6, display: "flex", alignItems: "stretch" }}>
+                <Box sx={{flex: 6, display: "flex", alignItems: "stretch"}}>
                     <SentimentScoreGraph
                         fromDate={fromDate}
                         toDate={toDate}
@@ -187,7 +187,7 @@ export default function Dashboard({
                         setSelectedMenu={setSelectedMenu}
                     />
                 </Box>
-                <Box sx={{flex: 4, display: "flex", alignItems: "stretch" }}>
+                <Box sx={{flex: 4, display: "flex", alignItems: "stretch"}}>
                     <CategoriesSunburstChart
                         fromDate={fromDate}
                         toDate={toDate}

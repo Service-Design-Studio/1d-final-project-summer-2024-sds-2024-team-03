@@ -1,580 +1,868 @@
-import React, { useEffect, useState } from "react";
-import { Theme, useTheme } from "@mui/material/styles";
-import { Paper, Box, Typography, ButtonBase } from "@mui/material";
-import { Dayjs } from "dayjs";
-import { ResponsiveLine } from "@nivo/line";
-import { ResponsiveBar } from "@nivo/bar";
+import React, {useEffect, useState} from "react";
+import {Theme, useTheme} from "@mui/material/styles";
+import {Paper, Box, Typography, ButtonBase, Divider} from "@mui/material";
+import {Dayjs} from "dayjs";
+import {ResponsiveBar} from "@nivo/bar";
 import OutlinedInput from "@mui/material/OutlinedInput";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
-import Select, { SelectChangeEvent } from "@mui/material/Select";
+import Select, {SelectChangeEvent} from "@mui/material/Select";
 import Chip from "@mui/material/Chip";
-import DialogSentimentCategoriesGraph from "./Dashboard/DialogSentimentCategoriesGraph";
+import DialogSentimentCategoriesGraph from "./DialogSentimentCategoriesGraph";
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
 const MenuProps = {
-  PaperProps: {
-    style: {
-      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-      width: 250,
+    PaperProps: {
+        style: {
+            maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+            width: 250,
+        },
     },
-  },
+};
+const ORDER: Record<string, string> = {
+    Excited: "darkgreen",
+    Satisfied: "green",
+    Neutral: "grey",
+    Unsatisfied: "orange",
+    Frustrated: "red",
 };
 
 interface SentimentCategoriesGraphProps {
-  fromDate: Dayjs;
-  toDate: Dayjs;
-  selectedProduct: string[];
-  selectedSource: string[];
-  isDetailed: boolean;
-  setSelectedMenu?: React.Dispatch<React.SetStateAction<string>>;
+    fromDate: Dayjs;
+    toDate: Dayjs;
+    selectedProduct: string[];
+    selectedSource: string[];
+    isDetailed: boolean;
+    setSelectedMenu?: React.Dispatch<React.SetStateAction<string>>;
 }
 
 export default function SentimentCategoriesGraph({
-  fromDate,
-  toDate,
-  selectedProduct,
-  selectedSource,
-  isDetailed,
-  setSelectedMenu,
+    fromDate,
+    toDate,
+    selectedProduct,
+    selectedSource,
+    isDetailed,
+    setSelectedMenu,
 }: SentimentCategoriesGraphProps) {
-  const fromDate_string = fromDate.format("DD/MM/YYYY");
-  const toDate_string = toDate.format("DD/MM/YYYY");
-  type DataPoint = {
-    // Coordinates mandated by nivo library, cannot change to Eg. date, score
-    x: string;
-    y: number;
-  };
+    const fromDate_string = fromDate.format("DD/MM/YYYY");
+    const toDate_string = toDate.format("DD/MM/YYYY");
 
-  type DataSet = {
-    id: string;
-    color: string;
-    data: DataPoint[];
-  };
-
-  const [sentimentScores, setSentimentScores] = useState<DataSet[]>([]);
-  const [selectedSubcategory, setSelectedSubcategory] = useState<string>("");
-  // const [selectedFeedbackcategory, setSelectedFeedbackcategory] = useState<string>("");
-  const [graphSubcategories, setGraphSubcategories] = useState<string[]>([]);
-  // const [graphFeedbackcategories, setGraphFeedbackcategories] = useState<string[]>([]);
-  const [noData, setNoData] = useState<boolean>(true);
-
-  const theme = useTheme();
-
-  const convertDate = (dateString: string) => {
-    const [day, month, year] = dateString.split("/");
-    return new Date(`${year}-${month}-${day}`).getTime();
-  };
-
-  const formatDate = (dateString: string): string => {
-    const [day, month, year] = dateString.split("/").map(Number);
-    // months in JavaScript Date are zero-indexed
-    const date = new Date(year, month - 1, day);
-    const options: Intl.DateTimeFormatOptions = {
-      day: "numeric",
-      month: "short",
-      year: "2-digit",
+    type DataRecord = {
+        sentiment_score: string;
+        product: string;
+        subcategory: string;
+        feedback_category: string;
     };
-    const formattedDate = new Intl.DateTimeFormat("en-GB", options).format(
-      date
-    );
-    return formattedDate;
-  };
 
-  const feedbackcategoryHashToHue = (feedbackcategory: string) => {
-    let hash = 0;
-    for (let i = 0; i < feedbackcategory.length; i++) {
-      hash = feedbackcategory.charCodeAt(i) + ((hash << 5) - hash);
-    }
-    return hash % 360;
-  };
+    type Bar = {
+        category: string;
+        Frustrated: number;
+        FrustratedColor: string;
+        Unsatisfied: number;
+        UnsatisfiedColor: string;
+        Neutral: number;
+        NeutralColor: string;
+        Satisfied: number;
+        SatisfiedColor: string;
+        Excited: number;
+        ExcitedColor: string;
+    };
 
-  const handleSubcategoryChange = (event: SelectChangeEvent<string>) => {
-    const {
-      target: { value },
-    } = event;
-    setSelectedSubcategory(value);
-  };
+    const [bars, setBars] = useState<Bar[]>([]);
+    const [selectedSubcategory, setSelectedSubcategory] = useState<string>("");
+    const [graphSubcategories, setGraphSubcategories] = useState<string[]>([]);
 
-  // const handleFeedbackcategoryChange = (
-  //   event: SelectChangeEvent<string>
-  // ) => {
-  //   const {
-  //     target: { value },
-  //   } = event;
-  //   setGraphFeedbackcategories(value);
-  // };
+    const getColorByOrder = (
+        score: number,
+        order: Record<string, string>
+    ): string => {
+        if (score <= 1) return order["Frustrated"];
+        if (score <= 2) return order["Unsatisfied"];
+        if (score <= 3) return order["Neutral"];
+        if (score <= 4) return order["Satisfied"];
+        return order["Excited"];
+    };
+    const theme = useTheme();
 
-  useEffect(() => {
-    const urlPrefix =
-      process.env.NODE_ENV === "development"
-        ? "http://localhost:3000"
-        : "https://jbaaam-yl5rojgcbq-et.a.run.app";
-    if (isDetailed) {
-      fetch(
-        `${urlPrefix}/analytics/get_sentiment_scores?fromDate=${fromDate_string}&toDate=${toDate_string}&product=${selectedProduct}&source=${selectedSource}`
-      )
-        .then((response) => response.json())
-        .then((data: Record<string, string>[]) => {
-          if (data.length > 0) {
-            setNoData(false);
-            setGraphSubcategories(data.map(({ subcategory }) => subcategory));
-            // setGraphFeedbackcategories(data.map( ({ feedback_category }) => feedback_category ));
-            const filteredData = data.filter(
-              (item) => selectedSubcategory.includes(item.subcategory)
-              // && selectedFeedbackcategory.includes(item.feedback_category)
-            );
-            const filteredDataGroupedByFeedbackcategory = filteredData.reduce(
-              (acc, item) => {
-                if (!acc[item.feedback_category]) {
-                  acc[item.feedback_category] = [];
-                }
-                acc[item.feedback_category].push({
-                  date: item.date,
-                  sentiment_score: parseFloat(item.sentiment_score as string),
+    const convertDate = (dateString: string) => {
+        const [day, month, year] = dateString.split("/");
+        return new Date(`${year}-${month}-${day}`).getTime();
+    };
+
+    const formatDate = (dateString: string): string => {
+        const [day, month, year] = dateString.split("/").map(Number);
+        // months in JavaScript Date are zero-indexed
+        const date = new Date(year, month - 1, day);
+        const options: Intl.DateTimeFormatOptions = {
+            day: "numeric",
+            month: "short",
+            year: "2-digit",
+        };
+        const formattedDate = new Intl.DateTimeFormat("en-GB", options).format(
+            date
+        );
+        return formattedDate;
+    };
+
+    const handleSubcategoryChange = (event: SelectChangeEvent<string>) => {
+        const {
+            target: {value},
+        } = event;
+        setSelectedSubcategory(value);
+    };
+
+    useEffect(() => {
+        const urlPrefix =
+            process.env.NODE_ENV === "development"
+                ? "http://localhost:3000"
+                : "https://jbaaam-yl5rojgcbq-et.a.run.app";
+
+        if (isDetailed) {
+            if (!selectedSubcategory) setBars([]);
+            fetch(
+                `${urlPrefix}/analytics/get_sentiment_scores?fromDate=${fromDate_string}&toDate=${toDate_string}&product=${selectedProduct}&source=${selectedSource}`
+            )
+                .then((response) => response.json())
+                .then((data: DataRecord[]) => {
+                    if (data.length > 0) {
+                        setGraphSubcategories(
+                            Array.from(
+                                new Set(
+                                    data.map(({subcategory}) => subcategory)
+                                )
+                            )
+                        );
+                        const filteredSubcategories = data.filter((item) => {
+                            if (item.subcategory)
+                                return item.subcategory.includes(
+                                    selectedSubcategory
+                                );
+                        });
+                        const dataGroupedByFeedbackcategory: Record<
+                            string,
+                            DataRecord[]
+                        > = filteredSubcategories.reduce((acc, curr) => {
+                            const key = `${curr.subcategory} > ${curr.feedback_category}`;
+                            if (!acc[key]) {
+                                acc[key] = [];
+                            }
+                            acc[key].push(curr);
+                            return acc;
+                        }, {} as Record<string, DataRecord[]>);
+
+                        const barsData: Bar[] = Object.entries(
+                            dataGroupedByFeedbackcategory
+                        ).map(([key, records]) => {
+                            const total = records.length;
+                            const sentimentScores = records.map((r) =>
+                                parseFloat(r.sentiment_score)
+                            );
+                            const frustratedRecords = sentimentScores.filter(
+                                (score) => score <= 1
+                            );
+                            const unsatisfiedRecords = sentimentScores.filter(
+                                (score) => score <= 2 && score > 1
+                            );
+                            const neutralRecords = sentimentScores.filter(
+                                (score) => score <= 3 && score > 2
+                            );
+                            const satisfiedRecords = sentimentScores.filter(
+                                (score) => score <= 4 && score > 3
+                            );
+                            const excitedRecords = sentimentScores.filter(
+                                (score) => score > 4
+                            );
+
+                            const averageScore =
+                                sentimentScores.reduce(
+                                    (sum, score) => sum + score,
+                                    0
+                                ) / total;
+
+                            return {
+                                category: key,
+                                Frustrated: frustratedRecords.length / total,
+                                FrustratedColor: getColorByOrder(
+                                    frustratedRecords.reduce(
+                                        (sum, score) => sum + score,
+                                        0
+                                    ) / frustratedRecords.length || 0,
+                                    ORDER
+                                ),
+                                Unsatisfied: unsatisfiedRecords.length / total,
+                                UnsatisfiedColor: getColorByOrder(
+                                    unsatisfiedRecords.reduce(
+                                        (sum, score) => sum + score,
+                                        0
+                                    ) / unsatisfiedRecords.length || 0,
+                                    ORDER
+                                ),
+                                Neutral: neutralRecords.length / total,
+                                NeutralColor: getColorByOrder(
+                                    neutralRecords.reduce(
+                                        (sum, score) => sum + score,
+                                        0
+                                    ) / neutralRecords.length || 0,
+                                    ORDER
+                                ),
+                                Satisfied: satisfiedRecords.length / total,
+                                SatisfiedColor: getColorByOrder(
+                                    satisfiedRecords.reduce(
+                                        (sum, score) => sum + score,
+                                        0
+                                    ) / satisfiedRecords.length || 0,
+                                    ORDER
+                                ),
+                                Excited: excitedRecords.length / total,
+                                ExcitedColor: getColorByOrder(
+                                    excitedRecords.reduce(
+                                        (sum, score) => sum + score,
+                                        0
+                                    ) / excitedRecords.length || 0,
+                                    ORDER
+                                ),
+                            };
+                        });
+                        console.log(barsData);
+                        // Highest to lowest
+                        const sortedBars = barsData.sort((a, b) => {
+                            const avgA =
+                                Object.values(a)
+                                    .filter((_, idx) => idx % 2 === 0)
+                                    .map((val) => val as number)
+                                    .reduce((sum, val) => sum + val, 0) / 5;
+                            const avgB =
+                                Object.values(b)
+                                    .filter((_, idx) => idx % 2 === 0)
+                                    .map((val) => val as number)
+                                    .reduce((sum, val) => sum + val, 0) / 5;
+                            return avgB - avgA;
+                        });
+                        setBars(sortedBars);
+                    } else {
+                        setBars([]);
+                    }
                 });
-                return acc;
-              },
-              {} as Record<string, { date: string; sentiment_score: number }[]>
-            );
+        } else {
+            fetch(
+                `${urlPrefix}/analytics/get_sentiment_scores?fromDate=${fromDate_string}&toDate=${toDate_string}&product=${selectedProduct}&source=${selectedSource}`
+            )
+                .then((response) => response.json())
+                .then((data: DataRecord[]) => {
+                    if (data.length > 0) {
+                        // [
+                        //     {
+                        //         subcategory: "Card>Perks",
+                        //         "very angry": -29,
+                        //         "very angryColor": getColorByOrder(1.1, ORDER),
+                        //         sad: -11,
+                        //         sadColor: "hsl(130, 70%, 50%)",
+                        //         others: 24,
+                        //         othersColor: "hsl(222, 70%, 50%)",
+                        //         satisfied: 28,
+                        //         satisfiedColor: "hsl(125, 70%, 50%)",
+                        //         happy: 8,
+                        //         happyColor: "hsl(289, 70%, 50%)",
+                        //     },
+                        // ]
+                        const dataGroupedByFeedbackcategory: Record<
+                            string,
+                            DataRecord[]
+                        > = data.reduce((acc, curr) => {
+                            const key = `${curr.subcategory} > ${curr.feedback_category}`;
+                            if (!acc[key]) {
+                                acc[key] = [];
+                            }
+                            acc[key].push(curr);
+                            return acc;
+                        }, {} as Record<string, DataRecord[]>);
 
-            setSentimentScores(
-              Object.entries(filteredDataGroupedByFeedbackcategory).map(
-                ([feedback_category, date_sentiment_score]) => {
-                  return {
-                    id: feedback_category,
-                    color: `hsl(${feedbackcategoryHashToHue(
-                      feedback_category
-                    )}, 70%, 50%)`,
-                    data: date_sentiment_score
-                      .sort((a, b) => convertDate(a.date) - convertDate(b.date))
-                      .map(({ date, sentiment_score }) => ({
-                        x: formatDate(date),
-                        y: sentiment_score,
-                      })),
-                  };
-                }
-              )
-            );
-          } else {
-            setNoData(true);
-            setSentimentScores([]);
-          }
-        });
-    } else {
-      fetch(
-        `${urlPrefix}/analytics/get_overall_sentiment_scores?fromDate=${fromDate_string}&toDate=${toDate_string}&product=${selectedProduct}&source=${selectedSource}`
-      )
-        .then((response) => response.json())
-        .then((data: Record<string, string>[]) => {
-          if (data.length > 0) {
-            setNoData(false);
-            setSentimentScores([
-              {
-                id: "all",
-                color: "hsl(8, 70%, 50%)",
-                data: data
-                  .sort((a, b) => convertDate(a.date) - convertDate(b.date))
-                  .map(({ date, sentiment_score }) => ({
-                    x: formatDate(date),
-                    y: parseFloat(sentiment_score),
-                  })),
-              },
-            ]);
-          } else {
-            setNoData(true);
-            setSentimentScores([]);
-          }
-        });
-    }
-  }, [fromDate, toDate, selectedProduct, selectedSource, selectedSubcategory]);
+                        const barsData: Bar[] = Object.entries(
+                            dataGroupedByFeedbackcategory
+                        ).map(([key, records]) => {
+                            const total = records.length;
+                            const sentimentScores = records.map((r) =>
+                                parseFloat(r.sentiment_score)
+                            );
+                            const frustratedRecords = sentimentScores.filter(
+                                (score) => score <= 1
+                            );
+                            const unsatisfiedRecords = sentimentScores.filter(
+                                (score) => score <= 2 && score > 1
+                            );
+                            const neutralRecords = sentimentScores.filter(
+                                (score) => score <= 3 && score > 2
+                            );
+                            const satisfiedRecords = sentimentScores.filter(
+                                (score) => score <= 4 && score > 3
+                            );
+                            const excitedRecords = sentimentScores.filter(
+                                (score) => score > 4
+                            );
 
-  /* Must have parent container with a defined size */
-  return isDetailed ? (
-    <Box
-      sx={{
-        display: "flex",
-        gap: 2,
-        mt: 2,
-        width: "100%",
-        flexDirection: "row",
-      }}
-    >
-      <Paper
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "center",
-          p: 2,
-          borderRadius: 2,
-          flex: 1,
-        }}
-        id="overall-sentimentscoregraph"
-      >
+                            const averageScore =
+                                sentimentScores.reduce(
+                                    (sum, score) => sum + score,
+                                    0
+                                ) / total;
+
+                            return {
+                                category: key,
+                                Frustrated: frustratedRecords.length / total,
+                                FrustratedColor: getColorByOrder(
+                                    frustratedRecords.reduce(
+                                        (sum, score) => sum + score,
+                                        0
+                                    ) / frustratedRecords.length || 0,
+                                    ORDER
+                                ),
+                                Unsatisfied: unsatisfiedRecords.length / total,
+                                UnsatisfiedColor: getColorByOrder(
+                                    unsatisfiedRecords.reduce(
+                                        (sum, score) => sum + score,
+                                        0
+                                    ) / unsatisfiedRecords.length || 0,
+                                    ORDER
+                                ),
+                                Neutral: neutralRecords.length / total,
+                                NeutralColor: getColorByOrder(
+                                    neutralRecords.reduce(
+                                        (sum, score) => sum + score,
+                                        0
+                                    ) / neutralRecords.length || 0,
+                                    ORDER
+                                ),
+                                Satisfied: satisfiedRecords.length / total,
+                                SatisfiedColor: getColorByOrder(
+                                    satisfiedRecords.reduce(
+                                        (sum, score) => sum + score,
+                                        0
+                                    ) / satisfiedRecords.length || 0,
+                                    ORDER
+                                ),
+                                Excited: excitedRecords.length / total,
+                                ExcitedColor: getColorByOrder(
+                                    excitedRecords.reduce(
+                                        (sum, score) => sum + score,
+                                        0
+                                    ) / excitedRecords.length || 0,
+                                    ORDER
+                                ),
+                            };
+                        });
+                        console.log(barsData);
+                        // Highest to lowest
+                        const sortedBars = barsData.sort((a, b) => {
+                            const avgA =
+                                Object.values(a)
+                                    .filter((_, idx) => idx % 2 === 0)
+                                    .map((val) => val as number)
+                                    .reduce((sum, val) => sum + val, 0) / 5;
+                            const avgB =
+                                Object.values(b)
+                                    .filter((_, idx) => idx % 2 === 0)
+                                    .map((val) => val as number)
+                                    .reduce((sum, val) => sum + val, 0) / 5;
+                            return avgB - avgA;
+                        });
+                        setBars(sortedBars);
+                    } else {
+                        setBars([]);
+                    }
+                });
+        }
+    }, [
+        fromDate,
+        toDate,
+        selectedProduct,
+        selectedSource,
+        selectedSubcategory,
+    ]);
+
+    /* Must have parent container with a defined size */
+    return isDetailed ? (
         <Box
-          sx={{
-            display: "flex",
-            gap: 2,
-            mt: 2,
-            width: "100%",
-            flexDirection: "row",
-          }}
+            sx={{
+                display: "flex",
+                gap: 2,
+                width: "100%",
+                flexDirection: "row",
+            }}
         >
-          <Typography
-            variant="h6"
-            component="h3"
-            sx={{ marginRight: 2, width: "50%" }}
-            style={{ fontWeight: "bold" }}
-          >
-            Sentiment vs Time trend for
-            {selectedSubcategory
-              ? ` ${selectedSubcategory}`
-              : " selected Subcategories"}
-          </Typography>
-          <FormControl sx={{ m: 0, width: "20%" }}>
-            <InputLabel id="detailed-sentimentscoregraph-filter-subcategory-label">
-              Subcategories
-            </InputLabel>
-            <Select
-              labelId="detailed-sentimentscoregraph-filter-subcategory-label"
-              id="detailed-sentimentscoregraph-filter-subcategory"
-              multiple={false}
-              value={selectedSubcategory}
-              onChange={handleSubcategoryChange}
-              input={
-                <OutlinedInput
-                  id="detailed-sentimentscoregraph-select-subcategory"
-                  label="subcategory"
-                />
-              }
-              renderValue={(selected) => (
-                <Box
-                  sx={{
+            <Paper
+                sx={{
                     display: "flex",
-                    flexWrap: "wrap",
-                    gap: 0.5,
-                  }}
-                >
-                  <Chip key={selected} label={selected} />
-                </Box>
-              )}
-              MenuProps={MenuProps}
+                    flexDirection: "column",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    p: 2,
+                    borderRadius: 4,
+                    boxShadow: "0px 0px 20px rgba(0, 0, 0, 0.1)",
+                    transition: "transform 0.3s ease-in-out",
+                    "&:hover": {
+                        transform: "scaleX(1.015) scaleY(1.03)",
+                    },
+                    flex: 1,
+                }}
+                id="detailed-sentimentcategoriesgraph"
             >
-              {graphSubcategories.map((subcategory: string) => (
-                <MenuItem key={subcategory} value={subcategory}>
-                  {subcategory}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-          {/* <FormControl sx={{ m: 0, width: "20%" }}>
-          <InputLabel id="detailed-sentimentscoregraph-filter-subcategory-label">
-            Subcategories
-          </InputLabel>
-          <Select
-            labelId="detailed-sentimentscoregraph-filter-subcategory-label"
-            id="detailed-sentimentscoregraph-filter-subcategory"
-            multiple
-            value={graphSubcategories}
-            onChange={handleSubcategoryChange}
-            input={
-              <OutlinedInput
-                id="detailed-sentimentscoregraph-select-subcategory"
-                label="subcategory"
-              />
-            }
-            renderValue={(selected) => (
-              <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
-                {selected.map((value) => (
-                  <Chip key={value} label={value} />
-                ))}
-              </Box>
-            )}
-            MenuProps={MenuProps}
-          >
-            {graphSubcategories.map((subcategpry: string) => (
-              <MenuItem key={subcategpry} value={subcategpry}>
-                {subcategpry}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl> */}
+                <Typography
+                    variant="h6"
+                    component="h3"
+                    sx={{marginRight: 2, width: "50%"}}
+                >
+                    Sentiment Categorisation
+                </Typography>
+                <FormControl sx={{m: 0, width: "20%"}}>
+                    <InputLabel id="detailed-sentimentcategoriesgraph-filter-subcategory-label">
+                        Subcategories
+                    </InputLabel>
+                    <Select
+                        labelId="detailed-sentimentcategoriesgraph-filter-subcategory-label"
+                        id="detailed-sentimentcategoriesgraph-filter-subcategory"
+                        multiple={false}
+                        value={selectedSubcategory}
+                        onChange={handleSubcategoryChange}
+                        input={
+                            <OutlinedInput
+                                id="detailed-sentimentcategoriesgraph-select-subcategory"
+                                label="subcategory"
+                                sx={{
+                                    borderRadius: 4,
+                                }}
+                            />
+                        }
+                        renderValue={(selected) => (
+                            <Box
+                                sx={{
+                                    display: "flex",
+                                    flexWrap: "wrap",
+                                    gap: 0.5,
+                                }}
+                            >
+                                <Chip key={selected} label={selected} />
+                            </Box>
+                        )}
+                        MenuProps={MenuProps}
+                    >
+                        {graphSubcategories.length > 0 ? (
+                            graphSubcategories.map((subcategory: string) => (
+                                <MenuItem
+                                    key={subcategory}
+                                    value={subcategory}
+                                    className="subcategory-option"
+                                >
+                                    {subcategory}
+                                </MenuItem>
+                            ))
+                        ) : (
+                            <MenuItem disabled>No data from selection</MenuItem>
+                        )}
+                    </Select>
+                </FormControl>
+                {/* {bars.length === 0 ? (
+                    <Typography variant="body2" color="grey">
+                        No data
+                    </Typography>
+                ) : */}
+                ({" "}
+                <Box
+                    sx={{
+                        display: "flex",
+                        gap: 2,
+                        mt: 2,
+                        width: "100%",
+                        height: 200,
+                    }}
+                >
+                    <ResponsiveBar
+                        data={bars.slice(0, 5)}
+                        keys={Object.keys(ORDER)}
+                        indexBy="category"
+                        margin={{
+                            top: 50,
+                            right: 100,
+                            bottom: 50,
+                            left: 100,
+                        }}
+                        padding={0.3}
+                        minValue={0}
+                        maxValue={100}
+                        layout="horizontal"
+                        valueScale={{type: "linear"}}
+                        indexScale={{type: "band", round: true}}
+                        colors={{scheme: "red_yellow_blue"}}
+                        defs={[
+                            {
+                                id: "dots",
+                                type: "patternDots",
+                                background: "inherit",
+                                color: "#38bcb2",
+                                size: 4,
+                                padding: 1,
+                                stagger: true,
+                            },
+                            {
+                                id: "lines",
+                                type: "patternLines",
+                                background: "inherit",
+                                color: "#eed312",
+                                rotation: -45,
+                                lineWidth: 6,
+                                spacing: 10,
+                            },
+                        ]}
+                        // fill={[
+                        //     {
+                        //         match: {
+                        //             id: "Frustrated",
+                        //         },
+                        //         id: "dots",
+                        //     },
+                        //     {
+                        //         match: {
+                        //             id: "Neutral",
+                        //         },
+                        //         id: "lines",
+                        //     },
+                        // ]}
+                        borderColor={{
+                            from: "color",
+                            modifiers: [["darker", 1.6]],
+                        }}
+                        axisTop={null}
+                        axisRight={null}
+                        axisBottom={{
+                            tickSize: 5,
+                            tickPadding: 5,
+                            tickRotation: 0,
+                            legend: "Percent",
+                            legendPosition: "middle",
+                            legendOffset: 32,
+                            truncateTickAt: 0,
+                        }}
+                        axisLeft={{
+                            tickSize: 5,
+                            tickPadding: 5,
+                            tickRotation: 0,
+                            legend: "",
+                            legendPosition: "middle",
+                            legendOffset: -40,
+                            truncateTickAt: 0,
+                        }}
+                        enableGridX={true}
+                        labelSkipWidth={12}
+                        labelSkipHeight={12}
+                        labelTextColor={{
+                            from: "color",
+                            modifiers: [["darker", 1.6]],
+                        }}
+                        legends={[]}
+                        role="application"
+                        ariaLabel="Sentiment Categorisation"
+                        barAriaLabel={(e) =>
+                            e.id +
+                            ": " +
+                            e.formattedValue +
+                            " for Subcategory: " +
+                            e.indexValue
+                        }
+                    />
+                </Box>
+                ){/* } */}
+            </Paper>
         </Box>
-        {noData ? (
-          <Typography variant="body2" color="grey">
-            No data
-          </Typography>
-        ) : (
-          <Box
+    ) : (
+        <Box
             sx={{
-              display: "flex",
-              gap: 2,
-              mt: 2,
-              width: "100%",
-              height: 200,
+                display: "flex",
+                gap: 2,
+                mt: 2,
+                width: "100%",
+                flexDirection: "column",
             }}
-          >
-            {sentimentScores.length > 0 && (
-              <ResponsiveLine
-                data={sentimentScores}
-                margin={{
-                  top: 20,
-                  right: 20,
-                  bottom: 80,
-                  left: 40,
-                }}
-                xScale={{
-                  type: "time",
-                  format: "%d %b %y",
-                  precision: "day",
-                }}
-                xFormat={`time:%d %b %y`}
-                yScale={{
-                  type: "linear",
-                  min: "auto",
-                  max: "auto",
-                  stacked: false,
-                  reverse: false,
-                }}
-                yFormat=" >+.1f"
-                curve="linear"
-                axisTop={null}
-                axisRight={null}
-                axisBottom={{
-                  tickSize: 5,
-                  tickPadding: 5,
-                  tickRotation: 0,
-                  legend: "",
-                  legendOffset: 36,
-                  legendPosition: "middle",
-                  truncateTickAt: 0,
-                  format: "%b '%y",
-                  tickValues: "every 1 month",
-                }}
-                axisLeft={{
-                  tickSize: 5,
-                  tickPadding: 5,
-                  tickRotation: 0,
-                  legend: "",
-                  legendOffset: -40,
-                  legendPosition: "middle",
-                  truncateTickAt: 0,
-                }}
-                enableGridX={false}
-                colors={{ scheme: "category10" }}
-                pointSize={8}
-                pointColor={{ theme: "background" }}
-                pointBorderWidth={2}
-                pointBorderColor={{ from: "serieColor" }}
-                pointLabel="data.yFormatted"
-                pointLabelYOffset={-12}
-                enableTouchCrosshair={true}
-                useMesh={true}
-                legends={[
-                  {
-                    anchor: "bottom",
-                    direction: "row",
-                    justify: false,
-                    translateX: 0,
-                    translateY: 50,
-                    itemsSpacing: 20,
-                    itemDirection: "left-to-right",
-                    itemWidth: 80,
-                    itemHeight: 10,
-                    itemOpacity: 0.75,
-                    symbolSize: 12,
-                    symbolShape: "circle",
-                    symbolBorderColor: "rgba(0, 0, 0, .5)",
-                    effects: [
-                      {
-                        on: "hover",
-                        style: {
-                          itemBackground: "rgba(0, 0, 0, .03)",
-                          itemOpacity: 1,
-                        },
-                      },
-                    ],
-                  },
-                ]}
-              />
-            )}
-          </Box>
-        )}
-      </Paper>
-    </Box>
-  ) : (
-    <Box
-      sx={{
-        display: "flex",
-        gap: 2,
-        mt: 2,
-        width: "100%",
-        flexDirection: "column",
-      }}
-    >
-      <>
-        <DialogSentimentCategoriesGraph />;
-        <ButtonBase
-          component={Paper}
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            justifyContent: "center",
-            p: 2,
-            borderRadius: 4,
-            flex: 1,
-            cursor: "pointer",
-            boxShadow: "0px 0px 20px rgba(0, 0, 0, 0.1)",
-            backgroundColor:
-              theme.palette.mode === "dark" ? "#151515" : "#ffffff",
-            transition: "transform 0.3s ease-in-out",
-            "&:hover": {
-              backgroundColor:
-                theme.palette.mode === "dark" ? "#1a1a1a" : "#f9f9f9",
-              transform: "scaleX(1.01) scaleY(1.02)",
-            },
-          }}
-          id="overall-sentimentcategoriesgraph"
-          onClick={() => setSelectedMenu!("analytics")}
         >
-          <Typography
-            variant="h6"
-            component="h3"
-            sx={{ marginRight: 2, width: "50%" }}
-          >
-            Top 5 Positive Subcategories
-          </Typography>
-          <Box
-            sx={{
-              display: "flex",
-              gap: 2,
-              mt: 2,
-              width: "100%",
-              height: 200,
-            }}
-          >
-            <ResponsiveBar
-              data={[
-                {
-                  subcategory: "Card>Perks",
-                  "very angry": -29,
-                  "very angryColor": "hsl(181, 70%, 50%)",
-                  sad: -11,
-                  sadColor: "hsl(130, 70%, 50%)",
-                  others: 24,
-                  othersColor: "hsl(222, 70%, 50%)",
-                  satisfied: 28,
-                  satisfiedColor: "hsl(125, 70%, 50%)",
-                  happy: 8,
-                  happyColor: "hsl(289, 70%, 50%)",
-                },
-                {
-                  subcategory: "Loan>Interest",
-                  "very angry": -9,
-                  "very angryColor": "hsl(181, 70%, 50%)",
-                  sad: -21,
-                  sadColor: "hsl(130, 70%, 50%)",
-                  others: 5,
-                  othersColor: "hsl(222, 70%, 50%)",
-                  satisfied: 12,
-                  satisfiedColor: "hsl(125, 70%, 50%)",
-                  happy: 53,
-                  happyColor: "hsl(289, 70%, 50%)",
-                },
-              ]}
-              keys={["very angry", "sad", "others", "satisfied", "happy"]}
-              indexBy="subcategory"
-              margin={{ top: 50, right: 100, bottom: 50, left: 100 }}
-              padding={0.3}
-              minValue={-100}
-              maxValue={100}
-              layout="horizontal"
-              valueScale={{ type: "linear" }}
-              indexScale={{ type: "band", round: true }}
-              colors={{ scheme: "red_yellow_blue" }}
-              defs={[
-                {
-                  id: "dots",
-                  type: "patternDots",
-                  background: "inherit",
-                  color: "#38bcb2",
-                  size: 4,
-                  padding: 1,
-                  stagger: true,
-                },
-                {
-                  id: "lines",
-                  type: "patternLines",
-                  background: "inherit",
-                  color: "#eed312",
-                  rotation: -45,
-                  lineWidth: 6,
-                  spacing: 10,
-                },
-              ]}
-              fill={[
-                {
-                  match: {
-                    id: "very angry",
-                  },
-                  id: "dots",
-                },
-                {
-                  match: {
-                    id: "others",
-                  },
-                  id: "lines",
-                },
-              ]}
-              borderColor={{
-                from: "color",
-                modifiers: [["darker", 1.6]],
-              }}
-              axisTop={null}
-              axisRight={null}
-              axisBottom={{
-                tickSize: 5,
-                tickPadding: 5,
-                tickRotation: 0,
-                legend: "Percent",
-                legendPosition: "middle",
-                legendOffset: 32,
-                truncateTickAt: 0,
-              }}
-              axisLeft={{
-                tickSize: 5,
-                tickPadding: 5,
-                tickRotation: 0,
-                legend: "",
-                legendPosition: "middle",
-                legendOffset: -40,
-                truncateTickAt: 0,
-              }}
-              enableGridX={true}
-              labelSkipWidth={12}
-              labelSkipHeight={12}
-              labelTextColor={{
-                from: "color",
-                modifiers: [["darker", 1.6]],
-              }}
-              legends={[]}
-              role="application"
-              ariaLabel="Categorization"
-              barAriaLabel={(e) =>
-                e.id +
-                ": " +
-                e.formattedValue +
-                " for Subcategory: " +
-                e.indexValue
-              }
-            />
-          </Box>
-        </ButtonBase>
-      </>
-    </Box>
-  );
+            <DialogSentimentCategoriesGraph />;
+            <ButtonBase
+                component={Paper}
+                sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    p: 2,
+                    borderRadius: 4,
+                    flex: 1,
+                    cursor: "pointer",
+                    boxShadow: "0px 0px 20px rgba(0, 0, 0, 0.1)",
+                    backgroundColor:
+                        theme.palette.mode === "dark" ? "#151515" : "#ffffff",
+                    transition: "transform 0.3s ease-in-out",
+                    "&:hover": {
+                        backgroundColor:
+                            theme.palette.mode === "dark"
+                                ? "#1a1a1a"
+                                : "#f9f9f9",
+                        transform: "scaleX(1.01) scaleY(1.02)",
+                    },
+                }}
+                id="overall-sentimentcategoriesgraph"
+                onClick={() => setSelectedMenu!("analytics")}
+            >
+                <Box
+                    sx={{
+                        display: "flex",
+                        width: "100%",
+                        alignItems: "stretch",
+                        gap: 2,
+                        mt: 2,
+                    }}
+                >
+                    <Box sx={{width: "50%"}}>
+                        <Typography
+                            variant="h6"
+                            component="h3"
+                            sx={{marginRight: 2, width: "50%"}}
+                        >
+                            Top 5 Positive Categories
+                        </Typography>
+                        {/* {bars.length === 0 ? (
+                    <Typography variant="body2" color="grey">
+                        No data
+                    </Typography>
+                ) :  */}
+                        (
+                        <Box
+                            sx={{
+                                display: "flex",
+                                gap: 2,
+                                mt: 2,
+                                height: 200,
+                            }}
+                        >
+                            <ResponsiveBar
+                                data={bars.reverse().slice(0, 5)}
+                                keys={Object.keys(ORDER)}
+                                indexBy="category"
+                                margin={{
+                                    top: 50,
+                                    right: 100,
+                                    bottom: 50,
+                                    left: 100,
+                                }}
+                                padding={0.3}
+                                minValue={0}
+                                maxValue={100}
+                                layout="horizontal"
+                                valueScale={{type: "linear"}}
+                                indexScale={{type: "band", round: true}}
+                                colors={{scheme: "red_yellow_blue"}}
+                                defs={[
+                                    {
+                                        id: "dots",
+                                        type: "patternDots",
+                                        background: "inherit",
+                                        color: "#38bcb2",
+                                        size: 4,
+                                        padding: 1,
+                                        stagger: true,
+                                    },
+                                    {
+                                        id: "lines",
+                                        type: "patternLines",
+                                        background: "inherit",
+                                        color: "#eed312",
+                                        rotation: -45,
+                                        lineWidth: 6,
+                                        spacing: 10,
+                                    },
+                                ]}
+                                // fill={[
+                                //     {
+                                //         match: {
+                                //             id: "Frustrated",
+                                //         },
+                                //         id: "dots",
+                                //     },
+                                //     {
+                                //         match: {
+                                //             id: "Neutral",
+                                //         },
+                                //         id: "lines",
+                                //     },
+                                // ]}
+                                borderColor={{
+                                    from: "color",
+                                    modifiers: [["darker", 1.6]],
+                                }}
+                                axisTop={null}
+                                axisRight={null}
+                                axisBottom={{
+                                    tickSize: 5,
+                                    tickPadding: 5,
+                                    tickRotation: 0,
+                                    legend: "Percent",
+                                    legendPosition: "middle",
+                                    legendOffset: 32,
+                                    truncateTickAt: 0,
+                                }}
+                                axisLeft={{
+                                    tickSize: 5,
+                                    tickPadding: 5,
+                                    tickRotation: 0,
+                                    legend: "",
+                                    legendPosition: "middle",
+                                    legendOffset: -40,
+                                    truncateTickAt: 0,
+                                }}
+                                enableGridX={true}
+                                labelSkipWidth={12}
+                                labelSkipHeight={12}
+                                labelTextColor={{
+                                    from: "color",
+                                    modifiers: [["darker", 1.6]],
+                                }}
+                                legends={[]}
+                                role="application"
+                                ariaLabel="Sentiment Categorisation"
+                                barAriaLabel={(e) =>
+                                    e.id +
+                                    ": " +
+                                    e.formattedValue +
+                                    " for Subcategory: " +
+                                    e.indexValue
+                                }
+                            />
+                        </Box>
+                    </Box>
+                    ){/* } */}
+                    <Divider
+                        orientation="vertical"
+                        flexItem
+                        sx={{borderRightWidth: 2, borderColor: "black"}}
+                    />
+                    <Box sx={{width: "50%"}}>
+                        <Typography
+                            variant="h6"
+                            component="h3"
+                            sx={{marginRight: 2, width: "50%"}}
+                        >
+                            Top 5 Negative Categories
+                        </Typography>
+                        {/* {bars.length === 0 ? (
+                    <Typography variant="body2" color="grey">
+                        No data
+                    </Typography>
+                ) :  */}
+                        (
+                        <Box
+                            sx={{
+                                display: "flex",
+                                gap: 2,
+                                mt: 2,
+                                height: 200,
+                            }}
+                        >
+                            <ResponsiveBar
+                                data={bars.slice(0, 5)}
+                                keys={Object.keys(ORDER)}
+                                indexBy="category"
+                                margin={{
+                                    top: 50,
+                                    right: 100,
+                                    bottom: 50,
+                                    left: 100,
+                                }}
+                                padding={0.3}
+                                minValue={0}
+                                maxValue={100}
+                                layout="horizontal"
+                                valueScale={{type: "linear"}}
+                                indexScale={{type: "band", round: true}}
+                                colors={{scheme: "red_yellow_blue"}}
+                                defs={[
+                                    {
+                                        id: "dots",
+                                        type: "patternDots",
+                                        background: "inherit",
+                                        color: "#38bcb2",
+                                        size: 4,
+                                        padding: 1,
+                                        stagger: true,
+                                    },
+                                    {
+                                        id: "lines",
+                                        type: "patternLines",
+                                        background: "inherit",
+                                        color: "#eed312",
+                                        rotation: -45,
+                                        lineWidth: 6,
+                                        spacing: 10,
+                                    },
+                                ]}
+                                // fill={[
+                                //     {
+                                //         match: {
+                                //             id: "Frustrated",
+                                //         },
+                                //         id: "dots",
+                                //     },
+                                //     {
+                                //         match: {
+                                //             id: "Neutral",
+                                //         },
+                                //         id: "lines",
+                                //     },
+                                // ]}
+                                borderColor={{
+                                    from: "color",
+                                    modifiers: [["darker", 1.6]],
+                                }}
+                                axisTop={null}
+                                axisRight={null}
+                                axisBottom={{
+                                    tickSize: 5,
+                                    tickPadding: 5,
+                                    tickRotation: 0,
+                                    legend: "Percent",
+                                    legendPosition: "middle",
+                                    legendOffset: 32,
+                                    truncateTickAt: 0,
+                                }}
+                                axisLeft={{
+                                    tickSize: 5,
+                                    tickPadding: 5,
+                                    tickRotation: 0,
+                                    legend: "",
+                                    legendPosition: "middle",
+                                    legendOffset: -40,
+                                    truncateTickAt: 0,
+                                }}
+                                enableGridX={true}
+                                labelSkipWidth={12}
+                                labelSkipHeight={12}
+                                labelTextColor={{
+                                    from: "color",
+                                    modifiers: [["darker", 1.6]],
+                                }}
+                                legends={[]}
+                                role="application"
+                                ariaLabel="Sentiment Categorisation"
+                                barAriaLabel={(e) =>
+                                    e.id +
+                                    ": " +
+                                    e.formattedValue +
+                                    " for Subcategory: " +
+                                    e.indexValue
+                                }
+                            />
+                        </Box>
+                    </Box>
+                    ){/* } */}
+                </Box>
+            </ButtonBase>
+        </Box>
+    );
 }
