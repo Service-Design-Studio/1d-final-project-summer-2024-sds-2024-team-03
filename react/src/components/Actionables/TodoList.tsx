@@ -25,7 +25,6 @@ const Accordion = styled((props: AccordionProps) => (
   "&::before": {
     display: "none",
   },
-  backgroundColor: theme.palette.mode === "dark" ? "#333" : "#fff",
 }));
 
 const AccordionSummary = styled((props: AccordionSummaryProps) => (
@@ -64,13 +63,11 @@ export default function CustomizedAccordions() {
       <Accordion
         expanded={expanded === "panel1"}
         onChange={handleChange("panel1")}
-        style={{ borderTopLeftRadius: 18, borderTopRightRadius: 18 }}
       >
         <AccordionSummary
           aria-controls="panel1d-content"
           id="panel1d-header"
           expandIcon={<ExpandMoreIcon />}
-          style={{ borderTopLeftRadius: 18, borderTopRightRadius: 18 }}
         >
           <Box display="flex" alignItems="center" width="100%">
             <Typography>To Fix</Typography>
@@ -138,13 +135,11 @@ export default function CustomizedAccordions() {
       <Accordion
         expanded={expanded === "panel4"}
         onChange={handleChange("panel4")}
-        style={{ borderBottomLeftRadius: 18, borderBottomRightRadius: 18 }}
       >
         <AccordionSummary
           aria-controls="panel3d-content"
           id="panel3d-header"
           expandIcon={<ExpandMoreIcon />}
-          style={{ borderBottomLeftRadius: expanded === "panel4" ? 0 : 18, borderBottomRightRadius: expanded === "panel4" ? 0 : 18, transition: "border-radius 0.5s ease" }}
         >
           <Box display="flex" alignItems="center" width="100%">
             <Typography>To Amplify</Typography>
