@@ -57,6 +57,15 @@ export default function Calendar({
               InputLabelProps: {
                 sx: { fontWeight: 'bold' }}
             },
+            popper: {
+              sx: {
+                '& .MuiPaper-root': {
+                  borderRadius: 4,
+                  mt: 2,
+                  boxShadow: '0px 0px 20px rgba(0, 0, 0, 0.1)'
+                }
+              }
+            }
           }}
           format="DD-MM-YYYY"
           label="From"
@@ -89,6 +98,14 @@ export default function Calendar({
               InputLabelProps: {
                 sx: { fontWeight: 'bold' }}
             },
+            popper: {
+              sx: {
+                '& .MuiPaper-root': {
+                  borderRadius: 4,
+                  mt: 2,
+                }
+              }
+            }
           }}
           format="DD-MM-YYYY"
           label="To"

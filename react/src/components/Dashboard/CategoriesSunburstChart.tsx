@@ -224,7 +224,6 @@ export default function CategoriesSunburstChart({
             sx={{
                 display: "flex",
                 gap: 2,
-                mt: 2,
                 width: "100%",
                 flexDirection: "row",
             }}
@@ -240,9 +239,12 @@ export default function CategoriesSunburstChart({
                     borderRadius: 4,
                     flex: 1,
                     cursor: "pointer",
+                    boxShadow: '0px 0px 20px rgba(0, 0, 0, 0.1)',
                     backgroundColor: theme.palette.mode === 'dark' ? "#151515" : "#ffffff",
+                    transition: "transform 0.3s ease-in-out",
                     "&:hover": {
                       backgroundColor: theme.palette.mode === 'dark' ? "#1a1a1a" : "#f9f9f9",
+                      transform: "scaleX(1.02) scaleY(1.03)"
                     },
                 }}
                 id="overall-categoriessunburstchart"
@@ -382,10 +384,10 @@ export default function CategoriesSunburstChart({
                                         backgroundColor: `hsl(${feedbackcategoryHashToHue(
                                             category.feedback_category
                                         )}, 70%, 50%)`,
-                                        mr: 1,
+                                        flexShrink: 0
                                     }}
                                 />
-                                <Typography variant="body2">
+                                <Typography variant="body2" sx={{ml: 1}}>
                                     {category.product} &gt;{" "}
                                     {category.subcategory} &gt;{" "}
                                     {category.feedback_category}
@@ -411,7 +413,7 @@ export default function CategoriesSunburstChart({
                                     ),
                                 }}
                             >
-                                {category.averageSentimentScore.toFixed(1)}/5.0
+                                {category.averageSentimentScore.toFixed(1)} / 5.0
                             </Typography>
                         </React.Fragment>
                     ))}

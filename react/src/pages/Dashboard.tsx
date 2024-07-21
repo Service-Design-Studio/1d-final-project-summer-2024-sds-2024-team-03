@@ -42,6 +42,7 @@ export default function Dashboard({
                     display: "flex",
                     flexDirection: {xs: "column", sm: "row"},
                     gap: 2,
+                    mb: 7,
                     justifyContent: "flex-start",
                 }}
             >
@@ -72,10 +73,8 @@ export default function Dashboard({
             {/* If dates, products, sources not selected yet, all these should not show / be disabled */}
             <Box
                 sx={{
-                    py: 5,
                     display: "flex",
                     gap: 2,
-                    mt: 2,
                     alignItems: "stretch",
                     flexDirection: "row",
                 }}
@@ -105,17 +104,19 @@ export default function Dashboard({
                         flexDirection: "column",
                         justifyContent: "center",
                         height: 200,
+                        boxShadow: '0px 0px 20px rgba(0, 0, 0, 0.1)'
                     }}
                 >
                     <Box
                         sx={{
                             display: "flex",
                             justifyContent: "space-between",
-                            alignItems: "center",
+                            alignItems: "top",
                             flexDirection: "row",
+                            gap: 1
                         }}
                     >
-                        <Box sx={{textAlign: "center"}}>
+                        <Box sx={{ flex: "1 1 25%", textAlign: "center" }}>
                             <Typography
                                 variant="body1"
                                 sx={{fontWeight: "bold"}}
@@ -123,11 +124,11 @@ export default function Dashboard({
                                 To Promote
                             </Typography>
                             <Typography variant="body2" color="grey">
-                                maintain user-friendly staff
+                                Maintain user-friendly staff
                             </Typography>
                         </Box>
                         <Divider orientation="vertical" flexItem />
-                        <Box sx={{textAlign: "center"}}>
+                        <Box sx={{ flex: "1 1 25%", textAlign: "center" }}>
                             <Typography
                                 variant="body1"
                                 sx={{fontWeight: "bold"}}
@@ -139,7 +140,7 @@ export default function Dashboard({
                             </Typography>
                         </Box>
                         <Divider orientation="vertical" flexItem />
-                        <Box sx={{textAlign: "center"}}>
+                        <Box sx={{ flex: "1 1 25%", textAlign: "center" }}>
                             <Typography
                                 variant="body1"
                                 sx={{fontWeight: "bold"}}
@@ -151,7 +152,7 @@ export default function Dashboard({
                             </Typography>
                         </Box>
                         <Divider orientation="vertical" flexItem />
-                        <Box sx={{textAlign: "center"}}>
+                        <Box sx={{ flex: "1 1 25%", textAlign: "center" }}>
                             <Typography
                                 variant="body1"
                                 sx={{fontWeight: "bold"}}
@@ -159,7 +160,7 @@ export default function Dashboard({
                                 To Fix
                             </Typography>
                             <Typography variant="body2" color="grey">
-                                Paylah! break downs
+                                PayLah! disruptions
                             </Typography>
                         </Box>
                     </Box>
@@ -171,10 +172,12 @@ export default function Dashboard({
                 sx={{
                     display: "flex",
                     width: "100%",
+                    alignItems: "stretch",
                     gap: 2,
+                    mt: 2
                 }}
             >
-                <Box sx={{flex: 6}}>
+                <Box sx={{flex: 6, display: "flex", alignItems: "stretch" }}>
                     <SentimentScoreGraph
                         fromDate={fromDate}
                         toDate={toDate}
@@ -184,7 +187,7 @@ export default function Dashboard({
                         setSelectedMenu={setSelectedMenu}
                     />
                 </Box>
-                <Box sx={{flex: 4}}>
+                <Box sx={{flex: 4, display: "flex", alignItems: "stretch" }}>
                     <CategoriesSunburstChart
                         fromDate={fromDate}
                         toDate={toDate}

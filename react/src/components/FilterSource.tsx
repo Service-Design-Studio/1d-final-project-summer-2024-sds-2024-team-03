@@ -18,7 +18,10 @@ const MenuProps = {
         style: {
             maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
             width: 250,
+            borderRadius: 18,
+            marginTop: '18px'
         },
+        sx: { boxShadow: '0px 0px 20px rgba(0, 0, 0, 0.1)' }
     },
 };
 
@@ -82,15 +85,19 @@ export default function FilterSource({
                     )}
                     MenuProps={MenuProps}
                 >
-                    {sources.map((source: string) => (
-                        <MenuItem
-                            key={source}
-                            value={source}
-                            className="filter-source-option"
-                        >
-                            {source}
-                        </MenuItem>
-                    ))}
+                    {sources.length > 0 ? (
+                        sources.map((source: string) => (
+                            <MenuItem
+                                key={source}
+                                value={source}
+                                className="filter-source-option"
+                            >
+                                {source}
+                            </MenuItem>
+                        ))
+                    ) : (
+                        <MenuItem disabled>No sources for selected time period</MenuItem>
+                    )}
                 </Select>
             </FormControl>
         </Grid>

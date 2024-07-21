@@ -8,6 +8,12 @@ import MuiAccordionSummary, {
 import MuiAccordionDetails from "@mui/material/AccordionDetails";
 import Typography from "@mui/material/Typography";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import Box from "@mui/material/Box";
+import BuildCircleTwoToneIcon from "@mui/icons-material/BuildCircleTwoTone";
+import NotificationsActiveTwoToneIcon from "@mui/icons-material/NotificationsActiveTwoTone";
+import MovingIcon from "@mui/icons-material/Moving";
+import CampaignTwoToneIcon from "@mui/icons-material/CampaignTwoTone";
+import TodoCard from "./TodoCard";
 
 const Accordion = styled((props: AccordionProps) => (
   <MuiAccordion disableGutters elevation={0} square {...props} />
@@ -19,6 +25,7 @@ const Accordion = styled((props: AccordionProps) => (
   "&::before": {
     display: "none",
   },
+  backgroundColor: theme.palette.mode === "dark" ? "#333" : "#fff",
 }));
 
 const AccordionSummary = styled((props: AccordionSummaryProps) => (
@@ -57,22 +64,25 @@ export default function CustomizedAccordions() {
       <Accordion
         expanded={expanded === "panel1"}
         onChange={handleChange("panel1")}
+        style={{ borderTopLeftRadius: 18, borderTopRightRadius: 18 }}
       >
         <AccordionSummary
           aria-controls="panel1d-content"
           id="panel1d-header"
-          style={{ backgroundColor: "#E6B0AA" }}
-          expandIcon={<ExpandMoreIcon style={{ color: "black" }} />}
+          expandIcon={<ExpandMoreIcon />}
+          style={{ borderTopLeftRadius: 18, borderTopRightRadius: 18 }}
         >
-          <Typography style={{ color: "black" }}>To Fix</Typography>
+          <Box display="flex" alignItems="center" width="100%">
+            <Typography>To Fix</Typography>
+            <Box flexGrow={1} />
+            <BuildCircleTwoToneIcon
+              style={{ color: "#9a031e", marginLeft: 8 }}
+            />{" "}
+          </Box>
         </AccordionSummary>
         <AccordionDetails>
-          <Typography>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse
-            malesuada lacus ex, sit amet blandit leo lobortis eget. Lorem ipsum
-            dolor sit amet, consectetur adipiscing elit. Suspendisse malesuada
-            lacus ex, sit amet blandit leo lobortis eget.
-          </Typography>
+          <TodoCard />
+          <TodoCard />
         </AccordionDetails>
       </Accordion>
       <Accordion
@@ -82,10 +92,15 @@ export default function CustomizedAccordions() {
         <AccordionSummary
           aria-controls="panel2d-content"
           id="panel2d-header"
-          style={{ backgroundColor: "#DCEFFD" }}
-          expandIcon={<ExpandMoreIcon style={{ color: "black" }} />}
+          expandIcon={<ExpandMoreIcon />}
         >
-          <Typography style={{ color: "black" }}>To Keep In Mind</Typography>
+          <Box display="flex" alignItems="center" width="100%">
+            <Typography>To Keep In Mind</Typography>
+            <Box flexGrow={1} />
+            <NotificationsActiveTwoToneIcon
+              style={{ color: "#5f0f40", marginLeft: 8 }}
+            />{" "}
+          </Box>
         </AccordionSummary>
         <AccordionDetails>
           <Typography>
@@ -103,10 +118,13 @@ export default function CustomizedAccordions() {
         <AccordionSummary
           aria-controls="panel2d-content"
           id="panel2d-header"
-          style={{ backgroundColor: "#DEF7DE" }}
-          expandIcon={<ExpandMoreIcon style={{ color: "black" }} />}
+          expandIcon={<ExpandMoreIcon />}
         >
-          <Typography style={{ color: "black" }}>To Promote</Typography>
+          <Box display="flex" alignItems="center" width="100%">
+            <Typography>To Promote</Typography>
+            <Box flexGrow={1} />
+            <MovingIcon style={{ color: "#e36414", marginLeft: 8 }} />{" "}
+          </Box>
         </AccordionSummary>
         <AccordionDetails>
           <Typography>
@@ -120,14 +138,21 @@ export default function CustomizedAccordions() {
       <Accordion
         expanded={expanded === "panel4"}
         onChange={handleChange("panel4")}
+        style={{ borderBottomLeftRadius: 18, borderBottomRightRadius: 18 }}
       >
         <AccordionSummary
           aria-controls="panel3d-content"
           id="panel3d-header"
-          style={{ backgroundColor: "#FDFBDC" }}
-          expandIcon={<ExpandMoreIcon style={{ color: "black" }} />}
+          expandIcon={<ExpandMoreIcon />}
+          style={{ borderBottomLeftRadius: expanded === "panel4" ? 0 : 18, borderBottomRightRadius: expanded === "panel4" ? 0 : 18, transition: "border-radius 0.5s ease" }}
         >
-          <Typography style={{ color: "black" }}>To Amplify</Typography>
+          <Box display="flex" alignItems="center" width="100%">
+            <Typography>To Amplify</Typography>
+            <Box flexGrow={1} />
+            <CampaignTwoToneIcon
+              style={{ color: "#0f4c5c", marginLeft: 8 }}
+            />{" "}
+          </Box>
         </AccordionSummary>
         <AccordionDetails>
           <Typography>

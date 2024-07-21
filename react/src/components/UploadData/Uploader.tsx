@@ -245,9 +245,9 @@ export function FileDrop({
         alignItems: "center",
         height: "600px",
         width: "100%",
-        border: "1px dotted",
         borderRadius: 18,
         backgroundColor: theme.palette.mode === 'dark' ? "#222" : "#ccc",
+        boxShadow: `inset 0 0 20px ${theme.palette.mode === 'dark' ? '#555' : '#aaa'}`,
       }}
     >
       <input
@@ -260,7 +260,7 @@ export function FileDrop({
       />
       <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 2 }}>
         <CloudUploadIcon sx={{ color: "gray", fontSize: "8rem" }} />
-        <Typography sx={{ fontSize: "1.6rem" }} >
+        <Typography sx={{ fontSize: "1.4rem" }} >
           Drag and drop CSV or XLS files here
         </Typography>
         <Typography sx={{ m: 3 , fontSize: "1.2rem", fontWeight: 'bold' }}>
@@ -269,7 +269,7 @@ export function FileDrop({
         <Button variant="contained" component="label" htmlFor="fileInput"
         sx={{ 
           borderRadius: 8,
-          fontSize: "1.2rem",
+          fontSize: "1.1rem",
           backgroundColor: "#777",
           padding: "0.5rem 2rem",
           '&:hover': {

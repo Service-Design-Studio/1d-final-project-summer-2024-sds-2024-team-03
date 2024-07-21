@@ -17,6 +17,8 @@ const MenuProps = {
         style: {
             maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
             width: 250,
+            borderRadius: 18,
+            marginTop: "18px",
         },
     },
 };
@@ -271,7 +273,6 @@ export default function SentimentScoreGraph({
             sx={{
                 display: "flex",
                 gap: 2,
-                mt: 2,
                 width: "100%",
                 flexDirection: "row",
             }}
@@ -284,6 +285,11 @@ export default function SentimentScoreGraph({
                     justifyContent: "center",
                     p: 2,
                     borderRadius: 4,
+                    boxShadow: "0px 0px 20px rgba(0, 0, 0, 0.1)",
+                    transition: "transform 0.3s ease-in-out",
+                    "&:hover": {
+                        transform: "scaleX(1.015) scaleY(1.03)",
+                    },
                     flex: 1,
                 }}
                 id="detailed-sentimentscoregraph"
@@ -302,7 +308,7 @@ export default function SentimentScoreGraph({
                         component="h3"
                         sx={{marginRight: 2, width: "50%"}}
                     >
-                        Sentiment vs Time trend for
+                        Sentiment vs Time Trend for
                         {selectedSubcategory
                             ? ` ${selectedSubcategory}`
                             : " selected Subcategories"}
@@ -321,6 +327,9 @@ export default function SentimentScoreGraph({
                                 <OutlinedInput
                                     id="detailed-sentimentscoregraph-select-subcategory"
                                     label="subcategory"
+                                    sx={{
+                                        borderRadius: 4,
+                                    }}
                                 />
                             }
                             renderValue={(selected) => (
@@ -360,6 +369,9 @@ export default function SentimentScoreGraph({
                                 <OutlinedInput
                                     id="detailed-sentimentscoregraph-select-feedbackcategory"
                                     label="feedbackcategory"
+                                    sx={{
+                                        borderRadius: 4,
+                                    }}
                                 />
                             }
                             renderValue={(selected) => (
@@ -496,7 +508,6 @@ export default function SentimentScoreGraph({
             sx={{
                 display: "flex",
                 gap: 2,
-                mt: 2,
                 width: "100%",
                 flexDirection: "column",
             }}
@@ -512,13 +523,16 @@ export default function SentimentScoreGraph({
                     borderRadius: 4,
                     flex: 1,
                     cursor: "pointer",
+                    boxShadow: "0px 0px 20px rgba(0, 0, 0, 0.1)",
                     backgroundColor:
                         theme.palette.mode === "dark" ? "#151515" : "#ffffff",
+                    transition: "transform 0.3s ease-in-out",
                     "&:hover": {
                         backgroundColor:
                             theme.palette.mode === "dark"
                                 ? "#1a1a1a"
                                 : "#f9f9f9",
+                        transform: "scaleX(1.015) scaleY(1.03)",
                     },
                 }}
                 id="overall-sentimentscoregraph"
