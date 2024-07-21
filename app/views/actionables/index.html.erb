@@ -1,0 +1,14 @@
+<p style="color: green"><%= notice %></p>
+
+<h1>Actionables</h1>
+
+<div id="actionables">
+  <% @actionables.each do |actionable| %>
+    <%= render actionable %>
+    <p>
+      <%= link_to "Show this actionable", actionable %>
+    </p>
+  <% end %>
+</div>
+
+<%= link_to "New actionable", new_actionable_path %>

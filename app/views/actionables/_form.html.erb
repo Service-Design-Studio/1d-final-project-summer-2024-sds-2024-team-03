@@ -1,0 +1,47 @@
+<%= form_with(model: actionable) do |form| %>
+  <% if actionable.errors.any? %>
+    <div style="color: red">
+      <h2><%= pluralize(actionable.errors.count, "error") %> prohibited this actionable from being saved:</h2>
+
+      <ul>
+        <% actionable.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div>
+    <%= form.label :action, style: "display: block" %>
+    <%= form.text_area :action %>
+  </div>
+
+  <div>
+    <%= form.label :status, style: "display: block" %>
+    <%= form.text_field :status %>
+  </div>
+
+  <div>
+    <%= form.label :subproduct, style: "display: block" %>
+    <%= form.text_field :subproduct %>
+  </div>
+
+  <div>
+    <%= form.label :actionable_category, style: "display: block" %>
+    <%= form.text_field :actionable_category %>
+  </div>
+
+  <div>
+    <%= form.label :feedback_category, style: "display: block" %>
+    <%= form.text_field :feedback_category %>
+  </div>
+
+  <div>
+    <%= form.label :feedback_json, style: "display: block" %>
+    <%= form.text_area :feedback_json %>
+  </div>
+
+  <div>
+    <%= form.submit %>
+  </div>
+<% end %>
