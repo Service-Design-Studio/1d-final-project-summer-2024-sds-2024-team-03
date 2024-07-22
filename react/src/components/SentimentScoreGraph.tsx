@@ -119,10 +119,16 @@ export default function SentimentScoreGraph({
             process.env.NODE_ENV === "development"
                 ? "http://localhost:3000"
                 : "https://jbaaam-yl5rojgcbq-et.a.run.app";
-
+        if (
+            !fromDate ||
+            !toDate ||
+            selectedProduct.length === 0 ||
+            selectedSource.length === 0 ||
+            !selectedSubcategory ||
+            selectedFeedbackcategories.length === 0
+        )
+            setSentimentScores([]);
         if (isDetailed) {
-            if (!selectedSubcategory || selectedFeedbackcategories.length === 0)
-                setSentimentScores([]);
             fetch(
                 `${urlPrefix}/analytics/get_sentiment_scores?fromDate=${fromDate_string}&toDate=${toDate_string}&product=${selectedProduct}&source=${selectedSource}`
             )
@@ -199,7 +205,10 @@ export default function SentimentScoreGraph({
                             },
                             {} as Record<
                                 string,
-                                {date: string; sentiment_score: number}[]
+                                {
+                                    date: string;
+                                    sentiment_score: number;
+                                }[]
                             >
                         );
 
@@ -442,7 +451,7 @@ export default function SentimentScoreGraph({
                                 format: "%d %b %y",
                                 precision: "day",
                             }}
-                            xFormat={`time:%d %b %y`}
+                            xFormat={`time: %d %b %y`}
                             yScale={{
                                 type: "linear",
                                 min: "auto",
@@ -585,7 +594,7 @@ export default function SentimentScoreGraph({
                                 format: "%d %b %y",
                                 precision: "day",
                             }}
-                            xFormat={`time:%d %b %y`}
+                            xFormat={`time: %d %b %y`}
                             yScale={{
                                 type: "linear",
                                 min: "auto",

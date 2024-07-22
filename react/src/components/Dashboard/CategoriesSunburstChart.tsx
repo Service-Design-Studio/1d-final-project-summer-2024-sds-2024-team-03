@@ -99,7 +99,6 @@ export default function CategoriesSunburstChart({
         nodes: CategoryNode[]
     ): Record<string, string> => {
         const categoryColorMap: Record<string, string> = {};
-
         const traverse = (nodes: CategoryNode[]) => {
             nodes.forEach((node) => {
                 categoryColorMap[node.category] = node.color;
@@ -108,11 +107,11 @@ export default function CategoriesSunburstChart({
                 }
             });
         };
-
         traverse(nodes);
-        console.log(categoryColorMap);
         return categoryColorMap;
     };
+
+    const barColors = mapCategoryToColor(components);
 
     useEffect(() => {
         const urlPrefix =
@@ -512,7 +511,7 @@ export default function CategoriesSunburstChart({
                                 subcategoryNode = {
                                     category: subcategory,
                                     color: `hsl(${feedbackcategoryHashToHue(
-                                        product + subcategory
+                                        subcategory
                                     )}, 70%, 50%)`,
                                     children: [],
                                 };
@@ -527,9 +526,7 @@ export default function CategoriesSunburstChart({
                                 feedbackNode = {
                                     category: feedback_category,
                                     color: `hsl(${feedbackcategoryHashToHue(
-                                        product +
-                                            subcategory +
-                                            feedback_category
+                                        feedback_category
                                     )}, 70%, 50%)`,
                                     mentions: 0,
                                 };
@@ -640,9 +637,7 @@ export default function CategoriesSunburstChart({
                             cornerRadius={2}
                             borderWidth={3}
                             borderColor={{theme: "grid.line.stroke"}}
-                            colors={(bar) =>
-                                mapCategoryToColor(components)[bar.id]
-                            }
+                            colors={(bar) => barColors[bar.id]}
                             // To make use of hsl from each component
                             inheritColorFromParent={false}
                             // colors={{scheme: "paired"}}
@@ -735,11 +730,11 @@ export default function CategoriesSunburstChart({
                                                 width: 18,
                                                 height: 18,
                                                 borderRadius: "50%",
-                                                backgroundColor: `hsl(${feedbackcategoryHashToHue(
-                                                    category.product +
-                                                        category.subcategory +
-                                                        category.feedback_category
-                                                )}, 70%, 50%)`,
+                                                backgroundColor:
+                                                    barColors[
+                                                        category
+                                                            .feedback_category
+                                                    ],
                                                 flexShrink: 0,
                                             }}
                                         />
