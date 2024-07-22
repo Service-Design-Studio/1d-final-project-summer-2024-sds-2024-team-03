@@ -89,7 +89,7 @@ export default function SentimentDistribution({
           .reverse()
           .map(([sentiment, sentimentColor]) => {
             const sentimentValue = parseFloat(sentimentDistribution[sentiment] || "0");
-            const barWidth = (sentimentValue / 100) * maxBarWidth;
+            const barWidth = 1.5 * (sentimentValue / 100) * maxBarWidth;
             
             return (
               <Box sx={{ display: "flex", mb: 1 }} key={sentiment}>
