@@ -20,6 +20,7 @@ export function FileDrop({
     const [openModal, setOpenModal] = useState(false);
     const [modalContent, setModalContent] = useState("");
     const requiredCols: string[] = ["date", "feedback"];
+    const theme = useTheme();
 
     const validateDateFormat = (dates: string[]) => {
         return dates.every((date) => {
@@ -63,6 +64,28 @@ export function FileDrop({
     const handleDragLeave = (event: DragEvent<HTMLDivElement>) => {
         event.preventDefault();
         setIsOver(false);
+    };
+
+    const handleDrop = (event: DragEvent<HTMLDivElement>) => {
+        event.preventDefault();
+        setIsOver(false);
+
+        // Fetch the files
+        const droppedFiles = Array.from(event.dataTransfer.files);
+        setFiles(droppedFiles);
+
+        if (
+            selectedProduct[0] === undefined ||
+            selectedSource[0] === undefined
+        ) {
+            setModalContent("Error: Empty product or source.");
+            setOpenModal(true);
+        } else {
+            // Use FileReader to read file content
+            droppedFiles.forEach((file) => {
+                processFile(file);
+            });
+        }
     };
 
     const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -230,30 +253,6 @@ export function FileDrop({
             }
         }
     };
-
-    const handleDrop = (event: DragEvent<HTMLDivElement>) => {
-        event.preventDefault();
-        setIsOver(false);
-
-        // Fetch the files
-        const droppedFiles = Array.from(event.dataTransfer.files);
-        setFiles(droppedFiles);
-
-        if (
-            selectedProduct[0] === undefined ||
-            selectedSource[0] === undefined
-        ) {
-            setModalContent("Error: Empty product or source.");
-            setOpenModal(true);
-        } else {
-            // Use FileReader to read file content
-            droppedFiles.forEach((file) => {
-                processFile(file);
-            });
-        }
-    };
-
-    const theme = useTheme();
 
     return (
         <div
