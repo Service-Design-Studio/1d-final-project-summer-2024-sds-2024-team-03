@@ -114,37 +114,35 @@ export default function OverallSentimentScore({
         id="overall-sentiment-score"
         onClick={() => setSelectedMenu("analytics")}
       >
-        <Box sx={{ width: '100%', textAlign: 'center' }}>
+        <Box sx={{ width: '100%', justifyContent: "flex-start" }}>
           <Typography variant="h6" style={{ fontWeight: "bold" }}>
             Overall Sentiment Score
           </Typography>
         </Box>
-        <Box>
-          <Box sx={{ display: 'flex', alignItems: "center" }}>
-            <Typography sx={{ mt:1, fontSize: "4rem", fontWeight: "bold" }}>
-              {overallSentimentScore ? overallSentimentScore : 0}
-            </Typography>
-            <Typography sx={{ ml:1, mt:3, fontSize: "2.5rem" }} color = "grey">
-              / 5
-            </Typography>
-          </Box>
-          <Box sx={{ 
-            borderRadius: 4, 
-            backgroundColor: backgroundColor,
-            mt:1,
-            mb:2
-            }}>
-            <Typography sx={{ml:2, mr:2, textAlign: "center"}}
-              variant="subtitle1"
-              color="white"
-            >
-              {overallSentimentScoreChange && overallSentimentScoreChange > 0
-                ? `▲ ${overallSentimentScoreChange}%`
-                : overallSentimentScoreChange && overallSentimentScoreChange < 0
-                ? `▼ ${-overallSentimentScoreChange}%`
-                : `Not Applicable`}
-            </Typography>
-          </Box>
+        <Box sx={{ display: 'flex', justifyContent: "center" }}>
+          <Typography sx={{ fontSize: "4rem", fontWeight: "bold" }}>
+            {overallSentimentScore ? overallSentimentScore : 0}
+          </Typography>
+          <Typography sx={{ ml:1, mt:3, fontSize: "2.5rem" }} color = "grey">
+            / 5
+          </Typography>
+        </Box>
+        <Box sx={{ 
+          borderRadius: 4, 
+          backgroundColor: backgroundColor,
+          mb:2,
+          width:150
+          }}>
+          <Typography sx={{ml:2, mr:2, textAlign: "center"}}
+            variant="subtitle1"
+            color="white"
+          >
+            {overallSentimentScoreChange && overallSentimentScoreChange > 0
+              ? `▲ ${overallSentimentScoreChange}%`
+              : overallSentimentScoreChange && overallSentimentScoreChange < 0
+              ? `▼ ${-overallSentimentScoreChange}%`
+              : `Not Applicable`}
+          </Typography>
         </Box>
       </ButtonBase>
     </div>
