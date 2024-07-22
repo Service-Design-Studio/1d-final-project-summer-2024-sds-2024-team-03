@@ -55,7 +55,7 @@ export default function SentimentCategoriesGraph({
   };
 
   const [sentimentScores, setSentimentScores] = useState<DataSet[]>([]);
-  const [selectedSubcategory, setSelectedSubcategory] = useState<string>("");
+  const [selectedSubproducts, setselectedSubproducts] = useState<string>("");
   // const [selectedFeedbackcategory, setSelectedFeedbackcategory] = useState<string>("");
   const [graphSubcategories, setGraphSubcategories] = useState<string[]>([]);
   // const [graphFeedbackcategories, setGraphFeedbackcategories] = useState<string[]>([]);
@@ -95,7 +95,7 @@ export default function SentimentCategoriesGraph({
     const {
       target: { value },
     } = event;
-    setSelectedSubcategory(value);
+    setselectedSubproducts(value);
   };
 
   // const handleFeedbackcategoryChange = (
@@ -123,7 +123,7 @@ export default function SentimentCategoriesGraph({
             setGraphSubcategories(data.map(({ subcategory }) => subcategory));
             // setGraphFeedbackcategories(data.map( ({ feedback_category }) => feedback_category ));
             const filteredData = data.filter(
-              (item) => selectedSubcategory.includes(item.subcategory)
+              (item) => selectedSubproducts.includes(item.subcategory)
               // && selectedFeedbackcategory.includes(item.feedback_category)
             );
             const filteredDataGroupedByFeedbackcategory = filteredData.reduce(
@@ -189,7 +189,7 @@ export default function SentimentCategoriesGraph({
           }
         });
     }
-  }, [fromDate, toDate, selectedProduct, selectedSource, selectedSubcategory]);
+  }, [fromDate, toDate, selectedProduct, selectedSource, selectedSubproducts]);
 
   /* Must have parent container with a defined size */
   return isDetailed ? (
@@ -230,19 +230,19 @@ export default function SentimentCategoriesGraph({
             style={{ fontWeight: "bold" }}
           >
             Sentiment vs Time trend for
-            {selectedSubcategory
-              ? ` ${selectedSubcategory}`
+            {selectedSubproducts
+              ? ` ${selectedSubproducts}`
               : " selected Subcategories"}
           </Typography>
           <FormControl sx={{ m: 0, width: "20%" }}>
             <InputLabel id="detailed-sentimentscoregraph-filter-subcategory-label">
-              Subcategories
+              Subproducts
             </InputLabel>
             <Select
               labelId="detailed-sentimentscoregraph-filter-subcategory-label"
               id="detailed-sentimentscoregraph-filter-subcategory"
               multiple={false}
-              value={selectedSubcategory}
+              value={selectedSubproducts}
               onChange={handleSubcategoryChange}
               input={
                 <OutlinedInput
@@ -446,7 +446,7 @@ export default function SentimentCategoriesGraph({
             component="h3"
             sx={{ marginRight: 2, width: "50%" }}
           >
-            Top 5 Positive Subcategories
+            Top 5 Positive Subproducts
           </Typography>
           <Box
             sx={{
