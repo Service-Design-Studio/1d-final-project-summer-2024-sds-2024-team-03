@@ -1,30 +1,36 @@
 Given(/I am on (Dashboard|Analytics|Actionables|Upload Data)/) do |page|
-  @current_page = page
-  case page
-  when 'Dashboard'
-    visit root_path
-  else
-    visit root_path
-    find('#nav-hamburger').click
-    within('.MuiList-root.MuiList-padding') do
-      find('.MuiListItemText-primary', text: page).click
-    end
-    find('.MuiButtonBase-root.MuiIconButton-root.MuiIconButton-sizeMedium.css-1yxmbwk').click
+  within('.MuiToolbar-root.MuiToolbar-gutters.MuiToolbar-regular.css-mnxgqr') do
+    find('button', text: page).click
   end
+  #@current_page = page
+  #case page
+  #when 'Dashboard'
+  #  visit root_path
+  #else
+  #  visit root_path
+  #  find('#nav-hamburger').click
+  #  within('.MuiList-root.MuiList-padding') do
+  #    find('.MuiListItemText-primary', text: page).click
+  #  end
+  #  find('.MuiButtonBase-root.MuiIconButton-root.MuiIconButton-sizeMedium.css-1yxmbwk').click
+  #end
 end
 
 Given(/I am on the (.*) page/) do |page|
-  case page
-  when 'Dashboard'
-    visit root_path
-  else
-    visit root_path
-    find('#nav-hamburger').click
-    within('.MuiList-root.MuiList-padding') do
-      find('.MuiListItemText-primary', text: page).click
-    end
-    find('.MuiButtonBase-root.MuiIconButton-root.MuiIconButton-sizeMedium.css-1yxmbwk').click
+  within('.MuiToolbar-root.MuiToolbar-gutters.MuiToolbar-regular.css-mnxgqr') do
+    find('button', text: page).click
   end
+  #case page
+  #when 'Dashboard'
+  #  visit root_path
+  #else
+  #  visit root_path
+  #  find('#nav-hamburger').click
+  #  within('.MuiList-root.MuiList-padding') do
+  #    find('.MuiListItemText-primary', text: page).click
+  #  end
+  #  find('.MuiButtonBase-root.MuiIconButton-root.MuiIconButton-sizeMedium.css-1yxmbwk').click
+  #end
 end
 
 When(/I select the hamburger menu/) do

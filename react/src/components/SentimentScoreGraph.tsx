@@ -311,121 +311,123 @@ export default function SentimentScoreGraph({
                     sx={{
                         display: "flex",
                         gap: 2,
-                        mt: 2,
                         width: "100%",
                         flexDirection: "row",
+                        justifyContent: "space-between",
+                        mb: 2,
                     }}
                 >
                     <Typography
                         variant="h6"
-                        component="h3"
-                        sx={{marginRight: 2, width: "50%"}}
+                        sx={{ fontWeight: "bold", width: "100%"}}
                     >
-                        Sentiment vs Time Trend for
+                        Sentiment Trend for
                         {selectedSubcategory
                             ? ` ${selectedSubcategory}`
-                            : " selected Subcategories"}
+                            : " Selected Subcategories"}
                     </Typography>
-                    <FormControl sx={{m: 0, width: "20%"}}>
-                        <InputLabel id="detailed-sentimentscoregraph-filter-subcategory-label">
-                            Subcategories
-                        </InputLabel>
-                        <Select
-                            labelId="detailed-sentimentscoregraph-filter-subcategory-label"
-                            id="detailed-sentimentscoregraph-filter-subcategory"
-                            multiple={false}
-                            value={selectedSubcategory}
-                            onChange={handleSubcategoryChange}
-                            input={
-                                <OutlinedInput
-                                    id="detailed-sentimentscoregraph-select-subcategory"
-                                    label="subcategory"
-                                    sx={{
-                                        borderRadius: 4,
-                                    }}
-                                />
-                            }
-                            renderValue={(selected) => (
-                                <Box
-                                    sx={{
-                                        display: "flex",
-                                        flexWrap: "wrap",
-                                        gap: 0.5,
-                                    }}
-                                >
-                                    <Chip key={selected} label={selected} />
-                                </Box>
-                            )}
-                            MenuProps={MenuProps}
+                    <Box sx={{display: "flex", gap: 2, mt: 1, width: "80%"}}>
+                        <FormControl sx={{m: 0, width: "50%"}}>
+                            <InputLabel id="detailed-sentimentscoregraph-filter-subcategory-label">
+                                Subcategories
+                            </InputLabel>
+                            <Select
+                                labelId="detailed-sentimentscoregraph-filter-subcategory-label"
+                                id="detailed-sentimentscoregraph-filter-subcategory"
+                                multiple={false}
+                                value={selectedSubcategory}
+                                onChange={handleSubcategoryChange}
+                                input={
+                                    <OutlinedInput
+                                        id="detailed-sentimentscoregraph-select-subcategory"
+                                        label="subcategory"
+                                        sx={{
+                                            borderRadius: 4,
+                                        }}
+                                    />
+                                }
+                                renderValue={(selected) => (
+                                    <Box
+                                        sx={{
+                                            display: "flex",
+                                            flexWrap: "wrap",
+                                            gap: 0.5,
+                                        }}
+                                    >
+                                        <Chip key={selected} label={selected} />
+                                    </Box>
+                                )}
+                                MenuProps={MenuProps}
+                            >
+                                {graphSubcategories.length > 0 ? (
+                                    graphSubcategories.map(
+                                        (subcategory: string) => (
+                                            <MenuItem
+                                                key={subcategory}
+                                                value={subcategory}
+                                                className="subcategory-option"
+                                            >
+                                                {subcategory}
+                                            </MenuItem>
+                                        )
+                                    )
+                                ) : (
+                                    <MenuItem disabled>
+                                        No data from selection
+                                    </MenuItem>
+                                )}
+                            </Select>
+                        </FormControl>
+                        <FormControl
+                            sx={{m: 0, width: "50%"}}
+                            disabled={!selectedSubcategory}
                         >
-                            {graphSubcategories.length > 0 ? (
-                                graphSubcategories.map(
-                                    (subcategory: string) => (
+                            <InputLabel id="detailed-sentimentscoregraph-filter-feedbackcategory-label">
+                                Feedback Categories
+                            </InputLabel>
+                            <Select
+                                labelId="detailed-sentimentscoregraph-filter-feedbackcategory-label"
+                                id="detailed-sentimentscoregraph-filter-feedbackcategory"
+                                multiple
+                                value={selectedFeedbackcategories}
+                                onChange={handleFeedbackcategoryChange}
+                                input={
+                                    <OutlinedInput
+                                        id="detailed-sentimentscoregraph-select-feedbackcategory"
+                                        label="feedbackcategory"
+                                        sx={{
+                                            borderRadius: 4,
+                                        }}
+                                    />
+                                }
+                                renderValue={(selected) => (
+                                    <Box
+                                        sx={{
+                                            display: "flex",
+                                            flexWrap: "wrap",
+                                            gap: 0.5,
+                                        }}
+                                    >
+                                        {selected.map((value) => (
+                                            <Chip key={value} label={value} />
+                                        ))}
+                                    </Box>
+                                )}
+                                MenuProps={MenuProps}
+                            >
+                                {graphFeedbackcategories.map(
+                                    (feedbackcategory: string) => (
                                         <MenuItem
-                                            key={subcategory}
-                                            value={subcategory}
-                                            className="subcategory-option"
+                                            key={feedbackcategory}
+                                            value={feedbackcategory}
                                         >
-                                            {subcategory}
+                                            {feedbackcategory}
                                         </MenuItem>
                                     )
-                                )
-                            ) : (
-                                <MenuItem disabled>
-                                    No data from selection
-                                </MenuItem>
-                            )}
-                        </Select>
-                    </FormControl>
-                    <FormControl
-                        sx={{m: 0, width: "20%"}}
-                        disabled={!selectedSubcategory}
-                    >
-                        <InputLabel id="detailed-sentimentscoregraph-filter-feedbackcategory-label">
-                            Feedback Categories
-                        </InputLabel>
-                        <Select
-                            labelId="detailed-sentimentscoregraph-filter-feedbackcategory-label"
-                            id="detailed-sentimentscoregraph-filter-feedbackcategory"
-                            multiple
-                            value={selectedFeedbackcategories}
-                            onChange={handleFeedbackcategoryChange}
-                            input={
-                                <OutlinedInput
-                                    id="detailed-sentimentscoregraph-select-feedbackcategory"
-                                    label="feedbackcategory"
-                                    sx={{
-                                        borderRadius: 4,
-                                    }}
-                                />
-                            }
-                            renderValue={(selected) => (
-                                <Box
-                                    sx={{
-                                        display: "flex",
-                                        flexWrap: "wrap",
-                                        gap: 0.5,
-                                    }}
-                                >
-                                    {selected.map((value) => (
-                                        <Chip key={value} label={value} />
-                                    ))}
-                                </Box>
-                            )}
-                            MenuProps={MenuProps}
-                        >
-                            {graphFeedbackcategories.map(
-                                (feedbackcategory: string) => (
-                                    <MenuItem
-                                        key={feedbackcategory}
-                                        value={feedbackcategory}
-                                    >
-                                        {feedbackcategory}
-                                    </MenuItem>
-                                )
-                            )}
-                        </Select>
-                    </FormControl>
+                                )}
+                            </Select>
+                        </FormControl>
+                    </Box>
                 </Box>
                 {sentimentScores.length === 0 ? (
                     <Typography variant="body2" color="grey">
@@ -565,10 +567,15 @@ export default function SentimentScoreGraph({
             >
                 <Typography
                     variant="h6"
-                    component="h3"
-                    sx={{marginRight: 2, width: "50%"}}
+                    sx={{ fontWeight: "bold", width: "100%" }}
                 >
-                    Sentiment vs Time trend for Product(s) (All Subcategories)
+                    Sentiment Trend for Selected Product(s)
+                </Typography>
+                <Typography
+                    color="grey"
+                    sx={{ fontWeight: "600", mb: 2, width: "100%" }}
+                >
+                    across all subcategories
                 </Typography>
                 {sentimentScores.length === 0 ? (
                     <Typography variant="body2" color="grey">

@@ -102,10 +102,16 @@ export default function Dashboard({
                         flex: 2,
                         display: "flex",
                         flexDirection: "column",
-                        justifyContent: "center",
+                        justifyContent: "flex-start",
                         boxShadow: "0px 0px 20px rgba(0, 0, 0, 0.1)",
                     }}
                 >
+                    <Typography
+                            variant="h6"
+                            sx={{ width: "100%", fontWeight: "bold", mb:2 }}
+                        >
+                            New Action Items
+                    </Typography>
                     <Box
                         sx={{
                             display: "flex",
