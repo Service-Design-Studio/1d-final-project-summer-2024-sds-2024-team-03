@@ -1,4 +1,5 @@
 import React, {useState, useEffect} from "react";
+import { Theme, useTheme } from "@mui/material/styles";
 import {styled} from "@mui/material/styles";
 import {
     Paper,
@@ -105,9 +106,29 @@ export default function ScrollDialog() {
             1.0
         ),
     ];
+
+    const theme = useTheme();
+
     return (
-        <React.Fragment>
-            <Button onClick={handleClickOpen("paper")}>View Analytics</Button>
+      <React.Fragment>
+        <Button onClick={handleClickOpen("paper")}
+          sx={{
+            borderRadius: 4,
+            fontWeight: 'bold',
+            fontSize: '1rem',
+            height: 50,
+            boxShadow: "0px 0px 20px rgba(0, 0, 0, 0.1)",
+            backgroundColor:
+              theme.palette.mode === "dark" ? "#555" : "#666",
+            transition: "transform 0.3s ease-in-out",
+            color: "#fff",
+            "&:hover": {
+              backgroundColor:
+                theme.palette.mode === "dark" ? "#666" : "#555",
+              transform: "scaleX(1.01) scaleY(1.02)",
+            },
+          }}
+        >View Analytics</Button>
             <Dialog
                 open={open}
                 onClose={handleClose}

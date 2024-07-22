@@ -641,7 +641,7 @@ export default function SentimentCategoriesGraph({
                 flexDirection: "column",
             }}
         >
-            <DialogSentimentCategoriesGraph />;
+            <DialogSentimentCategoriesGraph />
             <ButtonBase
                 component={Paper}
                 sx={{
