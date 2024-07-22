@@ -31,7 +31,7 @@ export default function SentimentDistribution({
     Frustrated: "red",
   };
 
-  const maxBarWidth = 300; // Maximum width for the bar
+  const maxBarWidth = 110; // Maximum width for the bar, matching the outer box width
 
   useEffect(() => {
     const urlPrefix =
@@ -104,23 +104,24 @@ export default function SentimentDistribution({
                   flexItem
                   sx={{borderRightWidth: 2, borderColor: "black"}}
                 />
-                <Box sx={{ 
-                  borderTopRightRadius: 10,
-                  borderBottomRightRadius: 10,
-                  backgroundColor: sentimentColor,
-                  width: barWidth,
-                  flex: 4, 
-                }}>
+                <Box sx={{ display: "flex", alignItems: "center", width: maxBarWidth }}>
+                  <Box sx={{ 
+                    borderTopRightRadius: 10,
+                    borderBottomRightRadius: 10,
+                    backgroundColor: sentimentColor,
+                    width: barWidth, // Adjusted width based on percentage
+                    height: "20px" // Ensure visibility of the bar
+                  }}>
+                  </Box>
+                  <Typography sx={{ ml: 1, width: 45 }}
+                    variant="body1"
+                    color="grey"
+                  >
+                    {sentimentDistribution[sentiment]
+                      ? `${sentimentDistribution[sentiment]}%`
+                      : "0%"}
+                  </Typography>
                 </Box>
-                <Typography sx={{ ml: 1, width: 45 }}
-                  variant="body1"
-                  color="grey"
-                >
-                  {sentimentDistribution[sentiment]
-                    ? `${sentimentDistribution[sentiment]}%`
-                    : "0%"
-                  }
-                </Typography>
               </Box>
             );
           })}
