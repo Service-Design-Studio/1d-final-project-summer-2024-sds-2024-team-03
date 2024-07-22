@@ -484,14 +484,19 @@ export default function SentimentCategoriesGraph({
                             flexGrow: 1,
                         }}
                     >
-                        <Typography
-                            variant="h6"
-                            component="h3"
-                            sx={{marginRight: 2}}
-                        >
-                            Sentiment Categorisation (
-                            {sortPositive ? "Positive" : "Negative"})
-                        </Typography>
+                        <Box sx={{display: "flex", justifyContent: "flex-start", flexGrow: 1,}}>
+                            <Typography
+                                variant="h6"
+                                sx={{fontWeight: "bold", mr:1}}
+                            >
+                                Sentiment Categorisation
+                            </Typography>
+                            <Typography
+                                variant="h6"
+                            >
+                                ({sortPositive ? "Positive" : "Negative"})
+                            </Typography>
+                        </Box>
                         <Button
                             variant="outlined"
                             onClick={() => setSortPositive(!sortPositive)}
@@ -500,7 +505,7 @@ export default function SentimentCategoriesGraph({
                             Sort
                         </Button>
                     </Box>
-                    <FormControl sx={{m: 0, minWidth: 200}}>
+                    <FormControl sx={{m: 0, minWidth: 240}}>
                         <InputLabel id="detailed-sentimentcategoriesgraph-filter-subcategory-label">
                             Subcategories
                         </InputLabel>
@@ -527,6 +532,7 @@ export default function SentimentCategoriesGraph({
                                     <Chip key={selected} label={selected} />
                                 </Box>
                             )}
+                            MenuProps={MenuProps}
                         >
                             {graphSubcategories.length > 0 ? (
                                 graphSubcategories.map((subcategory) => (
