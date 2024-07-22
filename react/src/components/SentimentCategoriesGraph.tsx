@@ -30,7 +30,6 @@ import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select, {SelectChangeEvent} from "@mui/material/Select";
 import Chip from "@mui/material/Chip";
-import DialogSentimentCategoriesGraph from "./DialogSentimentCategoriesGraph";
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -127,11 +126,8 @@ export default function SentimentCategoriesGraph({
         const records = dataGroupedByFeedbackcategory[key].filter(
             (record) =>
                 getColorByOrder(parseFloat(record.sentiment_score), ORDER) ===
-                sentiment
+                ORDER[sentiment]
         );
-        console.log(bar);
-        console.log(dataGroupedByFeedbackcategory);
-        console.log(records);
         setSelectedBarData(records);
         setOpen(true);
     };
@@ -699,19 +695,23 @@ export default function SentimentCategoriesGraph({
                                 indexScale={{type: "band", round: true}}
                                 tooltip={({id, indexValue, value, color}) => (
                                     <div
-                                    // STYLE
+                                        style={{
+                                            backgroundColor: "white",
+                                        }}
                                     >
                                         <span>
                                             {id} - {indexValue}:{" "}
                                             <strong>{value}</strong>{" "}
                                         </span>
+                                        <br></br>
                                         <span
                                             style={{
                                                 color: "grey",
                                                 fontStyle: "italic",
                                             }}
                                         >
-                                            <strong>Click</strong> to view data
+                                            <strong>Click</strong> to view
+                                            related data
                                         </span>
                                     </div>
                                 )}
@@ -858,9 +858,6 @@ export default function SentimentCategoriesGraph({
                                                             Feedback Category
                                                         </TableCell>
                                                         <TableCell align="left">
-                                                            Sentiment
-                                                        </TableCell>
-                                                        <TableCell align="left">
                                                             Sentiment Score
                                                         </TableCell>
                                                     </TableRow>
@@ -895,11 +892,6 @@ export default function SentimentCategoriesGraph({
                                                                 <TableCell align="left">
                                                                     {
                                                                         row.feedback_category
-                                                                    }
-                                                                </TableCell>
-                                                                <TableCell align="left">
-                                                                    {
-                                                                        row.sentiment
                                                                     }
                                                                 </TableCell>
                                                                 <TableCell align="left">
@@ -940,7 +932,6 @@ export default function SentimentCategoriesGraph({
                 flexDirection: "column",
             }}
         >
-            <DialogSentimentCategoriesGraph />
             <ButtonBase
                 component={Paper}
                 sx={{
