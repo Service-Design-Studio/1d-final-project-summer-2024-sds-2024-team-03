@@ -1,5 +1,6 @@
 class ActionablesController < ApplicationController
   before_action :set_actionable, only: %i[ show edit update destroy ]
+  skip_before_action :verify_authenticity_token, only: [:create]
 
   # GET /actionables or /actionables.json
   def index
