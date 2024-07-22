@@ -170,147 +170,140 @@ export default function SentimentCategoriesGraph({
             !fromDate ||
             !toDate ||
             selectedProduct.length === 0 ||
-            selectedSource.length === 0
+            selectedSource.length === 0 ||
+            !selectedSubcategory
         )
             setBars([]);
         if (isDetailed) {
-            if (selectedSubcategory) {
-                fetch(
-                    `${urlPrefix}/analytics/get_sentiment_scores?fromDate=${fromDate_string}&toDate=${toDate_string}&product=${selectedProduct}&source=${selectedSource}`
-                )
-                    .then((response) => response.json())
-                    .then((data: DataRecord[]) => {
-                        if (data.length > 0) {
-                            setGraphSubcategories(
-                                Array.from(
-                                    new Set(
-                                        data.map(({subcategory}) => subcategory)
-                                    )
+            fetch(
+                `${urlPrefix}/analytics/get_sentiment_scores?fromDate=${fromDate_string}&toDate=${toDate_string}&product=${selectedProduct}&source=${selectedSource}`
+            )
+                .then((response) => response.json())
+                .then((data: DataRecord[]) => {
+                    if (data.length > 0) {
+                        setGraphSubcategories(
+                            Array.from(
+                                new Set(
+                                    data.map(({subcategory}) => subcategory)
                                 )
-                            );
-                            const filteredSubcategories = data.filter(
-                                (item) => {
-                                    if (item.subcategory)
-                                        return selectedSubcategory.includes(
-                                            item.subcategory
-                                        );
-                                }
-                            );
-                            const dataGroupedByFeedbackcategory: Record<
-                                string,
-                                DataRecord[]
-                            > = filteredSubcategories.reduce((acc, curr) => {
-                                const key = `${curr.subcategory} > ${curr.feedback_category}`;
-                                if (!acc[key]) {
-                                    acc[key] = [];
-                                }
-                                acc[key].push(curr);
-                                return acc;
-                            }, {} as Record<string, DataRecord[]>);
+                            )
+                        );
+                        const filteredSubcategories = data.filter((item) => {
+                            if (item.subcategory)
+                                return selectedSubcategory.includes(
+                                    item.subcategory
+                                );
+                        });
+                        const dataGroupedByFeedbackcategory: Record<
+                            string,
+                            DataRecord[]
+                        > = filteredSubcategories.reduce((acc, curr) => {
+                            const key = `${curr.subcategory} > ${curr.feedback_category}`;
+                            if (!acc[key]) {
+                                acc[key] = [];
+                            }
+                            acc[key].push(curr);
+                            return acc;
+                        }, {} as Record<string, DataRecord[]>);
 
-                            const barsData: Bar[] = Object.entries(
-                                dataGroupedByFeedbackcategory
-                            ).map(([key, records]) => {
-                                const total = records.length;
-                                const sentimentScores = records.map((r) =>
-                                    parseFloat(r.sentiment_score)
-                                );
-                                const frustratedRecords =
-                                    sentimentScores.filter(
-                                        (score) => score <= 1
-                                    );
-                                const unsatisfiedRecords =
-                                    sentimentScores.filter(
-                                        (score) => score <= 2 && score > 1
-                                    );
-                                const neutralRecords = sentimentScores.filter(
-                                    (score) => score <= 3 && score > 2
-                                );
-                                const satisfiedRecords = sentimentScores.filter(
-                                    (score) => score <= 4 && score > 3
-                                );
-                                const excitedRecords = sentimentScores.filter(
-                                    (score) => score > 4
-                                );
+                        const barsData: Bar[] = Object.entries(
+                            dataGroupedByFeedbackcategory
+                        ).map(([key, records]) => {
+                            const total = records.length;
+                            const sentimentScores = records.map((r) =>
+                                parseFloat(r.sentiment_score)
+                            );
+                            const frustratedRecords = sentimentScores.filter(
+                                (score) => score <= 1
+                            );
+                            const unsatisfiedRecords = sentimentScores.filter(
+                                (score) => score <= 2 && score > 1
+                            );
+                            const neutralRecords = sentimentScores.filter(
+                                (score) => score <= 3 && score > 2
+                            );
+                            const satisfiedRecords = sentimentScores.filter(
+                                (score) => score <= 4 && score > 3
+                            );
+                            const excitedRecords = sentimentScores.filter(
+                                (score) => score > 4
+                            );
 
-                                return {
-                                    category: key,
-                                    Frustrated: parseFloat(
-                                        (
-                                            (100 * frustratedRecords.length) /
-                                            total
-                                        ).toFixed(1)
-                                    ),
-                                    FrustratedColor: getColorByOrder(
-                                        frustratedRecords.reduce(
-                                            (sum, score) => sum + score,
-                                            0
-                                        ) / frustratedRecords.length || 0,
-                                        ORDER
-                                    ),
-                                    Unsatisfied: parseFloat(
-                                        (
-                                            (100 * unsatisfiedRecords.length) /
-                                            total
-                                        ).toFixed(1)
-                                    ),
-                                    UnsatisfiedColor: getColorByOrder(
-                                        unsatisfiedRecords.reduce(
-                                            (sum, score) => sum + score,
-                                            0
-                                        ) / unsatisfiedRecords.length || 0,
-                                        ORDER
-                                    ),
-                                    Neutral: parseFloat(
-                                        (
-                                            (100 * neutralRecords.length) /
-                                            total
-                                        ).toFixed(1)
-                                    ),
-                                    NeutralColor: getColorByOrder(
-                                        neutralRecords.reduce(
-                                            (sum, score) => sum + score,
-                                            0
-                                        ) / neutralRecords.length || 0,
-                                        ORDER
-                                    ),
-                                    Satisfied: parseFloat(
-                                        (
-                                            (100 * satisfiedRecords.length) /
-                                            total
-                                        ).toFixed(1)
-                                    ),
-                                    SatisfiedColor: getColorByOrder(
-                                        satisfiedRecords.reduce(
-                                            (sum, score) => sum + score,
-                                            0
-                                        ) / satisfiedRecords.length || 0,
-                                        ORDER
-                                    ),
-                                    Excited: parseFloat(
-                                        (
-                                            (100 * excitedRecords.length) /
-                                            total
-                                        ).toFixed(1)
-                                    ),
-                                    ExcitedColor: getColorByOrder(
-                                        excitedRecords.reduce(
-                                            (sum, score) => sum + score,
-                                            0
-                                        ) / excitedRecords.length || 0,
-                                        ORDER
-                                    ),
-                                };
-                            });
-                            console.log(barsData);
-                            setBars(barsData);
-                        } else {
-                            setBars([]);
-                        }
-                    });
-            } else {
-                setBars([]);
-            }
+                            return {
+                                category: key,
+                                Frustrated: parseFloat(
+                                    (
+                                        (100 * frustratedRecords.length) /
+                                        total
+                                    ).toFixed(1)
+                                ),
+                                FrustratedColor: getColorByOrder(
+                                    frustratedRecords.reduce(
+                                        (sum, score) => sum + score,
+                                        0
+                                    ) / frustratedRecords.length || 0,
+                                    ORDER
+                                ),
+                                Unsatisfied: parseFloat(
+                                    (
+                                        (100 * unsatisfiedRecords.length) /
+                                        total
+                                    ).toFixed(1)
+                                ),
+                                UnsatisfiedColor: getColorByOrder(
+                                    unsatisfiedRecords.reduce(
+                                        (sum, score) => sum + score,
+                                        0
+                                    ) / unsatisfiedRecords.length || 0,
+                                    ORDER
+                                ),
+                                Neutral: parseFloat(
+                                    (
+                                        (100 * neutralRecords.length) /
+                                        total
+                                    ).toFixed(1)
+                                ),
+                                NeutralColor: getColorByOrder(
+                                    neutralRecords.reduce(
+                                        (sum, score) => sum + score,
+                                        0
+                                    ) / neutralRecords.length || 0,
+                                    ORDER
+                                ),
+                                Satisfied: parseFloat(
+                                    (
+                                        (100 * satisfiedRecords.length) /
+                                        total
+                                    ).toFixed(1)
+                                ),
+                                SatisfiedColor: getColorByOrder(
+                                    satisfiedRecords.reduce(
+                                        (sum, score) => sum + score,
+                                        0
+                                    ) / satisfiedRecords.length || 0,
+                                    ORDER
+                                ),
+                                Excited: parseFloat(
+                                    (
+                                        (100 * excitedRecords.length) /
+                                        total
+                                    ).toFixed(1)
+                                ),
+                                ExcitedColor: getColorByOrder(
+                                    excitedRecords.reduce(
+                                        (sum, score) => sum + score,
+                                        0
+                                    ) / excitedRecords.length || 0,
+                                    ORDER
+                                ),
+                            };
+                        });
+                        console.log(barsData);
+                        setBars(barsData);
+                    } else {
+                        setBars([]);
+                    }
+                });
         } else {
             fetch(
                 `${urlPrefix}/analytics/get_sentiment_scores?fromDate=${fromDate_string}&toDate=${toDate_string}&product=${selectedProduct}&source=${selectedSource}`
