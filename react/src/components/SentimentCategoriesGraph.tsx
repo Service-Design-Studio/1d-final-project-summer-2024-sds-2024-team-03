@@ -121,27 +121,26 @@ export default function SentimentCategoriesGraph({
             const aValues = [
                 a.Frustrated,
                 a.Unsatisfied,
-                a.Neutral,
                 a.Satisfied,
                 a.Excited,
             ];
             const bValues = [
                 b.Frustrated,
                 b.Unsatisfied,
-                b.Neutral,
                 b.Satisfied,
                 b.Excited,
             ];
 
             if (negative) {
-                for (let i = 0; i < aValues.length; i++) {
-                    if (bValues[i] !== aValues[i]) {
+                for (let i = 0; i < 2; i++) {
+                    // Only consider Frustrated and Unsatisfied
+                    if (aValues[i] !== bValues[i]) {
                         return aValues[i] - bValues[i];
                     }
                 }
             } else {
-                // Highest to lowest no. of excited->satisfied->neutral->unsatisfied->frustrated
-                for (let i = 0; i < aValues.length; i++) {
+                for (let i = 2; i < 4; i++) {
+                    // For highest to lowest positive, only consider Satisfied and Excited
                     if (aValues[i] !== bValues[i]) {
                         return bValues[i] - aValues[i];
                     }
