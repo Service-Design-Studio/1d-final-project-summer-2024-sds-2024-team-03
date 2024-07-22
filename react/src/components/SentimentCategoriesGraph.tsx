@@ -129,6 +129,9 @@ export default function SentimentCategoriesGraph({
                 getColorByOrder(parseFloat(record.sentiment_score), ORDER) ===
                 sentiment
         );
+        console.log(bar);
+        console.log(dataGroupedByFeedbackcategory);
+        console.log(records);
         setSelectedBarData(records);
         setOpen(true);
     };
@@ -694,6 +697,24 @@ export default function SentimentCategoriesGraph({
                                 layout="horizontal"
                                 valueScale={{type: "linear"}}
                                 indexScale={{type: "band", round: true}}
+                                tooltip={({id, indexValue, value, color}) => (
+                                    <div
+                                    // STYLE
+                                    >
+                                        <span>
+                                            {id} - {indexValue}:{" "}
+                                            <strong>{value}</strong>{" "}
+                                        </span>
+                                        <span
+                                            style={{
+                                                color: "grey",
+                                                fontStyle: "italic",
+                                            }}
+                                        >
+                                            <strong>Click</strong> to view data
+                                        </span>
+                                    </div>
+                                )}
                                 defs={[
                                     {
                                         id: "dots",
@@ -788,7 +809,7 @@ export default function SentimentCategoriesGraph({
                                         fontWeight: "bold",
                                     }}
                                 >
-                                    Analytics Raw Data
+                                    From the data
                                     <Button
                                         onClick={handleClose}
                                         sx={{borderRadius: 4}}
