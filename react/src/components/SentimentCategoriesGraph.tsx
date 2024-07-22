@@ -484,14 +484,19 @@ export default function SentimentCategoriesGraph({
                             flexGrow: 1,
                         }}
                     >
-                        <Typography
-                            variant="h6"
-                            component="h3"
-                            sx={{marginRight: 2}}
-                        >
-                            Sentiment Categorisation (
-                            {sortPositive ? "Positive" : "Negative"})
-                        </Typography>
+                        <Box sx={{display: "flex", justifyContent: "flex-start", flexGrow: 1,}}>
+                            <Typography
+                                variant="h6"
+                                sx={{fontWeight: "bold", mr:1}}
+                            >
+                                Sentiment Categorisation
+                            </Typography>
+                            <Typography
+                                variant="h6"
+                            >
+                                ({sortPositive ? "Positive" : "Negative"})
+                            </Typography>
+                        </Box>
                         <Button
                             variant="outlined"
                             onClick={() => setSortPositive(!sortPositive)}
@@ -500,7 +505,7 @@ export default function SentimentCategoriesGraph({
                             Sort
                         </Button>
                     </Box>
-                    <FormControl sx={{m: 0, minWidth: 200}}>
+                    <FormControl sx={{m: 0, minWidth: 240}}>
                         <InputLabel id="detailed-sentimentcategoriesgraph-filter-subcategory-label">
                             Subcategories
                         </InputLabel>
@@ -527,6 +532,7 @@ export default function SentimentCategoriesGraph({
                                     <Chip key={selected} label={selected} />
                                 </Box>
                             )}
+                            MenuProps={MenuProps}
                         >
                             {graphSubcategories.length > 0 ? (
                                 graphSubcategories.map((subcategory) => (
@@ -631,7 +637,7 @@ export default function SentimentCategoriesGraph({
                                 tickSize: 5,
                                 tickPadding: 5,
                                 tickRotation: 0,
-                                legend: "Percent",
+                                legend: "Percentage",
                                 legendPosition: "middle",
                                 legendOffset: 32,
                                 truncateTickAt: 0,
@@ -717,14 +723,14 @@ export default function SentimentCategoriesGraph({
                         width: "100%",
                         alignItems: "stretch",
                         gap: 2,
-                        mt: 2,
+                        mt: 1,
+                        mb: 1,
                     }}
                 >
                     <Box sx={{width: "50%"}}>
                         <Typography
                             variant="h6"
-                            component="h3"
-                            sx={{marginRight: 2, width: "50%"}}
+                            sx={{ fontWeight: "bold" }}
                         >
                             Top 5 Positive Categories
                         </Typography>
@@ -751,9 +757,9 @@ export default function SentimentCategoriesGraph({
                                     indexBy="category"
                                     margin={{
                                         top: 10,
-                                        right: 50,
+                                        right: 10,
                                         bottom: 50,
-                                        left: 250,
+                                        left: 240,
                                     }}
                                     padding={0.3}
                                     minValue={0}
@@ -805,7 +811,7 @@ export default function SentimentCategoriesGraph({
                                         tickSize: 5,
                                         tickPadding: 5,
                                         tickRotation: 0,
-                                        legend: "Percent",
+                                        legend: "Percentage",
                                         legendPosition: "middle",
                                         legendOffset: 32,
                                         truncateTickAt: 0,
@@ -848,8 +854,7 @@ export default function SentimentCategoriesGraph({
                     <Box sx={{width: "50%"}}>
                         <Typography
                             variant="h6"
-                            component="h3"
-                            sx={{marginRight: 2, width: "50%"}}
+                            sx={{ fontWeight: "bold" }}
                         >
                             Top 5 Negative Categories
                         </Typography>
@@ -876,9 +881,9 @@ export default function SentimentCategoriesGraph({
                                     indexBy="category"
                                     margin={{
                                         top: 10,
-                                        right: 50,
+                                        right: 10,
                                         bottom: 50,
-                                        left: 250,
+                                        left: 240,
                                     }}
                                     padding={0.3}
                                     minValue={0}
@@ -930,7 +935,7 @@ export default function SentimentCategoriesGraph({
                                         tickSize: 5,
                                         tickPadding: 5,
                                         tickRotation: 0,
-                                        legend: "Percent",
+                                        legend: "Percentage",
                                         legendPosition: "middle",
                                         legendOffset: 32,
                                         truncateTickAt: 0,

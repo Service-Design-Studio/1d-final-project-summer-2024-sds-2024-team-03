@@ -578,7 +578,7 @@ export default function CategoriesSunburstChart({
                     display: "flex",
                     flexDirection: "column",
                     alignItems: "center",
-                    justifyContent: "center",
+                    justifyContent: "space-between",
                     p: 2,
                     borderRadius: 4,
                     flex: 1,
@@ -598,27 +598,16 @@ export default function CategoriesSunburstChart({
                 id="overall-categoriessunburstchart"
                 onClick={() => setSelectedMenu!("analytics")}
             >
-                <Box
-                    sx={{
-                        display: "flex",
-                        gap: 2,
-                        mt: 2,
-                        width: "100%",
-                        flexDirection: "row",
-                    }}
+                <Typography
+                    variant="h6"
+                    sx={{ width: "100%", fontWeight: "bold" }}
                 >
-                    <Typography
-                        variant="h6"
-                        component="h3"
-                        sx={{marginRight: 2, width: "100%"}}
-                    >
-                        Distribution of Categories
-                    </Typography>
-                </Box>
-                {components.length === 0 ? (
-                    <Typography variant="body2" color="grey">
-                        No data
-                    </Typography>
+                    Distribution of Categories
+                </Typography>
+                    {components.length === 0 ? (
+                <Typography variant="body2" color="grey">
+                    No data
+                </Typography>
                 ) : (
                     <Box
                         sx={{
@@ -675,7 +664,7 @@ export default function CategoriesSunburstChart({
                             sx={{
                                 display: "grid",
                                 gridTemplateColumns: "1fr 1fr 1fr",
-                                gap: 2,
+                                gap: 1,
                                 width: "100%",
                                 alignItems: "center",
                             }}

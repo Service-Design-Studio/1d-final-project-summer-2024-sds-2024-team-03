@@ -270,7 +270,7 @@ export function FileDrop({
                 backgroundColor:
                     theme.palette.mode === "dark" ? "#222" : "#ccc",
                 boxShadow: `inset 0 0 20px ${
-                    theme.palette.mode === "dark" ? "#555" : "#aaa"
+                    theme.palette.mode === "dark" ? "#333" : "#aaa"
                 }`,
             }}
         >
@@ -304,10 +304,10 @@ export function FileDrop({
                     sx={{
                         borderRadius: 8,
                         fontSize: "1.1rem",
-                        backgroundColor: "#8D1927",
+                        backgroundColor: theme.palette.mode === "dark" ? "#8D0000" : "#BD0000",
                         padding: "0.5rem 2rem",
                         "&:hover": {
-                            backgroundColor: "#444",
+                          backgroundColor: theme.palette.mode === "dark" ? "#720000" : "#980000",
                         },
                     }}
                 >

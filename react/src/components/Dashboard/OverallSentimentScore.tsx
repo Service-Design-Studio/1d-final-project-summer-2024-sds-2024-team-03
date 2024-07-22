@@ -95,7 +95,7 @@ export default function OverallSentimentScore({
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-          justifyContent: "center",
+          justifyContent: "space-between",
           p: 2,
           borderRadius: 4,
           flex: 1,
@@ -114,27 +114,37 @@ export default function OverallSentimentScore({
         id="overall-sentiment-score"
         onClick={() => setSelectedMenu("analytics")}
       >
-        <Typography variant="h6" color="grey" style={{ fontWeight: "bold" }}>
-          Overall Sentiment Score
-        </Typography>
-        <Typography sx={{mt:1}} variant="h4">
-          {overallSentimentScore ? overallSentimentScore : 0} / 5
-        </Typography>
-        <Box sx={{ 
-          borderRadius: 4, 
-          backgroundColor: backgroundColor,
-          mt:2
-          }}>
-          <Typography sx={{ml:2, mr:2}}
-            variant="subtitle1"
-            color="white"
-          >
-            {overallSentimentScoreChange && overallSentimentScoreChange > 0
-              ? `▲ ${overallSentimentScoreChange}%`
-              : overallSentimentScoreChange && overallSentimentScoreChange < 0
-              ? `▼ ${-overallSentimentScoreChange}%`
-              : `Not Applicable`}
+        <Box sx={{ width: '100%', textAlign: 'center' }}>
+          <Typography variant="h6" style={{ fontWeight: "bold" }}>
+            Overall Sentiment Score
           </Typography>
+        </Box>
+        <Box>
+          <Box sx={{ display: 'flex', alignItems: "center" }}>
+            <Typography sx={{ mt:1, fontSize: "4rem", fontWeight: "bold" }}>
+              {overallSentimentScore ? overallSentimentScore : 0}
+            </Typography>
+            <Typography sx={{ ml:1, mt:3, fontSize: "2.5rem" }} color = "grey">
+              / 5
+            </Typography>
+          </Box>
+          <Box sx={{ 
+            borderRadius: 4, 
+            backgroundColor: backgroundColor,
+            mt:1,
+            mb:2
+            }}>
+            <Typography sx={{ml:2, mr:2, textAlign: "center"}}
+              variant="subtitle1"
+              color="white"
+            >
+              {overallSentimentScoreChange && overallSentimentScoreChange > 0
+                ? `▲ ${overallSentimentScoreChange}%`
+                : overallSentimentScoreChange && overallSentimentScoreChange < 0
+                ? `▼ ${-overallSentimentScoreChange}%`
+                : `Not Applicable`}
+            </Typography>
+          </Box>
         </Box>
       </ButtonBase>
     </div>
