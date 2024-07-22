@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Theme, useTheme } from "@mui/material/styles";
-import { Paper, Typography, ButtonBase } from "@mui/material";
+import { Paper, Box, Typography, ButtonBase } from "@mui/material";
 import dayjs, { Dayjs } from "dayjs";
 
 interface OverallSentimentScoreProps {
@@ -80,6 +80,13 @@ export default function OverallSentimentScore({
 
   const theme = useTheme();
 
+  const backgroundColor =
+    overallSentimentScoreChange && overallSentimentScoreChange > 0
+      ? "darkgreen" // Light green background for increase
+      : overallSentimentScoreChange && overallSentimentScoreChange < 0
+      ? "red" // Light red background for decrease
+      : "grey"
+
   return (
     <div>
       <ButtonBase
@@ -110,25 +117,25 @@ export default function OverallSentimentScore({
         <Typography variant="h6" color="grey" style={{ fontWeight: "bold" }}>
           Overall Sentiment Score
         </Typography>
-        <Typography variant="h4">
-          {overallSentimentScore ? overallSentimentScore : 0}/5
+        <Typography sx={{mt:1}} variant="h4">
+          {overallSentimentScore ? overallSentimentScore : 0} / 5
         </Typography>
-        <Typography
-          variant="subtitle1"
-          color={
-            overallSentimentScoreChange && overallSentimentScoreChange > 0
-              ? "darkgreen"
+        <Box sx={{ 
+          borderRadius: 4, 
+          backgroundColor: backgroundColor,
+          mt:2
+          }}>
+          <Typography sx={{ml:2, mr:2}}
+            variant="subtitle1"
+            color="white"
+          >
+            {overallSentimentScoreChange && overallSentimentScoreChange > 0
+              ? `▲ ${overallSentimentScoreChange}%`
               : overallSentimentScoreChange && overallSentimentScoreChange < 0
-              ? "red"
-              : "grey"
-          }
-        >
-          {overallSentimentScoreChange && overallSentimentScoreChange > 0
-            ? `↑ ${overallSentimentScoreChange}% Increase`
-            : overallSentimentScoreChange && overallSentimentScoreChange < 0
-            ? `↓ ${overallSentimentScoreChange}% Decrease`
-            : `Not Applicable`}
-        </Typography>
+              ? `▼ ${-overallSentimentScoreChange}%`
+              : `Not Applicable`}
+          </Typography>
+        </Box>
       </ButtonBase>
     </div>
   );
