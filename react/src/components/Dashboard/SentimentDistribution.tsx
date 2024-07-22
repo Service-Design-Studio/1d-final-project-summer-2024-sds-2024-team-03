@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Theme, useTheme } from "@mui/material/styles";
-import { Paper, Typography, ButtonBase } from "@mui/material";
+import { Paper, Typography, Box, ButtonBase, Divider } from "@mui/material";
 import { Dayjs } from "dayjs";
 
 interface SentimentDistributionProps {
@@ -26,10 +26,12 @@ export default function SentimentDistribution({
   const order: Record<string, string> = {
     Excited: "darkgreen",
     Satisfied: "green",
-    Neutral: "blue",
+    Neutral: "darkgray",
     Unsatisfied: "orange",
     Frustrated: "red",
   };
+
+  const maxBarWidth = 300; // Maximum width for the bar
 
   useEffect(() => {
     const urlPrefix =
@@ -80,23 +82,48 @@ export default function SentimentDistribution({
         id="sentiment-distribution"
         onClick={() => setSelectedMenu("analytics")}
       >
-        <Typography variant="h6" color="grey" style={{ fontWeight: "bold" }}>
+        <Typography variant="h6" color="grey" sx={{ fontWeight: "bold", mb:2 }}>
           Distribution of Sentiment
         </Typography>
         {Object.entries(order)
           .reverse()
-          .map(([sentiment, sentimentColor]) => (
-            <Typography
-              key={sentiment}
-              variant="body1"
-              style={{ color: sentimentColor }}
-            >
-              {sentimentDistribution[sentiment]
-                ? `${sentimentDistribution[sentiment]}% `
-                : "0% "}
-              {sentiment}
-            </Typography>
-          ))}
+          .map(([sentiment, sentimentColor]) => {
+            const sentimentValue = parseFloat(sentimentDistribution[sentiment] || "0");
+            const barWidth = (sentimentValue / 100) * maxBarWidth;
+            
+            return (
+              <Box sx={{ display: "flex", mb: 1 }} key={sentiment}>
+                <Typography sx={{mr:1, textAlign: "right", width: 80}}
+                  variant="body1"
+                  color="grey"
+                >
+                  {sentiment}
+                </Typography>
+                <Divider
+                  orientation="vertical"
+                  flexItem
+                  sx={{borderRightWidth: 2, borderColor: "black"}}
+                />
+                <Box sx={{ 
+                  borderTopRightRadius: 10,
+                  borderBottomRightRadius: 10,
+                  backgroundColor: sentimentColor,
+                  width: barWidth,
+                  flex: 4, 
+                }}>
+                </Box>
+                <Typography sx={{ ml: 1, width: 45 }}
+                  variant="body1"
+                  color="grey"
+                >
+                  {sentimentDistribution[sentiment]
+                    ? `${sentimentDistribution[sentiment]}%`
+                    : "0%"
+                  }
+                </Typography>
+              </Box>
+            );
+          })}
       </ButtonBase>
     </div>
   );
