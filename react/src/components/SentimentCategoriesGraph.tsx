@@ -43,6 +43,27 @@ const MenuProps = {
         },
     },
 };
+const StyledTableCell = styled(TableCell)(({theme}) => ({
+    [`&.${tableCellClasses.head}`]: {
+        backgroundColor: theme.palette.common.black,
+        color: theme.palette.common.white,
+        fontWeight: "bold",
+    },
+    [`&.${tableCellClasses.body}`]: {
+        fontSize: 14,
+    },
+}));
+
+const StyledTableRow = styled(TableRow)(({theme}) => ({
+    "&:nth-of-type(odd)": {
+        backgroundColor: theme.palette.action.hover,
+    },
+    // hide last border
+    "&:last-child td, &:last-child th": {
+        border: 0,
+    },
+}));
+
 const ORDER: Record<string, string> = {
     Excited: "darkgreen",
     Satisfied: "green",
@@ -144,11 +165,6 @@ export default function SentimentCategoriesGraph({
             }
         }
     }, [open]);
-
-    const convertDate = (dateString: string) => {
-        const [day, month, year] = dateString.split("/");
-        return new Date(`${year}-${month}-${day}`).getTime();
-    };
 
     const formatDate = (dateString: string): string => {
         const [day, month, year] = dateString.split("/").map(Number);
@@ -809,7 +825,7 @@ export default function SentimentCategoriesGraph({
                                         fontWeight: "bold",
                                     }}
                                 >
-                                    From the data
+                                    Relevant data
                                     <Button
                                         onClick={handleClose}
                                         sx={{borderRadius: 4}}
@@ -839,69 +855,69 @@ export default function SentimentCategoriesGraph({
                                             >
                                                 <TableHead>
                                                     <TableRow>
-                                                        <TableCell>
+                                                        <StyledTableCell>
                                                             Date
-                                                        </TableCell>
-                                                        <TableCell align="left">
+                                                        </StyledTableCell>
+                                                        <StyledTableCell align="left">
                                                             Feedback
-                                                        </TableCell>
-                                                        <TableCell align="left">
+                                                        </StyledTableCell>
+                                                        <StyledTableCell align="left">
                                                             Source
-                                                        </TableCell>
-                                                        <TableCell align="left">
+                                                        </StyledTableCell>
+                                                        <StyledTableCell align="left">
                                                             Product
-                                                        </TableCell>
-                                                        <TableCell align="left">
+                                                        </StyledTableCell>
+                                                        <StyledTableCell align="left">
                                                             Subcategory
-                                                        </TableCell>
-                                                        <TableCell align="left">
+                                                        </StyledTableCell>
+                                                        <StyledTableCell align="left">
                                                             Feedback Category
-                                                        </TableCell>
-                                                        <TableCell align="left">
+                                                        </StyledTableCell>
+                                                        <StyledTableCell align="left">
                                                             Sentiment Score
-                                                        </TableCell>
+                                                        </StyledTableCell>
                                                     </TableRow>
                                                 </TableHead>
                                                 <TableBody>
                                                     {selectedBarData.map(
                                                         (row, index) => (
-                                                            <TableRow
+                                                            <StyledTableRow
                                                                 key={index}
                                                             >
-                                                                <TableCell>
+                                                                <StyledTableCell>
                                                                     {row.date}
-                                                                </TableCell>
-                                                                <TableCell align="left">
+                                                                </StyledTableCell>
+                                                                <StyledTableCell align="left">
                                                                     {
                                                                         row.feedback
                                                                     }
-                                                                </TableCell>
-                                                                <TableCell align="left">
+                                                                </StyledTableCell>
+                                                                <StyledTableCell align="left">
                                                                     {row.source}
-                                                                </TableCell>
-                                                                <TableCell align="left">
+                                                                </StyledTableCell>
+                                                                <StyledTableCell align="left">
                                                                     {
                                                                         row.product
                                                                     }
-                                                                </TableCell>
-                                                                <TableCell align="left">
+                                                                </StyledTableCell>
+                                                                <StyledTableCell align="left">
                                                                     {
                                                                         row.subcategory
                                                                     }
-                                                                </TableCell>
-                                                                <TableCell align="left">
+                                                                </StyledTableCell>
+                                                                <StyledTableCell align="left">
                                                                     {
                                                                         row.feedback_category
                                                                     }
-                                                                </TableCell>
-                                                                <TableCell align="left">
+                                                                </StyledTableCell>
+                                                                <StyledTableCell align="left">
                                                                     {parseFloat(
                                                                         row.sentiment_score
                                                                     ).toFixed(
                                                                         1
                                                                     )}
-                                                                </TableCell>
-                                                            </TableRow>
+                                                                </StyledTableCell>
+                                                            </StyledTableRow>
                                                         )
                                                     )}
                                                 </TableBody>
