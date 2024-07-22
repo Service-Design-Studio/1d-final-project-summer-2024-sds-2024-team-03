@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useState, useRef} from "react";
 import {Theme, useTheme} from "@mui/material/styles";
 import {
     Paper,
@@ -7,7 +7,21 @@ import {
     ButtonBase,
     Divider,
     Button,
+    Dialog,
+    DialogProps,
+    DialogContent,
+    DialogContentText,
+    DialogTitle,
+    Table,
+    TableBody,
+    TableCell,
+    tableCellClasses,
+    TableContainer,
+    TableHead,
+    TableRow,
 } from "@mui/material";
+import {styled} from "@mui/material/styles";
+import CloseIcon from "@mui/icons-material/Close";
 import {Dayjs} from "dayjs";
 import {ResponsiveBar} from "@nivo/bar";
 import OutlinedInput from "@mui/material/OutlinedInput";
@@ -63,6 +77,9 @@ export default function SentimentCategoriesGraph({
         product: string;
         subcategory: string;
         feedback_category: string;
+        date: string;
+        feedback: string;
+        source: string;
     };
 
     type Bar = {
@@ -85,6 +102,13 @@ export default function SentimentCategoriesGraph({
     const [sortPositive, setSortPositive] = useState<boolean>(true);
     const [viewAll, setViewAll] = useState(false);
 
+    const [dataGroupedByFeedbackcategory, setDataGroupedByFeedbackcategory] =
+        useState<Record<string, DataRecord[]>>({});
+    const [selectedBarData, setSelectedBarData] = useState<any[]>([]);
+    const [open, setOpen] = useState(false);
+    const [scroll, setScroll] = useState<DialogProps["scroll"]>("paper");
+    const descriptionElementRef = useRef<HTMLElement>(null);
+
     const getColorByOrder = (
         score: number,
         order: Record<string, string>
@@ -96,6 +120,31 @@ export default function SentimentCategoriesGraph({
         return order["Excited"];
     };
     const theme = useTheme();
+
+    const handleBarClick = (bar: any) => {
+        const key = bar.indexValue;
+        const sentiment = bar.id;
+        const records = dataGroupedByFeedbackcategory[key].filter(
+            (record) =>
+                getColorByOrder(parseFloat(record.sentiment_score), ORDER) ===
+                sentiment
+        );
+        setSelectedBarData(records);
+        setOpen(true);
+    };
+
+    const handleClose = () => {
+        setOpen(false);
+    };
+
+    useEffect(() => {
+        if (open) {
+            const {current: descriptionElement} = descriptionElementRef;
+            if (descriptionElement !== null) {
+                descriptionElement.focus();
+            }
+        }
+    }, [open]);
 
     const convertDate = (dateString: string) => {
         const [day, month, year] = dateString.split("/");
@@ -172,8 +221,10 @@ export default function SentimentCategoriesGraph({
             selectedProduct.length === 0 ||
             selectedSource.length === 0 ||
             !selectedSubcategory
-        )
+        ) {
+            setGraphSubcategories([]);
             setBars([]);
+        }
         if (isDetailed) {
             fetch(
                 `${urlPrefix}/analytics/get_sentiment_scores?fromDate=${fromDate_string}&toDate=${toDate_string}&product=${selectedProduct}&source=${selectedSource}`
@@ -190,116 +241,151 @@ export default function SentimentCategoriesGraph({
                         );
                         const filteredSubcategories = data.filter((item) => {
                             if (item.subcategory)
-                                return selectedSubcategory.includes(
-                                    item.subcategory
-                                );
+                                return selectedSubcategory === item.subcategory;
                         });
-                        const dataGroupedByFeedbackcategory: Record<
-                            string,
-                            DataRecord[]
-                        > = filteredSubcategories.reduce((acc, curr) => {
-                            const key = `${curr.subcategory} > ${curr.feedback_category}`;
-                            if (!acc[key]) {
-                                acc[key] = [];
-                            }
-                            acc[key].push(curr);
-                            return acc;
-                        }, {} as Record<string, DataRecord[]>);
+                        const dataGroupedByFeedbackcategory =
+                            filteredSubcategories.reduce(
+                                (
+                                    acc,
+                                    {
+                                        subcategory,
+                                        feedback_category,
+                                        sentiment_score,
+                                        date,
+                                        product,
+                                        feedback,
+                                        source,
+                                    }
+                                ) => {
+                                    const key = `${subcategory} > ${feedback_category}`;
+                                    (acc[key] = acc[key] || []).push({
+                                        subcategory,
+                                        feedback_category,
+                                        sentiment_score,
+                                        date,
+                                        product,
+                                        feedback,
+                                        source,
+                                    });
+                                    return acc;
+                                },
+                                {} as Record<string, DataRecord[]>
+                            );
+
+                        const barsDataFuncs = (
+                            records: DataRecord[],
+                            total: number
+                        ) => {
+                            const sentimentScores = records.map((record) =>
+                                parseFloat(record.sentiment_score)
+                            );
+                            const average = (arr: number[]) =>
+                                arr.reduce((sum, score) => sum + score, 0) /
+                                    arr.length || 0;
+                            return {
+                                percentage: (count: number) =>
+                                    parseFloat(
+                                        ((100 * count) / total).toFixed(1)
+                                    ),
+                                averageScore: average(sentimentScores),
+                                colors: {
+                                    Frustrated: getColorByOrder(
+                                        average(
+                                            sentimentScores.filter(
+                                                (score) => score <= 1
+                                            )
+                                        ),
+                                        ORDER
+                                    ),
+                                    Unsatisfied: getColorByOrder(
+                                        average(
+                                            sentimentScores.filter(
+                                                (score) =>
+                                                    score > 1 && score <= 2
+                                            )
+                                        ),
+                                        ORDER
+                                    ),
+                                    Neutral: getColorByOrder(
+                                        average(
+                                            sentimentScores.filter(
+                                                (score) =>
+                                                    score > 2 && score <= 3
+                                            )
+                                        ),
+                                        ORDER
+                                    ),
+                                    Satisfied: getColorByOrder(
+                                        average(
+                                            sentimentScores.filter(
+                                                (score) =>
+                                                    score > 3 && score <= 4
+                                            )
+                                        ),
+                                        ORDER
+                                    ),
+                                    Excited: getColorByOrder(
+                                        average(
+                                            sentimentScores.filter(
+                                                (score) => score > 4
+                                            )
+                                        ),
+                                        ORDER
+                                    ),
+                                },
+                            };
+                        };
 
                         const barsData: Bar[] = Object.entries(
                             dataGroupedByFeedbackcategory
                         ).map(([key, records]) => {
+                            const sentimentScores = records.map((record) =>
+                                parseFloat(record.sentiment_score)
+                            );
                             const total = records.length;
-                            const sentimentScores = records.map((r) =>
-                                parseFloat(r.sentiment_score)
-                            );
-                            const frustratedRecords = sentimentScores.filter(
-                                (score) => score <= 1
-                            );
-                            const unsatisfiedRecords = sentimentScores.filter(
-                                (score) => score <= 2 && score > 1
-                            );
-                            const neutralRecords = sentimentScores.filter(
-                                (score) => score <= 3 && score > 2
-                            );
-                            const satisfiedRecords = sentimentScores.filter(
-                                (score) => score <= 4 && score > 3
-                            );
-                            const excitedRecords = sentimentScores.filter(
-                                (score) => score > 4
+                            const {percentage, colors} = barsDataFuncs(
+                                records,
+                                total
                             );
 
                             return {
                                 category: key,
-                                Frustrated: parseFloat(
-                                    (
-                                        (100 * frustratedRecords.length) /
-                                        total
-                                    ).toFixed(1)
+                                Frustrated: percentage(
+                                    sentimentScores.filter(
+                                        (score) => score <= 1
+                                    ).length
                                 ),
-                                FrustratedColor: getColorByOrder(
-                                    frustratedRecords.reduce(
-                                        (sum, score) => sum + score,
-                                        0
-                                    ) / frustratedRecords.length || 0,
-                                    ORDER
+                                FrustratedColor: colors.Frustrated,
+                                Unsatisfied: percentage(
+                                    sentimentScores.filter(
+                                        (score) => score > 1 && score <= 2
+                                    ).length
                                 ),
-                                Unsatisfied: parseFloat(
-                                    (
-                                        (100 * unsatisfiedRecords.length) /
-                                        total
-                                    ).toFixed(1)
+                                UnsatisfiedColor: colors.Unsatisfied,
+                                Neutral: percentage(
+                                    sentimentScores.filter(
+                                        (score) => score > 2 && score <= 3
+                                    ).length
                                 ),
-                                UnsatisfiedColor: getColorByOrder(
-                                    unsatisfiedRecords.reduce(
-                                        (sum, score) => sum + score,
-                                        0
-                                    ) / unsatisfiedRecords.length || 0,
-                                    ORDER
+                                NeutralColor: colors.Neutral,
+                                Satisfied: percentage(
+                                    sentimentScores.filter(
+                                        (score) => score > 3 && score <= 4
+                                    ).length
                                 ),
-                                Neutral: parseFloat(
-                                    (
-                                        (100 * neutralRecords.length) /
-                                        total
-                                    ).toFixed(1)
+                                SatisfiedColor: colors.Satisfied,
+                                Excited: percentage(
+                                    sentimentScores.filter((score) => score > 4)
+                                        .length
                                 ),
-                                NeutralColor: getColorByOrder(
-                                    neutralRecords.reduce(
-                                        (sum, score) => sum + score,
-                                        0
-                                    ) / neutralRecords.length || 0,
-                                    ORDER
-                                ),
-                                Satisfied: parseFloat(
-                                    (
-                                        (100 * satisfiedRecords.length) /
-                                        total
-                                    ).toFixed(1)
-                                ),
-                                SatisfiedColor: getColorByOrder(
-                                    satisfiedRecords.reduce(
-                                        (sum, score) => sum + score,
-                                        0
-                                    ) / satisfiedRecords.length || 0,
-                                    ORDER
-                                ),
-                                Excited: parseFloat(
-                                    (
-                                        (100 * excitedRecords.length) /
-                                        total
-                                    ).toFixed(1)
-                                ),
-                                ExcitedColor: getColorByOrder(
-                                    excitedRecords.reduce(
-                                        (sum, score) => sum + score,
-                                        0
-                                    ) / excitedRecords.length || 0,
-                                    ORDER
-                                ),
+                                ExcitedColor: colors.Excited,
                             };
                         });
                         console.log(barsData);
                         setBars(barsData);
+                        setDataGroupedByFeedbackcategory(
+                            dataGroupedByFeedbackcategory
+                        );
                     } else {
                         setBars([]);
                     }
@@ -487,7 +573,7 @@ export default function SentimentCategoriesGraph({
                         <Typography
                             variant="h6"
                             component="h3"
-                            sx={{marginRight: 2}}
+                            sx={{marginRight: 2, width: "50%"}}
                         >
                             Sentiment Categorisation (
                             {sortPositive ? "Positive" : "Negative"})
@@ -500,13 +586,14 @@ export default function SentimentCategoriesGraph({
                             Sort
                         </Button>
                     </Box>
-                    <FormControl sx={{m: 0, minWidth: 200}}>
+                    <FormControl sx={{m: 0, width: "20%"}}>
                         <InputLabel id="detailed-sentimentcategoriesgraph-filter-subcategory-label">
                             Subcategories
                         </InputLabel>
                         <Select
                             labelId="detailed-sentimentcategoriesgraph-filter-subcategory-label"
                             id="detailed-sentimentcategoriesgraph-filter-subcategory"
+                            multiple={false}
                             value={selectedSubcategory}
                             onChange={handleSubcategoryChange}
                             input={
@@ -561,108 +648,246 @@ export default function SentimentCategoriesGraph({
                             gap: 2,
                             mt: 2,
                             width: "100%",
-                            height: 300,
+                            height: 200,
                         }}
                     >
-                        <ResponsiveBar
-                            onClick={(data) => {
-                                console.log("Bar clicked:", data);
-                            }}
-                            data={sortBySentiment(bars).slice(
-                                bars.length - 5,
-                                bars.length
-                            )}
-                            keys={Object.keys(ORDER).reverse()}
-                            colors={Object.values(ORDER).reverse()}
-                            indexBy="category"
-                            margin={{
-                                top: 10,
-                                right: 50,
-                                bottom: 50,
-                                left: 250,
-                            }}
-                            padding={0.3}
-                            minValue={0}
-                            maxValue={100}
-                            layout="horizontal"
-                            valueScale={{type: "linear"}}
-                            indexScale={{type: "band", round: true}}
-                            defs={[
-                                {
-                                    id: "dots",
-                                    type: "patternDots",
-                                    background: "inherit",
-                                    color: "#38bcb2",
-                                    size: 4,
-                                    padding: 1,
-                                    stagger: true,
-                                },
-                                {
-                                    id: "lines",
-                                    type: "patternLines",
-                                    background: "inherit",
-                                    color: "#eed312",
-                                    rotation: -45,
-                                    lineWidth: 6,
-                                    spacing: 10,
-                                },
-                            ]}
-                            // fill={[
-                            //     {
-                            //         match: {
-                            //             id: "Frustrated",
-                            //         },
-                            //         id: "dots",
-                            //     },
-                            //     {
-                            //         match: {
-                            //             id: "Neutral",
-                            //         },
-                            //         id: "lines",
-                            //     },
-                            // ]}
-                            borderColor={{
-                                from: "color",
-                                modifiers: [["darker", 1.6]],
-                            }}
-                            axisTop={null}
-                            axisRight={null}
-                            axisBottom={{
-                                tickSize: 5,
-                                tickPadding: 5,
-                                tickRotation: 0,
-                                legend: "Percent",
-                                legendPosition: "middle",
-                                legendOffset: 32,
-                                truncateTickAt: 0,
-                            }}
-                            axisLeft={{
-                                tickSize: 5,
-                                tickPadding: 5,
-                                tickRotation: 0,
-                                legend: "",
-                                legendPosition: "middle",
-                                legendOffset: -40,
-                                truncateTickAt: 0,
-                            }}
-                            enableGridX={true}
-                            labelSkipWidth={12}
-                            labelSkipHeight={12}
-                            labelTextColor={{
-                                from: "color",
-                                modifiers: [["darker", 1.6]],
-                            }}
-                            legends={[]}
-                            role="application"
-                            ariaLabel="Sentiment Categorisation"
-                            barAriaLabel={(e) =>
-                                e.id +
-                                ": " +
-                                e.formattedValue +
-                                " for Subcategory: " +
-                                e.indexValue
-                            }
-                        />
+                        <React.Fragment>
+                            <ResponsiveBar
+                                onClick={handleBarClick}
+                                data={
+                                    viewAll && sortPositive
+                                        ? sortBySentiment(bars)
+                                        : sortPositive
+                                        ? sortBySentiment(bars).slice(
+                                              bars.length - 5,
+                                              bars.length
+                                          )
+                                        : viewAll
+                                        ? sortBySentiment(bars, true)
+                                        : sortBySentiment(bars, true).slice(
+                                              bars.length - 5,
+                                              bars.length
+                                          )
+                                }
+                                keys={Object.keys(ORDER).reverse()}
+                                colors={Object.values(ORDER).reverse()}
+                                indexBy="category"
+                                margin={{
+                                    top: 10,
+                                    right: 50,
+                                    bottom: 50,
+                                    left: 250,
+                                }}
+                                padding={0.3}
+                                minValue={0}
+                                maxValue={100}
+                                layout="horizontal"
+                                valueScale={{type: "linear"}}
+                                indexScale={{type: "band", round: true}}
+                                defs={[
+                                    {
+                                        id: "dots",
+                                        type: "patternDots",
+                                        background: "inherit",
+                                        color: "#38bcb2",
+                                        size: 4,
+                                        padding: 1,
+                                        stagger: true,
+                                    },
+                                    {
+                                        id: "lines",
+                                        type: "patternLines",
+                                        background: "inherit",
+                                        color: "#eed312",
+                                        rotation: -45,
+                                        lineWidth: 6,
+                                        spacing: 10,
+                                    },
+                                ]}
+                                // fill={[
+                                //     {
+                                //         match: {
+                                //             id: "Frustrated",
+                                //         },
+                                //         id: "dots",
+                                //     },
+                                //     {
+                                //         match: {
+                                //             id: "Neutral",
+                                //         },
+                                //         id: "lines",
+                                //     },
+                                // ]}
+                                borderColor={{
+                                    from: "color",
+                                    modifiers: [["darker", 1.6]],
+                                }}
+                                axisTop={null}
+                                axisRight={null}
+                                axisBottom={{
+                                    tickSize: 5,
+                                    tickPadding: 5,
+                                    tickRotation: 0,
+                                    legend: "Percent",
+                                    legendPosition: "middle",
+                                    legendOffset: 32,
+                                    truncateTickAt: 0,
+                                }}
+                                axisLeft={{
+                                    tickSize: 5,
+                                    tickPadding: 5,
+                                    tickRotation: 0,
+                                    legend: "",
+                                    legendPosition: "middle",
+                                    legendOffset: -40,
+                                    truncateTickAt: 0,
+                                }}
+                                enableGridX={true}
+                                labelSkipWidth={12}
+                                labelSkipHeight={12}
+                                labelTextColor={{
+                                    from: "color",
+                                    modifiers: [["darker", 1.6]],
+                                }}
+                                legends={[]}
+                                role="application"
+                                ariaLabel="Sentiment Categorisation"
+                                barAriaLabel={(e) =>
+                                    e.id +
+                                    ": " +
+                                    e.formattedValue +
+                                    " for Subcategory: " +
+                                    e.indexValue
+                                }
+                            />
+                            <Dialog
+                                PaperProps={{style: {borderRadius: 18}}}
+                                open={open}
+                                onClose={handleClose}
+                                scroll={scroll}
+                                maxWidth="lg"
+                                aria-labelledby="scroll-dialog-title"
+                                aria-describedby="scroll-dialog-description"
+                            >
+                                <DialogTitle
+                                    id="scroll-dialog-title"
+                                    style={{
+                                        display: "flex",
+                                        justifyContent: "space-between",
+                                        alignItems: "center",
+                                        fontWeight: "bold",
+                                    }}
+                                >
+                                    Analytics Raw Data
+                                    <Button
+                                        onClick={handleClose}
+                                        sx={{borderRadius: 4}}
+                                    >
+                                        <CloseIcon />
+                                    </Button>
+                                </DialogTitle>
+                                <DialogContent dividers={scroll === "paper"}>
+                                    <DialogContentText
+                                        id="scroll-dialog-description"
+                                        ref={descriptionElementRef}
+                                        tabIndex={-1}
+                                    >
+                                        <TableContainer
+                                            component={Paper}
+                                            sx={{
+                                                borderRadius: 4,
+                                                mt: 1,
+                                                mb: 1,
+                                                boxShadow:
+                                                    "0px 0px 20px rgba(0, 0, 0, 0.2)",
+                                            }}
+                                        >
+                                            <Table
+                                                sx={{minWidth: 700}}
+                                                aria-label="customized table"
+                                            >
+                                                <TableHead>
+                                                    <TableRow>
+                                                        <TableCell>
+                                                            Date
+                                                        </TableCell>
+                                                        <TableCell align="left">
+                                                            Feedback
+                                                        </TableCell>
+                                                        <TableCell align="left">
+                                                            Source
+                                                        </TableCell>
+                                                        <TableCell align="left">
+                                                            Product
+                                                        </TableCell>
+                                                        <TableCell align="left">
+                                                            Subcategory
+                                                        </TableCell>
+                                                        <TableCell align="left">
+                                                            Feedback Category
+                                                        </TableCell>
+                                                        <TableCell align="left">
+                                                            Sentiment
+                                                        </TableCell>
+                                                        <TableCell align="left">
+                                                            Sentiment Score
+                                                        </TableCell>
+                                                    </TableRow>
+                                                </TableHead>
+                                                <TableBody>
+                                                    {selectedBarData.map(
+                                                        (row, index) => (
+                                                            <TableRow
+                                                                key={index}
+                                                            >
+                                                                <TableCell>
+                                                                    {row.date}
+                                                                </TableCell>
+                                                                <TableCell align="left">
+                                                                    {
+                                                                        row.feedback
+                                                                    }
+                                                                </TableCell>
+                                                                <TableCell align="left">
+                                                                    {row.source}
+                                                                </TableCell>
+                                                                <TableCell align="left">
+                                                                    {
+                                                                        row.product
+                                                                    }
+                                                                </TableCell>
+                                                                <TableCell align="left">
+                                                                    {
+                                                                        row.subcategory
+                                                                    }
+                                                                </TableCell>
+                                                                <TableCell align="left">
+                                                                    {
+                                                                        row.feedback_category
+                                                                    }
+                                                                </TableCell>
+                                                                <TableCell align="left">
+                                                                    {
+                                                                        row.sentiment
+                                                                    }
+                                                                </TableCell>
+                                                                <TableCell align="left">
+                                                                    {parseFloat(
+                                                                        row.sentiment_score
+                                                                    ).toFixed(
+                                                                        1
+                                                                    )}
+                                                                </TableCell>
+                                                            </TableRow>
+                                                        )
+                                                    )}
+                                                </TableBody>
+                                            </Table>
+                                        </TableContainer>
+                                    </DialogContentText>
+                                </DialogContent>
+                            </Dialog>
+                        </React.Fragment>
                     </Box>
                 )}
                 <Button

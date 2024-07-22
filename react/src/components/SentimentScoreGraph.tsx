@@ -126,8 +126,11 @@ export default function SentimentScoreGraph({
             selectedSource.length === 0 ||
             !selectedSubcategory ||
             selectedFeedbackcategories.length === 0
-        )
+        ) {
+            setGraphSubcategories([]);
+            setGraphFeedbackcategories([]);
             setSentimentScores([]);
+        }
         if (isDetailed) {
             fetch(
                 `${urlPrefix}/analytics/get_sentiment_scores?fromDate=${fromDate_string}&toDate=${toDate_string}&product=${selectedProduct}&source=${selectedSource}`
