@@ -256,7 +256,7 @@ export default function CategoriesSunburstChart({
             component="h3"
             sx={{ marginRight: 2, width: "100%" }}
           >
-            Sentiment vs Subproducts
+            Distribution of Categories
           </Typography>
         </Box>
         {components.length === 0 ? (
@@ -284,9 +284,9 @@ export default function CategoriesSunburstChart({
               cornerRadius={2}
               borderWidth={3}
               borderColor={{ theme: "grid.line.stroke" }}
-              colors={{ scheme: "paired" }}
               // To make use of hsl from each component
-              // inheritColorFromParent={false}
+              inheritColorFromParent={false}
+              // colors={{scheme: "paired"}}
               childColor={{
                 from: "color",
                 modifiers: [["brighter", 0.3]],
@@ -317,95 +317,104 @@ export default function CategoriesSunburstChart({
               //     )
               // }
             />
-          </Box>
-        )}
-        <Box
-          sx={{
-            display: "grid",
-            gridTemplateColumns: "1fr 1fr 1fr",
-            gap: 2,
-            mt: 2,
-            width: "100%",
-            alignItems: "center",
-          }}
-        >
-          <Typography
-            variant="body2"
-            color="textSecondary"
-            component="div"
-            sx={{ gridColumn: "1 / span 1" }}
-          >
-            CATEGORIES
-          </Typography>
-          <Typography
-            variant="body2"
-            color="textSecondary"
-            component="div"
-            sx={{ textAlign: "center", gridColumn: "2 / span 1" }}
-          >
-            TOTAL MENTIONS
-          </Typography>
-          <Typography
-            variant="body2"
-            color="textSecondary"
-            component="div"
-            sx={{ textAlign: "right", gridColumn: "3 / span 1" }}
-          >
-            AVG SENTIMENT
-          </Typography>
-          <Box
-            sx={{
-              gridColumn: "1 / span 3",
-              borderBottom: "1px solid #ccc",
-            }}
-          />
-          {topCategories.map((category, index) => (
-            <React.Fragment key={index}>
+            <Box
+              sx={{
+                display: "grid",
+                gridTemplateColumns: "1fr 1fr 1fr",
+                gap: 2,
+                mt: 2,
+                width: "100%",
+                alignItems: "center",
+              }}
+            >
+              <Typography
+                variant="body2"
+                color="textSecondary"
+                component="div"
+                sx={{ gridColumn: "1 / span 1" }}
+              >
+                Categories
+              </Typography>
+              <Typography
+                variant="body2"
+                color="textSecondary"
+                component="div"
+                sx={{
+                  textAlign: "center",
+                  gridColumn: "2 / span 1",
+                }}
+              >
+                Total Mentions
+              </Typography>
+              <Typography
+                variant="body2"
+                color="textSecondary"
+                component="div"
+                sx={{
+                  textAlign: "right",
+                  gridColumn: "3 / span 1",
+                }}
+              >
+                Avg Sentiment
+              </Typography>
               <Box
                 sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  gridColumn: "1 / span 1",
+                  gridColumn: "1 / span 3",
+                  borderBottom: "1px solid #ccc",
                 }}
-              >
-                <Box
-                  sx={{
-                    width: 12,
-                    height: 12,
-                    borderRadius: "50%",
-                    backgroundColor: `hsl(${feedbackcategoryHashToHue(
-                      category.feedback_category
-                    )}, 70%, 50%)`,
-                    flexShrink: 0,
-                  }}
-                />
-                <Typography variant="body2" sx={{ ml: 1 }}>
-                  {category.product} &gt; {category.subcategory} &gt;{" "}
-                  {category.feedback_category}
-                </Typography>
-              </Box>
-              <Typography
-                variant="body2"
-                sx={{
-                  gridColumn: "2 / span 1",
-                  textAlign: "center",
-                }}
-              >
-                {category.mentions}
-              </Typography>
-              <Typography
-                variant="body2"
-                sx={{
-                  gridColumn: "3 / span 1",
-                  textAlign: "right",
-                  color: getColorByOrder(category.averageSentimentScore, ORDER),
-                }}
-              >
-                {category.averageSentimentScore.toFixed(1)} / 5.0
-              </Typography>
-            </React.Fragment>
-          ))}
-        </Box>
+              />
+              {topCategories.map((category, index) => (
+                <React.Fragment key={index}>
+                  <Box
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      gridColumn: "1 / span 1",
+                    }}
+                  >
+                    <Box
+                      sx={{
+                        width: 18,
+                        height: 18,
+                        borderRadius: "50%",
+                        backgroundColor: `hsl(${feedbackcategoryHashToHue(
+                          category.feedback_category
+                        )}, 70%, 50%)`,
+                        flexShrink: 0,
+                      }}
+                    />
+                    <Typography variant="body2" sx={{ ml: 1 }}>
+                      {category.product} &gt; {category.subcategory} &gt;{" "}
+                      {category.feedback_category}
+                    </Typography>
+                  </Box>
+                  <Typography
+                    variant="body2"
+                    sx={{
+                      gridColumn: "2 / span 1",
+                      textAlign: "center",
+                    }}
+                  >
+                    {category.mentions}
+                  </Typography>
+                  <Typography
+                    variant="body2"
+                    sx={{
+                      gridColumn: "3 / span 1",
+                      textAlign: "right",
+                      color: getColorByOrder(
+                        category.averageSentimentScore,
+                        ORDER
+                      ),
+                    }}
+                  >
+                    {category.averageSentimentScore.toFixed(1)} / 5.0
+                  </Typography>
+                </React.Fragment>
+              ))}
+            </Box>
+          </Box>
+        )}
       </ButtonBase>
     </Box>
   );
