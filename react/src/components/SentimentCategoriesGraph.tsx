@@ -1,6 +1,13 @@
 import React, {useEffect, useState} from "react";
 import {Theme, useTheme} from "@mui/material/styles";
-import {Paper, Box, Typography, ButtonBase, Divider} from "@mui/material";
+import {
+    Paper,
+    Box,
+    Typography,
+    ButtonBase,
+    Divider,
+    Button,
+} from "@mui/material";
 import {Dayjs} from "dayjs";
 import {ResponsiveBar} from "@nivo/bar";
 import OutlinedInput from "@mui/material/OutlinedInput";
@@ -72,9 +79,11 @@ export default function SentimentCategoriesGraph({
         ExcitedColor: string;
     };
 
-    const [bars, setBars] = useState<Bar[]>([]);
-    const [selectedSubcategory, setSelectedSubcategory] = useState<string>("");
     const [graphSubcategories, setGraphSubcategories] = useState<string[]>([]);
+    const [selectedSubcategory, setSelectedSubcategory] = useState<string>("");
+    const [bars, setBars] = useState<Bar[]>([]);
+    const [sortPositive, setSortPositive] = useState<boolean>(true);
+    const [viewAll, setViewAll] = useState(false);
 
     const getColorByOrder = (
         score: number,
@@ -157,137 +166,151 @@ export default function SentimentCategoriesGraph({
             process.env.NODE_ENV === "development"
                 ? "http://localhost:3000"
                 : "https://jbaaam-yl5rojgcbq-et.a.run.app";
+        if (
+            !fromDate ||
+            !toDate ||
+            selectedProduct.length === 0 ||
+            selectedSource.length === 0
+        )
+            setBars([]);
         if (isDetailed) {
-            if (!selectedSubcategory) setBars([]);
-            fetch(
-                `${urlPrefix}/analytics/get_sentiment_scores?fromDate=${fromDate_string}&toDate=${toDate_string}&product=${selectedProduct}&source=${selectedSource}`
-            )
-                .then((response) => response.json())
-                .then((data: DataRecord[]) => {
-                    if (data.length > 0) {
-                        setGraphSubcategories(
-                            Array.from(
-                                new Set(
-                                    data.map(({subcategory}) => subcategory)
+            if (selectedSubcategory) {
+                fetch(
+                    `${urlPrefix}/analytics/get_sentiment_scores?fromDate=${fromDate_string}&toDate=${toDate_string}&product=${selectedProduct}&source=${selectedSource}`
+                )
+                    .then((response) => response.json())
+                    .then((data: DataRecord[]) => {
+                        if (data.length > 0) {
+                            setGraphSubcategories(
+                                Array.from(
+                                    new Set(
+                                        data.map(({subcategory}) => subcategory)
+                                    )
                                 )
-                            )
-                        );
-                        const filteredSubcategories = data.filter((item) => {
-                            if (item.subcategory)
-                                return item.subcategory.includes(
-                                    selectedSubcategory
+                            );
+                            const filteredSubcategories = data.filter(
+                                (item) => {
+                                    if (item.subcategory)
+                                        return selectedSubcategory.includes(
+                                            item.subcategory
+                                        );
+                                }
+                            );
+                            const dataGroupedByFeedbackcategory: Record<
+                                string,
+                                DataRecord[]
+                            > = filteredSubcategories.reduce((acc, curr) => {
+                                const key = `${curr.subcategory} > ${curr.feedback_category}`;
+                                if (!acc[key]) {
+                                    acc[key] = [];
+                                }
+                                acc[key].push(curr);
+                                return acc;
+                            }, {} as Record<string, DataRecord[]>);
+
+                            const barsData: Bar[] = Object.entries(
+                                dataGroupedByFeedbackcategory
+                            ).map(([key, records]) => {
+                                const total = records.length;
+                                const sentimentScores = records.map((r) =>
+                                    parseFloat(r.sentiment_score)
                                 );
-                        });
-                        const dataGroupedByFeedbackcategory: Record<
-                            string,
-                            DataRecord[]
-                        > = filteredSubcategories.reduce((acc, curr) => {
-                            const key = `${curr.subcategory} > ${curr.feedback_category}`;
-                            if (!acc[key]) {
-                                acc[key] = [];
-                            }
-                            acc[key].push(curr);
-                            return acc;
-                        }, {} as Record<string, DataRecord[]>);
+                                const frustratedRecords =
+                                    sentimentScores.filter(
+                                        (score) => score <= 1
+                                    );
+                                const unsatisfiedRecords =
+                                    sentimentScores.filter(
+                                        (score) => score <= 2 && score > 1
+                                    );
+                                const neutralRecords = sentimentScores.filter(
+                                    (score) => score <= 3 && score > 2
+                                );
+                                const satisfiedRecords = sentimentScores.filter(
+                                    (score) => score <= 4 && score > 3
+                                );
+                                const excitedRecords = sentimentScores.filter(
+                                    (score) => score > 4
+                                );
 
-                        const barsData: Bar[] = Object.entries(
-                            dataGroupedByFeedbackcategory
-                        ).map(([key, records]) => {
-                            const total = records.length;
-                            const sentimentScores = records.map((r) =>
-                                parseFloat(r.sentiment_score)
-                            );
-                            const frustratedRecords = sentimentScores.filter(
-                                (score) => score <= 1
-                            );
-                            const unsatisfiedRecords = sentimentScores.filter(
-                                (score) => score <= 2 && score > 1
-                            );
-                            const neutralRecords = sentimentScores.filter(
-                                (score) => score <= 3 && score > 2
-                            );
-                            const satisfiedRecords = sentimentScores.filter(
-                                (score) => score <= 4 && score > 3
-                            );
-                            const excitedRecords = sentimentScores.filter(
-                                (score) => score > 4
-                            );
-
-                            return {
-                                category: key,
-                                Frustrated: parseFloat(
-                                    (
-                                        (100 * frustratedRecords.length) /
-                                        total
-                                    ).toFixed(1)
-                                ),
-                                FrustratedColor: getColorByOrder(
-                                    frustratedRecords.reduce(
-                                        (sum, score) => sum + score,
-                                        0
-                                    ) / frustratedRecords.length || 0,
-                                    ORDER
-                                ),
-                                Unsatisfied: parseFloat(
-                                    (
-                                        (100 * unsatisfiedRecords.length) /
-                                        total
-                                    ).toFixed(1)
-                                ),
-                                UnsatisfiedColor: getColorByOrder(
-                                    unsatisfiedRecords.reduce(
-                                        (sum, score) => sum + score,
-                                        0
-                                    ) / unsatisfiedRecords.length || 0,
-                                    ORDER
-                                ),
-                                Neutral: parseFloat(
-                                    (
-                                        (100 * neutralRecords.length) /
-                                        total
-                                    ).toFixed(1)
-                                ),
-                                NeutralColor: getColorByOrder(
-                                    neutralRecords.reduce(
-                                        (sum, score) => sum + score,
-                                        0
-                                    ) / neutralRecords.length || 0,
-                                    ORDER
-                                ),
-                                Satisfied: parseFloat(
-                                    (
-                                        (100 * satisfiedRecords.length) /
-                                        total
-                                    ).toFixed(1)
-                                ),
-                                SatisfiedColor: getColorByOrder(
-                                    satisfiedRecords.reduce(
-                                        (sum, score) => sum + score,
-                                        0
-                                    ) / satisfiedRecords.length || 0,
-                                    ORDER
-                                ),
-                                Excited: parseFloat(
-                                    (
-                                        (100 * excitedRecords.length) /
-                                        total
-                                    ).toFixed(1)
-                                ),
-                                ExcitedColor: getColorByOrder(
-                                    excitedRecords.reduce(
-                                        (sum, score) => sum + score,
-                                        0
-                                    ) / excitedRecords.length || 0,
-                                    ORDER
-                                ),
-                            };
-                        });
-                        console.log(barsData);
-                        setBars(barsData);
-                    } else {
-                        setBars([]);
-                    }
-                });
+                                return {
+                                    category: key,
+                                    Frustrated: parseFloat(
+                                        (
+                                            (100 * frustratedRecords.length) /
+                                            total
+                                        ).toFixed(1)
+                                    ),
+                                    FrustratedColor: getColorByOrder(
+                                        frustratedRecords.reduce(
+                                            (sum, score) => sum + score,
+                                            0
+                                        ) / frustratedRecords.length || 0,
+                                        ORDER
+                                    ),
+                                    Unsatisfied: parseFloat(
+                                        (
+                                            (100 * unsatisfiedRecords.length) /
+                                            total
+                                        ).toFixed(1)
+                                    ),
+                                    UnsatisfiedColor: getColorByOrder(
+                                        unsatisfiedRecords.reduce(
+                                            (sum, score) => sum + score,
+                                            0
+                                        ) / unsatisfiedRecords.length || 0,
+                                        ORDER
+                                    ),
+                                    Neutral: parseFloat(
+                                        (
+                                            (100 * neutralRecords.length) /
+                                            total
+                                        ).toFixed(1)
+                                    ),
+                                    NeutralColor: getColorByOrder(
+                                        neutralRecords.reduce(
+                                            (sum, score) => sum + score,
+                                            0
+                                        ) / neutralRecords.length || 0,
+                                        ORDER
+                                    ),
+                                    Satisfied: parseFloat(
+                                        (
+                                            (100 * satisfiedRecords.length) /
+                                            total
+                                        ).toFixed(1)
+                                    ),
+                                    SatisfiedColor: getColorByOrder(
+                                        satisfiedRecords.reduce(
+                                            (sum, score) => sum + score,
+                                            0
+                                        ) / satisfiedRecords.length || 0,
+                                        ORDER
+                                    ),
+                                    Excited: parseFloat(
+                                        (
+                                            (100 * excitedRecords.length) /
+                                            total
+                                        ).toFixed(1)
+                                    ),
+                                    ExcitedColor: getColorByOrder(
+                                        excitedRecords.reduce(
+                                            (sum, score) => sum + score,
+                                            0
+                                        ) / excitedRecords.length || 0,
+                                        ORDER
+                                    ),
+                                };
+                            });
+                            console.log(barsData);
+                            setBars(barsData);
+                        } else {
+                            setBars([]);
+                        }
+                    });
+            } else {
+                setBars([]);
+            }
         } else {
             fetch(
                 `${urlPrefix}/analytics/get_sentiment_scores?fromDate=${fromDate_string}&toDate=${toDate_string}&product=${selectedProduct}&source=${selectedSource}`
@@ -452,62 +475,90 @@ export default function SentimentCategoriesGraph({
                 }}
                 id="detailed-sentimentcategoriesgraph"
             >
-                <Typography
-                    variant="h6"
-                    component="h3"
-                    sx={{marginRight: 2, width: "50%"}}
+                <Box
+                    sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "space-between",
+                        width: "100%",
+                    }}
                 >
-                    Sentiment Categorisation
-                </Typography>
-                <FormControl sx={{m: 0, width: "20%"}}>
-                    <InputLabel id="detailed-sentimentcategoriesgraph-filter-subcategory-label">
-                        Subcategories
-                    </InputLabel>
-                    <Select
-                        labelId="detailed-sentimentcategoriesgraph-filter-subcategory-label"
-                        id="detailed-sentimentcategoriesgraph-filter-subcategory"
-                        multiple={false}
-                        value={selectedSubcategory}
-                        onChange={handleSubcategoryChange}
-                        input={
-                            <OutlinedInput
-                                id="detailed-sentimentcategoriesgraph-select-subcategory"
-                                label="subcategory"
-                                sx={{
-                                    borderRadius: 4,
-                                }}
-                            />
-                        }
-                        renderValue={(selected) => (
-                            <Box
-                                sx={{
-                                    display: "flex",
-                                    flexWrap: "wrap",
-                                    gap: 0.5,
-                                }}
-                            >
-                                <Chip key={selected} label={selected} />
-                            </Box>
-                        )}
-                        MenuProps={MenuProps}
+                    <Box
+                        sx={{
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "space-between",
+                            flexGrow: 1,
+                        }}
                     >
-                        {graphSubcategories.length > 0 ? (
-                            graphSubcategories.map((subcategory: string) => (
-                                <MenuItem
-                                    key={subcategory}
-                                    value={subcategory}
-                                    className="subcategory-option"
+                        <Typography
+                            variant="h6"
+                            component="h3"
+                            sx={{marginRight: 2}}
+                        >
+                            Sentiment Categorisation (
+                            {sortPositive ? "Positive" : "Negative"})
+                        </Typography>
+                        <Button
+                            variant="outlined"
+                            onClick={() => setSortPositive(!sortPositive)}
+                            sx={{marginRight: 2}}
+                        >
+                            Sort
+                        </Button>
+                    </Box>
+                    <FormControl sx={{m: 0, minWidth: 200}}>
+                        <InputLabel id="detailed-sentimentcategoriesgraph-filter-subcategory-label">
+                            Subcategories
+                        </InputLabel>
+                        <Select
+                            labelId="detailed-sentimentcategoriesgraph-filter-subcategory-label"
+                            id="detailed-sentimentcategoriesgraph-filter-subcategory"
+                            value={selectedSubcategory}
+                            onChange={handleSubcategoryChange}
+                            input={
+                                <OutlinedInput
+                                    id="detailed-sentimentcategoriesgraph-select-subcategory"
+                                    label="Subcategory"
+                                    sx={{borderRadius: 4}}
+                                />
+                            }
+                            renderValue={(selected) => (
+                                <Box
+                                    sx={{
+                                        display: "flex",
+                                        flexWrap: "wrap",
+                                        gap: 0.5,
+                                    }}
                                 >
-                                    {subcategory}
+                                    <Chip key={selected} label={selected} />
+                                </Box>
+                            )}
+                        >
+                            {graphSubcategories.length > 0 ? (
+                                graphSubcategories.map((subcategory) => (
+                                    <MenuItem
+                                        key={subcategory}
+                                        value={subcategory}
+                                        className="subcategory-option"
+                                    >
+                                        {subcategory}
+                                    </MenuItem>
+                                ))
+                            ) : (
+                                <MenuItem disabled>
+                                    No data from selection
                                 </MenuItem>
-                            ))
-                        ) : (
-                            <MenuItem disabled>No data from selection</MenuItem>
-                        )}
-                    </Select>
-                </FormControl>
+                            )}
+                        </Select>
+                    </FormControl>
+                </Box>
                 {bars.length === 0 ? (
-                    <Typography variant="body2" color="grey">
+                    <Typography
+                        variant="body2"
+                        color="grey"
+                        sx={{marginTop: 2}}
+                    >
                         No data
                     </Typography>
                 ) : (
@@ -517,11 +568,17 @@ export default function SentimentCategoriesGraph({
                             gap: 2,
                             mt: 2,
                             width: "100%",
-                            height: 200,
+                            height: 300,
                         }}
                     >
                         <ResponsiveBar
-                            data={sortBySentiment(bars)}
+                            onClick={(data) => {
+                                console.log("Bar clicked:", data);
+                            }}
+                            data={sortBySentiment(bars).slice(
+                                bars.length - 5,
+                                bars.length
+                            )}
                             keys={Object.keys(ORDER).reverse()}
                             colors={Object.values(ORDER).reverse()}
                             indexBy="category"
@@ -529,7 +586,7 @@ export default function SentimentCategoriesGraph({
                                 top: 10,
                                 right: 50,
                                 bottom: 50,
-                                left: 200,
+                                left: 250,
                             }}
                             padding={0.3}
                             minValue={0}
@@ -615,6 +672,13 @@ export default function SentimentCategoriesGraph({
                         />
                     </Box>
                 )}
+                <Button
+                    variant="outlined"
+                    onClick={() => setViewAll(!viewAll)}
+                    sx={{alignSelf: "flex-end", mt: 2}}
+                >
+                    {viewAll ? "View Less" : "View All"}
+                </Button>
             </Paper>
         </Box>
     ) : (
@@ -696,7 +760,7 @@ export default function SentimentCategoriesGraph({
                                         top: 10,
                                         right: 50,
                                         bottom: 50,
-                                        left: 200,
+                                        left: 250,
                                     }}
                                     padding={0.3}
                                     minValue={0}
@@ -821,7 +885,7 @@ export default function SentimentCategoriesGraph({
                                         top: 10,
                                         right: 50,
                                         bottom: 50,
-                                        left: 200,
+                                        left: 250,
                                     }}
                                     padding={0.3}
                                     minValue={0}

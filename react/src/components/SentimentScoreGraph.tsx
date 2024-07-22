@@ -119,118 +119,153 @@ export default function SentimentScoreGraph({
             process.env.NODE_ENV === "development"
                 ? "http://localhost:3000"
                 : "https://jbaaam-yl5rojgcbq-et.a.run.app";
-
+        if (
+            !fromDate ||
+            !toDate ||
+            selectedProduct.length === 0 ||
+            selectedSource.length === 0
+        )
+            setSentimentScores([]);
         if (isDetailed) {
-            if (!selectedSubcategory || selectedFeedbackcategories.length === 0)
+            if (
+                !selectedSubcategory ||
+                selectedFeedbackcategories.length === 0
+            ) {
                 setSentimentScores([]);
-            fetch(
-                `${urlPrefix}/analytics/get_sentiment_scores?fromDate=${fromDate_string}&toDate=${toDate_string}&product=${selectedProduct}&source=${selectedSource}`
-            )
-                .then((response) => response.json())
-                .then((data: Record<string, string>[]) => {
-                    if (data.length > 0) {
-                        setGraphSubcategories(
-                            Array.from(
-                                new Set(
-                                    data.map(({subcategory}) => subcategory)
-                                )
-                            )
-                        );
-                        const filteredSubcategories = data.filter((item) => {
-                            if (item.subcategory)
-                                return item.subcategory.includes(
-                                    selectedSubcategory
-                                );
-                        });
-                        setGraphFeedbackcategories(
-                            Array.from(
-                                new Set(
-                                    filteredSubcategories.map(
-                                        ({feedback_category}) =>
-                                            feedback_category
+            } else {
+                fetch(
+                    `${urlPrefix}/analytics/get_sentiment_scores?fromDate=${fromDate_string}&toDate=${toDate_string}&product=${selectedProduct}&source=${selectedSource}`
+                )
+                    .then((response) => response.json())
+                    .then((data: Record<string, string>[]) => {
+                        if (data.length > 0) {
+                            setGraphSubcategories(
+                                Array.from(
+                                    new Set(
+                                        data.map(({subcategory}) => subcategory)
                                     )
                                 )
-                            )
-                        );
-                        const filteredData = filteredSubcategories.filter(
-                            (item) => {
-                                if (item.feedback_category)
-                                    return selectedFeedbackcategories.includes(
-                                        item.feedback_category
+                            );
+                            const filteredSubcategories = data.filter(
+                                (item) => {
+                                    if (item.subcategory)
+                                        return item.subcategory.includes(
+                                            selectedSubcategory
+                                        );
+                                }
+                            );
+                            setGraphFeedbackcategories(
+                                Array.from(
+                                    new Set(
+                                        filteredSubcategories.map(
+                                            ({feedback_category}) =>
+                                                feedback_category
+                                        )
+                                    )
+                                )
+                            );
+                            const filteredData = filteredSubcategories.filter(
+                                (item) => {
+                                    if (item.feedback_category)
+                                        return selectedFeedbackcategories.includes(
+                                            item.feedback_category
+                                        );
+                                }
+                            );
+                            const filteredDataGroupedByFeedbackcategory =
+                                filteredData.reduce((acc, item) => {
+                                    if (!acc[item.feedback_category]) {
+                                        acc[item.feedback_category] = {};
+                                    }
+                                    if (
+                                        !acc[item.feedback_category][item.date]
+                                    ) {
+                                        acc[item.feedback_category][item.date] =
+                                            [];
+                                    }
+                                    acc[item.feedback_category][item.date].push(
+                                        parseFloat(
+                                            item.sentiment_score as string
+                                        )
                                     );
-                            }
-                        );
-                        const filteredDataGroupedByFeedbackcategory =
-                            filteredData.reduce((acc, item) => {
-                                if (!acc[item.feedback_category]) {
-                                    acc[item.feedback_category] = {};
-                                }
-                                if (!acc[item.feedback_category][item.date]) {
-                                    acc[item.feedback_category][item.date] = [];
-                                }
-                                acc[item.feedback_category][item.date].push(
-                                    parseFloat(item.sentiment_score as string)
+                                    return acc;
+                                }, {} as Record<string, Record<string, number[]>>);
+                            const avgDataGroupedByFeedbackcategory =
+                                Object.entries(
+                                    filteredDataGroupedByFeedbackcategory
+                                ).reduce(
+                                    (
+                                        acc,
+                                        [
+                                            feedbackcategory,
+                                            date_sentiment_scores,
+                                        ]
+                                    ) => {
+                                        acc[feedbackcategory] = Object.entries(
+                                            date_sentiment_scores
+                                        ).map(([date, sentiment_scores]) => {
+                                            const totalScore =
+                                                sentiment_scores.reduce(
+                                                    (sum, sentiment_scores) =>
+                                                        sum + sentiment_scores,
+                                                    0
+                                                );
+                                            const averageScore =
+                                                totalScore /
+                                                sentiment_scores.length;
+                                            return {
+                                                date,
+                                                sentiment_score: averageScore,
+                                            };
+                                        });
+                                        return acc;
+                                    },
+                                    {} as Record<
+                                        string,
+                                        {
+                                            date: string;
+                                            sentiment_score: number;
+                                        }[]
+                                    >
                                 );
-                                return acc;
-                            }, {} as Record<string, Record<string, number[]>>);
-                        const avgDataGroupedByFeedbackcategory = Object.entries(
-                            filteredDataGroupedByFeedbackcategory
-                        ).reduce(
-                            (
-                                acc,
-                                [feedbackcategory, date_sentiment_scores]
-                            ) => {
-                                acc[feedbackcategory] = Object.entries(
-                                    date_sentiment_scores
-                                ).map(([date, sentiment_scores]) => {
-                                    const totalScore = sentiment_scores.reduce(
-                                        (sum, sentiment_scores) =>
-                                            sum + sentiment_scores,
-                                        0
-                                    );
-                                    const averageScore =
-                                        totalScore / sentiment_scores.length;
-                                    return {
-                                        date,
-                                        sentiment_score: averageScore,
-                                    };
-                                });
-                                return acc;
-                            },
-                            {} as Record<
-                                string,
-                                {date: string; sentiment_score: number}[]
-                            >
-                        );
 
-                        setSentimentScores(
-                            Object.entries(
-                                avgDataGroupedByFeedbackcategory
-                            ).map(
-                                ([feedback_category, date_sentiment_score]) => {
-                                    return {
-                                        id: feedback_category,
-                                        color: `hsl(${feedbackcategoryHashToHue(
-                                            feedback_category
-                                        )}, 70%, 50%)`,
-                                        data: date_sentiment_score
-                                            .sort(
-                                                (a, b) =>
-                                                    convertDate(a.date) -
-                                                    convertDate(b.date)
-                                            )
-                                            .map(({date, sentiment_score}) => ({
-                                                x: formatDate(date),
-                                                y: sentiment_score,
-                                            })),
-                                    };
-                                }
-                            )
-                        );
-                    } else {
-                        setSentimentScores([]);
-                    }
-                });
+                            setSentimentScores(
+                                Object.entries(
+                                    avgDataGroupedByFeedbackcategory
+                                ).map(
+                                    ([
+                                        feedback_category,
+                                        date_sentiment_score,
+                                    ]) => {
+                                        return {
+                                            id: feedback_category,
+                                            color: `hsl(${feedbackcategoryHashToHue(
+                                                feedback_category
+                                            )}, 70%, 50%)`,
+                                            data: date_sentiment_score
+                                                .sort(
+                                                    (a, b) =>
+                                                        convertDate(a.date) -
+                                                        convertDate(b.date)
+                                                )
+                                                .map(
+                                                    ({
+                                                        date,
+                                                        sentiment_score,
+                                                    }) => ({
+                                                        x: formatDate(date),
+                                                        y: sentiment_score,
+                                                    })
+                                                ),
+                                        };
+                                    }
+                                )
+                            );
+                        } else {
+                            setSentimentScores([]);
+                        }
+                    });
+            }
         } else {
             fetch(
                 `${urlPrefix}/analytics/get_overall_sentiment_scores?fromDate=${fromDate_string}&toDate=${toDate_string}&product=${selectedProduct}&source=${selectedSource}`
@@ -442,7 +477,7 @@ export default function SentimentScoreGraph({
                                 format: "%d %b %y",
                                 precision: "day",
                             }}
-                            xFormat={`time:%d %b %y`}
+                            xFormat={`time: %d %b %y`}
                             yScale={{
                                 type: "linear",
                                 min: "auto",
@@ -585,7 +620,7 @@ export default function SentimentScoreGraph({
                                 format: "%d %b %y",
                                 precision: "day",
                             }}
-                            xFormat={`time:%d %b %y`}
+                            xFormat={`time: %d %b %y`}
                             yScale={{
                                 type: "linear",
                                 min: "auto",
