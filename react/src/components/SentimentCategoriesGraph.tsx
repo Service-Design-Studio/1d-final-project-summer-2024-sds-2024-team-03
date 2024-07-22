@@ -631,7 +631,7 @@ export default function SentimentCategoriesGraph({
                                 tickSize: 5,
                                 tickPadding: 5,
                                 tickRotation: 0,
-                                legend: "Percent",
+                                legend: "Percentage",
                                 legendPosition: "middle",
                                 legendOffset: 32,
                                 truncateTickAt: 0,
@@ -717,14 +717,14 @@ export default function SentimentCategoriesGraph({
                         width: "100%",
                         alignItems: "stretch",
                         gap: 2,
-                        mt: 2,
+                        mt: 1,
+                        mb: 1,
                     }}
                 >
                     <Box sx={{width: "50%"}}>
                         <Typography
                             variant="h6"
-                            component="h3"
-                            sx={{marginRight: 2, width: "50%"}}
+                            sx={{ fontWeight: "bold" }}
                         >
                             Top 5 Positive Categories
                         </Typography>
@@ -751,9 +751,9 @@ export default function SentimentCategoriesGraph({
                                     indexBy="category"
                                     margin={{
                                         top: 10,
-                                        right: 50,
+                                        right: 10,
                                         bottom: 50,
-                                        left: 250,
+                                        left: 240,
                                     }}
                                     padding={0.3}
                                     minValue={0}
@@ -805,7 +805,7 @@ export default function SentimentCategoriesGraph({
                                         tickSize: 5,
                                         tickPadding: 5,
                                         tickRotation: 0,
-                                        legend: "Percent",
+                                        legend: "Percentage",
                                         legendPosition: "middle",
                                         legendOffset: 32,
                                         truncateTickAt: 0,
@@ -848,8 +848,7 @@ export default function SentimentCategoriesGraph({
                     <Box sx={{width: "50%"}}>
                         <Typography
                             variant="h6"
-                            component="h3"
-                            sx={{marginRight: 2, width: "50%"}}
+                            sx={{ fontWeight: "bold" }}
                         >
                             Top 5 Negative Categories
                         </Typography>
@@ -876,9 +875,9 @@ export default function SentimentCategoriesGraph({
                                     indexBy="category"
                                     margin={{
                                         top: 10,
-                                        right: 50,
+                                        right: 10,
                                         bottom: 50,
-                                        left: 250,
+                                        left: 240,
                                     }}
                                     padding={0.3}
                                     minValue={0}
@@ -930,7 +929,7 @@ export default function SentimentCategoriesGraph({
                                         tickSize: 5,
                                         tickPadding: 5,
                                         tickRotation: 0,
-                                        legend: "Percent",
+                                        legend: "Percentage",
                                         legendPosition: "middle",
                                         legendOffset: 32,
                                         truncateTickAt: 0,
