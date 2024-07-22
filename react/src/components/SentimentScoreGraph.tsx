@@ -562,10 +562,15 @@ export default function SentimentScoreGraph({
             >
                 <Typography
                     variant="h6"
-                    component="h3"
-                    sx={{marginRight: 2, width: "50%"}}
+                    sx={{ fontWeight: "bold", width: "100%" }}
                 >
-                    Sentiment vs Time trend for Product(s) (All Subcategories)
+                    Sentiment Trend for Selected Product(s)
+                </Typography>
+                <Typography
+                    color="grey"
+                    sx={{ fontWeight: "600", mb: 2, width: "100%" }}
+                >
+                    across all subcategories
                 </Typography>
                 {sentimentScores.length === 0 ? (
                     <Typography variant="body2" color="grey">
