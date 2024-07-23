@@ -144,11 +144,26 @@ export default function SentimentCategoriesGraph({
     const handleBarClick = (bar: any) => {
         const key = bar.indexValue;
         const sentiment = bar.id;
-        const records = dataGroupedByFeedbackcategory[key].filter(
+        let records = dataGroupedByFeedbackcategory[key].filter(
             (record) =>
                 getColorByOrder(parseFloat(record.sentiment_score), ORDER) ===
                 ORDER[sentiment]
         );
+
+        if (sentiment === "Frustrated" || sentiment === "Unsatisfied") {
+            records = records.sort(
+                (a, b) =>
+                    parseFloat(a.sentiment_score) -
+                    parseFloat(b.sentiment_score)
+            );
+        } else {
+            records = records.sort(
+                (a, b) =>
+                    parseFloat(b.sentiment_score) -
+                    parseFloat(a.sentiment_score)
+            );
+        }
+
         setSelectedBarData(records);
         setOpen(true);
     };
