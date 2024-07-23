@@ -51,40 +51,32 @@ Scenario: Reset selection by refreshing
 
 Scenario: Upload 1 file
   Given I am on the Upload Data page
-  And the sources selected are: 'Product Survey'
+  And the sources selected are: 'Call Centre'
   And the products selected are: 'Investments'
   When I upload a valid file using the file input
-  Then a Modal should open, informing a successful upload of the 'Investments' + 'Product Survey' + filename
-
-Scenario: Upload multiple files
-  Given I am on the Upload Data page
-  And the sources selected are: 'Product Survey'
-  And the products selected are: 'Investments'
-  When I upload multiple valid files using the file input
-  Then a Modal should open, informing a successful upload
+  Then a Modal should open, informing a successful upload of the 'Investments' and 'Call Centre' and filename
 
 Scenario: Invalid upload
   Given I am on the Upload Data page
   When I upload an invalid file using the file input
   Then a Modal should open, informing an unsuccessful upload
 
-
 Scenario: Unable to upload due to unselected product and source
-  Given I am on Upload page
+  Given I am on the Upload page
   When I do not select any product or source
   And I simply drag and drop a file of valid extension and data format
   Then I should be alerted "Please select a product and source"
   And my file should not be uploaded
 
 Scenario: Unable to upload due to valid file extension format
-  Given I am on Upload page
+  Given I am on the Upload page
   When I have selected a product and source
   And I drag and drop a file of invalid extension format
   Then I should be alerted "Please upload a file of valid X extension format"
   And my file should not be uploaded
 
 Scenario: Unable to upload due to unsuitable data format (structure, columns, etc)
-  Given I am on Upload page
+  Given I am on the Upload page
   When I have selected a product and source
   And I drag and drop a file of valid extension format but invalid data format
   Then I should be alerted "Please upload a file of valild data format, your data is missing column X"

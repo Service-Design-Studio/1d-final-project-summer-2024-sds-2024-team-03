@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useState, forwardRef} from "react";
 import {Theme, useTheme} from "@mui/material/styles";
 import {Paper, Box, Typography, ButtonBase} from "@mui/material";
 import {Dayjs} from "dayjs";
@@ -32,14 +32,17 @@ interface SentimentScoreGraphProps {
     setSelectedMenu?: React.Dispatch<React.SetStateAction<string>>;
 }
 
-export default function SentimentScoreGraph({
-    fromDate,
-    toDate,
-    selectedProduct,
-    selectedSource,
-    isDetailed,
-    setSelectedMenu,
-}: SentimentScoreGraphProps) {
+export default forwardRef(function SentimentScoreGraph(
+    {
+        fromDate,
+        toDate,
+        selectedProduct,
+        selectedSource,
+        isDetailed,
+        setSelectedMenu,
+    }: SentimentScoreGraphProps,
+    ref: React.Ref<HTMLDivElement>
+) {
     const fromDate_string = fromDate.format("DD/MM/YYYY");
     const toDate_string = toDate.format("DD/MM/YYYY");
     type DataPoint = {
@@ -283,6 +286,7 @@ export default function SentimentScoreGraph({
     /* Must have parent container with a defined size */
     return isDetailed ? (
         <Box
+            ref={ref}
             sx={{
                 display: "flex",
                 gap: 2,
@@ -319,7 +323,7 @@ export default function SentimentScoreGraph({
                 >
                     <Typography
                         variant="h6"
-                        sx={{ fontWeight: "bold", width: "100%"}}
+                        sx={{fontWeight: "bold", width: "100%"}}
                     >
                         Sentiment Trend for
                         {selectedSubcategory
@@ -499,44 +503,46 @@ export default function SentimentScoreGraph({
                             pointLabelYOffset={-12}
                             enableTouchCrosshair={true}
                             useMesh={true}
-
                             // label styling
-                            tooltip={({ point }) => (
+                            tooltip={({point}) => (
                                 <div
-                                  style={{
-                                    background: theme.palette.mode === "dark" ? "#333" : "#fff",
-                                    boxShadow: '0px 0px 10px rgba(0, 0, 0, 0.2)',
-                                    padding: '9px 12px',
-                                    borderRadius: '10px',
-                                    fontSize: '0.8rem',
-                                    display: 'grid',
-                                    gridTemplateColumns: 'auto 1fr',
-                                    gap: '4px',
-                                    alignItems: 'center',
-                                  }}
-                                >
-                                  <span
                                     style={{
-                                      width: 12,
-                                      height: 12,
-                                      backgroundColor: point.serieColor,
-                                      borderRadius: '50%',
-                                      marginRight: 4,
+                                        background:
+                                            theme.palette.mode === "dark"
+                                                ? "#333"
+                                                : "#fff",
+                                        boxShadow:
+                                            "0px 0px 10px rgba(0, 0, 0, 0.2)",
+                                        padding: "9px 12px",
+                                        borderRadius: "10px",
+                                        fontSize: "0.8rem",
+                                        display: "grid",
+                                        gridTemplateColumns: "auto 1fr",
+                                        gap: "4px",
+                                        alignItems: "center",
                                     }}
-                                  />
-                                  <div>
-                                    <div style={{ display: 'flex' }}>
-                                      <strong>Date:&nbsp;</strong>
-                                      {point.data.xFormatted}
+                                >
+                                    <span
+                                        style={{
+                                            width: 12,
+                                            height: 12,
+                                            backgroundColor: point.serieColor,
+                                            borderRadius: "50%",
+                                            marginRight: 4,
+                                        }}
+                                    />
+                                    <div>
+                                        <div style={{display: "flex"}}>
+                                            <strong>Date:&nbsp;</strong>
+                                            {point.data.xFormatted}
+                                        </div>
+                                        <div style={{display: "flex"}}>
+                                            <strong>Score:&nbsp;</strong>
+                                            {point.data.yFormatted}
+                                        </div>
                                     </div>
-                                    <div style={{ display: 'flex' }}>
-                                      <strong>Score:&nbsp;</strong>
-                                      {point.data.yFormatted}
-                                    </div>
-                                  </div>
                                 </div>
-                              )}
-
+                            )}
                             legends={[
                                 {
                                     anchor: "bottom",
@@ -571,6 +577,7 @@ export default function SentimentScoreGraph({
         </Box>
     ) : (
         <Box
+            ref={ref}
             sx={{
                 display: "flex",
                 gap: 2,
@@ -606,13 +613,13 @@ export default function SentimentScoreGraph({
             >
                 <Typography
                     variant="h6"
-                    sx={{ fontWeight: "bold", width: "100%" }}
+                    sx={{fontWeight: "bold", width: "100%"}}
                 >
                     Sentiment Trend for Selected Product(s)
                 </Typography>
                 <Typography
                     color="grey"
-                    sx={{ fontWeight: "600", mb: 2, width: "100%" }}
+                    sx={{fontWeight: "600", mb: 2, width: "100%"}}
                 >
                     across all subcategories
                 </Typography>
@@ -686,47 +693,50 @@ export default function SentimentScoreGraph({
                             pointLabelYOffset={-12}
                             enableTouchCrosshair={true}
                             useMesh={true}
-                            
                             // label styling
-                            tooltip={({ point }) => (
+                            tooltip={({point}) => (
                                 <div
                                     style={{
-                                    background: theme.palette.mode === "dark" ? "#333" : "#fff",
-                                    boxShadow: '0px 0px 10px rgba(0, 0, 0, 0.2)',
-                                    padding: '9px 12px',
-                                    borderRadius: '10px',
-                                    fontSize: '0.8rem',
-                                    display: 'grid',
-                                    gridTemplateColumns: 'auto 1fr',
-                                    gap: '4px',
-                                    alignItems: 'center',
+                                        background:
+                                            theme.palette.mode === "dark"
+                                                ? "#333"
+                                                : "#fff",
+                                        boxShadow:
+                                            "0px 0px 10px rgba(0, 0, 0, 0.2)",
+                                        padding: "9px 12px",
+                                        borderRadius: "10px",
+                                        fontSize: "0.8rem",
+                                        display: "grid",
+                                        gridTemplateColumns: "auto 1fr",
+                                        gap: "4px",
+                                        alignItems: "center",
                                     }}
                                 >
                                     <span
-                                    style={{
-                                        width: 12,
-                                        height: 12,
-                                        backgroundColor: point.serieColor,
-                                        borderRadius: '50%',
-                                        marginRight: 4,
-                                    }}
+                                        style={{
+                                            width: 12,
+                                            height: 12,
+                                            backgroundColor: point.serieColor,
+                                            borderRadius: "50%",
+                                            marginRight: 4,
+                                        }}
                                     />
                                     <div>
-                                    <div style={{ display: 'flex' }}>
-                                        <strong>Date:&nbsp;</strong>
-                                        {point.data.xFormatted}
-                                    </div>
-                                    <div style={{ display: 'flex' }}>
-                                        <strong>Score:&nbsp;</strong>
-                                        {point.data.yFormatted}
-                                    </div>
+                                        <div style={{display: "flex"}}>
+                                            <strong>Date:&nbsp;</strong>
+                                            {point.data.xFormatted}
+                                        </div>
+                                        <div style={{display: "flex"}}>
+                                            <strong>Score:&nbsp;</strong>
+                                            {point.data.yFormatted}
+                                        </div>
                                     </div>
                                 </div>
-                                )}
+                            )}
                         />
                     </Box>
                 )}
             </ButtonBase>
         </Box>
     );
-}
+});

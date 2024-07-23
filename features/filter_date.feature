@@ -6,8 +6,8 @@ Feature: Date filter dropdown for Dashboard
 Scenario: View time period
   Given I am on the Dashboard page
   And the earliest and latest dates are available
-  Then the "From" date should be filled up with the date 1 week ago from now in the format of "DD/MM/YYYY"
-  And the "To" date filled up with date now in the format of "DD/MM/YYYY"
+  Then the "From" date should be filled up with the date 1 week ago from now in the format of "DD-MM-YYYY"
+  And the "To" date filled up with date now in the format of "DD-MM-YYYY"
 
 Scenario: Today's date is circled
   Given I am on the Dashboard page
@@ -41,7 +41,7 @@ Scenario: Calendar dropdown closes on selection
   And I have the "From" calendar dropdown opened
   When I select a date
   Then the calendar dropdown should close
-  And the "From" date should be filled up in the format of "DD/MM/YYYY"
+  And the "From" date should be filled up in the format of "DD-MM-YYYY"
 
 Scenario: Calendar dropdown closes on clicking away
   Given I am on the Dashboard page
@@ -60,8 +60,8 @@ Scenario: Reset selection by refreshing
   Given I am on the Dashboard page
   And I have selected a time period
   When I refresh the page
-  Then the "From" date should be filled up with the date 1 week ago from now in the format of "DD/MM/YYYY"
-  And the "To" date filled up with date now in the format of "DD/MM/YYYY"
+  Then the "From" date should be filled up with the date 1 week ago from now in the format of "DD-MM-YYYY"
+  And the "To" date filled up with date now in the format of "DD-MM-YYYY"
 
 Scenario: Disable invalid date range (From later than To)
   Given I am on the Dashboard page

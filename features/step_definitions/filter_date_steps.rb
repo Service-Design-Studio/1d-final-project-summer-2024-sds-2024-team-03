@@ -10,13 +10,13 @@ Given(/the earliest and latest dates are available/) do
   @dates = get_earliest_and_latest_dates(url)
 end
 
-Then(/the "From" date should be filled up with the date 1 week ago from now in the format of "DD\/MM\/YYYY"/) do
-  from_date = (Date.today - 7).strftime("%d/%m/%Y")
+Then(/the "From" date should be filled up with the date 1 week ago from now in the format of "DD\-MM\-YYYY"/) do
+  from_date = (Date.today - 7).strftime("%d-%m-%Y")
   expect(find("#from-date").value).to eq from_date
 end
 
-Then(/the "To" date filled up with date now in the format of "DD\/MM\/YYYY"/) do
-  to_date = Date.today.strftime("%d/%m/%Y")
+Then(/the "To" date filled up with date now in the format of "DD\-MM\-YYYY"/) do
+  to_date = Date.today.strftime("%d-%m-%Y")
   expect(find("#to-date").value).to eq to_date
 end
 
@@ -41,7 +41,7 @@ end
 # Scenario: Clickable and unclickable dates based on earliest date
 When(/^I select the earliest date$/) do
   earliest_date = Date.parse(@dates[:earliest_date])
-  earliest_date_text = earliest_date.strftime("%d/%m/%Y")
+  earliest_date_text = earliest_date.strftime("%d-%m-%Y")
   # Fill in the 'from-date' input field with the earliest date text
   fill_in 'from-date', with: earliest_date_text
 end
@@ -86,7 +86,7 @@ end
 # Scenario: Clickable and unclickable dates based on today or latest date
 When(/^I select the latest date$/) do
   latest_date = Date.parse(@dates[:latest_date])
-  latest_date_text = latest_date.strftime("%d/%m/%Y")
+  latest_date_text = latest_date.strftime("%d-%m-%Y")
   # Fill in the 'from-date' input field with the earliest date text
   fill_in 'from-date', with: latest_date_text
 end
@@ -180,9 +180,9 @@ Then(/the calendar dropdown should close/) do
   expect(page).to have_no_css('.MuiPaper-root.MuiPickersPopper-paper', visible: true)
 end
 
-Then(/the "From" date should be filled up in the format of "DD\/MM\/YYYY"/) do
+Then(/the "From" date should be filled up in the format of "DD\-MM\-YYYY"/) do
   # Parse the stored clicked date to format it correctly
-  selected_date = Date.parse("#{@clicked_date}/#{Time.now.month}/#{Time.now.year}").strftime("%d/%m/%Y")
+  selected_date = Date.parse("#{@clicked_date}/#{Time.now.month}/#{Time.now.year}").strftime("%d-%m-%Y")
   expect(find("#from-date").value).to eq selected_date
 end
 
