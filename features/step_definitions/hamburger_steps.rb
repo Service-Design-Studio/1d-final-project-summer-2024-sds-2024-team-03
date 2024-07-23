@@ -1,12 +1,13 @@
 Given(/I am on (Dashboard|Analytics|Actionables|Upload Data)/) do |page|
   visit root_path  # Adjust the root_path to match your routing
-
+  sleep(3)
   within('header.MuiPaper-root') do
     within('.MuiToolbar-root') do
       within('.MuiBox-root.css-6tjt3u') do
         within('.MuiBox-root') do
           button = find_button(page, visible: true)
           button.click
+          sleep(2)
         end
       end
     end
@@ -15,13 +16,14 @@ end
 
 Given(/I am on the (.*) page/) do |page|
   visit root_path  # Adjust the root_path to match your routing
-
+  sleep(15)
   within('header.MuiPaper-root') do
     within('.MuiToolbar-root') do
       within('.MuiBox-root.css-6tjt3u') do
         within('.MuiBox-root') do
           button = find_button(page, visible: true)
           button.click
+          sleep(10)
         end
       end
     end
