@@ -1,2 +1,6 @@
 ./hamburger.feature
   When I select the hamburger menu
+
+./upload.feature
+  When I upload multiple valid files using the file input
+  Then a Modal should open, informing a successful upload

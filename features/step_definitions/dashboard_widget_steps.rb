@@ -16,23 +16,28 @@ Then(/(.*) seed feedback should exist/) do |n_seeds|
   expect(Analytic.count).to eq(n_seeds.to_i)
 end
 
-Then(/^(.*) score is colored (.*)$/) do |sentiment, color|
-  # Find the element with the specified sentiment text
-  element = find("p.MuiTypography-root.MuiTypography-body1.css-9l3uo3", text: /#{sentiment}/)
-  style = element[:style]
+Then(/^(.*) bar is colored (.*)$/) do |sentiment, color|
+  element = find("p.MuiTypography-root.MuiTypography-body1", text: /#{sentiment}/)
 
-  # Verify that the style contains the expected color
+  # Navigate to the correct div with the background color
+  parent_div = element.find(:xpath, "ancestor::div[contains(@class, 'MuiBox-root css-34ji4n')]")
+  child_div = parent_div.find(:xpath, "descendant::div[contains(@class, 'MuiBox-root css-15yuoy2')]")
+  color_div = child_div.find(:xpath, "descendant::div[contains(@class, 'css-') and contains(@class, 'MuiBox-root')]")
+  
+  # Get the computed background color style
+  background_color = color_div.native.style('background-color')
+
   case color
     when "red"
-      expect(style).to include("color: red")
+      expect(background_color).to eq("rgba(255, 0, 0, 1)")
     when "orange"
-      expect(style).to include("color: orange")
+      expect(background_color).to eq("rgba(255, 165, 0, 1)")
     when "grey"
-      expect(style).to include("color: grey")
+      expect(background_color).to eq("rgba(169, 169, 169, 1)")
     when "green"
-      expect(style).to include("color: green")
+      expect(background_color).to eq("rgba(0, 128, 0, 1)")
     when "darkgreen"
-      expect(style).to include("color: darkgreen")
+      expect(background_color).to eq("rgba(0, 100, 0, 1)")
     else
       raise "Unknown color: #{color}"
   end
@@ -54,12 +59,14 @@ And(/the sources selected are: '(.*)'/) do |sources|
   select_sources(sources.split(', '))
 end
 
-When(/All Dates are selected/) do
-  earliest_date = Date.parse(@dates[:earliest_date])
-  earliest_date_text = earliest_date.strftime("%d/%m/%Y")
+When(/Past 6 Months are selected/) do
+  url = "#{Capybara.app_host}"
+  @dates = get_earliest_and_latest_dates(url)
   latest_date = Date.parse(@dates[:latest_date])
-  latest_date_text = latest_date.strftime("%d/%m/%Y")
-  set_date_range(earliest_date_text, latest_date_text)
+  latest_date_text = latest_date.strftime("%d-%m-%Y")
+  start_date = Date.parse(@dates[:latest_date]) << 6
+  start_date_text = start_date.strftime("%d-%m-%Y")
+  set_date_range(start_date_text, latest_date_text)
 end
 
 When(/the date is set from '(.*)' to '(.*)'/) do |start_date, end_date|
@@ -79,15 +86,19 @@ Then(/I should see the percentage change as '(.*)'/) do |expected_change|
   # Verify the text content
   expect(element).to have_text(expected_change)
   
-  # Verify the color based on the class attribute
-  class_attribute = element[:class]
-  
-  if expected_change.include?("Increase")
-    expect(class_attribute).to include('css-1p46rei') # Assuming this class indicates green color
-  elsif expected_change.include?("Decrease")
-    expect(class_attribute).to include('css-s5aq4g') # Assuming this class indicates red color
+  # Verify the color
+  if expected_change.include?("▲")
+    parent_element = element.find(:xpath, "ancestor::div[1]")
+    parent_class_attribute = parent_element[:class]
+    expect(parent_class_attribute).to include('css-16aw65f') # green color
+  elsif expected_change.include?("▼")
+    parent_element = element.find(:xpath, "ancestor::div[1]")
+    parent_class_attribute = parent_element[:class]
+    expect(parent_class_attribute).to include('css-19iv31y') # red color
   elsif expected_change.include?("Not Applicable")
-    expect(class_attribute).to include('css-1gcnt69') # Assuming this class indicates red color
+    parent_element = element.find(:xpath, "ancestor::div[1]")
+    parent_class_attribute = parent_element[:class]
+    expect(parent_class_attribute).to include('css-1cvl920') # grey color
   end
 end
 
@@ -112,15 +123,15 @@ Then(/I should see the distribution of sentiment add up to '(.*)'/) do |distribu
 end
 
 # Scenario: Clicking on sentiment score widget redirects to Analytics page
-  When(/I click on '(.*)' widget/) do |widget_id|
-    find("##{widget_id}").click
-  end
+When(/I click on '(.*)' widget/) do |widget_id|
+  find("##{widget_id}").click
+end
 
-  Then(/I should be redirected to '(.*)' page/) do |expected_title|
-    page_title = find('h1')
-    actual_title = page_title.text.strip
-    expect(actual_title).to eq(expected_title)
-  end
+Then(/I should be redirected to '(.*)' page/) do |expected_title|
+  page_title = find('h1')
+  actual_title = page_title.text.strip
+  expect(actual_title).to eq(expected_title)
+end
 
 
 
@@ -177,10 +188,12 @@ def select_all_sources
     option.click
   end
 
+  # Wait a moment for any JS processing
+  sleep(0.1)
+
   # Close dropdown by clicking outside of it
   find('body').click
 end
-
 
 def select_sources(sources)
   # Ensure the dropdown is interactable
@@ -200,12 +213,10 @@ def select_sources(sources)
   find('body').click
 end
 
-
 def set_date_range(start_date, end_date)
   # Fill in the 'From Date' input
   find('#from-date').set(start_date)
   # Fill in the 'To Date' input
   find('#to-date').set(end_date)
-  # Additional actions like submitting the form or clicking away to trigger any validations or updates can be added here
-  find('header').click # to close date picker if it stays open
+  find('body').click # to close date picker if it stays open
 end
