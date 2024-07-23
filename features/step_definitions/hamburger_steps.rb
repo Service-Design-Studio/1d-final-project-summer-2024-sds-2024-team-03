@@ -1,29 +1,30 @@
 Given(/I am on (Dashboard|Analytics|Actionables|Upload Data)/) do |page|
-  @current_page = page
-  case page
-  when 'Dashboard'
-    visit root_path
-  else
-    visit root_path
-    find('#nav-hamburger').click
-    within('.MuiList-root.MuiList-padding') do
-      find('.MuiListItemText-primary', text: page).click
+  visit root_path  # Adjust the root_path to match your routing
+
+  within('header.MuiPaper-root') do
+    within('.MuiToolbar-root') do
+      within('.MuiBox-root.css-6tjt3u') do
+        within('.MuiBox-root') do
+          button = find_button(page, visible: true)
+          button.click
+        end
+      end
     end
-    find('.MuiButtonBase-root.MuiIconButton-root.MuiIconButton-sizeMedium.css-1yxmbwk').click
   end
 end
 
 Given(/I am on the (.*) page/) do |page|
-  case page
-  when 'Dashboard'
-    visit root_path
-  else
-    visit root_path
-    find('#nav-hamburger').click
-    within('.MuiList-root.MuiList-padding') do
-      find('.MuiListItemText-primary', text: page).click
+  visit root_path  # Adjust the root_path to match your routing
+
+  within('header.MuiPaper-root') do
+    within('.MuiToolbar-root') do
+      within('.MuiBox-root.css-6tjt3u') do
+        within('.MuiBox-root') do
+          button = find_button(page, visible: true)
+          button.click
+        end
+      end
     end
-    find('.MuiButtonBase-root.MuiIconButton-root.MuiIconButton-sizeMedium.css-1yxmbwk').click
   end
 end
 
