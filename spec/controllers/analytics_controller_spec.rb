@@ -92,7 +92,7 @@ RSpec.describe AnalyticsController, type: :controller do
       {
         "date" => "13/08/2024",
         "feedback" => "Too busy",
-        "feedback_category" => nil,
+        "feedback_category" => "Staff Related",
         "product" => "Others",
         "sentiment" => "Satisfied",
         "sentiment_score" => "4.5",
@@ -102,7 +102,7 @@ RSpec.describe AnalyticsController, type: :controller do
       {
         "date" => "15/08/2024",
         "feedback" => "Thank you",
-        "feedback_category" => nil,
+        "feedback_category" => "Staff Related",
         "product" => "Others",
         "sentiment" => "Unsatisfied",
         "sentiment_score" => "2.1",
@@ -112,7 +112,7 @@ RSpec.describe AnalyticsController, type: :controller do
       {
         "date" => "13/08/2024",
         "feedback" => "So far is a good service from the staff handled my matter",
-        "feedback_category" => nil,
+        "feedback_category" => "Staff Related",
         "product" => "Others",
         "sentiment" => "Unsatisfied",
         "sentiment_score" => "2.0",
@@ -122,7 +122,7 @@ RSpec.describe AnalyticsController, type: :controller do
       {
         "date" => "13/08/2024",
         "feedback" => "Faster than expected process : A+",
-        "feedback_category" => nil,
+        "feedback_category" => "Staff Related",
         "product" => "Others",
         "sentiment" => "Frustrated",
         "sentiment_score" => "0.3",
