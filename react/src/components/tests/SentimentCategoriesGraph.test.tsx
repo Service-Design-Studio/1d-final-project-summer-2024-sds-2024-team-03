@@ -1,6 +1,6 @@
 import React from "react";
 import {render, screen, fireEvent, waitFor} from "@testing-library/react";
-import SentimentScoreGraph from "../SentimentScoreGraph";
+import SentimentCategoriesGraph from "../SentimentCategoriesGraph";
 import fetchMock from "jest-fetch-mock";
 import dayjs from "dayjs";
 
@@ -11,10 +11,7 @@ const urlPrefix =
     process.env.NODE_ENV === "development"
         ? "http://localhost:3000"
         : "https://jbaaam-yl5rojgcbq-et.a.run.app";
-const overviewResponse = [
-    {date: "02/05/2024", sentiment_score: "2.5238095238095238"},
-];
-const detailedResponse = [
+const response = [
     [
         {
             subcategory: "Credit Card",
@@ -41,11 +38,11 @@ const toDate = "01/07/2024";
 const selectedProduct = ["Cards", "Deposits"];
 const selectedSource = ["Product Survey", "Social Media"];
 
-const renderSentimentScoreGraph = (props = {}) =>
+const renderSentimentCategoriesGraph = (props = {}) =>
     render(
-        <SentimentScoreGraph
-            fromDate={dayjs(dayjs(fromDate).format("DD/MM/YYYY"))}
-            toDate={dayjs(dayjs(toDate).format("DD/MM/YYYY"))}
+        <SentimentCategoriesGraph
+            fromDate={dayjs(dayjs(fromDate).format("DD-MM-YYYY"))}
+            toDate={dayjs(dayjs(toDate).format("DD-MM-YYYY"))}
             selectedProduct={selectedProduct}
             selectedSource={selectedSource}
             isDetailed={false}
@@ -54,47 +51,46 @@ const renderSentimentScoreGraph = (props = {}) =>
         />
     );
 
-describe("SentimentScoreGraph Component", () => {
+describe("SentimentCategoriesGraph Component", () => {
     beforeEach(() => {
         jest.spyOn(global.console, "error").mockImplementation(() => jest.fn());
         jest.spyOn(global.console, "log").mockImplementation(() => jest.fn());
         fetchMock.resetMocks();
-    });
-
-    it("should render correctly", () => {
-        fetchMock.mockResponseOnce(JSON.stringify(overviewResponse), {
+        fetchMock.mockResponseOnce(JSON.stringify(response), {
             status: 200,
         });
-        renderSentimentScoreGraph();
+    });
 
+    it("should render correctly for overview", () => {
+        renderSentimentCategoriesGraph();
         expect(
-            screen.getByText("Sentiment Trend for Selected Product(s)")
+            screen.getByText("Top 5 Positive Categories")
         ).toBeInTheDocument();
-
         expect(
-            screen.getByText("across all subcategories")
+            screen.getByText("Top 5 Negative Categories")
         ).toBeInTheDocument();
     });
 
-    it("should fetch overall sentiment scores data on mount when on Dashboard", async () => {
-        fetchMock.mockResponseOnce(JSON.stringify(overviewResponse), {
-            status: 200,
-        });
-        renderSentimentScoreGraph();
+    it("should render correctly for detailed", () => {
+        renderSentimentCategoriesGraph({isDetailed: true});
+        expect(
+            screen.getByText("Sentiment Categorisation")
+        ).toBeInTheDocument();
+        expect(screen.getByText("Sort")).toBeInTheDocument();
+        expect(screen.getByText("View All")).toBeInTheDocument();
+    });
 
+    it("should fetch data on mount when on Dashboard", async () => {
+        renderSentimentCategoriesGraph();
         await waitFor(() => {
             expect(fetch).toHaveBeenCalledWith(
-                `${urlPrefix}/analytics/get_overall_sentiment_scores?fromDate=${fromDate}&toDate=${toDate}&product=${selectedProduct}&source=${selectedSource}`
+                `${urlPrefix}/analytics/get_sentiment_scores?fromDate=${fromDate}&toDate=${toDate}&product=${selectedProduct}&source=${selectedSource}`
             );
         });
     });
 
-    it("should fetch detailed sentiment scores data on mount when on Analytics", async () => {
-        fetchMock.mockResponseOnce(JSON.stringify(detailedResponse), {
-            status: 200,
-        });
-        renderSentimentScoreGraph({isDetailed: true});
-
+    it("should fetch data on mount when on Analytics", async () => {
+        renderSentimentCategoriesGraph({isDetailed: true});
         await waitFor(() => {
             expect(fetch).toHaveBeenCalledWith(
                 `${urlPrefix}/analytics/get_sentiment_scores?fromDate=${fromDate}&toDate=${toDate}&product=${selectedProduct}&source=${selectedSource}`
@@ -103,25 +99,23 @@ describe("SentimentScoreGraph Component", () => {
     });
 
     it("should handle empty data gracefully for overview", async () => {
+        fetchMock.resetMocks();
         fetchMock.mockResponseOnce(JSON.stringify([]), {status: 200});
+        renderSentimentCategoriesGraph();
 
-        renderSentimentScoreGraph();
-        expect(screen.getByText("No data")).toBeInTheDocument();
+        expect(screen.getAllByText("No data").length).toBe(2);
     });
 
     it("should handle empty data gracefully for detailed", async () => {
+        fetchMock.resetMocks();
         fetchMock.mockResponseOnce(JSON.stringify([]), {status: 200});
+        renderSentimentCategoriesGraph({isDetailed: true});
 
-        renderSentimentScoreGraph({isDetailed: true});
         expect(screen.getByText("No data")).toBeInTheDocument();
     });
 
     it("should call setSelectedMenu on button click for overview", async () => {
-        fetchMock.mockResponseOnce(JSON.stringify(overviewResponse), {
-            status: 200,
-        });
-        renderSentimentScoreGraph();
-
+        renderSentimentCategoriesGraph();
         const button = screen.getByRole("button");
         fireEvent.click(button);
         await waitFor(() => {
@@ -129,20 +123,17 @@ describe("SentimentScoreGraph Component", () => {
         });
     });
 
-    it("handles subcategory and feedback category selection for detailed", async () => {
-        fetchMock.resetMocks();
-        fetchMock.mockResponseOnce(JSON.stringify(detailedResponse), {
-            status: 200,
+    it("should have clickable View All and Sort buttons, updating the interface", async () => {
+        renderSentimentCategoriesGraph({isDetailed: true});
+        const viewAll = screen.getByText("View All");
+        fireEvent.click(viewAll);
+        expect(screen.getByText("View Less")).toBeInTheDocument();
+        await waitFor(async () => {
+            if (screen.getByText("(Positive)")) {
+                const sort = screen.getByText("Sort");
+                fireEvent.click(sort);
+                expect(screen.getByText("(Negative)")).toBeInTheDocument();
+            }
         });
-        renderSentimentScoreGraph({isDetailed: true});
-
-        const subcategorySelect = screen.getByLabelText("Subcategories");
-        const feedbackcategorySelect = screen.getByLabelText(
-            "Feedback Categories"
-        );
-        expect(feedbackcategorySelect).toHaveAttribute("aria-disabled");
-
-        fireEvent.mouseDown(subcategorySelect);
-        fireEvent.mouseDown(feedbackcategorySelect);
     });
 });
