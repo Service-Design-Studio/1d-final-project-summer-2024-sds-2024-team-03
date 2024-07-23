@@ -440,7 +440,7 @@ export default function SentimentScoreGraph({
                             gap: 2,
                             mt: 2,
                             width: "100%",
-                            height: 200,
+                            height: 300,
                         }}
                     >
                         <ResponsiveLine
@@ -459,8 +459,8 @@ export default function SentimentScoreGraph({
                             xFormat={`time: %d %b %y`}
                             yScale={{
                                 type: "linear",
-                                min: "auto",
-                                max: "auto",
+                                min: 0,
+                                max: 5,
                                 stacked: false,
                                 reverse: false,
                             }}
@@ -487,6 +487,7 @@ export default function SentimentScoreGraph({
                                 legendOffset: -40,
                                 legendPosition: "middle",
                                 truncateTickAt: 0,
+                                tickValues: [0, 1, 2, 3, 4, 5],
                             }}
                             enableGridX={false}
                             colors={{scheme: "category10"}}
@@ -498,6 +499,44 @@ export default function SentimentScoreGraph({
                             pointLabelYOffset={-12}
                             enableTouchCrosshair={true}
                             useMesh={true}
+
+                            // label styling
+                            tooltip={({ point }) => (
+                                <div
+                                  style={{
+                                    background: theme.palette.mode === "dark" ? "#333" : "#fff",
+                                    boxShadow: '0px 0px 10px rgba(0, 0, 0, 0.2)',
+                                    padding: '9px 12px',
+                                    borderRadius: '10px',
+                                    fontSize: '0.8rem',
+                                    display: 'grid',
+                                    gridTemplateColumns: 'auto 1fr',
+                                    gap: '4px',
+                                    alignItems: 'center',
+                                  }}
+                                >
+                                  <span
+                                    style={{
+                                      width: 12,
+                                      height: 12,
+                                      backgroundColor: point.serieColor,
+                                      borderRadius: '50%',
+                                      marginRight: 4,
+                                    }}
+                                  />
+                                  <div>
+                                    <div style={{ display: 'flex' }}>
+                                      <strong>Date:&nbsp;</strong>
+                                      {point.data.xFormatted}
+                                    </div>
+                                    <div style={{ display: 'flex' }}>
+                                      <strong>Score:&nbsp;</strong>
+                                      {point.data.yFormatted}
+                                    </div>
+                                  </div>
+                                </div>
+                              )}
+
                             legends={[
                                 {
                                     anchor: "bottom",
@@ -607,8 +646,8 @@ export default function SentimentScoreGraph({
                             xFormat={`time: %d %b %y`}
                             yScale={{
                                 type: "linear",
-                                min: "auto",
-                                max: "auto",
+                                min: 0,
+                                max: 5,
                                 stacked: false,
                                 reverse: false,
                             }}
@@ -635,6 +674,7 @@ export default function SentimentScoreGraph({
                                 legendOffset: -40,
                                 legendPosition: "middle",
                                 truncateTickAt: 0,
+                                tickValues: [0, 1, 2, 3, 4, 5],
                             }}
                             enableGridX={false}
                             colors={{scheme: "category10"}}
@@ -646,6 +686,43 @@ export default function SentimentScoreGraph({
                             pointLabelYOffset={-12}
                             enableTouchCrosshair={true}
                             useMesh={true}
+                            
+                            // label styling
+                            tooltip={({ point }) => (
+                                <div
+                                    style={{
+                                    background: theme.palette.mode === "dark" ? "#333" : "#fff",
+                                    boxShadow: '0px 0px 10px rgba(0, 0, 0, 0.2)',
+                                    padding: '9px 12px',
+                                    borderRadius: '10px',
+                                    fontSize: '0.8rem',
+                                    display: 'grid',
+                                    gridTemplateColumns: 'auto 1fr',
+                                    gap: '4px',
+                                    alignItems: 'center',
+                                    }}
+                                >
+                                    <span
+                                    style={{
+                                        width: 12,
+                                        height: 12,
+                                        backgroundColor: point.serieColor,
+                                        borderRadius: '50%',
+                                        marginRight: 4,
+                                    }}
+                                    />
+                                    <div>
+                                    <div style={{ display: 'flex' }}>
+                                        <strong>Date:&nbsp;</strong>
+                                        {point.data.xFormatted}
+                                    </div>
+                                    <div style={{ display: 'flex' }}>
+                                        <strong>Score:&nbsp;</strong>
+                                        {point.data.yFormatted}
+                                    </div>
+                                    </div>
+                                </div>
+                                )}
                         />
                     </Box>
                 )}
