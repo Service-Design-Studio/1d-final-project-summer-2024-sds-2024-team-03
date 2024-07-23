@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useState, forwardRef} from "react";
 import {Theme, useTheme} from "@mui/material/styles";
 import {Paper, Box, Typography, ButtonBase} from "@mui/material";
 import {Dayjs} from "dayjs";
@@ -32,14 +32,17 @@ interface SentimentScoreGraphProps {
     setSelectedMenu?: React.Dispatch<React.SetStateAction<string>>;
 }
 
-export default function SentimentScoreGraph({
-    fromDate,
-    toDate,
-    selectedProduct,
-    selectedSource,
-    isDetailed,
-    setSelectedMenu,
-}: SentimentScoreGraphProps) {
+export default forwardRef(function SentimentScoreGraph(
+    {
+        fromDate,
+        toDate,
+        selectedProduct,
+        selectedSource,
+        isDetailed,
+        setSelectedMenu,
+    }: SentimentScoreGraphProps,
+    ref: React.Ref<HTMLDivElement>
+) {
     const fromDate_string = fromDate.format("DD/MM/YYYY");
     const toDate_string = toDate.format("DD/MM/YYYY");
     type DataPoint = {
@@ -283,6 +286,7 @@ export default function SentimentScoreGraph({
     /* Must have parent container with a defined size */
     return isDetailed ? (
         <Box
+            ref={ref}
             sx={{
                 display: "flex",
                 gap: 2,
@@ -573,6 +577,7 @@ export default function SentimentScoreGraph({
         </Box>
     ) : (
         <Box
+            ref={ref}
             sx={{
                 display: "flex",
                 gap: 2,
@@ -734,4 +739,4 @@ export default function SentimentScoreGraph({
             </ButtonBase>
         </Box>
     );
-}
+});

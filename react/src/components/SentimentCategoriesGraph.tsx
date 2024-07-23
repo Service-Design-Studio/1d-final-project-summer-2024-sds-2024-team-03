@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useRef} from "react";
+import React, {useEffect, useState, useRef, forwardRef} from "react";
 import {Theme, useTheme} from "@mui/material/styles";
 import {
     Paper,
@@ -82,14 +82,17 @@ interface SentimentCategoriesGraphProps {
     setSelectedMenu?: React.Dispatch<React.SetStateAction<string>>;
 }
 
-export default function SentimentCategoriesGraph({
-    fromDate,
-    toDate,
-    selectedProduct,
-    selectedSource,
-    isDetailed,
-    setSelectedMenu,
-}: SentimentCategoriesGraphProps) {
+export default forwardRef(function SentimentCategoriesGraph(
+    {
+        fromDate,
+        toDate,
+        selectedProduct,
+        selectedSource,
+        isDetailed,
+        setSelectedMenu,
+    }: SentimentCategoriesGraphProps,
+    ref: React.Ref<HTMLDivElement>
+) {
     const fromDate_string = fromDate.format("DD/MM/YYYY");
     const toDate_string = toDate.format("DD/MM/YYYY");
 
@@ -561,6 +564,7 @@ export default function SentimentCategoriesGraph({
     /* Must have parent container with a defined size */
     return isDetailed ? (
         <Box
+            ref={ref}
             sx={{
                 display: "flex",
                 gap: 2,
@@ -975,6 +979,7 @@ export default function SentimentCategoriesGraph({
         </Box>
     ) : (
         <Box
+            ref={ref}
             sx={{
                 display: "flex",
                 gap: 2,
@@ -1260,4 +1265,4 @@ export default function SentimentCategoriesGraph({
             </ButtonBase>
         </Box>
     );
-}
+});

@@ -19,9 +19,9 @@ const MenuProps = {
             maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
             width: 250,
             borderRadius: 18,
-            marginTop: '18px'
+            marginTop: "18px",
         },
-        sx: { boxShadow: '0px 0px 20px rgba(0, 0, 0, 0.1)' }
+        sx: {boxShadow: "0px 0px 20px rgba(0, 0, 0, 0.1)"},
     },
 };
 
@@ -62,7 +62,9 @@ export default function FilterSource({
     return (
         <Grid item xs={3}>
             <FormControl sx={{m: 0, width: "100%"}}>
-                <InputLabel id="filter-source-label" sx={{fontWeight: 'bold'}} >Sources</InputLabel>
+                <InputLabel id="filter-source-label" sx={{fontWeight: "bold"}}>
+                    Sources
+                </InputLabel>
                 <Select
                     labelId="filter-source-label"
                     id="filter-source"
@@ -70,7 +72,11 @@ export default function FilterSource({
                     value={selectedSource}
                     onChange={handleChange}
                     input={
-                        <OutlinedInput id="select-source" label="source" sx={{ borderRadius: 4 }} />
+                        <OutlinedInput
+                            id="select-source"
+                            label="source"
+                            sx={{borderRadius: 4}}
+                        />
                     }
                     renderValue={(selected) => (
                         <Box sx={{display: "flex", flexWrap: "wrap", gap: 0.5}}>
@@ -96,7 +102,7 @@ export default function FilterSource({
                             </MenuItem>
                         ))
                     ) : (
-                        <MenuItem disabled>No sources for selected time period</MenuItem>
+                        <MenuItem disabled>No data</MenuItem>
                     )}
                 </Select>
             </FormControl>
