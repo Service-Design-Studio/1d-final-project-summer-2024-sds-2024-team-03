@@ -1,59 +1,58 @@
 Given(/I am on (Dashboard|Analytics|Actionables|Upload Data)/) do |page|
-  visit root_path  # Adjust the root_path to match your routing
-
-  within('header.MuiPaper-root') do
-    within('.MuiToolbar-root') do
-      within('.MuiBox-root.css-6tjt3u') do
-        within('.MuiBox-root') do
-          button = find_button(page, visible: true)
-          button.click
-        end
-      end
+  @current_page = page
+  case page
+  when 'Dashboard'
+    visit root_path
+  else
+    visit root_path
+    within('header.MuiPaper-root') do
+      button = find_button(page, visible: true)
+      button.click
     end
   end
 end
 
 Given(/I am on the (.*) page/) do |page|
-  visit root_path  # Adjust the root_path to match your routing
-
-  within('header.MuiPaper-root') do
-    within('.MuiToolbar-root') do
-      within('.MuiBox-root.css-6tjt3u') do
-        within('.MuiBox-root') do
-          button = find_button(page, visible: true)
-          button.click
-        end
-      end
+  case page
+  when 'Dashboard'
+    visit root_path
+  else
+    visit root_path
+    within('header.MuiPaper-root') do
+      button = find_button(page, visible: true)
+      button.click
     end
   end
 end
 
-When(/I select the hamburger menu/) do
-  find('#nav-hamburger').click
-end
+Then(/the navigation bar should show "(.*?)", "(.*?)", "(.*?)", "(.*?)"/) do |dashboard, analytics, actionables, upload|
+  dashboard.upcase!
+  analytics.upcase!
+  actionables.upcase!
+  upload.upcase!
 
-Then(/the hamburger menu should expand out to reveal "(.*?)", "(.*?)", "(.*?)", "(.*?)"/) do |dashboard, analytics, actions, upload|
-  within('.MuiList-root.MuiList-padding') do
-    expect(page).to have_css('.MuiListItemText-primary', text: dashboard, wait: 1)
-    expect(page).to have_css('.MuiListItemText-primary', text: analytics, wait: 1)
-    expect(page).to have_css('.MuiListItemText-primary', text: actions, wait: 1)
-    expect(page).to have_css('.MuiListItemText-primary', text: upload, wait: 1)
+  within('header.MuiPaper-root') do
+    within('.MuiBox-root.css-10egq61') do
+      expect(page).to have_css('.MuiButton-sizeMedium', text: dashboard, wait: 1)
+      expect(page).to have_css('.MuiButton-sizeMedium', text: analytics, wait: 1)
+      expect(page).to have_css('.MuiButton-sizeMedium', text: actionables, wait: 1)
+      expect(page).to have_css('.MuiButton-sizeMedium', text: upload, wait: 1)
+    end
   end
 end
 
 Then(/the page I am currently on should be highlighted/) do
-  highlighted_element = find('.menu-item-active') # highlight automatically applies to .menu-item-active
-  expect(highlighted_element).to have_content(@current_page)
+  highlighted_element = find('.css-1ld4d8p') # highlight automatically applies to .css-1ld4d8p
+  expect(highlighted_element).to have_content(@current_page.upcase)
 end
 
-When(/I select a (Analytics|Actionables|Upload Data) on the hamburger menu from Dashboard page/) do |page|
+When(/I select a (Analytics|Actionables|Upload Data) on the navigation bar from Dashboard page/) do |page|
   @clicked_page = page
   visit root_path
-  find('#nav-hamburger').click
-  within('.MuiList-root.MuiList-padding') do
-    find('.MuiListItemText-primary', text: page).click
+  within('header.MuiPaper-root') do
+    button = find_button(page, visible: true)
+    button.click
   end
-  find('.MuiButtonBase-root.MuiIconButton-root.MuiIconButton-sizeMedium.css-1yxmbwk').click
 end
 
 Then(/the page I am currently on shows the correct page title/) do
@@ -96,11 +95,10 @@ When(/I select "(.*?)" and "(.*?)" for the Sources/) do |source1, source2|
   @source2 = source2
 end
 
-When(/I click on "(.*?)" in the Hamburger Menu/) do |menu_item|
-  find('#nav-hamburger').click
-  expect(page).to have_css('.menu-item')
-  within('.MuiList-root.MuiList-padding') do
-    find('.MuiListItemText-primary', text: menu_item).click
+When(/I click on "(.*?)" in the navigation bar/) do |menu_item|
+  within('header.MuiPaper-root') do
+    button = find_button(menu_item, visible: true)
+    button.click
   end
 end
 
