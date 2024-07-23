@@ -130,8 +130,6 @@ export default function SentimentScoreGraph({
             setGraphSubcategories([]);
             setGraphFeedbackcategories([]);
             setSentimentScores([]);
-            setSelectedSubcategory("");
-            setSelectedFeedbackcategories([]);
         }
         if (isDetailed) {
             fetch(
@@ -348,17 +346,23 @@ export default function SentimentScoreGraph({
                                         }}
                                     />
                                 }
-                                renderValue={(selected) => (
-                                    <Box
-                                        sx={{
-                                            display: "flex",
-                                            flexWrap: "wrap",
-                                            gap: 0.5,
-                                        }}
-                                    >
-                                        <Chip key={selected} label={selected} />
-                                    </Box>
-                                )}
+                                renderValue={(selected) => {
+                                    if (graphSubcategories.length > 0)
+                                        return (
+                                            <Box
+                                                sx={{
+                                                    display: "flex",
+                                                    flexWrap: "wrap",
+                                                    gap: 0.5,
+                                                }}
+                                            >
+                                                <Chip
+                                                    key={selected}
+                                                    label={selected}
+                                                />
+                                            </Box>
+                                        );
+                                }}
                                 MenuProps={MenuProps}
                             >
                                 {graphSubcategories.length > 0 ? (
@@ -402,19 +406,25 @@ export default function SentimentScoreGraph({
                                         }}
                                     />
                                 }
-                                renderValue={(selected) => (
-                                    <Box
-                                        sx={{
-                                            display: "flex",
-                                            flexWrap: "wrap",
-                                            gap: 0.5,
-                                        }}
-                                    >
-                                        {selected.map((value) => (
-                                            <Chip key={value} label={value} />
-                                        ))}
-                                    </Box>
-                                )}
+                                renderValue={(selected) => {
+                                    if (graphFeedbackcategories.length > 0)
+                                        return (
+                                            <Box
+                                                sx={{
+                                                    display: "flex",
+                                                    flexWrap: "wrap",
+                                                    gap: 0.5,
+                                                }}
+                                            >
+                                                {selected.map((value) => (
+                                                    <Chip
+                                                        key={value}
+                                                        label={value}
+                                                    />
+                                                ))}
+                                            </Box>
+                                        );
+                                }}
                                 MenuProps={MenuProps}
                             >
                                 {graphFeedbackcategories.map(

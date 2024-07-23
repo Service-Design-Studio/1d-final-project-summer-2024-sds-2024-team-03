@@ -255,7 +255,6 @@ export default function SentimentCategoriesGraph({
         ) {
             setGraphSubcategories([]);
             setBars([]);
-            setSelectedSubcategory("");
         }
         if (isDetailed) {
             fetch(
@@ -644,17 +643,23 @@ export default function SentimentCategoriesGraph({
                                     sx={{borderRadius: 4}}
                                 />
                             }
-                            renderValue={(selected) => (
-                                <Box
-                                    sx={{
-                                        display: "flex",
-                                        flexWrap: "wrap",
-                                        gap: 0.5,
-                                    }}
-                                >
-                                    <Chip key={selected} label={selected} />
-                                </Box>
-                            )}
+                            renderValue={(selected) => {
+                                if (graphSubcategories.length > 0)
+                                    return (
+                                        <Box
+                                            sx={{
+                                                display: "flex",
+                                                flexWrap: "wrap",
+                                                gap: 0.5,
+                                            }}
+                                        >
+                                            <Chip
+                                                key={selected}
+                                                label={selected}
+                                            />
+                                        </Box>
+                                    );
+                            }}
                             MenuProps={MenuProps}
                         >
                             {graphSubcategories.length > 0 ? (
