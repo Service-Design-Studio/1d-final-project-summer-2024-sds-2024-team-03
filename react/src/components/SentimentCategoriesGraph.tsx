@@ -727,23 +727,42 @@ export default function SentimentCategoriesGraph({
                                 tooltip={({id, indexValue, value, color}) => (
                                     <div
                                         style={{
+                                            padding: "10px",
                                             backgroundColor: "white",
+                                            boxShadow:
+                                                "0 4px 8px rgba(0, 0, 0, 0.1)",
                                         }}
                                     >
-                                        <span>
-                                            {id} - {indexValue}:{" "}
-                                            <strong>{value}</strong>{" "}
-                                        </span>
-                                        <br></br>
-                                        <span
+                                        <div
+                                            style={{
+                                                display: "flex",
+                                                alignItems: "center",
+                                                marginBottom: "5px",
+                                            }}
+                                        >
+                                            <div
+                                                style={{
+                                                    width: "12px",
+                                                    height: "12px",
+                                                    backgroundColor: color,
+                                                    marginRight: "8px",
+                                                }}
+                                            ></div>
+                                            <span>
+                                                {id} - {indexValue}:{" "}
+                                                <strong>{value}</strong>
+                                            </span>
+                                        </div>
+                                        <div
                                             style={{
                                                 color: "grey",
                                                 fontStyle: "italic",
+                                                marginTop: "5px",
                                             }}
                                         >
                                             <strong>Click</strong> to view
                                             related data
-                                        </span>
+                                        </div>
                                     </div>
                                 )}
                                 defs={[
