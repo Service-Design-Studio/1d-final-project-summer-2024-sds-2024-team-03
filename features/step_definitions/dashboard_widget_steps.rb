@@ -17,31 +17,22 @@ Then(/(.*) seed feedback should exist/) do |n_seeds|
 end
 
 Then(/^(.*) score is colored (.*)$/) do |sentiment, color|
-  element = find('p', text: sentiment)
   # Find the element with the specified sentiment text
+  element = find("p.MuiTypography-root.MuiTypography-body1.css-9l3uo3", text: /#{sentiment}/)
+  style = element[:style]
 
-
-  parent_div = element.find(:xpath, './ancestor::div[contains(@class, "MuiBox-root")]')
-
-  # Get the color element within the parent div
-  color_element = parent_div.find(:xpath, './/div[contains(@class, "css-19xdw6m")]')
-  # Get the background color of the color element
-  color = color_element.native.style('background-color')
-
-  # Check if the color is red
-  expect(color).to eq('rgb(255, 0, 0)')
   # Verify that the style contains the expected color
   case color
     when "red"
-      expect(color).to include("color: red")
+      expect(style).to include("color: red")
     when "orange"
-      expect(color).to include("color: orange")
+      expect(style).to include("color: orange")
     when "grey"
-      expect(color).to include("color: grey")
+      expect(style).to include("color: grey")
     when "green"
-      expect(color).to include("color: green")
+      expect(style).to include("color: green")
     when "darkgreen"
-      expect(color).to include("color: darkgreen")
+      expect(style).to include("color: darkgreen")
     else
       raise "Unknown color: #{color}"
   end
