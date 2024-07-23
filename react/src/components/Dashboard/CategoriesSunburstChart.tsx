@@ -291,7 +291,7 @@ export default function CategoriesSunburstChart({
                             id="category"
                             value="mentions"
                             cornerRadius={2}
-                            borderWidth={3}
+                            borderWidth={2}
                             borderColor={{theme: "grid.line.stroke"}}
                             colors={(bar) => barColors[bar.id]}
                             // To make use of hsl from each component

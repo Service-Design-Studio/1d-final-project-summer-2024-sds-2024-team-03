@@ -1013,7 +1013,7 @@ export default function SentimentCategoriesGraph({
                                         top: 10,
                                         right: 10,
                                         bottom: 50,
-                                        left: 240,
+                                        left: 250,
                                     }}
                                     padding={0.3}
                                     minValue={0}
@@ -1134,7 +1134,7 @@ export default function SentimentCategoriesGraph({
                                         top: 10,
                                         right: 10,
                                         bottom: 50,
-                                        left: 240,
+                                        left: 250,
                                     }}
                                     padding={0.3}
                                     minValue={0}
