@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useState, forwardRef} from "react";
 import {Theme, useTheme} from "@mui/material/styles";
 import {Paper, Box, Typography, ButtonBase} from "@mui/material";
 import {Dayjs} from "dayjs";
@@ -20,13 +20,16 @@ const ORDER: Record<string, string> = {
     Frustrated: "red",
 };
 
-export default function CategoriesSunburstChart({
-    fromDate,
-    toDate,
-    selectedProduct,
-    selectedSource,
-    setSelectedMenu,
-}: CategoriesSunburstChartProps) {
+export default forwardRef(function CategoriesSunburstChart(
+    {
+        fromDate,
+        toDate,
+        selectedProduct,
+        selectedSource,
+        setSelectedMenu,
+    }: CategoriesSunburstChartProps,
+    ref: React.Ref<HTMLDivElement>
+) {
     const fromDate_string = fromDate.format("DD/MM/YYYY");
     const toDate_string = toDate.format("DD/MM/YYYY");
     interface FeedbackCategory {
@@ -232,6 +235,7 @@ export default function CategoriesSunburstChart({
     /* Must have parent container with a defined size */
     return (
         <Box
+            ref={ref}
             sx={{
                 display: "flex",
                 gap: 2,
@@ -436,4 +440,4 @@ export default function CategoriesSunburstChart({
             </ButtonBase>
         </Box>
     );
-}
+});
