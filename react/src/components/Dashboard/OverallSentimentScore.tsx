@@ -33,22 +33,16 @@ export default forwardRef(function OverallSentimentScore(
     }: OverallSentimentScoreProps,
     ref: ForwardedRef<CustomRef<HTMLDivElement>>
 ) {
+    const theme = useTheme();
     const fromDate_string = fromDate.format("DD/MM/YYYY");
     const toDate_string = toDate.format("DD/MM/YYYY");
+    const prevFromDate_string = dayjs(fromDate)
+        .subtract(dayjs(toDate).diff(dayjs(fromDate), "day"), "day")
+        .format("DD/MM/YYYY");
     const [overallSentimentScore, setOverallSentimentScore] =
         useState<number>(0);
     const [overallSentimentScoreChange, setOverallSentimentScoreChange] =
         useState<number>(0);
-
-    const internalRef = useRef<HTMLDivElement>(null);
-    useImperativeHandle(
-        ref,
-        () => ({
-            img: internalRef.current!,
-            reportDesc: `${overallSentimentScore} yes ${overallSentimentScoreChange}`,
-        }),
-        [overallSentimentScore, overallSentimentScoreChange]
-    );
 
     useEffect(() => {
         const urlPrefix =
@@ -71,9 +65,6 @@ export default forwardRef(function OverallSentimentScore(
                 // console.log(avgScore);
                 setOverallSentimentScore(parseFloat(avgScore.toFixed(1)));
 
-                const prevFromDate_string = dayjs(fromDate)
-                    .subtract(dayjs(toDate).diff(dayjs(fromDate), "day"), "day")
-                    .format("DD/MM/YYYY");
                 fetch(
                     `${urlPrefix}/analytics/get_overall_sentiment_scores?fromDate=${prevFromDate_string}&toDate=${fromDate_string}&product=${selectedProduct}&source=${selectedSource}`
                 )
@@ -110,14 +101,17 @@ export default forwardRef(function OverallSentimentScore(
             });
     }, [fromDate, toDate, selectedProduct, selectedSource]);
 
-    const theme = useTheme();
-
-    const backgroundColor =
-        overallSentimentScoreChange && overallSentimentScoreChange > 0
-            ? "darkgreen" // Light green background for increase
-            : overallSentimentScoreChange && overallSentimentScoreChange < 0
-            ? "red" // Light red background for decrease
-            : "grey";
+    const internalRef = useRef<HTMLDivElement>(null);
+    useImperativeHandle(
+        ref,
+        () => ({
+            img: internalRef.current!,
+            reportDesc: `Compared to ${prevFromDate_string} - ${fromDate_string}, there was an overall sentiment score of ${overallSentimentScore} / 5, which was a ${overallSentimentScoreChange}% ${
+                overallSentimentScoreChange > 0 ? "increase" : "decrease"
+            }.`,
+        }),
+        [overallSentimentScore, overallSentimentScoreChange, fromDate]
+    );
 
     return (
         <ButtonBase
@@ -165,7 +159,14 @@ export default forwardRef(function OverallSentimentScore(
             <Box
                 sx={{
                     borderRadius: 4,
-                    backgroundColor: backgroundColor,
+                    backgroundColor:
+                        overallSentimentScoreChange &&
+                        overallSentimentScoreChange > 0
+                            ? "darkgreen" // Light green background for increase
+                            : overallSentimentScoreChange &&
+                              overallSentimentScoreChange < 0
+                            ? "red" // Light red background for decrease
+                            : "grey",
                     mb: 2,
                     width: 150,
                 }}

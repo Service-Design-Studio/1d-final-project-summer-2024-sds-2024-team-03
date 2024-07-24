@@ -57,6 +57,22 @@ export default function Dashboard({
             img: document.createElement("div"),
             reportDesc: "",
         }),
+        SentimentDistributionRef: useRef<CustomRef<HTMLDivElement>>({
+            img: document.createElement("div"),
+            reportDesc: "",
+        }),
+        SentimentScoreGraphRef: useRef<CustomRef<HTMLDivElement>>({
+            img: document.createElement("div"),
+            reportDesc: "",
+        }),
+        CategoriesSunburstChartRef: useRef<CustomRef<HTMLDivElement>>({
+            img: document.createElement("div"),
+            reportDesc: "",
+        }),
+        SentimentCategoriesGraphRef: useRef<CustomRef<HTMLDivElement>>({
+            img: document.createElement("div"),
+            reportDesc: "",
+        }),
         // ActionablesRef
     };
 
@@ -92,6 +108,19 @@ export default function Dashboard({
                     y = MARGIN;
                 }
 
+                // Draw a border with rounded corners
+                const borderRadius = 5;
+                pdf.setDrawColor(0, 0, 0); // Set border color to black
+                pdf.setLineWidth(1); // Set border width
+                pdf.roundedRect(
+                    MARGIN + x - 1, // X position adjusted for border
+                    y - 1, // Y position adjusted for border
+                    scaledWidth + 2, // Width adjusted for border
+                    scaledHeight + 2, // Height adjusted for border
+                    borderRadius, // Radius for rounded corners
+                    borderRadius // Radius for rounded corners
+                );
+
                 pdf.addImage(
                     dataUrl,
                     "PNG",
@@ -105,13 +134,36 @@ export default function Dashboard({
             return [0, 0];
         };
 
-        const addText = (text: string, x: number, y: number) => {
-            if (y + 10 > LIMIT_Y) {
-                pdf.addPage();
-                y = MARGIN;
-            }
-            pdf.text(text, x, y);
-            return y + 10;
+        const addScaledImageToPDF = async (
+            ref: React.RefObject<CustomRef<HTMLDivElement>>,
+            x: number,
+            y: number
+        ) => {
+            const scale =
+                ref === reportRefs.OverallSentimentScoreRef ||
+                ref === reportRefs.SentimentDistributionRef
+                    ? 0.35
+                    : ref === reportRefs.CategoriesSunburstChartRef
+                    ? 0.5
+                    : 0.85;
+            return await addImageToPDF(ref, x, y, scale);
+        };
+
+        const addText = (text: string, x: number, y: number, fontSize = 12) => {
+            const pdfWidth = pdf.internal.pageSize.getWidth() - 2 * MARGIN;
+            const lines = pdf.splitTextToSize(text, pdfWidth);
+            pdf.setFontSize(fontSize);
+
+            lines.forEach((line: string) => {
+                if (y + fontSize / 2 > LIMIT_Y) {
+                    pdf.addPage();
+                    y = MARGIN;
+                }
+                pdf.text(line, x, y);
+                y += fontSize / 2;
+            });
+
+            return y;
         };
 
         pdf.setFontSize(16);
@@ -135,32 +187,88 @@ export default function Dashboard({
         );
         prevY = addText(`Sources: ${selectedSource.join(", ")}`, MARGIN, prevY);
 
-        const addScaledImageToPDF = async (
-            ref: React.RefObject<CustomRef<HTMLDivElement>>,
-            x: number,
-            y: number
-        ) => {
-            const scale = 0.85;
-            return await addImageToPDF(ref, x, y, scale);
-        };
-
         [prevImageWidth, prevImageHeight] = await addScaledImageToPDF(
             reportRefs.OverallSentimentScoreRef,
             0,
             prevY + PADDING
         );
 
-        prevY = addText("Additional Details:", MARGIN, prevY + PADDING);
+        [prevImageWidth, prevImageHeight] = await addScaledImageToPDF(
+            reportRefs.SentimentDistributionRef,
+            prevImageWidth + PADDING,
+            prevY + PADDING
+        );
+        prevY += prevImageHeight + PADDING;
         prevY = addText(
-            "Details about the graphs or other insights.",
+            reportRefs.OverallSentimentScoreRef.current?.reportDesc ?? "",
+            MARGIN,
+            prevY + PADDING
+        );
+        prevY = addText(
+            reportRefs.SentimentDistributionRef.current?.reportDesc ?? "",
             MARGIN,
             prevY
         );
 
         prevY = MARGIN;
         pdf.addPage();
+        [prevImageWidth, prevImageHeight] = await addScaledImageToPDF(
+            reportRefs.SentimentScoreGraphRef,
+            0,
+            prevY
+        );
+        prevY += prevImageHeight + PADDING;
+
+        prevY = addText(
+            reportRefs.SentimentScoreGraphRef.current?.reportDesc ?? "",
+            MARGIN,
+            prevY + PADDING
+        );
 
         prevY = MARGIN;
+        pdf.addPage();
+        [prevImageWidth, prevImageHeight] = await addScaledImageToPDF(
+            reportRefs.CategoriesSunburstChartRef,
+            0,
+            prevY
+        );
+
+        prevY += prevImageHeight + PADDING;
+        prevY = addText(
+            reportRefs.CategoriesSunburstChartRef.current?.reportDesc ?? "",
+            MARGIN,
+            prevY + PADDING
+        );
+
+        prevY = MARGIN;
+        pdf.addPage();
+        [prevImageWidth, prevImageHeight] = await addScaledImageToPDF(
+            reportRefs.SentimentCategoriesGraphRef,
+            0,
+            prevY
+        );
+
+        prevY += prevImageHeight + PADDING;
+        prevY = addText(
+            reportRefs.SentimentCategoriesGraphRef.current?.reportDesc ?? "",
+            MARGIN,
+            prevY + PADDING
+        );
+
+        // prevY = MARGIN;
+        // pdf.addPage();
+        // [prevImageWidth, prevImageHeight] = await addScaledImageToPDF(
+        //     reportRefs.SentimentCategoriesGraphRef,
+        //     0,
+        //     prevY
+        // );
+
+        // prevY += prevImageHeight + PADDING;
+        // prevY = addText(
+        //     reportRefs.SentimentCategoriesGraphRef.current?.reportDesc ?? "",
+        //     MARGIN,
+        //     prevY + PADDING
+        // );
 
         const pdfDataUrl = pdf.output("dataurlstring");
         setPdfDataUrl(pdfDataUrl);
@@ -271,6 +379,7 @@ export default function Dashboard({
                 />
 
                 <SentimentDistribution
+                    ref={reportRefs.SentimentDistributionRef}
                     fromDate={fromDate}
                     toDate={toDate}
                     selectedProduct={selectedProduct}
@@ -366,6 +475,7 @@ export default function Dashboard({
             >
                 <Box sx={{flex: 6, display: "flex", alignItems: "stretch"}}>
                     <SentimentScoreGraph
+                        ref={reportRefs.SentimentScoreGraphRef}
                         fromDate={fromDate}
                         toDate={toDate}
                         selectedProduct={selectedProduct}
@@ -376,6 +486,7 @@ export default function Dashboard({
                 </Box>
                 <Box sx={{flex: 4, display: "flex", alignItems: "stretch"}}>
                     <CategoriesSunburstChart
+                        ref={reportRefs.CategoriesSunburstChartRef}
                         fromDate={fromDate}
                         toDate={toDate}
                         selectedProduct={selectedProduct}
@@ -385,6 +496,7 @@ export default function Dashboard({
                 </Box>
             </Box>
             <SentimentCategoriesGraph
+                ref={reportRefs.SentimentCategoriesGraphRef}
                 fromDate={fromDate}
                 toDate={toDate}
                 selectedProduct={selectedProduct}
