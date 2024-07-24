@@ -1,4 +1,11 @@
-import React, {useEffect, useState} from "react";
+import React, {
+    useEffect,
+    useState,
+    forwardRef,
+    ForwardedRef,
+    useRef,
+    useImperativeHandle,
+} from "react";
 import {Theme, useTheme} from "@mui/material/styles";
 import {Paper, Box, Typography, ButtonBase} from "@mui/material";
 import {Dayjs} from "dayjs";
@@ -23,6 +30,11 @@ const MenuProps = {
     },
 };
 
+type CustomRef<T> = {
+    img: T;
+    reportDesc?: string;
+};
+
 interface SentimentScoreGraphProps {
     fromDate: Dayjs;
     toDate: Dayjs;
@@ -32,14 +44,17 @@ interface SentimentScoreGraphProps {
     setSelectedMenu?: React.Dispatch<React.SetStateAction<string>>;
 }
 
-export default function SentimentScoreGraph({
-    fromDate,
-    toDate,
-    selectedProduct,
-    selectedSource,
-    isDetailed,
-    setSelectedMenu,
-}: SentimentScoreGraphProps) {
+export default forwardRef(function SentimentScoreGraph(
+    {
+        fromDate,
+        toDate,
+        selectedProduct,
+        selectedSource,
+        isDetailed,
+        setSelectedMenu,
+    }: SentimentScoreGraphProps,
+    ref: ForwardedRef<CustomRef<HTMLDivElement>>
+) {
     const fromDate_string = fromDate.format("DD/MM/YYYY");
     const toDate_string = toDate.format("DD/MM/YYYY");
     type DataPoint = {
@@ -280,9 +295,94 @@ export default function SentimentScoreGraph({
         selectedFeedbackcategories,
     ]);
 
+    function findHighestAndLowestScores(dataSets: DataSet[]) {
+        if (dataSets.length === 0) {
+            return {
+                highest: {score: null as number | null, dates: [] as string[]},
+                lowest: {score: null as number | null, dates: [] as string[]},
+            };
+        }
+
+        let highestScore = -Infinity;
+        let lowestScore = Infinity;
+        let highestDates: string[] = [];
+        let lowestDates: string[] = [];
+
+        dataSets.forEach((dataSet) => {
+            dataSet.data.forEach(({x, y}) => {
+                if (y > highestScore) {
+                    highestScore = y;
+                    highestDates = [x];
+                } else if (y === highestScore) {
+                    highestDates.push(x);
+                }
+
+                if (y < lowestScore) {
+                    lowestScore = y;
+                    lowestDates = [x];
+                } else if (y === lowestScore) {
+                    lowestDates.push(x);
+                }
+            });
+        });
+
+        return {
+            highest: {score: highestScore, dates: highestDates},
+            lowest: {score: lowestScore, dates: lowestDates},
+        };
+    }
+    const {highest, lowest} = findHighestAndLowestScores(sentimentScores);
+    const internalRef = useRef<HTMLDivElement>(null);
+    useImperativeHandle(
+        ref,
+        () => {
+            // Compute highest and lowest sentiment scores
+            const allDataPoints = sentimentScores.flatMap((ds) => ds.data);
+            const highest = allDataPoints.reduce(
+                (max, dp) => (dp.y > max.y ? dp : max),
+                allDataPoints[0]
+            );
+            const lowest = allDataPoints.reduce(
+                (min, dp) => (dp.y < min.y ? dp : min),
+                allDataPoints[0]
+            );
+
+            // Collect all dates for highest and lowest scores
+            const highestDates = allDataPoints
+                .filter((dp) => dp.y === highest.y)
+                .map((dp) => dp.x);
+            const lowestDates = allDataPoints
+                .filter((dp) => dp.y === lowest.y)
+                .map((dp) => dp.x);
+
+            // Calculate total number of data points
+            const totalDataPoints = sentimentScores.reduce(
+                (acc, ds) => acc + ds.data.length,
+                0
+            );
+
+            // Generate the report description
+            return {
+                img: internalRef.current!,
+                reportDesc:
+                    totalDataPoints > 0
+                        ? `There are ${totalDataPoints} data points. The highest sentiment score was ${
+                              highest.y
+                          } on dates ${highestDates.join(
+                              ", "
+                          )}, and the lowest sentiment score was ${
+                              lowest.y
+                          } on dates ${lowestDates.join(", ")}.`
+                        : "No data.",
+            };
+        },
+        [sentimentScores]
+    );
+
     /* Must have parent container with a defined size */
     return isDetailed ? (
         <Box
+            ref={internalRef}
             sx={{
                 display: "flex",
                 gap: 2,
@@ -319,7 +419,7 @@ export default function SentimentScoreGraph({
                 >
                     <Typography
                         variant="h6"
-                        sx={{ fontWeight: "bold", width: "100%"}}
+                        sx={{fontWeight: "bold", width: "100%"}}
                     >
                         Sentiment Trend for
                         {selectedSubcategory
@@ -440,7 +540,7 @@ export default function SentimentScoreGraph({
                             gap: 2,
                             mt: 2,
                             width: "100%",
-                            height: 200,
+                            height: 300,
                         }}
                     >
                         <ResponsiveLine
@@ -459,8 +559,8 @@ export default function SentimentScoreGraph({
                             xFormat={`time: %d %b %y`}
                             yScale={{
                                 type: "linear",
-                                min: "auto",
-                                max: "auto",
+                                min: 0,
+                                max: 5,
                                 stacked: false,
                                 reverse: false,
                             }}
@@ -487,6 +587,7 @@ export default function SentimentScoreGraph({
                                 legendOffset: -40,
                                 legendPosition: "middle",
                                 truncateTickAt: 0,
+                                tickValues: [0, 1, 2, 3, 4, 5],
                             }}
                             enableGridX={false}
                             colors={{scheme: "category10"}}
@@ -498,6 +599,46 @@ export default function SentimentScoreGraph({
                             pointLabelYOffset={-12}
                             enableTouchCrosshair={true}
                             useMesh={true}
+                            // label styling
+                            tooltip={({point}) => (
+                                <div
+                                    style={{
+                                        background:
+                                            theme.palette.mode === "dark"
+                                                ? "#333"
+                                                : "#fff",
+                                        boxShadow:
+                                            "0px 0px 10px rgba(0, 0, 0, 0.2)",
+                                        padding: "9px 12px",
+                                        borderRadius: "10px",
+                                        fontSize: "0.8rem",
+                                        display: "grid",
+                                        gridTemplateColumns: "auto 1fr",
+                                        gap: "4px",
+                                        alignItems: "center",
+                                    }}
+                                >
+                                    <span
+                                        style={{
+                                            width: 12,
+                                            height: 12,
+                                            backgroundColor: point.serieColor,
+                                            borderRadius: "50%",
+                                            marginRight: 4,
+                                        }}
+                                    />
+                                    <div>
+                                        <div style={{display: "flex"}}>
+                                            <strong>Date:&nbsp;</strong>
+                                            {point.data.xFormatted}
+                                        </div>
+                                        <div style={{display: "flex"}}>
+                                            <strong>Score:&nbsp;</strong>
+                                            {point.data.yFormatted}
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
                             legends={[
                                 {
                                     anchor: "bottom",
@@ -532,6 +673,7 @@ export default function SentimentScoreGraph({
         </Box>
     ) : (
         <Box
+            ref={internalRef}
             sx={{
                 display: "flex",
                 gap: 2,
@@ -567,13 +709,13 @@ export default function SentimentScoreGraph({
             >
                 <Typography
                     variant="h6"
-                    sx={{ fontWeight: "bold", width: "100%" }}
+                    sx={{fontWeight: "bold", width: "100%"}}
                 >
                     Sentiment Trend for Selected Product(s)
                 </Typography>
                 <Typography
                     color="grey"
-                    sx={{ fontWeight: "600", mb: 2, width: "100%" }}
+                    sx={{fontWeight: "600", mb: 2, width: "100%"}}
                 >
                     across all subcategories
                 </Typography>
@@ -607,8 +749,8 @@ export default function SentimentScoreGraph({
                             xFormat={`time: %d %b %y`}
                             yScale={{
                                 type: "linear",
-                                min: "auto",
-                                max: "auto",
+                                min: 0,
+                                max: 5,
                                 stacked: false,
                                 reverse: false,
                             }}
@@ -635,6 +777,7 @@ export default function SentimentScoreGraph({
                                 legendOffset: -40,
                                 legendPosition: "middle",
                                 truncateTickAt: 0,
+                                tickValues: [0, 1, 2, 3, 4, 5],
                             }}
                             enableGridX={false}
                             colors={{scheme: "category10"}}
@@ -646,10 +789,50 @@ export default function SentimentScoreGraph({
                             pointLabelYOffset={-12}
                             enableTouchCrosshair={true}
                             useMesh={true}
+                            // label styling
+                            tooltip={({point}) => (
+                                <div
+                                    style={{
+                                        background:
+                                            theme.palette.mode === "dark"
+                                                ? "#333"
+                                                : "#fff",
+                                        boxShadow:
+                                            "0px 0px 10px rgba(0, 0, 0, 0.2)",
+                                        padding: "9px 12px",
+                                        borderRadius: "10px",
+                                        fontSize: "0.8rem",
+                                        display: "grid",
+                                        gridTemplateColumns: "auto 1fr",
+                                        gap: "4px",
+                                        alignItems: "center",
+                                    }}
+                                >
+                                    <span
+                                        style={{
+                                            width: 12,
+                                            height: 12,
+                                            backgroundColor: point.serieColor,
+                                            borderRadius: "50%",
+                                            marginRight: 4,
+                                        }}
+                                    />
+                                    <div>
+                                        <div style={{display: "flex"}}>
+                                            <strong>Date:&nbsp;</strong>
+                                            {point.data.xFormatted}
+                                        </div>
+                                        <div style={{display: "flex"}}>
+                                            <strong>Score:&nbsp;</strong>
+                                            {point.data.yFormatted}
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
                         />
                     </Box>
                 )}
             </ButtonBase>
         </Box>
     );
-}
+});

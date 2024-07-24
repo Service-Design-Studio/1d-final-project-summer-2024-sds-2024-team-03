@@ -1,4 +1,11 @@
-import React, {useEffect, useState} from "react";
+import React, {
+    useEffect,
+    useState,
+    forwardRef,
+    ForwardedRef,
+    useRef,
+    useImperativeHandle,
+} from "react";
 import {Theme, useTheme} from "@mui/material/styles";
 import {Paper, Box, Typography, ButtonBase} from "@mui/material";
 import {Dayjs} from "dayjs";
@@ -20,13 +27,21 @@ const ORDER: Record<string, string> = {
     Frustrated: "red",
 };
 
-export default function CategoriesSunburstChart({
-    fromDate,
-    toDate,
-    selectedProduct,
-    selectedSource,
-    setSelectedMenu,
-}: CategoriesSunburstChartProps) {
+type CustomRef<T> = {
+    img: T;
+    reportDesc?: string;
+};
+
+export default forwardRef(function CategoriesSunburstChart(
+    {
+        fromDate,
+        toDate,
+        selectedProduct,
+        selectedSource,
+        setSelectedMenu,
+    }: CategoriesSunburstChartProps,
+    ref: ForwardedRef<CustomRef<HTMLDivElement>>
+) {
     const fromDate_string = fromDate.format("DD/MM/YYYY");
     const toDate_string = toDate.format("DD/MM/YYYY");
     interface FeedbackCategory {
@@ -229,9 +244,37 @@ export default function CategoriesSunburstChart({
             });
     }, [fromDate, toDate, selectedProduct, selectedSource]);
 
+    const internalRef = useRef<HTMLDivElement>(null);
+    useImperativeHandle(
+        ref,
+        () => ({
+            img: internalRef.current!,
+            reportDesc:
+                topCategories.length > 0
+                    ? `For the top 3 most mentioned, ${topCategories
+                          .map((category) => {
+                              return `product <u>${
+                                  category.product
+                              }</u>, subcategory <u>${
+                                  category.subcategory
+                              }</u>, feedback category <u>${
+                                  category.feedback_category
+                              }</u> has ${
+                                  category.mentions
+                              } total mentions, with an average sentiment score of ${category.averageSentimentScore.toFixed(
+                                  1
+                              )} / 5.\n`;
+                          })
+                          .join(" ")}`
+                    : "No data.",
+        }),
+        [topCategories] // Adjust the dependency array if necessary
+    );
+
     /* Must have parent container with a defined size */
     return (
         <Box
+            ref={internalRef}
             sx={{
                 display: "flex",
                 gap: 2,
@@ -291,7 +334,7 @@ export default function CategoriesSunburstChart({
                             id="category"
                             value="mentions"
                             cornerRadius={2}
-                            borderWidth={3}
+                            borderWidth={2}
                             borderColor={{theme: "grid.line.stroke"}}
                             colors={(bar) => barColors[bar.id]}
                             // To make use of hsl from each component
@@ -425,8 +468,8 @@ export default function CategoriesSunburstChart({
                                     >
                                         {category.averageSentimentScore.toFixed(
                                             1
-                                        )}{" "}
-                                        / 5.0
+                                        )}
+                                        / 5
                                     </Typography>
                                 </React.Fragment>
                             ))}
@@ -436,4 +479,4 @@ export default function CategoriesSunburstChart({
             </ButtonBase>
         </Box>
     );
-}
+});

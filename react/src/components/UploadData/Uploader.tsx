@@ -115,76 +115,77 @@ export function FileDrop({
             const reader = new FileReader();
 
             reader.onloadend = () => {
-                let isValid = false;
+                // let isValid = false;
+                let isValid = true;
 
-                if (ext && ext[1] === "csv") {
-                    const csvData = reader.result as string;
-                    const parsed = Papa.parse(csvData, {header: true});
-                    let columns: string[] = [];
-                    if (parsed.meta && parsed.meta.fields) {
-                        columns = parsed.meta.fields.map((col: string) =>
-                            col.trim().toLowerCase()
-                        );
-                        const columnsSet = new Set(columns);
-                        let dateColumnName =
-                            parsed.meta.fields.find(
-                                (col: string) =>
-                                    col.trim().toLowerCase() === "date"
-                            ) || "";
-                        isValid =
-                            requiredCols.every((col) => columnsSet.has(col)) &&
-                            validateDateFormat(
-                                parsed.data.map(
-                                    (obj: any) => obj[dateColumnName]
-                                )
-                            );
-                    }
+                // if (ext && ext[1] === "csv") {
+                //     const csvData = reader.result as string;
+                //     const parsed = Papa.parse(csvData, {header: true});
+                //     let columns: string[] = [];
+                //     if (parsed.meta && parsed.meta.fields) {
+                //         columns = parsed.meta.fields.map((col: string) =>
+                //             col.trim().toLowerCase()
+                //         );
+                //         const columnsSet = new Set(columns);
+                //         let dateColumnName =
+                //             parsed.meta.fields.find(
+                //                 (col: string) =>
+                //                     col.trim().toLowerCase() === "date"
+                //             ) || "";
+                //         isValid =
+                //             requiredCols.every((col) => columnsSet.has(col)) &&
+                //             validateDateFormat(
+                //                 parsed.data.map(
+                //                     (obj: any) => obj[dateColumnName]
+                //                 )
+                //             );
+                //     }
 
-                    if (!isValid) {
-                        setModalContent("Error: Invalid data.");
-                        setOpenModal(true);
-                        return;
-                    }
-                } else if (ext && ext[1].startsWith("xls")) {
-                    const data = new Uint8Array(reader.result as ArrayBuffer);
-                    const workbook = XLSX.read(data, {type: "array"});
-                    const firstSheetName = workbook.SheetNames[0];
-                    const worksheet = workbook.Sheets[firstSheetName];
-                    const sheetData = XLSX.utils.sheet_to_json(worksheet, {
-                        header: 1,
-                    });
-                    const columns = (sheetData[0] as string[]).map(
-                        (col: string) => col.trim().toLowerCase()
-                    );
-                    const columnsSet = new Set(columns);
-                    const transformedData = sheetData
-                        .slice(1)
-                        .map((row: any) => {
-                            // Produces Eg. {feedback: ..., date: ...}
-                            const obj: {[key: string]: string} = {};
-                            row.forEach((val: string, idx: number) => {
-                                obj[columns[idx]] = val;
-                            });
-                            return obj;
-                        });
-                    let dateColumnName =
-                        columns.find(
-                            (col) => col.trim().toLowerCase() === "date"
-                        ) || "";
-                    isValid =
-                        requiredCols.every((col) => columnsSet.has(col)) &&
-                        validateDateFormat(
-                            transformedData.map((obj: any) =>
-                                convertExcelTimestampToDate(obj[dateColumnName])
-                            )
-                        );
+                //     if (!isValid) {
+                //         setModalContent("Error: Invalid data.");
+                //         setOpenModal(true);
+                //         return;
+                //     }
+                // } else if (ext && ext[1].startsWith("xls")) {
+                //     const data = new Uint8Array(reader.result as ArrayBuffer);
+                //     const workbook = XLSX.read(data, {type: "array"});
+                //     const firstSheetName = workbook.SheetNames[0];
+                //     const worksheet = workbook.Sheets[firstSheetName];
+                //     const sheetData = XLSX.utils.sheet_to_json(worksheet, {
+                //         header: 1,
+                //     });
+                //     const columns = (sheetData[0] as string[]).map(
+                //         (col: string) => col.trim().toLowerCase()
+                //     );
+                //     const columnsSet = new Set(columns);
+                //     const transformedData = sheetData
+                //         .slice(1)
+                //         .map((row: any) => {
+                //             // Produces Eg. {feedback: ..., date: ...}
+                //             const obj: {[key: string]: string} = {};
+                //             row.forEach((val: string, idx: number) => {
+                //                 obj[columns[idx]] = val;
+                //             });
+                //             return obj;
+                //         });
+                //     let dateColumnName =
+                //         columns.find(
+                //             (col) => col.trim().toLowerCase() === "date"
+                //         ) || "";
+                //     isValid =
+                //         requiredCols.every((col) => columnsSet.has(col)) &&
+                //         validateDateFormat(
+                //             transformedData.map((obj: any) =>
+                //                 convertExcelTimestampToDate(obj[dateColumnName])
+                //             )
+                //         );
 
-                    if (!isValid) {
-                        setModalContent("Error: Invalid data.");
-                        setOpenModal(true);
-                        return;
-                    }
-                }
+                //     if (!isValid) {
+                //         setModalContent("Error: Invalid data.");
+                //         setOpenModal(true);
+                //         return;
+                //     }
+                // }
 
                 if (isValid) {
                     const newFilename =
@@ -267,8 +268,11 @@ export function FileDrop({
                 height: "600px",
                 width: "100%",
                 borderRadius: 18,
-                backgroundColor:
-                    theme.palette.mode === "dark" ? "#222" : "#ccc",
+                backgroundColor: isOver
+                    ? "gray"
+                    : theme.palette.mode === "dark"
+                    ? "#222"
+                    : "#ccc",
                 boxShadow: `inset 0 0 20px ${
                     theme.palette.mode === "dark" ? "#333" : "#aaa"
                 }`,
@@ -290,7 +294,7 @@ export function FileDrop({
                     gap: 2,
                 }}
             >
-                <CloudUploadIcon sx={{color: "gray", fontSize: "8rem"}} />
+                <CloudUploadIcon sx={{color: "darkgray", fontSize: "8rem"}} />
                 <Typography sx={{fontSize: "1.4rem"}}>
                     Drag and drop CSV or XLS files here
                 </Typography>
@@ -304,10 +308,16 @@ export function FileDrop({
                     sx={{
                         borderRadius: 8,
                         fontSize: "1.1rem",
-                        backgroundColor: theme.palette.mode === "dark" ? "#8D0000" : "#BD0000",
+                        backgroundColor:
+                            theme.palette.mode === "dark"
+                                ? "#8D0000"
+                                : "#BD0000",
                         padding: "0.5rem 2rem",
                         "&:hover": {
-                          backgroundColor: theme.palette.mode === "dark" ? "#720000" : "#980000",
+                            backgroundColor:
+                                theme.palette.mode === "dark"
+                                    ? "#720000"
+                                    : "#980000",
                         },
                     }}
                 >

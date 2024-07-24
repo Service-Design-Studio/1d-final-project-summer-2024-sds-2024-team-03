@@ -15,15 +15,17 @@ When(/I click on the "Products" dropdown button/) do
 end
 
 When(/I hover over the product dropdown option/) do
-  find('.filter-product-option', match: :first).hover
+  button = find('.filter-product-option', match: :first)
+  page.execute_script("arguments[0].dispatchEvent(new MouseEvent('mouseover', { bubbles: true }));", button)
 end
 
 Then(/the product dropdown option should be highlighted on hover/) do
-  dropdown_option = find('.filter-product-option', match: :first)
-  # Simulate hover effect using plain JavaScript
-  page.execute_script("arguments[0].classList.add('hovered');", dropdown_option)
-  # Check if the element has the 'hovered' class
-  expect(dropdown_option[:class]).to include('hovered')
+  button = find('.filter-product-option', match: :first)
+  # Verify the color change by checking the computed style
+  new_background_color = page.evaluate_script("window.getComputedStyle(arguments[0]).backgroundColor;", button)
+  expect(new_background_color).to eq('rgba(0, 0, 0, 0.12)')
+  # Exit hover state
+  page.execute_script("arguments[0].dispatchEvent(new MouseEvent('mouseout', { bubbles: true }));", button)
 end
 
 # Scenario: Clicking a product dropdown option colors it red and adds it to the listbox
@@ -90,7 +92,7 @@ Then(/I should see "Products" in the text field of the dropdown button/) do
 end
 
 # Scenario: Reset product selection by refreshing
-#   Reused steps
+#   Using previously defined steps
 
 
 

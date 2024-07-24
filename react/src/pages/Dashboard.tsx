@@ -1,6 +1,15 @@
-import React from "react";
-import {Box, Paper, Typography, Divider} from "@mui/material";
-import {Dayjs} from "dayjs";
+import React, {useState, useRef} from "react";
+import {
+    Box,
+    Paper,
+    Typography,
+    Divider,
+    Button,
+    Dialog,
+    DialogTitle,
+} from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
+import dayjs, {Dayjs} from "dayjs";
 import Calendar from "../components/Calendar";
 import FilterProduct from "../components/FilterProduct";
 import FilterSource from "../components/FilterSource";
@@ -9,6 +18,8 @@ import SentimentDistribution from "../components/Dashboard/SentimentDistribution
 import SentimentScoreGraph from "../components/SentimentScoreGraph";
 import CategoriesSunburstChart from "../components/Dashboard/CategoriesSunburstChart";
 import SentimentCategoriesGraph from "../components/SentimentCategoriesGraph";
+import domtoimage from "dom-to-image-more";
+import {jsPDF} from "jspdf";
 
 interface DashboardProps {
     setFromDate: React.Dispatch<React.SetStateAction<Dayjs>>;
@@ -33,10 +44,290 @@ export default function Dashboard({
     setSelectedSource,
     setSelectedMenu,
 }: DashboardProps) {
-    return (
-        <Box sx={{maxWidth: "lg", mx: "auto", px: 2}}>
-            <h1>Overview Dashboard</h1>
+    const [openDialog, setOpenDialog] = useState(false);
+    const [pdfDataUrl, setPdfDataUrl] = useState<string | null>(null);
 
+    type CustomRef<T> = {
+        img: T;
+        reportDesc?: string;
+    };
+
+    const reportRefs = {
+        OverallSentimentScoreRef: useRef<CustomRef<HTMLDivElement>>({
+            img: document.createElement("div"),
+            reportDesc: "",
+        }),
+        SentimentDistributionRef: useRef<CustomRef<HTMLDivElement>>({
+            img: document.createElement("div"),
+            reportDesc: "",
+        }),
+        SentimentScoreGraphRef: useRef<CustomRef<HTMLDivElement>>({
+            img: document.createElement("div"),
+            reportDesc: "",
+        }),
+        CategoriesSunburstChartRef: useRef<CustomRef<HTMLDivElement>>({
+            img: document.createElement("div"),
+            reportDesc: "",
+        }),
+        SentimentCategoriesGraphRef: useRef<CustomRef<HTMLDivElement>>({
+            img: document.createElement("div"),
+            reportDesc: "",
+        }),
+        // ActionablesRef
+    };
+
+    const handleGenerateReport = async () => {
+        // Each page only until 210, 297
+        let prevImageHeight = 0;
+        let prevImageWidth = 0;
+        let prevY = 0;
+        const PADDING = 10;
+        const MARGIN = 20;
+        const PAGE_HEIGHT = 297;
+        const LIMIT_Y = PAGE_HEIGHT - MARGIN;
+
+        const pdf = new jsPDF();
+
+        const addImageToPDF = async (
+            ref: React.RefObject<CustomRef<HTMLDivElement>>,
+            x: number,
+            y: number,
+            scale: number
+        ) => {
+            if (ref.current && ref.current.img) {
+                const dataUrl = await domtoimage.toPng(ref.current.img);
+                const imgProperties = pdf.getImageProperties(dataUrl);
+                const pdfWidth = pdf.internal.pageSize.getWidth();
+
+                const scaledWidth = (pdfWidth - MARGIN) * scale;
+                const scaledHeight =
+                    (imgProperties.height * scaledWidth) / imgProperties.width;
+
+                if (y + scaledHeight > LIMIT_Y) {
+                    pdf.addPage();
+                    y = MARGIN;
+                }
+
+                // Draw a border with rounded corners
+                const borderRadius = 5;
+                pdf.setDrawColor(0, 0, 0); // Set border color to black
+                pdf.setLineWidth(1); // Set border width
+                pdf.roundedRect(
+                    MARGIN + x - 1, // X position adjusted for border
+                    y - 1, // Y position adjusted for border
+                    scaledWidth + 2, // Width adjusted for border
+                    scaledHeight + 2, // Height adjusted for border
+                    borderRadius, // Radius for rounded corners
+                    borderRadius // Radius for rounded corners
+                );
+
+                pdf.addImage(
+                    dataUrl,
+                    "PNG",
+                    MARGIN + x,
+                    y,
+                    scaledWidth,
+                    scaledHeight
+                );
+                return [scaledWidth, scaledHeight];
+            }
+            return [0, 0];
+        };
+
+        const addScaledImageToPDF = async (
+            ref: React.RefObject<CustomRef<HTMLDivElement>>,
+            x: number,
+            y: number
+        ) => {
+            const scale =
+                ref === reportRefs.OverallSentimentScoreRef ||
+                ref === reportRefs.SentimentDistributionRef
+                    ? 0.35
+                    : ref === reportRefs.CategoriesSunburstChartRef
+                    ? 0.5
+                    : 0.85;
+            return await addImageToPDF(ref, x, y, scale);
+        };
+
+        const addText = (text: string, x: number, y: number, fontSize = 12) => {
+            const pdfWidth = pdf.internal.pageSize.getWidth() - 2 * MARGIN;
+            const lines = pdf.splitTextToSize(text, pdfWidth);
+            pdf.setFontSize(fontSize);
+
+            lines.forEach((line: string) => {
+                if (y + fontSize / 2 > LIMIT_Y) {
+                    pdf.addPage();
+                    y = MARGIN;
+                }
+                pdf.text(line, x, y);
+                y += fontSize / 2;
+            });
+
+            return y;
+        };
+
+        pdf.setFontSize(16);
+        prevY = addText(
+            `DBS VOCUS generated on ${dayjs().format("DD/MM/YYYY")}`,
+            MARGIN,
+            MARGIN
+        );
+        pdf.setFontSize(12);
+        prevY = addText(
+            `Report for ${dayjs(fromDate).format("DD/MM/YYYY")} - ${dayjs(
+                toDate
+            ).format("DD/MM/YYYY")}`,
+            MARGIN,
+            prevY
+        );
+        prevY = addText(
+            `Products: ${selectedProduct.join(", ")}`,
+            MARGIN,
+            prevY
+        );
+        prevY = addText(`Sources: ${selectedSource.join(", ")}`, MARGIN, prevY);
+
+        [prevImageWidth, prevImageHeight] = await addScaledImageToPDF(
+            reportRefs.OverallSentimentScoreRef,
+            0,
+            prevY + PADDING
+        );
+
+        [prevImageWidth, prevImageHeight] = await addScaledImageToPDF(
+            reportRefs.SentimentDistributionRef,
+            prevImageWidth + PADDING,
+            prevY + PADDING
+        );
+        prevY += prevImageHeight + PADDING;
+        prevY = addText(
+            reportRefs.OverallSentimentScoreRef.current?.reportDesc ?? "",
+            MARGIN,
+            prevY + PADDING
+        );
+        prevY = addText(
+            reportRefs.SentimentDistributionRef.current?.reportDesc ?? "",
+            MARGIN,
+            prevY
+        );
+
+        prevY = MARGIN;
+        pdf.addPage();
+        [prevImageWidth, prevImageHeight] = await addScaledImageToPDF(
+            reportRefs.SentimentScoreGraphRef,
+            0,
+            prevY
+        );
+        prevY += prevImageHeight + PADDING;
+
+        prevY = addText(
+            reportRefs.SentimentScoreGraphRef.current?.reportDesc ?? "",
+            MARGIN,
+            prevY + PADDING
+        );
+
+        prevY = MARGIN;
+        pdf.addPage();
+        [prevImageWidth, prevImageHeight] = await addScaledImageToPDF(
+            reportRefs.CategoriesSunburstChartRef,
+            0,
+            prevY
+        );
+
+        prevY += prevImageHeight + PADDING;
+        prevY = addText(
+            reportRefs.CategoriesSunburstChartRef.current?.reportDesc ?? "",
+            MARGIN,
+            prevY + PADDING
+        );
+
+        prevY = MARGIN;
+        pdf.addPage();
+        [prevImageWidth, prevImageHeight] = await addScaledImageToPDF(
+            reportRefs.SentimentCategoriesGraphRef,
+            0,
+            prevY
+        );
+
+        prevY += prevImageHeight + PADDING;
+        prevY = addText(
+            reportRefs.SentimentCategoriesGraphRef.current?.reportDesc ?? "",
+            MARGIN,
+            prevY + PADDING
+        );
+
+        // prevY = MARGIN;
+        // pdf.addPage();
+        // [prevImageWidth, prevImageHeight] = await addScaledImageToPDF(
+        //     reportRefs.SentimentCategoriesGraphRef,
+        //     0,
+        //     prevY
+        // );
+
+        // prevY += prevImageHeight + PADDING;
+        // prevY = addText(
+        //     reportRefs.SentimentCategoriesGraphRef.current?.reportDesc ?? "",
+        //     MARGIN,
+        //     prevY + PADDING
+        // );
+
+        const pdfDataUrl = pdf.output("dataurlstring");
+        setPdfDataUrl(pdfDataUrl);
+        setOpenDialog(true);
+    };
+
+    return (
+        <Box
+            sx={{
+                maxWidth: "lg",
+                mx: "auto",
+                px: 2,
+            }}
+        >
+            <Box
+                sx={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                }}
+            >
+                <h1>Overview Dashboard</h1>
+                <Button variant="outlined" onClick={handleGenerateReport}>
+                    Generate Report
+                </Button>
+            </Box>
+            <Dialog
+                open={openDialog}
+                onClose={() => setOpenDialog(false)}
+                maxWidth="lg"
+                fullWidth
+            >
+                <DialogTitle
+                    id="scroll-dialog-title"
+                    style={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                        fontWeight: "bold",
+                    }}
+                >
+                    PDF Preview
+                    <Button
+                        onClick={() => setOpenDialog(false)}
+                        sx={{borderRadius: 4}}
+                    >
+                        <CloseIcon />
+                    </Button>
+                </DialogTitle>
+                <Box sx={{p: 2}}>
+                    {pdfDataUrl && (
+                        <iframe
+                            src={pdfDataUrl}
+                            width="100%"
+                            height="500px"
+                        ></iframe>
+                    )}
+                </Box>
+            </Dialog>
             <Box
                 sx={{
                     display: "flex",
@@ -70,7 +361,6 @@ export default function Dashboard({
                 </Box>
             </Box>
 
-            {/* If dates, products, sources not selected yet, all these should not show / be disabled */}
             <Box
                 sx={{
                     display: "flex",
@@ -80,6 +370,7 @@ export default function Dashboard({
                 }}
             >
                 <OverallSentimentScore
+                    ref={reportRefs.OverallSentimentScoreRef}
                     fromDate={fromDate}
                     toDate={toDate}
                     selectedProduct={selectedProduct}
@@ -88,6 +379,7 @@ export default function Dashboard({
                 />
 
                 <SentimentDistribution
+                    ref={reportRefs.SentimentDistributionRef}
                     fromDate={fromDate}
                     toDate={toDate}
                     selectedProduct={selectedProduct}
@@ -107,10 +399,10 @@ export default function Dashboard({
                     }}
                 >
                     <Typography
-                            variant="h6"
-                            sx={{ width: "100%", fontWeight: "bold", mb:2 }}
-                        >
-                            New Action Items
+                        variant="h6"
+                        sx={{width: "100%", fontWeight: "bold", mb: 2}}
+                    >
+                        New Action Items
                     </Typography>
                     <Box
                         sx={{
@@ -172,7 +464,6 @@ export default function Dashboard({
                 </Paper>
                 {/* setSelectedMenu = {setSelectedMenu} */}
             </Box>
-
             <Box
                 sx={{
                     display: "flex",
@@ -184,6 +475,7 @@ export default function Dashboard({
             >
                 <Box sx={{flex: 6, display: "flex", alignItems: "stretch"}}>
                     <SentimentScoreGraph
+                        ref={reportRefs.SentimentScoreGraphRef}
                         fromDate={fromDate}
                         toDate={toDate}
                         selectedProduct={selectedProduct}
@@ -194,6 +486,7 @@ export default function Dashboard({
                 </Box>
                 <Box sx={{flex: 4, display: "flex", alignItems: "stretch"}}>
                     <CategoriesSunburstChart
+                        ref={reportRefs.CategoriesSunburstChartRef}
                         fromDate={fromDate}
                         toDate={toDate}
                         selectedProduct={selectedProduct}
@@ -202,8 +495,8 @@ export default function Dashboard({
                     />
                 </Box>
             </Box>
-
             <SentimentCategoriesGraph
+                ref={reportRefs.SentimentCategoriesGraphRef}
                 fromDate={fromDate}
                 toDate={toDate}
                 selectedProduct={selectedProduct}

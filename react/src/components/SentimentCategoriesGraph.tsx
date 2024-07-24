@@ -1,4 +1,11 @@
-import React, {useEffect, useState, useRef} from "react";
+import React, {
+    useEffect,
+    useState,
+    forwardRef,
+    ForwardedRef,
+    useRef,
+    useImperativeHandle,
+} from "react";
 import {Theme, useTheme} from "@mui/material/styles";
 import {
     Paper,
@@ -19,17 +26,18 @@ import {
     TableContainer,
     TableHead,
     TableRow,
+    OutlinedInput,
+    InputLabel,
+    MenuItem,
+    FormControl,
+    Select,
+    SelectChangeEvent,
+    Chip,
+    styled,
 } from "@mui/material";
-import {styled} from "@mui/material/styles";
 import CloseIcon from "@mui/icons-material/Close";
 import {Dayjs} from "dayjs";
 import {ResponsiveBar} from "@nivo/bar";
-import OutlinedInput from "@mui/material/OutlinedInput";
-import InputLabel from "@mui/material/InputLabel";
-import MenuItem from "@mui/material/MenuItem";
-import FormControl from "@mui/material/FormControl";
-import Select, {SelectChangeEvent} from "@mui/material/Select";
-import Chip from "@mui/material/Chip";
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -81,14 +89,23 @@ interface SentimentCategoriesGraphProps {
     setSelectedMenu?: React.Dispatch<React.SetStateAction<string>>;
 }
 
-export default function SentimentCategoriesGraph({
-    fromDate,
-    toDate,
-    selectedProduct,
-    selectedSource,
-    isDetailed,
-    setSelectedMenu,
-}: SentimentCategoriesGraphProps) {
+type CustomRef<T> = {
+    img: T;
+    reportDesc?: string;
+};
+
+export default forwardRef(function SentimentCategoriesGraph(
+    {
+        fromDate,
+        toDate,
+        selectedProduct,
+        selectedSource,
+        isDetailed,
+        setSelectedMenu,
+    }: SentimentCategoriesGraphProps,
+    ref: ForwardedRef<CustomRef<HTMLDivElement>>
+) {
+    const theme = useTheme();
     const fromDate_string = fromDate.format("DD/MM/YYYY");
     const toDate_string = toDate.format("DD/MM/YYYY");
 
@@ -139,16 +156,30 @@ export default function SentimentCategoriesGraph({
         if (score <= 4) return order["Satisfied"];
         return order["Excited"];
     };
-    const theme = useTheme();
 
     const handleBarClick = (bar: any) => {
         const key = bar.indexValue;
         const sentiment = bar.id;
-        const records = dataGroupedByFeedbackcategory[key].filter(
+        let records = dataGroupedByFeedbackcategory[key].filter(
             (record) =>
                 getColorByOrder(parseFloat(record.sentiment_score), ORDER) ===
                 ORDER[sentiment]
         );
+
+        if (sentiment === "Frustrated" || sentiment === "Unsatisfied") {
+            records = records.sort(
+                (a, b) =>
+                    parseFloat(a.sentiment_score) -
+                    parseFloat(b.sentiment_score)
+            );
+        } else {
+            records = records.sort(
+                (a, b) =>
+                    parseFloat(b.sentiment_score) -
+                    parseFloat(a.sentiment_score)
+            );
+        }
+
         setSelectedBarData(records);
         setOpen(true);
     };
@@ -208,16 +239,28 @@ export default function SentimentCategoriesGraph({
 
             if (negative) {
                 for (let i = 0; i < 2; i++) {
-                    // Only consider Frustrated and Unsatisfied
+                    // Only consider Frustrated then Unsatisfied
                     if (aValues[i] !== bValues[i]) {
                         return aValues[i] - bValues[i];
                     }
                 }
+                for (let i = 3; i > 1; i--) {
+                    // If still not returned, consider the less of Satisfied then Excited
+                    if (aValues[i] !== bValues[i]) {
+                        return bValues[i] - aValues[i];
+                    }
+                }
             } else {
                 for (let i = 3; i > 1; i--) {
-                    // For highest to lowest positive, only consider Satisfied and Excited
+                    // For highest to lowest positive, only consider Satisfied then Excited
                     if (aValues[i] !== bValues[i]) {
                         return aValues[i] - bValues[i];
+                    }
+                }
+                for (let i = 0; i < 2; i++) {
+                    // If still not returned, consider the less of Frustrated then Unsatisfied
+                    if (aValues[i] !== bValues[i]) {
+                        return bValues[i] - aValues[i];
                     }
                 }
             }
@@ -542,9 +585,59 @@ export default function SentimentCategoriesGraph({
         selectedSubcategory,
     ]);
 
+    const internalRef = useRef<HTMLDivElement>(null);
+    useImperativeHandle(
+        ref,
+        () => ({
+            img: internalRef.current!,
+            reportDesc:
+                bars.length > 0
+                    ? `${sortBySentiment(bars)
+                          .slice(bars.length - 5, bars.length)
+                          .map((bar) => {
+                              return `${
+                                  bar.Excited > 0
+                                      ? `${bar.Excited}% were <b>Excited</b> and `
+                                      : ""
+                              }${
+                                  bar.Satisfied > 0
+                                      ? `${bar.Satisfied}% were <b>Satisfied</b>`
+                                      : ""
+                              } about product <u>${
+                                  bar.category.split(" > ")[0]
+                              }</u> and subcategory <u>${
+                                  bar.category.split(" > ")[1]
+                              }</u>, demonstrating strong support.\n`;
+                          })
+                          .join(" ")}
+                \n
+                However, ${sortBySentiment(bars)
+                    .slice(bars.length - 5, bars.length)
+                    .map((bar) => {
+                        return `${
+                            bar.Frustrated > 0
+                                ? `${bar.Frustrated}% were <b>Frustrated</b> and `
+                                : ""
+                        }${
+                            bar.Unsatisfied > 0
+                                ? `${bar.Unsatisfied}% were <b>Unsatisfied</b>`
+                                : ""
+                        } about product <u>${
+                            bar.category.split(" > ")[0]
+                        }</u> and subcategory <u>${
+                            bar.category.split(" > ")[1]
+                        }</u>, suggesting areas for improvement.\n`;
+                    })
+                    .join(" ")}`
+                    : "No data.",
+        }),
+        [bars]
+    );
+
     /* Must have parent container with a defined size */
     return isDetailed ? (
         <Box
+            ref={internalRef}
             sx={{
                 display: "flex",
                 gap: 2,
@@ -712,23 +805,42 @@ export default function SentimentCategoriesGraph({
                                 tooltip={({id, indexValue, value, color}) => (
                                     <div
                                         style={{
+                                            padding: "10px",
                                             backgroundColor: "white",
+                                            boxShadow:
+                                                "0 4px 8px rgba(0, 0, 0, 0.1)",
                                         }}
                                     >
-                                        <span>
-                                            {id} - {indexValue}:{" "}
-                                            <strong>{value}</strong>{" "}
-                                        </span>
-                                        <br></br>
-                                        <span
+                                        <div
+                                            style={{
+                                                display: "flex",
+                                                alignItems: "center",
+                                                marginBottom: "5px",
+                                            }}
+                                        >
+                                            <div
+                                                style={{
+                                                    width: "12px",
+                                                    height: "12px",
+                                                    backgroundColor: color,
+                                                    marginRight: "8px",
+                                                }}
+                                            ></div>
+                                            <span>
+                                                {id} - {indexValue}:{" "}
+                                                <strong>{value}</strong>
+                                            </span>
+                                        </div>
+                                        <div
                                             style={{
                                                 color: "grey",
                                                 fontStyle: "italic",
+                                                marginTop: "5px",
                                             }}
                                         >
                                             <strong>Click</strong> to view
                                             related data
-                                        </span>
+                                        </div>
                                     </div>
                                 )}
                                 defs={[
@@ -940,6 +1052,7 @@ export default function SentimentCategoriesGraph({
         </Box>
     ) : (
         <Box
+            ref={ref}
             sx={{
                 display: "flex",
                 gap: 2,
@@ -1013,7 +1126,7 @@ export default function SentimentCategoriesGraph({
                                         top: 10,
                                         right: 10,
                                         bottom: 50,
-                                        left: 240,
+                                        left: 250,
                                     }}
                                     padding={0.3}
                                     minValue={0}
@@ -1134,7 +1247,7 @@ export default function SentimentCategoriesGraph({
                                         top: 10,
                                         right: 10,
                                         bottom: 50,
-                                        left: 240,
+                                        left: 250,
                                     }}
                                     padding={0.3}
                                     minValue={0}
@@ -1225,4 +1338,4 @@ export default function SentimentCategoriesGraph({
             </ButtonBase>
         </Box>
     );
-}
+});
