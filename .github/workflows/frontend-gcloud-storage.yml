@@ -53,7 +53,7 @@ jobs:
         with:
           credentials_json: "${{ secrets.GCP_CREDENTIALS }}"
 
-      - name: Deploy to Cloud Run
+      - name: Deploy to Cloud Storage
         id: "upload-file"
         uses: "google-github-actions/upload-cloud-storage@v2"
         with:
