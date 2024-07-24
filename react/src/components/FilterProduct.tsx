@@ -25,6 +25,22 @@ const MenuProps = {
     },
 };
 
+const PRODUCTS = [
+    "Cards",
+    "Unsecured Loans",
+    "Secured Loans",
+    "Digital Channels",
+    "Investments",
+    "DBS Treasures",
+    "Self-Service Banking",
+    "Insurance",
+    "Deposits",
+    "Contact Center",
+    "Webpages",
+    "Remittance",
+    "Others",
+];
+
 interface FilterProductProps {
     selectedProduct: string[];
     setSelectedProduct: React.Dispatch<React.SetStateAction<string[]>>;
@@ -36,6 +52,7 @@ export default function FilterProduct({
     setSelectedProduct,
     multiple = true,
 }: FilterProductProps) {
+    const theme = useTheme();
     const [products, setProducts] = useState<string[]>([]);
 
     useEffect(() => {
@@ -47,8 +64,8 @@ export default function FilterProduct({
             .then((response) => response.json())
             .then((data) => setProducts(data.sort()));
     }, []);
+    // setProducts(PRODUCTS)
 
-    const theme = useTheme();
     const handleChange = (event: SelectChangeEvent<string[]>) => {
         const {
             target: {value},

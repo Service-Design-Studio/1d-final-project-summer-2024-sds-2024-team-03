@@ -133,12 +133,20 @@ export default function MainApp() {
   return (
     <ThemeProvider theme={theme}>
       <Box
-        sx={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          minHeight: "100vh",
+        }}
       >
         <CssBaseline />
         <MuiAppBar position="fixed" sx={{ height: 64 }}>
           <Toolbar
-            sx={{ height: "100%", display: "flex", alignItems: "center" }}
+            sx={{
+              height: "100%",
+              display: "flex",
+              alignItems: "center",
+            }}
           >
             <AppBarContent>
               <img src={dbsLogo} alt="DBS Logo" style={{ height: 30 }} />
@@ -250,14 +258,7 @@ export default function MainApp() {
               setSelectedSource={setSelectedSource}
             />
           )}
-          {selectedMenu === "upload data" && (
-            <UploadData
-              selectedProduct={selectedProduct}
-              setSelectedProduct={setSelectedProduct}
-              selectedSource={selectedSource}
-              setSelectedSource={setSelectedSource}
-            />
-          )}
+          {selectedMenu === "upload data" && <UploadData />}
         </Main>
         <Footer>
           <FooterText>© DBS 2024</FooterText>

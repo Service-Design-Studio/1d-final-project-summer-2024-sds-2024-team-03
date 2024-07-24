@@ -460,8 +460,9 @@ export default forwardRef(function SentimentScoreGraph(
                                 MenuProps={MenuProps}
                             >
                                 {graphSubcategories.length > 0 ? (
-                                    graphSubcategories.map(
-                                        (subcategory: string) => (
+                                    graphSubcategories
+                                        .sort()
+                                        .map((subcategory: string) => (
                                             <MenuItem
                                                 key={subcategory}
                                                 value={subcategory}
@@ -469,8 +470,7 @@ export default forwardRef(function SentimentScoreGraph(
                                             >
                                                 {subcategory}
                                             </MenuItem>
-                                        )
-                                    )
+                                        ))
                                 ) : (
                                     <MenuItem disabled>
                                         No data from selection
@@ -515,16 +515,16 @@ export default forwardRef(function SentimentScoreGraph(
                                 )}
                                 MenuProps={MenuProps}
                             >
-                                {graphFeedbackcategories.map(
-                                    (feedbackcategory: string) => (
+                                {graphFeedbackcategories
+                                    .sort()
+                                    .map((feedbackcategory: string) => (
                                         <MenuItem
                                             key={feedbackcategory}
                                             value={feedbackcategory}
                                         >
                                             {feedbackcategory}
                                         </MenuItem>
-                                    )
-                                )}
+                                    ))}
                             </Select>
                         </FormControl>
                     </Box>
