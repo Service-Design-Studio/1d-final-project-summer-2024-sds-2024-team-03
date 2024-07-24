@@ -25,6 +25,14 @@ const MenuProps = {
     },
 };
 
+const SOURCES = [
+    "5 Star Review",
+    "Call Centre",
+    "Problem Solution Survey",
+    "Product Survey",
+    "Social Media",
+];
+
 interface FilterSourceProps {
     selectedSource: string[];
     setSelectedSource: React.Dispatch<React.SetStateAction<string[]>>;
@@ -36,8 +44,8 @@ export default function FilterSource({
     setSelectedSource,
     multiple = true,
 }: FilterSourceProps) {
-    const [sources, setSources] = useState<string[]>([]);
     const theme = useTheme();
+    const [sources, setSources] = useState<string[]>([]);
 
     useEffect(() => {
         const urlPrefix =
@@ -48,6 +56,8 @@ export default function FilterSource({
             .then((response) => response.json())
             .then((data) => setSources(data.sort()));
     }, []);
+
+    // setSources(SOURCES)
 
     const handleChange = (event: SelectChangeEvent<string[]>) => {
         const {
