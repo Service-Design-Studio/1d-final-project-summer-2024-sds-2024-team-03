@@ -27,13 +27,17 @@ Then(/I should see 2 subcategories with the most positive sentiments '(.*)' and 
 end
 
 And(/I hover on '(.*)'/) do |text|
-  dropdown_option = find('li', text: text)
-  page.execute_script("arguments[0].classList.add('hovered');", dropdown_option)
+  button = find('li.subcategory-option', text: text, match: :first)
+  button.hover
 end
 
 Then(/the dropdown option '(.*)' should be highlighted/) do |text|
-  dropdown_option = find('li', text: text)
-  expect(dropdown_option[:class]).to include('hovered')
+  button = find('li.subcategory-option', text: text, match: :first)
+  # Verify the color change by checking the computed style
+  new_background_color = page.evaluate_script("window.getComputedStyle(arguments[0]).backgroundColor;", button)
+  expect(new_background_color).to eq('rgba(0, 0, 0, 0.04)')
+  # Exit hover state
+  page.execute_script("arguments[0].dispatchEvent(new MouseEvent('mouseout', { bubbles: true }));", button)
 end
 
 And(/I click on '(.*)'/) do |text|
