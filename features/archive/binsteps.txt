@@ -1,3 +1,22 @@
 When(/I select the hamburger menu/) do
   find('#nav-hamburger').click
 end
+
+When(/I upload multiple valid files using the file input/) do
+  # Ensure the file inputs are visible and set the files
+  files = [
+    Rails.root.join('features/testfiles', 'valid1.xlsx'),
+    Rails.root.join('features/testfiles', 'valid2.xlsx')
+  ]
+
+  file_input = find('input[type="file"]', visible: false)
+  files.each do |file|
+    attach_file(file_input[:id], file, make_visible: true)
+  end
+end
+
+Then(/a Modal should open, informing a successful upload/) do
+  modal_title = find('#modal-title')
+  expect(modal_title).not_to be_nil
+  expect(modal_title.text).to include("Uploaded successfully:")
+end
