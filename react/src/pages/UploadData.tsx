@@ -3,8 +3,11 @@ import { Box, Grid } from "@mui/material";
 import FilterProduct from "../components/FilterProduct";
 import FilterSource from "../components/FilterSource";
 import { FileDrop } from "../components/UploadData/Uploader";
+import Logs from "../components/UploadData/Logs";
 
 import FormControl from "@mui/material/FormControl";
+import Container from "@mui/material/Container";
+
 import InputLabel from "@mui/material/InputLabel";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import Chip from "@mui/material/Chip";
@@ -48,76 +51,75 @@ export default function UploadData({}: UploadDataProps) {
   }, []);
 
   return (
-    <Box
-      sx={{
-        display: "flex",
-        flexDirection: { xs: "column", sm: "row" },
-        justifyContent: "flex-start",
-        gap: 2,
-        mb: 7,
-      }}
-    >
-      <Box sx={{ width: { xs: "100%", sm: "30%" } }}>
-        <FormControl sx={{ m: 1, width: "50%" }}>
-          <InputLabel id="detailed-sentimentscoregraph-filter-subcategory-label">
-            Subcategories
-          </InputLabel>
-          <Select
-            labelId="detailed-sentimentscoregraph-filter-subcategory-label"
-            id="detailed-sentimentscoregraph-filter-subcategory"
-            multiple={false}
-            value={selectedSubcategory}
-            onChange={handleSubcategoryChange}
-            input={
-              <OutlinedInput
-                id="detailed-sentimentscoregraph-select-subcategory"
-                label="subcategory"
-                sx={{
-                  borderRadius: 4,
-                }}
-              />
-            }
-            renderValue={(selected) => (
-              <Box
-                sx={{
-                  display: "flex",
-                  flexWrap: "wrap",
-                  gap: 0.5,
-                }}
-              >
-                <Chip key={selected} label={selected} />
-              </Box>
-            )}
-            MenuProps={MenuProps}
-          >
-            {subcategories.length > 0 ? (
-              subcategories.map((subcategory: string) => (
-                <MenuItem
-                  key={subcategory}
-                  value={subcategory}
-                  className="subcategory-option"
+    <Container maxWidth="lg">
+      <Grid container spacing={2} padding={2}>
+        <Grid xs={6} padding={1}>
+          <FormControl sx={{ m: 0, width: "100%" }}>
+            <InputLabel id="detailed-sentimentscoregraph-filter-subcategory-label">
+              Subcategories
+            </InputLabel>
+            <Select
+              labelId="detailed-sentimentscoregraph-filter-subcategory-label"
+              id="detailed-sentimentscoregraph-filter-subcategory"
+              multiple={false}
+              value={selectedSubcategory}
+              onChange={handleSubcategoryChange}
+              input={
+                <OutlinedInput
+                  id="detailed-sentimentscoregraph-select-subcategory"
+                  label="subcategory"
+                  sx={{
+                    borderRadius: 4,
+                  }}
+                />
+              }
+              renderValue={(selected) => (
+                <Box
+                  sx={{
+                    display: "flex",
+                    flexWrap: "wrap",
+                    gap: 0.5,
+                  }}
                 >
-                  {subcategory}
-                </MenuItem>
-              ))
-            ) : (
-              <MenuItem disabled>No data from selection</MenuItem>
-            )}
-          </Select>
-        </FormControl>
-      </Box>
-      <Box sx={{ width: { xs: "100%", sm: "30%" } }}>
-        <FilterSource
-          selectedSource={selectedSource}
-          setSelectedSource={setSelectedSource}
-          multiple={false}
-        />
-      </Box>
-      <FileDrop
-        selectedSubcategory={selectedSubcategory}
-        selectedSource={selectedSource}
-      />
-    </Box>
+                  <Chip key={selected} label={selected} />
+                </Box>
+              )}
+              MenuProps={MenuProps}
+            >
+              {subcategories.length > 0 ? (
+                subcategories.map((subcategory: string) => (
+                  <MenuItem
+                    key={subcategory}
+                    value={subcategory}
+                    className="subcategory-option"
+                  >
+                    {subcategory}
+                  </MenuItem>
+                ))
+              ) : (
+                <MenuItem disabled>No data from selection</MenuItem>
+              )}
+            </Select>
+          </FormControl>
+        </Grid>
+        <Grid xs={6} padding={1}>
+          <FilterSource
+            selectedSource={selectedSource}
+            setSelectedSource={setSelectedSource}
+            multiple={false}
+          />
+        </Grid>
+        <Grid xs={9} padding={1}>
+          <FileDrop
+            selectedSubcategory={selectedSubcategory}
+            selectedSource={selectedSource}
+          />
+        </Grid>
+        <Grid xs={3} padding={1}>
+          <Logs />
+        </Grid>
+      </Grid>
+    </Container>
   );
 }
 

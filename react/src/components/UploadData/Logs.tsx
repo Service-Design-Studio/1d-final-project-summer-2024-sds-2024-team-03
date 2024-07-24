@@ -38,5 +38,3 @@ export default function FolderList() {
     </List>
   );
 }
-
-export {};
