@@ -227,16 +227,28 @@ export default forwardRef(function SentimentCategoriesGraph(
 
             if (negative) {
                 for (let i = 0; i < 2; i++) {
-                    // Only consider Frustrated and Unsatisfied
+                    // Only consider Frustrated then Unsatisfied
                     if (aValues[i] !== bValues[i]) {
                         return aValues[i] - bValues[i];
                     }
                 }
+                for (let i = 3; i > 1; i--) {
+                    // If still not returned, consider the less of Satisfied then Excited
+                    if (aValues[i] !== bValues[i]) {
+                        return bValues[i] - aValues[i];
+                    }
+                }
             } else {
                 for (let i = 3; i > 1; i--) {
-                    // For highest to lowest positive, only consider Satisfied and Excited
+                    // For highest to lowest positive, only consider Satisfied then Excited
                     if (aValues[i] !== bValues[i]) {
                         return aValues[i] - bValues[i];
+                    }
+                }
+                for (let i = 0; i < 2; i++) {
+                    // If still not returned, consider the less of Frustrated then Unsatisfied
+                    if (aValues[i] !== bValues[i]) {
+                        return bValues[i] - aValues[i];
                     }
                 }
             }

@@ -1,5 +1,14 @@
-import React, {useRef} from "react";
-import {Box, Paper, Typography, Divider, Button} from "@mui/material";
+import React, {useState, useRef} from "react";
+import {
+    Box,
+    Paper,
+    Typography,
+    Divider,
+    Button,
+    Dialog,
+    DialogTitle,
+} from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
 import dayjs, {Dayjs} from "dayjs";
 import Calendar from "../components/Calendar";
 import FilterProduct from "../components/FilterProduct";
@@ -35,6 +44,9 @@ export default function Dashboard({
     setSelectedSource,
     setSelectedMenu,
 }: DashboardProps) {
+    const [openDialog, setOpenDialog] = useState(false);
+    const [pdfDataUrl, setPdfDataUrl] = useState<string | null>(null);
+
     const reportRefs = {
         OverallSentimentScoreRef: useRef<HTMLDivElement>(null),
         SentimentDistributionRef: useRef<HTMLDivElement>(null),
@@ -45,11 +57,13 @@ export default function Dashboard({
     };
 
     const handleGenerateReport = async () => {
+        // Each page only until 210, 297
         let prevImageHeight = 0;
+        let prevImageWidth = 0;
         let prevY = 0;
         const PADDING = 10;
         const MARGIN = 20;
-        const PAGE_HEIGHT = 297; // A4 page height in mm
+        const PAGE_HEIGHT = 297;
         const LIMIT_Y = PAGE_HEIGHT - MARGIN;
 
         const pdf = new jsPDF();
@@ -82,9 +96,9 @@ export default function Dashboard({
                     scaledWidth,
                     scaledHeight
                 );
-                return scaledHeight;
+                return [scaledWidth, scaledHeight];
             }
-            return 0;
+            return [0, 0];
         };
 
         const addText = (text: string, x: number, y: number) => {
@@ -96,10 +110,9 @@ export default function Dashboard({
             return y + 10;
         };
 
-        // Each page only until 210, 297
         pdf.setFontSize(16);
         prevY = addText(
-            `Generated on ${dayjs().format("DD/MM/YYYY")}`,
+            `DBS VOCUS generated on ${dayjs().format("DD/MM/YYYY")}`,
             MARGIN,
             MARGIN
         );
@@ -126,21 +139,22 @@ export default function Dashboard({
             const scale =
                 ref === reportRefs.OverallSentimentScoreRef ||
                 ref === reportRefs.SentimentDistributionRef
+                    ? 0.35
+                    : ref === reportRefs.CategoriesSunburstChartRef
                     ? 0.5
                     : 0.85;
             return await addImageToPDF(ref, x, y, scale);
         };
 
-        prevImageHeight = await addScaledImageToPDF(
+        [prevImageWidth, prevImageHeight] = await addScaledImageToPDF(
             reportRefs.OverallSentimentScoreRef,
             0,
             prevY + PADDING
         );
-        prevY += prevImageHeight + PADDING;
 
-        prevImageHeight = await addScaledImageToPDF(
+        [prevImageWidth, prevImageHeight] = await addScaledImageToPDF(
             reportRefs.SentimentDistributionRef,
-            0,
+            prevImageWidth + PADDING,
             prevY + PADDING
         );
         prevY += prevImageHeight + PADDING;
@@ -154,7 +168,7 @@ export default function Dashboard({
 
         prevY = MARGIN;
         pdf.addPage();
-        prevImageHeight = await addScaledImageToPDF(
+        [prevImageWidth, prevImageHeight] = await addScaledImageToPDF(
             reportRefs.SentimentScoreGraphRef,
             0,
             prevY
@@ -162,7 +176,7 @@ export default function Dashboard({
 
         prevY = MARGIN;
         pdf.addPage();
-        prevImageHeight = await addScaledImageToPDF(
+        [prevImageWidth, prevImageHeight] = await addScaledImageToPDF(
             reportRefs.CategoriesSunburstChartRef,
             0,
             prevY
@@ -170,17 +184,15 @@ export default function Dashboard({
 
         prevY = MARGIN;
         pdf.addPage();
-        prevImageHeight = await addScaledImageToPDF(
+        [prevImageWidth, prevImageHeight] = await addScaledImageToPDF(
             reportRefs.SentimentCategoriesGraphRef,
             0,
             prevY
         );
 
-        pdf.save(
-            `${dayjs().format("DD/MM/YYYY")}_report_generated_for_${dayjs(
-                fromDate
-            ).format("DD/MM/YYYY")}-${dayjs(toDate).format("DD/MM/YYYY")}.pdf`
-        );
+        const pdfDataUrl = pdf.output("dataurlstring");
+        setPdfDataUrl(pdfDataUrl);
+        setOpenDialog(true);
     };
 
     return (
@@ -203,6 +215,39 @@ export default function Dashboard({
                     Generate Report
                 </Button>
             </Box>
+            <Dialog
+                open={openDialog}
+                onClose={() => setOpenDialog(false)}
+                maxWidth="lg"
+                fullWidth
+            >
+                <DialogTitle
+                    id="scroll-dialog-title"
+                    style={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                        fontWeight: "bold",
+                    }}
+                >
+                    PDF Preview
+                    <Button
+                        onClick={() => setOpenDialog(false)}
+                        sx={{borderRadius: 4}}
+                    >
+                        <CloseIcon />
+                    </Button>
+                </DialogTitle>
+                <Box sx={{p: 2}}>
+                    {pdfDataUrl && (
+                        <iframe
+                            src={pdfDataUrl}
+                            width="100%"
+                            height="500px"
+                        ></iframe>
+                    )}
+                </Box>
+            </Dialog>
             <Box
                 sx={{
                     display: "flex",
