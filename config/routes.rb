@@ -4,7 +4,7 @@ Rails.application.routes.draw do
   #root to: redirect('/feedbacks')
   #root "feedbacks#index" #path with nothing
 
-  #root "analytics#index"
+  root "analytics#index"
   # Define routes for Feedbacks
   resources :feedbacks
   

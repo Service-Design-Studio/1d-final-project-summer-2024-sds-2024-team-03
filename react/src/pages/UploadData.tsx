@@ -58,7 +58,7 @@ export default function UploadData({}: UploadDataProps) {
       }}
     >
       <Box sx={{ width: { xs: "100%", sm: "30%" } }}>
-        <FormControl sx={{ m: 0, width: "50%" }}>
+        <FormControl sx={{ m: 1, width: "50%" }}>
           <InputLabel id="detailed-sentimentscoregraph-filter-subcategory-label">
             Subcategories
           </InputLabel>
