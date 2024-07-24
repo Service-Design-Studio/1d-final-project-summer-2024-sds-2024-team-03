@@ -36,7 +36,7 @@ class AnalyticsController < ApplicationController
   end
 
   def filter_subcategory
-    @subcategory = private_filter(:subcategory)
+    @subcategory = ["Debit Card", "Credit Card", "Cashline", "Personal Loan", "Renovation Loan", "Education Loan", "Car Loan", "Mortgage/Home Loan", "DigiBank App", "Internet Banking(iBanking)", "Paylah!", "digiPortfolio", "Non-Unit Trust/Equities", "Unit Trust", "Vickers", "Treasures Relationship Manager(RM)", "DBS Wealth Planning Manager", "DBS Treasures (General)", "SSB", "VTM(Video Teller Machine)", "Phone Banking", "Coin Deposit Machine", "General Insurance", "Life Insurance", "DBS Deposit Account", "Payments", "PayNow", "Cheque", "GIRO", "digiVault", "DBS Hotline", "DBS Branches/Staff","Contact Center", "Websites", "Overseas Transfer", "Others"]
     render json: @subcategory
   end
 
