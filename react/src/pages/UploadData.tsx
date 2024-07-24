@@ -11,12 +11,7 @@ import Chip from "@mui/material/Chip";
 import OutlinedInput from "@mui/material/OutlinedInput";
 import MenuItem from "@mui/material/MenuItem";
 
-interface UploadDataProps {
-  selectedProduct: string[];
-  setSelectedProduct: React.Dispatch<React.SetStateAction<string[]>>;
-  selectedSource: string[];
-  setSelectedSource: React.Dispatch<React.SetStateAction<string[]>>;
-}
+interface UploadDataProps {}
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
 const MenuProps = {
@@ -30,20 +25,9 @@ const MenuProps = {
   },
 };
 
-export default function UploadData({
-  selectedProduct,
-  setSelectedProduct,
-  selectedSource,
-  setSelectedSource,
-}: UploadDataProps) {
-  const [selectedSubcategory, setSelectedSubcategory] = useState<string>("");
-  const [graphSubcategories, setGraphSubcategories] = useState<string[]>([]);
-  const handleSubcategoryChange = (event: SelectChangeEvent<string>) => {
-    const {
-      target: { value },
-    } = event;
-    setSelectedSubcategory((prevValue) => (prevValue === value ? "" : value));
-  };
+export default function UploadData({}: UploadDataProps) {
+  const [selectedProduct, setSelectedProduct] = useState<string[]>([]);
+  const [selectedSource, setSelectedSource] = useState<string[]>([]);
   return (
     <Box sx={{ maxWidth: "lg", mx: "auto", px: 2 }}>
       <h1>Upload Data</h1>
@@ -57,53 +41,11 @@ export default function UploadData({
         }}
       >
         <Box sx={{ width: { xs: "100%", sm: "30%" } }}>
-          <FormControl sx={{ m: 0, width: "50%" }}>
-            <InputLabel id="detailed-sentimentscoregraph-filter-subcategory-label">
-              Subcategories
-            </InputLabel>
-            <Select
-              labelId="detailed-sentimentscoregraph-filter-subcategory-label"
-              id="detailed-sentimentscoregraph-filter-subcategory"
-              multiple={false}
-              value={selectedSubcategory}
-              onChange={handleSubcategoryChange}
-              input={
-                <OutlinedInput
-                  id="detailed-sentimentscoregraph-select-subcategory"
-                  label="subcategory"
-                  sx={{
-                    borderRadius: 4,
-                  }}
-                />
-              }
-              renderValue={(selected) => (
-                <Box
-                  sx={{
-                    display: "flex",
-                    flexWrap: "wrap",
-                    gap: 0.5,
-                  }}
-                >
-                  <Chip key={selected} label={selected} />
-                </Box>
-              )}
-              MenuProps={MenuProps}
-            >
-              {graphSubcategories.length > 0 ? (
-                graphSubcategories.map((subcategory: string) => (
-                  <MenuItem
-                    key={subcategory}
-                    value={subcategory}
-                    className="subcategory-option"
-                  >
-                    {subcategory}
-                  </MenuItem>
-                ))
-              ) : (
-                <MenuItem disabled>No data from selection</MenuItem>
-              )}
-            </Select>
-          </FormControl>
+          <FilterProduct
+            selectedProduct={selectedProduct}
+            setSelectedProduct={setSelectedProduct}
+            multiple={false}
+          />
         </Box>
         <Box sx={{ width: { xs: "100%", sm: "30%" } }}>
           <FilterSource
