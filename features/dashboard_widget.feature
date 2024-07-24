@@ -61,10 +61,10 @@ Scenario: All Products Sources Selected for Past 6 Months
 
 Scenario: Clicking on sentiment score widget redirects to Analytics page
   Given I am on the Dashboard page
-  When I click on 'overall-sentiment-score' widget
+  When I click on the 'overall-sentiment-score' widget
   Then I should be redirected to 'Analytics' page
 
 Scenario: Clicking on sentiment distribution widget redirects to Analytics page
   Given I am on the Dashboard page
-  When I click on 'sentiment-distribution' widget
+  When I click on the 'sentiment-distribution' widget
   Then I should be redirected to 'Analytics' page
