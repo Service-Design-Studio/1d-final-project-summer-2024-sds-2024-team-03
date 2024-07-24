@@ -1,7 +1,16 @@
-import React, {useEffect, useState, forwardRef} from "react";
+import React, {
+    useEffect,
+    useState,
+    forwardRef,
+    ForwardedRef,
+    useRef,
+    useImperativeHandle,
+} from "react";
 import {Theme, useTheme} from "@mui/material/styles";
 import {Paper, Typography, Box, ButtonBase, Divider} from "@mui/material";
 import {Dayjs} from "dayjs";
+
+const MAXBARWIDTH = 110;
 
 interface SentimentDistributionProps {
     fromDate: Dayjs;
@@ -11,6 +20,11 @@ interface SentimentDistributionProps {
     setSelectedMenu: React.Dispatch<React.SetStateAction<string>>;
 }
 
+type CustomRef<T> = {
+    img: T;
+    reportDesc?: string;
+};
+
 export default forwardRef(function SentimentDistribution(
     {
         fromDate,
@@ -19,7 +33,7 @@ export default forwardRef(function SentimentDistribution(
         selectedSource,
         setSelectedMenu,
     }: SentimentDistributionProps,
-    ref: React.Ref<HTMLDivElement>
+    ref: ForwardedRef<CustomRef<HTMLDivElement>>
 ) {
     const fromDate_string = fromDate.format("DD/MM/YYYY");
     const toDate_string = toDate.format("DD/MM/YYYY");
@@ -33,8 +47,7 @@ export default forwardRef(function SentimentDistribution(
         Unsatisfied: "orange",
         Frustrated: "red",
     };
-
-    const maxBarWidth = 110; // Maximum width for the bar, matching the outer box width
+    const theme = useTheme();
 
     useEffect(() => {
         const urlPrefix =
@@ -62,11 +75,19 @@ export default forwardRef(function SentimentDistribution(
             });
     }, [fromDate, toDate, selectedProduct, selectedSource]);
 
-    const theme = useTheme();
+    const internalRef = useRef<HTMLDivElement>(null);
+    useImperativeHandle(
+        ref,
+        () => ({
+            img: internalRef.current!,
+            reportDesc: `The sentiment distribution is as shown.`,
+        }),
+        [sentimentDistribution]
+    );
 
     return (
         <ButtonBase
-            ref={ref}
+            ref={internalRef}
             component={Paper}
             sx={{
                 display: "flex",
@@ -100,7 +121,7 @@ export default forwardRef(function SentimentDistribution(
                     const sentimentValue = parseFloat(
                         sentimentDistribution[sentiment] || "0"
                     );
-                    const barWidth = 1.5 * (sentimentValue / 100) * maxBarWidth;
+                    const barWidth = 1.5 * (sentimentValue / 100) * MAXBARWIDTH;
 
                     return (
                         <Box sx={{display: "flex", mb: 1}} key={sentiment}>
@@ -123,7 +144,7 @@ export default forwardRef(function SentimentDistribution(
                                 sx={{
                                     display: "flex",
                                     alignItems: "center",
-                                    width: maxBarWidth,
+                                    width: MAXBARWIDTH,
                                 }}
                             >
                                 <Box

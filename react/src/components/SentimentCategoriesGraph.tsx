@@ -1,4 +1,11 @@
-import React, {useEffect, useState, useRef, forwardRef} from "react";
+import React, {
+    useEffect,
+    useState,
+    forwardRef,
+    ForwardedRef,
+    useRef,
+    useImperativeHandle,
+} from "react";
 import {Theme, useTheme} from "@mui/material/styles";
 import {
     Paper,
@@ -82,6 +89,11 @@ interface SentimentCategoriesGraphProps {
     setSelectedMenu?: React.Dispatch<React.SetStateAction<string>>;
 }
 
+type CustomRef<T> = {
+    img: T;
+    reportDesc?: string;
+};
+
 export default forwardRef(function SentimentCategoriesGraph(
     {
         fromDate,
@@ -91,8 +103,9 @@ export default forwardRef(function SentimentCategoriesGraph(
         isDetailed,
         setSelectedMenu,
     }: SentimentCategoriesGraphProps,
-    ref: React.Ref<HTMLDivElement>
+    ref: ForwardedRef<CustomRef<HTMLDivElement>>
 ) {
+    const theme = useTheme();
     const fromDate_string = fromDate.format("DD/MM/YYYY");
     const toDate_string = toDate.format("DD/MM/YYYY");
 
@@ -143,7 +156,6 @@ export default forwardRef(function SentimentCategoriesGraph(
         if (score <= 4) return order["Satisfied"];
         return order["Excited"];
     };
-    const theme = useTheme();
 
     const handleBarClick = (bar: any) => {
         const key = bar.indexValue;
@@ -573,10 +585,59 @@ export default forwardRef(function SentimentCategoriesGraph(
         selectedSubcategory,
     ]);
 
+    const internalRef = useRef<HTMLDivElement>(null);
+    useImperativeHandle(
+        ref,
+        () => ({
+            img: internalRef.current!,
+            reportDesc:
+                bars.length > 0
+                    ? `${sortBySentiment(bars)
+                          .slice(bars.length - 5, bars.length)
+                          .map((bar) => {
+                              return `${
+                                  bar.Excited > 0
+                                      ? `${bar.Excited}% were <b>Excited</b> and `
+                                      : ""
+                              }${
+                                  bar.Satisfied > 0
+                                      ? `${bar.Satisfied}% were <b>Satisfied</b>`
+                                      : ""
+                              } about product <u>${
+                                  bar.category.split(" > ")[0]
+                              }</u> and subcategory <u>${
+                                  bar.category.split(" > ")[1]
+                              }</u>, demonstrating strong support.\n`;
+                          })
+                          .join(" ")}
+                \n
+                However, ${sortBySentiment(bars)
+                    .slice(bars.length - 5, bars.length)
+                    .map((bar) => {
+                        return `${
+                            bar.Frustrated > 0
+                                ? `${bar.Frustrated}% were <b>Frustrated</b> and `
+                                : ""
+                        }${
+                            bar.Unsatisfied > 0
+                                ? `${bar.Unsatisfied}% were <b>Unsatisfied</b>`
+                                : ""
+                        } about product <u>${
+                            bar.category.split(" > ")[0]
+                        }</u> and subcategory <u>${
+                            bar.category.split(" > ")[1]
+                        }</u>, suggesting areas for improvement.\n`;
+                    })
+                    .join(" ")}`
+                    : "No data.",
+        }),
+        [bars]
+    );
+
     /* Must have parent container with a defined size */
     return isDetailed ? (
         <Box
-            ref={ref}
+            ref={internalRef}
             sx={{
                 display: "flex",
                 gap: 2,
