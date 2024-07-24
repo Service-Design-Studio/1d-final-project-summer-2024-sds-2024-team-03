@@ -7,7 +7,7 @@ Scenario: Hovering on a product dropdown option updates its color
   Given I am on the Dashboard page
   And there are products in the dataset
   When I click on the "Products" dropdown button
-  And I hover over the product dropdown option
+  And I hover over a product dropdown option
   Then the product dropdown option should be highlighted on hover
 
 Scenario: Selecting a product colors it red and adds it to the listbox

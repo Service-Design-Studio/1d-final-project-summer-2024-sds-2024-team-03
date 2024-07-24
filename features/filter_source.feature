@@ -7,7 +7,7 @@ Scenario: Hovering on a source dropdown option updates its color
   Given I am on the Dashboard page
   And there are sources in the dataset
   When I click on the "Sources" dropdown button
-  And I hover over the source dropdown option
+  And I hover over a source dropdown option
   Then the source dropdown option should be highlighted on hover
 
 Scenario: Selecting a source colors it red and adds it to the listbox

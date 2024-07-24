@@ -1,9 +1,9 @@
 Feature: Select Products, Sources, and Upload
 
-Scenario: Hovering on a dropdown option updates its color
+Scenario: Hovering on a product dropdown option updates its color
   Given I am on the Upload Data page
   When I click on the "Products" dropdown button
-  And I hover over the product dropdown option
+  And I hover over a product dropdown option
   Then the product dropdown option should be highlighted on hover
 
 Scenario: Available dropdown options
@@ -24,10 +24,10 @@ Scenario: Reset selection by refreshing
   Then I should still be on the Upload Data page
   And I should see "Products" in the text field of the dropdown button
 
-Scenario: Hovering on a dropdown option updates its color
+Scenario: Hovering on a source dropdown option updates its color
   Given I am on the Upload Data page
   When I click on the "Sources" dropdown button
-  And I hover over the source dropdown option
+  And I hover over a source dropdown option
   Then the source dropdown option should be highlighted on hover
 
 Scenario: Available dropdown options
