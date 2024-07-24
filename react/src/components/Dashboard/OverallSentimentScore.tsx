@@ -1,4 +1,11 @@
-import React, {useEffect, useState, forwardRef} from "react";
+import React, {
+    useEffect,
+    useState,
+    forwardRef,
+    ForwardedRef,
+    useRef,
+    useImperativeHandle,
+} from "react";
 import {Theme, useTheme} from "@mui/material/styles";
 import {Paper, Box, Typography, ButtonBase} from "@mui/material";
 import dayjs, {Dayjs} from "dayjs";
@@ -11,6 +18,11 @@ interface OverallSentimentScoreProps {
     setSelectedMenu: React.Dispatch<React.SetStateAction<string>>;
 }
 
+type CustomRef<T> = {
+    img: T;
+    reportDesc?: string;
+};
+
 export default forwardRef(function OverallSentimentScore(
     {
         fromDate,
@@ -19,7 +31,7 @@ export default forwardRef(function OverallSentimentScore(
         selectedSource,
         setSelectedMenu,
     }: OverallSentimentScoreProps,
-    ref: React.Ref<HTMLDivElement>
+    ref: ForwardedRef<CustomRef<HTMLDivElement>>
 ) {
     const fromDate_string = fromDate.format("DD/MM/YYYY");
     const toDate_string = toDate.format("DD/MM/YYYY");
@@ -27,6 +39,16 @@ export default forwardRef(function OverallSentimentScore(
         useState<number>(0);
     const [overallSentimentScoreChange, setOverallSentimentScoreChange] =
         useState<number>(0);
+
+    const internalRef = useRef<HTMLDivElement>(null);
+    useImperativeHandle(
+        ref,
+        () => ({
+            img: internalRef.current!,
+            reportDesc: `${overallSentimentScore} yes ${overallSentimentScoreChange}`,
+        }),
+        [overallSentimentScore, overallSentimentScoreChange]
+    );
 
     useEffect(() => {
         const urlPrefix =
@@ -99,7 +121,7 @@ export default forwardRef(function OverallSentimentScore(
 
     return (
         <ButtonBase
-            ref={ref}
+            ref={internalRef}
             component={Paper}
             sx={{
                 display: "flex",
