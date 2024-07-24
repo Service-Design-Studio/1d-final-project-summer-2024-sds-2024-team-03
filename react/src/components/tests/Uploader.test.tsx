@@ -151,7 +151,7 @@ describe("FileDrop Component", () => {
       expect(
         screen.getByText(
           new RegExp(
-            `${selectedSubcategory[0]}__${selectedSource[0]}__test.csv`,
+            `${selectedSubcategory}__${selectedSource[0]}__test.csv`,
             "i"
           )
         )
@@ -223,7 +223,7 @@ describe("FileDrop Component", () => {
       expect(
         screen.getByText(
           new RegExp(
-            `${selectedSubcategory[0]}__${selectedSource[0]}__test.xlsx`,
+            `${selectedSubcategory}__${selectedSource[0]}__test.xlsx`,
             "i"
           )
         )

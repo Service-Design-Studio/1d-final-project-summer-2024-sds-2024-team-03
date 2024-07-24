@@ -1,4 +1,4 @@
-import React, { DragEvent, useState } from "react";
+import React, { DragEvent, useState, useRef } from "react";
 import { Box, Modal, Typography, Button } from "@mui/material";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import { useTheme } from "@mui/material/styles";
@@ -72,10 +72,7 @@ export function FileDrop({
     const droppedFiles = Array.from(event.dataTransfer.files);
     setFiles(droppedFiles);
 
-    if (
-      selectedSubcategory[0] === undefined ||
-      selectedSource[0] === undefined
-    ) {
+    if (selectedSubcategory === undefined || selectedSource[0] === undefined) {
       setModalContent("Error: Empty product or source.");
       setOpenModal(true);
     } else {
@@ -91,10 +88,7 @@ export function FileDrop({
       ? Array.from(event.target.files)
       : [];
     setFiles(uploadedFiles);
-    if (
-      selectedSubcategory[0] === undefined ||
-      selectedSource[0] === undefined
-    ) {
+    if (selectedSubcategory === undefined || selectedSource[0] === undefined) {
       setModalContent("Error: Empty product or source.");
       setOpenModal(true);
     } else {
@@ -192,7 +186,7 @@ export function FileDrop({
             type: file.type,
           });
 
-          console.log("Filename:", file.name);
+          console.log("Filename:", newFile);
           console.log("File:", file);
           console.log(reader);
           console.log(reader.result);
@@ -247,6 +241,14 @@ export function FileDrop({
     }
   };
 
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleButtonClick = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
+    }
+  };
+
   return (
     <div
       data-testid="drop-zone"
@@ -297,6 +299,7 @@ export function FileDrop({
           variant="contained"
           component="label"
           htmlFor="fileInput"
+          onClick={handleButtonClick}
           sx={{
             borderRadius: 8,
             fontSize: "1.1rem",
@@ -338,7 +341,7 @@ export function FileDrop({
                 {files.map((file, index) => (
                   <React.Fragment key={index}>
                     <br />
-                    {selectedSubcategory[0] +
+                    {selectedSubcategory +
                       "__" +
                       selectedSource[0] +
                       "__" +
