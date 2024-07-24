@@ -1,4 +1,11 @@
-import React, {useEffect, useState, forwardRef} from "react";
+import React, {
+    useEffect,
+    useState,
+    forwardRef,
+    ForwardedRef,
+    useRef,
+    useImperativeHandle,
+} from "react";
 import {Theme, useTheme} from "@mui/material/styles";
 import {Paper, Box, Typography, ButtonBase} from "@mui/material";
 import {Dayjs} from "dayjs";
@@ -23,6 +30,11 @@ const MenuProps = {
     },
 };
 
+type CustomRef<T> = {
+    img: T;
+    reportDesc?: string;
+};
+
 interface SentimentScoreGraphProps {
     fromDate: Dayjs;
     toDate: Dayjs;
@@ -41,7 +53,7 @@ export default forwardRef(function SentimentScoreGraph(
         isDetailed,
         setSelectedMenu,
     }: SentimentScoreGraphProps,
-    ref: React.Ref<HTMLDivElement>
+    ref: ForwardedRef<CustomRef<HTMLDivElement>>
 ) {
     const fromDate_string = fromDate.format("DD/MM/YYYY");
     const toDate_string = toDate.format("DD/MM/YYYY");
@@ -283,10 +295,94 @@ export default forwardRef(function SentimentScoreGraph(
         selectedFeedbackcategories,
     ]);
 
+    function findHighestAndLowestScores(dataSets: DataSet[]) {
+        if (dataSets.length === 0) {
+            return {
+                highest: {score: null as number | null, dates: [] as string[]},
+                lowest: {score: null as number | null, dates: [] as string[]},
+            };
+        }
+
+        let highestScore = -Infinity;
+        let lowestScore = Infinity;
+        let highestDates: string[] = [];
+        let lowestDates: string[] = [];
+
+        dataSets.forEach((dataSet) => {
+            dataSet.data.forEach(({x, y}) => {
+                if (y > highestScore) {
+                    highestScore = y;
+                    highestDates = [x];
+                } else if (y === highestScore) {
+                    highestDates.push(x);
+                }
+
+                if (y < lowestScore) {
+                    lowestScore = y;
+                    lowestDates = [x];
+                } else if (y === lowestScore) {
+                    lowestDates.push(x);
+                }
+            });
+        });
+
+        return {
+            highest: {score: highestScore, dates: highestDates},
+            lowest: {score: lowestScore, dates: lowestDates},
+        };
+    }
+    const {highest, lowest} = findHighestAndLowestScores(sentimentScores);
+    const internalRef = useRef<HTMLDivElement>(null);
+    useImperativeHandle(
+        ref,
+        () => {
+            // Compute highest and lowest sentiment scores
+            const allDataPoints = sentimentScores.flatMap((ds) => ds.data);
+            const highest = allDataPoints.reduce(
+                (max, dp) => (dp.y > max.y ? dp : max),
+                allDataPoints[0]
+            );
+            const lowest = allDataPoints.reduce(
+                (min, dp) => (dp.y < min.y ? dp : min),
+                allDataPoints[0]
+            );
+
+            // Collect all dates for highest and lowest scores
+            const highestDates = allDataPoints
+                .filter((dp) => dp.y === highest.y)
+                .map((dp) => dp.x);
+            const lowestDates = allDataPoints
+                .filter((dp) => dp.y === lowest.y)
+                .map((dp) => dp.x);
+
+            // Calculate total number of data points
+            const totalDataPoints = sentimentScores.reduce(
+                (acc, ds) => acc + ds.data.length,
+                0
+            );
+
+            // Generate the report description
+            return {
+                img: internalRef.current!,
+                reportDesc:
+                    totalDataPoints > 0
+                        ? `There are ${totalDataPoints} data points. The highest sentiment score was ${
+                              highest.y
+                          } on dates ${highestDates.join(
+                              ", "
+                          )}, and the lowest sentiment score was ${
+                              lowest.y
+                          } on dates ${lowestDates.join(", ")}.`
+                        : "No data.",
+            };
+        },
+        [sentimentScores]
+    );
+
     /* Must have parent container with a defined size */
     return isDetailed ? (
         <Box
-            ref={ref}
+            ref={internalRef}
             sx={{
                 display: "flex",
                 gap: 2,
@@ -577,7 +673,7 @@ export default forwardRef(function SentimentScoreGraph(
         </Box>
     ) : (
         <Box
-            ref={ref}
+            ref={internalRef}
             sx={{
                 display: "flex",
                 gap: 2,

@@ -1,4 +1,11 @@
-import React, {useEffect, useState, forwardRef} from "react";
+import React, {
+    useEffect,
+    useState,
+    forwardRef,
+    ForwardedRef,
+    useRef,
+    useImperativeHandle,
+} from "react";
 import {Theme, useTheme} from "@mui/material/styles";
 import {Paper, Box, Typography, ButtonBase} from "@mui/material";
 import {Dayjs} from "dayjs";
@@ -20,6 +27,11 @@ const ORDER: Record<string, string> = {
     Frustrated: "red",
 };
 
+type CustomRef<T> = {
+    img: T;
+    reportDesc?: string;
+};
+
 export default forwardRef(function CategoriesSunburstChart(
     {
         fromDate,
@@ -28,7 +40,7 @@ export default forwardRef(function CategoriesSunburstChart(
         selectedSource,
         setSelectedMenu,
     }: CategoriesSunburstChartProps,
-    ref: React.Ref<HTMLDivElement>
+    ref: ForwardedRef<CustomRef<HTMLDivElement>>
 ) {
     const fromDate_string = fromDate.format("DD/MM/YYYY");
     const toDate_string = toDate.format("DD/MM/YYYY");
@@ -232,10 +244,37 @@ export default forwardRef(function CategoriesSunburstChart(
             });
     }, [fromDate, toDate, selectedProduct, selectedSource]);
 
+    const internalRef = useRef<HTMLDivElement>(null);
+    useImperativeHandle(
+        ref,
+        () => ({
+            img: internalRef.current!,
+            reportDesc:
+                topCategories.length > 0
+                    ? `For the top 3 most mentioned, ${topCategories
+                          .map((category) => {
+                              return `product <u>${
+                                  category.product
+                              }</u>, subcategory <u>${
+                                  category.subcategory
+                              }</u>, feedback category <u>${
+                                  category.feedback_category
+                              }</u> has ${
+                                  category.mentions
+                              } total mentions, with an average sentiment score of ${category.averageSentimentScore.toFixed(
+                                  1
+                              )} / 5.\n`;
+                          })
+                          .join(" ")}`
+                    : "No data.",
+        }),
+        [topCategories] // Adjust the dependency array if necessary
+    );
+
     /* Must have parent container with a defined size */
     return (
         <Box
-            ref={ref}
+            ref={internalRef}
             sx={{
                 display: "flex",
                 gap: 2,
@@ -429,8 +468,8 @@ export default forwardRef(function CategoriesSunburstChart(
                                     >
                                         {category.averageSentimentScore.toFixed(
                                             1
-                                        )}{" "}
-                                        / 5.0
+                                        )}
+                                        / 5
                                     </Typography>
                                 </React.Fragment>
                             ))}
