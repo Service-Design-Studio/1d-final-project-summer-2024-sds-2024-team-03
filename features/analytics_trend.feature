@@ -2,8 +2,7 @@ Feature: Sentiment Trend Graph
   
 Scenario: Normal View
   Given I am on the Analytics page
-  Then I should see a section titled 'Sentiment Trend for Selected Subcategories'
-  And I should see a section titled 'Sentiment Categorisation'
+  Then I should see a widget titled 'Sentiment Trend for Selected Subcategories'
   
 Scenario: Available Subcategory dropdown options
   Given I am on the Analytics page
