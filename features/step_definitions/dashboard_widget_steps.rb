@@ -218,5 +218,4 @@ def set_date_range(start_date, end_date)
   find('#from-date').set(start_date)
   # Fill in the 'To Date' input
   find('#to-date').set(end_date)
-  find('body').click # to close date picker if it stays open
 end

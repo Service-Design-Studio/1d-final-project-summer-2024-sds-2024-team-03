@@ -26,7 +26,7 @@ Then(/I should see all the feedback categories '(.*)' and '(.*)'/) do |item1, it
 end
 
 And(/the X-ticks are dates in the format MMM 'YY/) do
-  find('body').click
+# find('body').click
   expected_values = ["Feb '24", "Mar '24", "Apr '24", "May '24"]
   expected_values.each do |value|
     expect(page).to have_css("text[dominant-baseline='text-before-edge']", text: value)
