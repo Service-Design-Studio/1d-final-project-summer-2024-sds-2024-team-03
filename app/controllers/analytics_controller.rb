@@ -35,6 +35,11 @@ class AnalyticsController < ApplicationController
     render json: @products
   end
 
+  def filter_subcategory
+    @subcategory = private_filter(:subcategory)
+    render json: @subcategory
+  end
+
   def filter_sources
     @sources = private_filter(:source)
     render json: @sources

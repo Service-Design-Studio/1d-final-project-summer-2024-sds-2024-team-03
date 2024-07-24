@@ -11,6 +11,7 @@ Rails.application.routes.draw do
     get 'get_earliest_latest_dates', on: :collection
     get 'filter_products', on: :collection
     get 'filter_sources', on: :collection
+    get 'filter_subcategory', on: :collection
     get 'get_sentiment_scores', on: :collection
     get 'get_overall_sentiment_scores', on: :collection
     get 'get_sentiments_sorted', on: :collection
