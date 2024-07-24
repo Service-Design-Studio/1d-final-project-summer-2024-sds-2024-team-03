@@ -2,7 +2,7 @@ Then(/I should see a widget titled '(.*)'/) do |widget_title|
   expect(page).to have_content(widget_title)
 end
 
-When(/I click on the 'Subcategory' dropdown button/) do
+When(/I click on the 'Subcategory' dropdown button in the Sentiment Categorisation widget/) do
   find('#detailed-sentimentcategoriesgraph-filter-subcategory').click
   expect(page).to have_css('ul[role="listbox"]')
 end
@@ -14,7 +14,7 @@ Then(/I should see all the subcategories '(.*)' and '(.*)'/) do |item1, item2|
   end
 end
   
-Then(/I should see '(.*)' in the text field of the dropdown button/) do |item|
+Then(/I should see '(.*)' in the text field of the Sentiment Categorisation dropdown button/) do |item|
   dropdown_button = find('#detailed-sentimentcategoriesgraph-filter-subcategory')
   expect(dropdown_button).to have_content(item)
 end
@@ -44,10 +44,6 @@ And(/I click on '(.*)'/) do |text|
   find('li', text: text).click
 end
 
-Then(/I should see 'United Trust (UT) products' in the text field of the dropdown button/) do
-  expect(find('#detailed-sentimentcategoriesgraph-filter-subcategory').text).to eq('United Trust (UT) products')
-end
-
 And(/the X-ticks are integers from 0 to 100 with step 10/) do
   expected_values = [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100]
   expected_values.each do |value|
@@ -55,7 +51,6 @@ And(/the X-ticks are integers from 0 to 100 with step 10/) do
   end
 end
 
-#================================#
 And(/the Y-ticks show '(.*)' > '(.*)'/) do |subcategory, feedback_category|
   parent_element = find("g[transform='translate(250,10)']")
   # Check that the parent element contains both specified texts
@@ -63,7 +58,6 @@ And(/the Y-ticks show '(.*)' > '(.*)'/) do |subcategory, feedback_category|
   expect(parent_element).to have_content(feedback_category)
 end
 
-#================================#
 And(/I should be able to hover over it to reveal the label '(.*)' and percentage '(.*)'/) do |label, percentage|
   red_rect = find('rect[fill="red"]', visible: true)
   red_rect.hover
@@ -72,7 +66,6 @@ And(/I should be able to hover over it to reveal the label '(.*)' and percentage
   expect(hoverlabel).to have_content(percentage)
 end
 
-#================================#
 And(/a 'sort' button and 'view all' button dropdown/) do
   expect(page).to have_button('Sort')
   expect(page).to have_button('View All')
@@ -82,7 +75,6 @@ When(/I click on the 'sort' button/) do
   click_button('Sort')
 end
 
-#================================#
 Then(/the subcategories are currently sorted in descending order of positive sentiment '(.*)' and '(.*)'/) do |text1, text2|
   parent_element = find("g[transform='translate(250,10)']")
   # Check that the parent element contains both specified texts
@@ -90,7 +82,6 @@ Then(/the subcategories are currently sorted in descending order of positive sen
   expect(parent_element).to have_content(text2)
 end
 
-#================================#
 Then(/I should see the subcategories sorted in descending order of negative sentiment '(.*)' and '(.*)'/) do |text1, text2|
   parent_element = find("g[transform='translate(250,10)']")
   # Check that the parent element contains both specified texts
@@ -102,18 +93,19 @@ When(/I click 'view all'/) do
   click_button('View All')
 end
 
-#================================#
-Then(/I should see the top 3 categories sorted in the same previous order of sentiment/) do
-  # You need to implement a way to verify this, e.g., checking the order of bars in the chart
+Then(/I should see the top 3 subcategories sorted in this descending order '(.*)', '(.*)', '(.*)'/) do |text1, text2, text3|
+  expect(find("g[transform='translate(0,28)']")).to have_content(text1)
+  expect(find("g[transform='translate(0,70)']")).to have_content(text2)
+  expect(find("g[transform='translate(0,112)']")).to have_content(text3)
 end
 
 And(/I click 'view less'/) do
   click_button('View Less')
 end
 
-#================================#
-Then(/I should see only the top 2 categories sorted in the same previous order of sentiment/) do
-  # You need to implement a way to verify this, e.g., checking the order of bars in the chart
+Then(/I should see no longer see the third subcategory '(.*)'/) do |third_subcategory|
+  parent_element = find("g[transform='translate(250,10)']")
+  expect(parent_element).to have_no_content(third_subcategory)
 end
 
 When(/I click on the red portion in the '(.*)'/) do |product_subcategory|
@@ -125,17 +117,20 @@ Then(/I should see a pop-up with the relevant data/) do
   expect(page).to have_css('.MuiDialog-paper')
 end
 
-#================================#
-Then(/I should see only 1 category/) do
-  # Verify that only 1 category is displayed in the chart
+Then(/I should see only 1 subcategory/) do
+  parent_element = find("g[transform='translate(250,10)']")
+  expect(parent_element).to have_no_css("g[transform='translate(0,100)']")
 end
 
-#================================#
-And(/clicking on 'view all' would not add more categories to view/) do
-  # Verify that clicking 'View All' doesn't change the number of categories displayed
+And(/clicking on 'view all' would not add more subcategories to view/) do
+  click_button('View All')
+  parent_element = find("g[transform='translate(250,10)']")
+  expect(parent_element).to have_no_css("g[transform='translate(0,100)']")
 end
 
-#================================#
-And(/clicking 'sort' would seem like it did not change the order/) do
-  # Verify that clicking 'Sort' doesn't change the order of categories displayed
+And(/clicking 'sort' does not change the displayed subcategory '(.*)'/) do |only_subcategory|
+  label = find("g[transform='translate(0,71)']")
+  expect(label).to have_content(only_subcategory)
+  click_button('Sort')
+  expect(label).to have_content(only_subcategory)
 end

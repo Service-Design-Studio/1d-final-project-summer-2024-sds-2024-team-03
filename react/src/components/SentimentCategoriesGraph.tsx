@@ -734,7 +734,7 @@ export default forwardRef(function SentimentCategoriesGraph(
                             MenuProps={MenuProps}
                         >
                             {graphSubcategories.length > 0 ? (
-                                graphSubcategories.map((subcategory) => (
+                                graphSubcategories.sort().map((subcategory) => (
                                     <MenuItem
                                         key={subcategory}
                                         value={subcategory}
@@ -1052,16 +1052,15 @@ export default forwardRef(function SentimentCategoriesGraph(
         </Box>
     ) : (
         <Box
-            ref={ref}
             sx={{
                 display: "flex",
-                gap: 2,
                 mt: 2,
                 width: "100%",
                 flexDirection: "column",
             }}
         >
             <ButtonBase
+                ref={internalRef}
                 component={Paper}
                 sx={{
                     display: "flex",

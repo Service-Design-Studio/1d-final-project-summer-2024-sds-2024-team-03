@@ -111,7 +111,7 @@ export default function Dashboard({
                 // Draw a border with rounded corners
                 const borderRadius = 5;
                 pdf.setDrawColor(0, 0, 0); // Set border color to black
-                pdf.setLineWidth(1); // Set border width
+                pdf.setLineWidth(0.4); // Set border width
                 pdf.roundedRect(
                     MARGIN + x - 1, // X position adjusted for border
                     y - 1, // Y position adjusted for border

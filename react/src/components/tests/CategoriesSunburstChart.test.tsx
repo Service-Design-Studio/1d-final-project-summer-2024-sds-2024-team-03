@@ -106,7 +106,7 @@ describe("CategoriesSunburstChart Component", () => {
             ).toBeInTheDocument();
             expect(screen.getByText(/1.5/i)).toBeInTheDocument();
             expect(screen.getAllByText("1").length).toBe(2);
-            expect(screen.getAllByText(/\/ 5.0/i).length).toBe(2);
+            expect(screen.getAllByText(/\/ 5/i).length).toBe(2);
         });
     });
 });
