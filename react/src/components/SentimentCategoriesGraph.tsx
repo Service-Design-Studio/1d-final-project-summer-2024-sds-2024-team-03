@@ -1052,7 +1052,7 @@ export default forwardRef(function SentimentCategoriesGraph(
         </Box>
     ) : (
         <Box
-            ref={ref}
+            ref={internalRef}
             sx={{
                 display: "flex",
                 gap: 2,
