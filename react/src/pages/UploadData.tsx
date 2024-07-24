@@ -26,37 +26,95 @@ const MenuProps = {
 };
 
 export default function UploadData({}: UploadDataProps) {
-  const [selectedProduct, setSelectedProduct] = useState<string[]>([]);
+  const [subcategories, setSubcategories] = useState<string[]>([]);
   const [selectedSource, setSelectedSource] = useState<string[]>([]);
+  const [selectedSubcategory, setSelectedSubcategory] = useState<string>("");
+  const [graphSubcategories, setGraphSubcategories] = useState<string[]>([]);
+  const handleSubcategoryChange = (event: SelectChangeEvent<string>) => {
+    const {
+      target: { value },
+    } = event;
+    setSelectedSubcategory((prevValue) => (prevValue === value ? "" : value));
+  };
+
+  useEffect(() => {
+    const urlPrefix =
+      process.env.NODE_ENV === "development"
+        ? "http://localhost:3000"
+        : "https://jbaaam-yl5rojgcbq-et.a.run.app";
+    fetch(`${urlPrefix}/analytics/filter_subcategory`)
+      .then((response) => response.json())
+      .then((data) => setSubcategories(data.sort()));
+  }, []);
+
   return (
-    <Box sx={{ maxWidth: "lg", mx: "auto", px: 2 }}>
-      <h1>Upload Data</h1>
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: { xs: "column", sm: "row" },
-          justifyContent: "flex-start",
-          gap: 2,
-          mb: 7,
-        }}
-      >
-        <Box sx={{ width: { xs: "100%", sm: "30%" } }}>
-          <FilterProduct
-            selectedProduct={selectedProduct}
-            setSelectedProduct={setSelectedProduct}
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: { xs: "column", sm: "row" },
+        justifyContent: "flex-start",
+        gap: 2,
+        mb: 7,
+      }}
+    >
+      <Box sx={{ width: { xs: "100%", sm: "30%" } }}>
+        <FormControl sx={{ m: 0, width: "50%" }}>
+          <InputLabel id="detailed-sentimentscoregraph-filter-subcategory-label">
+            Subcategories
+          </InputLabel>
+          <Select
+            labelId="detailed-sentimentscoregraph-filter-subcategory-label"
+            id="detailed-sentimentscoregraph-filter-subcategory"
             multiple={false}
-          />
-        </Box>
-        <Box sx={{ width: { xs: "100%", sm: "30%" } }}>
-          <FilterSource
-            selectedSource={selectedSource}
-            setSelectedSource={setSelectedSource}
-            multiple={false}
-          />
-        </Box>
+            value={selectedSubcategory}
+            onChange={handleSubcategoryChange}
+            input={
+              <OutlinedInput
+                id="detailed-sentimentscoregraph-select-subcategory"
+                label="subcategory"
+                sx={{
+                  borderRadius: 4,
+                }}
+              />
+            }
+            renderValue={(selected) => (
+              <Box
+                sx={{
+                  display: "flex",
+                  flexWrap: "wrap",
+                  gap: 0.5,
+                }}
+              >
+                <Chip key={selected} label={selected} />
+              </Box>
+            )}
+            MenuProps={MenuProps}
+          >
+            {subcategories.length > 0 ? (
+              subcategories.map((subcategory: string) => (
+                <MenuItem
+                  key={subcategory}
+                  value={subcategory}
+                  className="subcategory-option"
+                >
+                  {subcategory}
+                </MenuItem>
+              ))
+            ) : (
+              <MenuItem disabled>No data from selection</MenuItem>
+            )}
+          </Select>
+        </FormControl>
+      </Box>
+      <Box sx={{ width: { xs: "100%", sm: "30%" } }}>
+        <FilterSource
+          selectedSource={selectedSource}
+          setSelectedSource={setSelectedSource}
+          multiple={false}
+        />
       </Box>
       <FileDrop
-        selectedProduct={selectedProduct}
+        selectedSubcategory={selectedSubcategory}
         selectedSource={selectedSource}
       />
     </Box>
