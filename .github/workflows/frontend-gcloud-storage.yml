@@ -57,5 +57,5 @@ jobs:
         id: "upload-file"
         uses: "google-github-actions/upload-cloud-storage@v2"
         with:
-          path: "/build"
+          path: "./react/build"
           destination: "jbaaam_frontend"
