@@ -9,7 +9,7 @@ Scenario: Available dropdown options
   When the date is set from '01/01/2024' to '10/01/2024'
   And the sources selected are: 'Product Survey'
   And the products selected are: 'Investments'
-  When I click on the 'Subcategory' dropdown button in the Sentiment Categorisation widget
+  And I click on the 'Subcategory' dropdown button in the Sentiment Categorisation widget
   Then I should see all the subcategories 'United Trust (UT) products' and 'NonUT products'
   
 Scenario: Hovering on a subcategory
@@ -17,7 +17,7 @@ Scenario: Hovering on a subcategory
   When the date is set from '01/01/2024' to '10/01/2024'
   And the sources selected are: 'Product Survey'
   And the products selected are: 'Investments'
-  When I click on the 'Subcategory' dropdown button in the Sentiment Categorisation widget
+  And I click on the 'Subcategory' dropdown button in the Sentiment Categorisation widget
   And I hover on 'NonUT products'
   Then the dropdown option 'NonUT products' should be highlighted
   
@@ -26,7 +26,7 @@ Scenario: Selecting a subcategory adds it to the listbox
   When the date is set from '01/01/2024' to '10/01/2024'
   And the sources selected are: 'Product Survey'
   And the products selected are: 'Investments'
-  When I click on the 'Subcategory' dropdown button in the Sentiment Categorisation widget
+  And I click on the 'Subcategory' dropdown button in the Sentiment Categorisation widget
   And I click on 'United Trust (UT) products'
   Then I should see 'United Trust (UT) products' in the text field of the Sentiment Categorisation dropdown button
   And I should see 2 subcategories with the most positive sentiments '> Application Related' and '> Staff Related' sorted in descending order
@@ -50,28 +50,32 @@ Scenario: Sort positive to negative sentiment in descending order and vice versa
   And the products selected are: 'Investments'
   And I click on the 'Subcategory' dropdown button in the Sentiment Categorisation widget
   And I click on 'United Trust (UT) products'
-  And the subcategories are currently sorted in descending order of positive sentiment '> Staff Related' and '> Fee Related' 
+  And the subcategories are currently sorted in descending order of positive sentiment '> Staff Related' and '> Fee Related'
   And I click on the 'sort' button
   Then I should see the subcategories sorted in descending order of negative sentiment '> Application Related' and '> Staff Related'
   
 Scenario: View all
   Given I am on the Analytics page
-  When the date is set from '01/01/2024' to '10/01/2024'
+  When the date is set from '01/01/2024' to '01/02/2024'
   And the sources selected are: 'Product Survey'
   And the products selected are: 'Investments'
-  When I click 'view all'
-  Then I should see the top 3 categories sorted in the same previous order of sentiment
+  And I click on the 'Subcategory' dropdown button in the Sentiment Categorisation widget
+  And I click on 'United Trust (UT) products'
+  And I click 'view all'
+  Then I should see the top 3 subcategories sorted in this descending order '> Staff Related', '> Application Related', '> Fee Related'
   
 Scenario: View less
   Given I am on the Analytics page
-  When the date is set from '01/01/2024' to '10/01/2024'
+  When the date is set from '01/01/2024' to '01/02/2024'
   And the sources selected are: 'Product Survey'
   And the products selected are: 'Investments'
-  When I click 'view all'
+  And I click on the 'Subcategory' dropdown button in the Sentiment Categorisation widget
+  And I click on 'United Trust (UT) products'
+  And I click 'view all'
   And I click 'view less'
-  Then I should see only the top 2 categories sorted in the same previous order of sentiment
+  Then I should see no longer see the third subcategory '> Fee Related'
   
-Scenario: Look into a specific category
+Scenario: Look into a specific subcategory
   Given I am on the Analytics page
   When the date is set from '01/01/2024' to '10/01/2024'
   And the sources selected are: 'Product Survey'
@@ -86,17 +90,17 @@ Scenario: Filter resets on page refresh
   When the date is set from '01/01/2024' to '10/01/2024'
   And the sources selected are: 'Product Survey'
   And the products selected are: 'Investments'
-  When I refresh the page
-  Then I should see "Products" in the text field of the Sentiment Categorisation dropdown button
-  And I should see "Sources" in the text field of the Sentiment Categorisation dropdown button
+  And I refresh the page
+  Then I should see "Products" in the text field of the dropdown button
+  Then I should see "Sources" in the text field of the dropdown button
   
 Scenario: Insufficient overall data
   Given I am on the Analytics page
-  When the date is set from '01/01/2024' to '06/01/2024'
+  When the date is set from '01/02/2024' to '08/02/2024'
   And the sources selected are: 'Product Survey'
   And the products selected are: 'Investments'
-  When I click on the 'Subcategory' dropdown button in the Sentiment Categorisation widget
+  And I click on the 'Subcategory' dropdown button in the Sentiment Categorisation widget
   And I click on 'United Trust (UT) products'
-  Then I should see only 1 category
-  And clicking on 'view all' would not add more categories to view
-  And clicking 'sort' would seem like it did not change the order
+  Then I should see only 1 subcategory
+  And clicking on 'view all' would not add more subcategories to view
+  And clicking 'sort' does not change the displayed subcategory '> Staff Related'

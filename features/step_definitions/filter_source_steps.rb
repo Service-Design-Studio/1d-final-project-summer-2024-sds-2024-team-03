@@ -14,16 +14,16 @@ When(/I click on the "Sources" dropdown button/) do
   find('#filter-source').click
 end
 
-When(/I hover over the source dropdown option/) do
-  button = find('.filter-source-option', match: :first)
-  page.execute_script("arguments[0].dispatchEvent(new MouseEvent('mouseover', { bubbles: true }));", button)
+When(/I hover over a source dropdown option/) do
+  button = find('.filter-source-option', text: "Call Centre")
+  button.hover
 end
 
 Then(/the source dropdown option should be highlighted on hover/) do
-  button = find('.filter-source-option', match: :first)
+  button = find('.filter-source-option', text: "Call Centre")
   # Verify the color change by checking the computed style
   new_background_color = page.evaluate_script("window.getComputedStyle(arguments[0]).backgroundColor;", button)
-  expect(new_background_color).to eq('rgba(0, 0, 0, 0.12)')
+  expect(new_background_color).to eq('rgba(0, 0, 0, 0.04)')
   # Exit hover state
   page.execute_script("arguments[0].dispatchEvent(new MouseEvent('mouseout', { bubbles: true }));", button)
 end

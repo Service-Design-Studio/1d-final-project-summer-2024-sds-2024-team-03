@@ -123,7 +123,7 @@ Then(/I should see the distribution of sentiment add up to '(.*)'/) do |distribu
 end
 
 # Scenario: Clicking on sentiment score widget redirects to Analytics page
-When(/I click on '(.*)' widget/) do |widget_id|
+When(/I click on the '(.*)' widget/) do |widget_id|
   find("##{widget_id}").click
 end
 
