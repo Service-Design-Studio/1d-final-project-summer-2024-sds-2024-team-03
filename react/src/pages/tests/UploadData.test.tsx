@@ -6,9 +6,6 @@ import fetchMock from "jest-fetch-mock";
 
 fetchMock.enableMocks();
 
-const mockSetSelectedProduct = jest.fn();
-const mockSetSelectedSource = jest.fn();
-
 describe("Dashboard Components", () => {
     // Suppress errors, logs, warn
     jest.spyOn(global.console, "error").mockImplementation(() => jest.fn());
@@ -61,14 +58,7 @@ describe("Dashboard Components", () => {
     );
 
     it("renders Upload Data page", async () => {
-        render(
-            <UploadData
-                selectedProduct={[]}
-                setSelectedProduct={mockSetSelectedProduct}
-                selectedSource={[]}
-                setSelectedSource={mockSetSelectedSource}
-            />
-        );
+        render(<UploadData />);
         expect(await screen.findByText(/Upload Data/i)).toBeInTheDocument();
         expect(await screen.findByLabelText(/Products/i)).toBeInTheDocument();
         expect(await screen.findByLabelText(/Sources/i)).toBeInTheDocument();
