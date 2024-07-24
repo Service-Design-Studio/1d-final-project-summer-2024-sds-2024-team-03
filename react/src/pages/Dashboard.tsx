@@ -47,13 +47,17 @@ export default function Dashboard({
     const [openDialog, setOpenDialog] = useState(false);
     const [pdfDataUrl, setPdfDataUrl] = useState<string | null>(null);
 
+    type CustomRef<T> = {
+        img: T;
+        reportDesc?: string;
+    };
+
     const reportRefs = {
-        OverallSentimentScoreRef: useRef<HTMLDivElement>(null),
-        SentimentDistributionRef: useRef<HTMLDivElement>(null),
+        OverallSentimentScoreRef: useRef<CustomRef<HTMLDivElement>>({
+            img: document.createElement("div"),
+            reportDesc: "",
+        }),
         // ActionablesRef
-        SentimentScoreGraphRef: useRef<HTMLDivElement>(null),
-        CategoriesSunburstChartRef: useRef<HTMLDivElement>(null),
-        SentimentCategoriesGraphRef: useRef<HTMLDivElement>(null),
     };
 
     const handleGenerateReport = async () => {
@@ -69,13 +73,13 @@ export default function Dashboard({
         const pdf = new jsPDF();
 
         const addImageToPDF = async (
-            ref: React.RefObject<HTMLDivElement>,
+            ref: React.RefObject<CustomRef<HTMLDivElement>>,
             x: number,
             y: number,
             scale: number
         ) => {
-            if (ref.current) {
-                const dataUrl = await domtoimage.toPng(ref.current);
+            if (ref.current && ref.current.img) {
+                const dataUrl = await domtoimage.toPng(ref.current.img);
                 const imgProperties = pdf.getImageProperties(dataUrl);
                 const pdfWidth = pdf.internal.pageSize.getWidth();
 
@@ -132,17 +136,11 @@ export default function Dashboard({
         prevY = addText(`Sources: ${selectedSource.join(", ")}`, MARGIN, prevY);
 
         const addScaledImageToPDF = async (
-            ref: React.RefObject<HTMLDivElement>,
+            ref: React.RefObject<CustomRef<HTMLDivElement>>,
             x: number,
             y: number
         ) => {
-            const scale =
-                ref === reportRefs.OverallSentimentScoreRef ||
-                ref === reportRefs.SentimentDistributionRef
-                    ? 0.35
-                    : ref === reportRefs.CategoriesSunburstChartRef
-                    ? 0.5
-                    : 0.85;
+            const scale = 0.85;
             return await addImageToPDF(ref, x, y, scale);
         };
 
@@ -151,13 +149,6 @@ export default function Dashboard({
             0,
             prevY + PADDING
         );
-
-        [prevImageWidth, prevImageHeight] = await addScaledImageToPDF(
-            reportRefs.SentimentDistributionRef,
-            prevImageWidth + PADDING,
-            prevY + PADDING
-        );
-        prevY += prevImageHeight + PADDING;
 
         prevY = addText("Additional Details:", MARGIN, prevY + PADDING);
         prevY = addText(
@@ -168,27 +159,8 @@ export default function Dashboard({
 
         prevY = MARGIN;
         pdf.addPage();
-        [prevImageWidth, prevImageHeight] = await addScaledImageToPDF(
-            reportRefs.SentimentScoreGraphRef,
-            0,
-            prevY
-        );
 
         prevY = MARGIN;
-        pdf.addPage();
-        [prevImageWidth, prevImageHeight] = await addScaledImageToPDF(
-            reportRefs.CategoriesSunburstChartRef,
-            0,
-            prevY
-        );
-
-        prevY = MARGIN;
-        pdf.addPage();
-        [prevImageWidth, prevImageHeight] = await addScaledImageToPDF(
-            reportRefs.SentimentCategoriesGraphRef,
-            0,
-            prevY
-        );
 
         const pdfDataUrl = pdf.output("dataurlstring");
         setPdfDataUrl(pdfDataUrl);
@@ -299,7 +271,6 @@ export default function Dashboard({
                 />
 
                 <SentimentDistribution
-                    ref={reportRefs.SentimentDistributionRef}
                     fromDate={fromDate}
                     toDate={toDate}
                     selectedProduct={selectedProduct}
@@ -395,7 +366,6 @@ export default function Dashboard({
             >
                 <Box sx={{flex: 6, display: "flex", alignItems: "stretch"}}>
                     <SentimentScoreGraph
-                        ref={reportRefs.SentimentScoreGraphRef}
                         fromDate={fromDate}
                         toDate={toDate}
                         selectedProduct={selectedProduct}
@@ -406,7 +376,6 @@ export default function Dashboard({
                 </Box>
                 <Box sx={{flex: 4, display: "flex", alignItems: "stretch"}}>
                     <CategoriesSunburstChart
-                        ref={reportRefs.CategoriesSunburstChartRef}
                         fromDate={fromDate}
                         toDate={toDate}
                         selectedProduct={selectedProduct}
@@ -416,7 +385,6 @@ export default function Dashboard({
                 </Box>
             </Box>
             <SentimentCategoriesGraph
-                ref={reportRefs.SentimentCategoriesGraphRef}
                 fromDate={fromDate}
                 toDate={toDate}
                 selectedProduct={selectedProduct}
