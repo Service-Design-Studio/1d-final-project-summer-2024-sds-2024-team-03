@@ -64,7 +64,7 @@
         "@types/papaparse": "^5.3.14",
         "@types/testing-library__jest-dom": "^6.0.0",
         "babel-jest": "^29.7.0",
-        "dayjs": "^1.11.11",
+        "dayjs": "^1.11.12",
         "jest-fetch-mock": "^3.0.3",
         "ts-jest": "^29.1.5"
     }
