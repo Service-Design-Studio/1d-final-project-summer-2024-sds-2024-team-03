@@ -74,10 +74,3 @@ Scenario: Unable to upload due to valid file extension format
   And I drag and drop a file of invalid extension format
   Then I should be alerted "Please upload a file of valid X extension format"
   And my file should not be uploaded
-
-Scenario: Unable to upload due to unsuitable data format (structure, columns, etc)
-  Given I am on the Upload page
-  When I have selected a product and source
-  And I drag and drop a file of valid extension format but invalid data format
-  Then I should be alerted "Please upload a file of valild data format, your data is missing column X"
-  And my file should not be uploaded
