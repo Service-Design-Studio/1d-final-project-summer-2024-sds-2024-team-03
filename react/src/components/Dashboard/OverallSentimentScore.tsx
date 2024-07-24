@@ -106,9 +106,13 @@ export default forwardRef(function OverallSentimentScore(
         ref,
         () => ({
             img: internalRef.current!,
-            reportDesc: `Compared to ${prevFromDate_string} - ${fromDate_string}, there was an overall sentiment score of ${overallSentimentScore} / 5, which was a ${overallSentimentScoreChange}% ${
-                overallSentimentScoreChange > 0 ? "increase" : "decrease"
-            }.`,
+            reportDesc: `There was an overall sentiment score of ${overallSentimentScore} / 5, which was a ${overallSentimentScoreChange}% ${
+                overallSentimentScoreChange > 0
+                    ? "increase"
+                    : overallSentimentScoreChange < 0
+                    ? "decrease"
+                    : "change"
+            } compared to the same interval from ${prevFromDate_string} - ${fromDate_string}, .`,
         }),
         [overallSentimentScore, overallSentimentScoreChange, fromDate]
     );
