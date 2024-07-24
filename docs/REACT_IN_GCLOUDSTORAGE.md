@@ -21,9 +21,9 @@ gsutil web set -m index.html -e 404.html gs://jbaaam_frontend/
 
 gsutil iam ch allUsers:objectViewer gs://jbaaam_frontend/
 
-## Upload your website files
+## Upload your website files, FROM ROOT!!
 
-gsutil cp -r frontend/\* gs://jbaaam_frontend/
+gsutil cp -r react/build/\* gs://jbaaam_frontend/
 
 ## Link to site:
 
