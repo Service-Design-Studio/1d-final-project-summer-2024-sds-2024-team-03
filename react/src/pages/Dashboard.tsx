@@ -95,41 +95,53 @@ export default function Dashboard({
             scale: number
         ) => {
             if (ref.current && ref.current.img) {
-                const dataUrl = await domtoimage.toPng(ref.current.img);
-                const imgProperties = pdf.getImageProperties(dataUrl);
-                const pdfWidth = pdf.internal.pageSize.getWidth();
+                const blob = await domtoimage.toBlob(ref.current.img, {
+                    style: {
+                        borderRadius: "10px",
+                        border: "2px solid black",
+                    },
+                });
+                const reader = new FileReader();
+                return new Promise<[number, number]>((resolve) => {
+                    reader.onloadend = () => {
+                        const dataUrl = reader.result as string;
+                        const imgProperties = pdf.getImageProperties(dataUrl);
+                        const pdfWidth = pdf.internal.pageSize.getWidth();
 
-                const scaledWidth = (pdfWidth - MARGIN) * scale;
-                const scaledHeight =
-                    (imgProperties.height * scaledWidth) / imgProperties.width;
+                        const scaledWidth = (pdfWidth - MARGIN) * scale;
+                        const scaledHeight =
+                            (imgProperties.height * scaledWidth) /
+                            imgProperties.width;
 
-                if (y + scaledHeight > LIMIT_Y) {
-                    pdf.addPage();
-                    y = MARGIN;
-                }
+                        if (y + scaledHeight > LIMIT_Y) {
+                            pdf.addPage();
+                            y = MARGIN;
+                        }
 
-                // Draw a border with rounded corners
-                const borderRadius = 5;
-                pdf.setDrawColor(0, 0, 0); // Set border color to black
-                pdf.setLineWidth(0.4); // Set border width
-                pdf.roundedRect(
-                    MARGIN + x - 1, // X position adjusted for border
-                    y - 1, // Y position adjusted for border
-                    scaledWidth + 2, // Width adjusted for border
-                    scaledHeight + 2, // Height adjusted for border
-                    borderRadius, // Radius for rounded corners
-                    borderRadius // Radius for rounded corners
-                );
+                        const borderRadius = 5;
+                        pdf.setDrawColor(0, 0, 0);
+                        pdf.setLineWidth(0.4);
+                        pdf.roundedRect(
+                            MARGIN + x - 1,
+                            y - 1,
+                            scaledWidth + 2,
+                            scaledHeight + 2,
+                            borderRadius,
+                            borderRadius
+                        );
 
-                pdf.addImage(
-                    dataUrl,
-                    "PNG",
-                    MARGIN + x,
-                    y,
-                    scaledWidth,
-                    scaledHeight
-                );
-                return [scaledWidth, scaledHeight];
+                        pdf.addImage(
+                            dataUrl,
+                            "PNG",
+                            MARGIN + x,
+                            y,
+                            scaledWidth,
+                            scaledHeight
+                        );
+                        resolve([scaledWidth, scaledHeight]);
+                    };
+                    reader.readAsDataURL(blob);
+                });
             }
             return [0, 0];
         };
@@ -254,7 +266,6 @@ export default function Dashboard({
             MARGIN,
             prevY + PADDING
         );
-
         // prevY = MARGIN;
         // pdf.addPage();
         // [prevImageWidth, prevImageHeight] = await addScaledImageToPDF(
@@ -270,9 +281,27 @@ export default function Dashboard({
         //     prevY + PADDING
         // );
 
-        const pdfDataUrl = pdf.output("dataurlstring");
-        setPdfDataUrl(pdfDataUrl);
-        setOpenDialog(true);
+        pdf.setProperties({
+            title: `${dayjs().format(
+                "DD/MM/YYYY"
+            )}_report_generated_for_${dayjs(fromDate).format(
+                "DD/MM/YYYY"
+            )}-${dayjs(toDate).format("DD/MM/YYYY")}`,
+            subject: "DBS VOCUS",
+            author: "SUTD JBAAAM!",
+            keywords: "generated, javascript, web 2.0, ajax",
+            creator: "SUTD JBAAAM!",
+        });
+
+        // const pdfDataUrl = pdf.output("dataurlstring");
+        // setPdfDataUrl(pdfDataUrl);
+        // setOpenDialog(true);
+
+        pdf.save(
+            `${dayjs().format("DD/MM/YYYY")}_report_generated_for_${dayjs(
+                fromDate
+            ).format("DD/MM/YYYY")}-${dayjs(toDate).format("DD/MM/YYYY")}.pdf`
+        );
     };
 
     return (
@@ -323,7 +352,7 @@ export default function Dashboard({
                         <iframe
                             src={pdfDataUrl}
                             width="100%"
-                            height="500px"
+                            height="700px"
                         ></iframe>
                     )}
                 </Box>
