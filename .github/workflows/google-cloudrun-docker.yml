@@ -38,8 +38,8 @@ name: Build and Deploy to Cloud Run
 on:
   push:
     branches: ["main"]
-    paths-ignore:
-      - "react/**" #** means recurssively (any change)
+    #paths-ignore:
+    #  - "react/**" #** means recurssively (any change)
 
 env:
   PROJECT_ID: jbaaam # TODO: update Google Cloud project id

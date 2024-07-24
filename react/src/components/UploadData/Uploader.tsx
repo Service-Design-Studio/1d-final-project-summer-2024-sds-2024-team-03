@@ -187,11 +187,7 @@ export function FileDrop({
 
         if (isValid) {
           const newFilename =
-            selectedSubcategory[0] +
-            "__" +
-            selectedSource[0] +
-            "__" +
-            file.name;
+            selectedSubcategory + "__" + selectedSource[0] + "__" + file.name;
           const newFile = new File([file], newFilename, {
             type: file.type,
           });
