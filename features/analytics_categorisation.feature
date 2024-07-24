@@ -18,8 +18,8 @@ Scenario: Hovering on a subcategory
   And the sources selected are: 'Product Survey'
   And the products selected are: 'Investments'
   When I click on the 'Subcategory' dropdown button
-  And I hover on 'United Trust (UT) products'
-  Then the dropdown option 'United Trust (UT) products' should be highlighted
+  And I hover on 'NonUT products'
+  Then the dropdown option 'NonUT products' should be highlighted
   
 Scenario: Selecting a subcategory adds it to the listbox
   Given I am on the Analytics page
