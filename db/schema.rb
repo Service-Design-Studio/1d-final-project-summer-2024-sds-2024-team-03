@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_07_21_152228) do
+ActiveRecord::Schema[7.1].define(version: 2024_07_24_173932) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -57,7 +57,25 @@ ActiveRecord::Schema[7.1].define(version: 2024_07_21_152228) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "logs", force: :cascade do |t|
+    t.date "log_date"
+    t.text "log_message"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "test_analytics", id: false, force: :cascade do |t|
+    t.text "date"
+    t.text "feedback"
+    t.string "product", limit: 50
+    t.string "subcategory", limit: 500
+    t.string "feedback_category", limit: 100
+    t.string "sentiment", limit: 100
+    t.string "sentiment_score", limit: 50
+    t.string "source", limit: 100
+  end
+
+  create_table "test_dataprocessing", id: false, force: :cascade do |t|
     t.text "date"
     t.text "feedback"
     t.string "product", limit: 50
