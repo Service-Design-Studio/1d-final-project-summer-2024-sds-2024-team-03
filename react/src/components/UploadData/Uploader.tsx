@@ -18,7 +18,7 @@ export function FileDrop({
   const [isOver, setIsOver] = useState(false);
   const [files, setFiles] = useState<File[]>([]);
   const [openModal, setOpenModal] = useState(false);
-  const [modalContent, setModalContent] = useState("");
+  const [modalContent, setModalContent] = useState<React.ReactNode[]>([]);
   const requiredCols: string[] = ["date", "feedback"];
   const theme = useTheme();
 
@@ -73,7 +73,10 @@ export function FileDrop({
     setFiles(droppedFiles);
 
     if (selectedSubcategory === undefined || selectedSource[0] === undefined) {
-      setModalContent("Error: Empty product or source.");
+      setModalContent([
+        <Typography key="error" variant="h6" component="div" sx={{ fontWeight: 'bold' }}>Error</Typography>,
+        <Typography key="message" variant="body1" component="div">Please select a subcategory and source.</Typography>,
+      ]);
       setOpenModal(true);
     } else {
       // Use FileReader to read file content
@@ -89,7 +92,10 @@ export function FileDrop({
       : [];
     setFiles(uploadedFiles);
     if (selectedSubcategory === undefined || selectedSource[0] === undefined) {
-      setModalContent("Error: Empty product or source.");
+      setModalContent([
+        <Typography key="error" variant="h6" component="div" sx={{ fontWeight: 'bold' }}>Error</Typography>,
+        <Typography key="message" variant="body1" component="div">Please select a subcategory and source.</Typography>,
+      ]);
       setOpenModal(true);
     } else {
       uploadedFiles.forEach((file) => {
@@ -101,7 +107,10 @@ export function FileDrop({
   const processFile = (file: File) => {
     const ext = file.name.match(/\.([^\.]+)$/);
     if (ext && !["csv"].includes(ext[1]) && !/^xls/i.test(ext[1])) {
-      setModalContent("Error: Invalid file extension.");
+      setModalContent([
+        <Typography key="error" variant="h6" component="div" sx={{ fontWeight: 'bold' }}>Error</Typography>,
+        <Typography key="message" variant="body1" component="div">Invalid file extension.</Typography>,
+      ]);
       setOpenModal(true);
     } else {
       const reader = new FileReader();
@@ -224,7 +233,7 @@ export function FileDrop({
             .catch((error) => {
               console.error("Error:", error);
             });
-          setModalContent("");
+          setModalContent([]);
           setOpenModal(true);
         }
       };
@@ -303,12 +312,14 @@ export function FileDrop({
           sx={{
             borderRadius: 8,
             fontSize: "1.1rem",
+            boxShadow: 0,
             backgroundColor:
               theme.palette.mode === "dark" ? "#8D0000" : "#BD0000",
             padding: "0.5rem 2rem",
             "&:hover": {
               backgroundColor:
                 theme.palette.mode === "dark" ? "#720000" : "#980000",
+              boxShadow: 0,
             },
           }}
         >
@@ -323,35 +334,39 @@ export function FileDrop({
       >
         <Box
           sx={{
-            p: 2,
+            p: 2.5,
             bgcolor: "background.paper",
-            margin: "auto",
             top: "50%",
             left: "50%",
             transform: "translate(-50%, -50%)",
             position: "absolute",
+            borderRadius: 3,
+            boxShadow: "0px 0px 20px rgba(0, 0, 0, 0.1)",
           }}
         >
           <Typography id="modal-title" variant="h6" component="h2">
-            {modalContent ? (
+            {modalContent.length > 0 ? (
               modalContent
             ) : (
               <>
-                Uploaded successfully:
+                <Typography variant="h6" component="div" sx={{ fontWeight: 'bold' }}>
+                  Uploaded successfully:
+                </Typography>
                 {files.map((file, index) => (
                   <React.Fragment key={index}>
-                    <br />
-                    {selectedSubcategory +
-                      "__" +
-                      selectedSource[0] +
-                      "__" +
-                      file.name}
+                    <Typography variant="body1" component="div">
+                      {selectedSubcategory +
+                        "__" +
+                        selectedSource[0] +
+                        "__" +
+                        file.name}
+                    </Typography>
                   </React.Fragment>
                 ))}
               </>
             )}
           </Typography>
-          <Button onClick={handleCloseModal}>Close</Button>
+          <Button onClick={handleCloseModal} sx={{ mt: 1, backgroundColor: theme.palette.mode === "dark" ? "#222" : "#eee" }}>Close</Button>
         </Box>
       </Modal>
     </div>
