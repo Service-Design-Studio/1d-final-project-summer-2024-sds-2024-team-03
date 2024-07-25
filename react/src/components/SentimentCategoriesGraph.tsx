@@ -407,7 +407,7 @@ export default forwardRef(function SentimentCategoriesGraph(
                             );
 
                             return {
-                                category: key,
+                                category: key.split(" > ")[1],
                                 Frustrated: percentage(
                                     sentimentScores.filter(
                                         (score) => score <= 1
@@ -540,7 +540,7 @@ export default forwardRef(function SentimentCategoriesGraph(
                             );
 
                             return {
-                                category: key.split(" > ")[1],
+                                category: key,
                                 Frustrated: percentage(
                                     scores.filter((score) => score <= 1).length
                                 ),
@@ -655,6 +655,9 @@ export default forwardRef(function SentimentCategoriesGraph(
                     borderRadius: 4,
                     boxShadow: "0px 0px 20px rgba(0, 0, 0, 0.1)",
                     transition: "transform 0.3s ease-in-out",
+                    "&:hover": {
+                        transform: "scaleX(1.015) scaleY(1.03)",
+                    },
                     flex: 1,
                 }}
                 id="detailed-sentimentcategoriesgraph"
@@ -688,13 +691,7 @@ export default forwardRef(function SentimentCategoriesGraph(
                             >
                                 Sentiment Categorisation
                             </Typography>
-                            <Typography
-                                variant="h6"
-                                sx={{fontWeight: "bold"}}
-                                style={{
-                                    color: sortPositive ? "darkgreen" : "red",
-                                }}
-                            >
+                            <Typography variant="h6">
                                 ({sortPositive ? "Positive" : "Negative"})
                             </Typography>
                         </Box>
