@@ -317,9 +317,11 @@ export default function Dashboard({
                     flexDirection: {xs: "column", sm: "row"},
                     gap: 2,
                     mb: 7,
+                    // pb: 1,
                     justifyContent: "flex-start",
                     zIndex: 1000, // Ensure it's above other content
                     backgroundColor: scrollPosition.top > 0 ? "white" : null,
+                    borderRadius: 4,
                 }}
             >
                 <Box sx={{flexBasis: {xs: "100%", sm: "40%"}, flexGrow: 1}}>
