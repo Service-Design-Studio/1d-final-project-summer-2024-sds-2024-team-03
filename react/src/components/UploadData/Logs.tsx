@@ -1,10 +1,9 @@
 import React, {useEffect, useState} from "react";
-import List from "@mui/material/List";
-import ListItem from "@mui/material/ListItem";
-import ListItemText from "@mui/material/ListItemText";
+import { Box, Typography, List, ListItem, ListItemText } from "@mui/material";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
+import { useTheme } from "@mui/material/styles";
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -15,6 +14,7 @@ interface Log {
 }
 
 export default function FolderList() {
+    const theme = useTheme();
     const [logs, setLogs] = useState<Log[]>([]);
 
     useEffect(() => {
@@ -36,17 +36,33 @@ export default function FolderList() {
     }, []);
     console.log(logs);
     return (
-        <List sx={{width: "100%", maxWidth: 360, bgcolor: "background.paper"}}>
-            {logs.map((log, index) => (
-                <ListItem>
-                    <ListItemText
-                        primary={log.log_message}
-                        secondary={dayjs(log.created_at)
-                            .tz("Asia/Singapore")
-                            .format("DD-MM-YYYY HH:mm:ss")}
-                    />
-                </ListItem>
-            ))}
-        </List>
+        <Box sx={{width: "100%", maxWidth: 360, minHeight: 600, bgcolor: theme.palette.mode === "dark" ? "#222" : "#fff", borderRadius: 4}}>
+            <Typography variant="h6" component="div" sx={{ fontWeight: 'bold', px: 2, pt: 2, pb: 1 }}>
+                Recent Uploads
+            </Typography>
+            {logs.length === 0 ? (
+                <Box sx={{p: 2}}>
+                    <Typography variant="body1" sx={{mb: 1}}>
+                        No files found.
+                    </Typography>
+                    <Typography variant="body1">
+                        The upload log may take a while to update.
+                    </Typography>
+                </Box>
+            ) : (
+                <List>
+                    {logs.map((log, index) => (
+                        <ListItem key={index}>
+                            <ListItemText
+                                primary={log.log_message}
+                                secondary={dayjs(log.created_at)
+                                    .tz("Asia/Singapore")
+                                    .format("DD-MM-YYYY HH:mm:ss")}
+                            />
+                        </ListItem>
+                    ))}
+                </List>
+            )}
+        </Box>
     );
 }
