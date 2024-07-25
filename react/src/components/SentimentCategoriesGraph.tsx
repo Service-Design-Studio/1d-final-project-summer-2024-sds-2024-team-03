@@ -315,7 +315,7 @@ export default forwardRef(function SentimentCategoriesGraph(
                                         source,
                                     }
                                 ) => {
-                                    const key = `${subcategory} > ${feedback_category}`;
+                                    const key = feedback_category;
                                     (acc[key] = acc[key] || []).push({
                                         subcategory,
                                         feedback_category,
@@ -655,9 +655,6 @@ export default forwardRef(function SentimentCategoriesGraph(
                     borderRadius: 4,
                     boxShadow: "0px 0px 20px rgba(0, 0, 0, 0.1)",
                     transition: "transform 0.3s ease-in-out",
-                    "&:hover": {
-                        transform: "scaleX(1.015) scaleY(1.03)",
-                    },
                     flex: 1,
                 }}
                 id="detailed-sentimentcategoriesgraph"
@@ -691,9 +688,13 @@ export default forwardRef(function SentimentCategoriesGraph(
                             >
                                 Sentiment Categorisation
                             </Typography>
-                            <Typography variant="h6">
-                                ({sortPositive ? "Positive" : "Negative"})
-                            </Typography>
+                            <Typography
+                                variant="h6"
+                                sx={{fontWeight: "bold"}}
+                                style={{
+                                    color: sortPositive ? "darkgreen" : "red",
+                                }}
+                            ></Typography>
                         </Box>
                         <Button
                             variant="outlined"
@@ -787,8 +788,16 @@ export default forwardRef(function SentimentCategoriesGraph(
                                               bars.length
                                           )
                                 }
-                                keys={Object.keys(ORDER).reverse()}
-                                colors={Object.values(ORDER).reverse()}
+                                keys={
+                                    sortPositive
+                                        ? Object.keys(ORDER)
+                                        : Object.keys(ORDER).reverse()
+                                }
+                                colors={
+                                    sortPositive
+                                        ? Object.keys(ORDER)
+                                        : Object.keys(ORDER).reverse()
+                                }
                                 indexBy="category"
                                 margin={{
                                     top: 10,
