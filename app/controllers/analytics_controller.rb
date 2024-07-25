@@ -31,6 +31,7 @@ class AnalyticsController < ApplicationController
   end
 
   def filter_products
+    # [ "Cards", "Unsecured Loans", "Secured Loans", "Digital Channels", "Investments", "DBS Treasures", "Self-Service Banking", "Insurance", "Deposits", "Contact Center", "Webpages", "Remittance", "Others", ];
     @products = private_filter(:product)
     render json: @products
   end
@@ -41,6 +42,7 @@ class AnalyticsController < ApplicationController
   end
 
   def filter_sources
+    # [ "5 Star Review", "Call Centre", "Problem Solution Survey", "Product Survey", "Social Media", ];
     @sources = private_filter(:source)
     render json: @sources
   end

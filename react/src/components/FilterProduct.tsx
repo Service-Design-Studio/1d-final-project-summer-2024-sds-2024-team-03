@@ -25,22 +25,6 @@ const MenuProps = {
     },
 };
 
-const PRODUCTS = [
-    "Cards",
-    "Unsecured Loans",
-    "Secured Loans",
-    "Digital Channels",
-    "Investments",
-    "DBS Treasures",
-    "Self-Service Banking",
-    "Insurance",
-    "Deposits",
-    "Contact Center",
-    "Webpages",
-    "Remittance",
-    "Others",
-];
-
 interface FilterProductProps {
     selectedProduct: string[];
     setSelectedProduct: React.Dispatch<React.SetStateAction<string[]>>;
