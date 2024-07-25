@@ -24,7 +24,7 @@ Then(/a Modal should open, informing a successful upload of the '(.*)' and '(.*)
   expect(modal_title.text).to include("Uploaded successfully")
 end
 
-Then(/I should be alerted "(.*)/) do |modal_text|
+Then(/I should be alerted "(.*)"/) do |modal_text|
   modal_text = find('#modal-title')
   expect(modal_text).not_to be_nil
 
