@@ -407,7 +407,7 @@ export default forwardRef(function SentimentCategoriesGraph(
                             );
 
                             return {
-                                category: key.split(" > ")[1],
+                                category: key,
                                 Frustrated: percentage(
                                     sentimentScores.filter(
                                         (score) => score <= 1
@@ -914,7 +914,7 @@ export default forwardRef(function SentimentCategoriesGraph(
                                 labelSkipWidth={12}
                                 labelSkipHeight={12}
                                 // background / grid.line.stroke / labels.text.fill / "color" / "#..."
-                                labelTextColor={{theme: "background"}}
+                                labelTextColor="white"
                                 legends={[]}
                                 role="application"
                                 ariaLabel="Sentiment Categorisation"

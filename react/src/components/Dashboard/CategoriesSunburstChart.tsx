@@ -351,6 +351,7 @@ export default forwardRef(function CategoriesSunburstChart(
                             arcLabelsRadiusOffset={0.35}
                             arcLabelsSkipAngle={60}
                             arcLabelsTextColor={{theme: "labels.text.fill"}}
+                            animate={false}
                             // tooltip={(e) =>
                             //     t.createElement(
                             //         l,
