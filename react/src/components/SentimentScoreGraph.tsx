@@ -589,7 +589,8 @@ export default forwardRef(function SentimentScoreGraph(
                             enableGridX={false}
                             colors={{scheme: "category10"}}
                             pointSize={8}
-                            pointColor={{theme: "background"}}
+                            // theme: background / theme: grid.line.stroke / theme: labels.text.fill / "color" / "#..."
+                            pointColor={{from: "color"}}
                             pointBorderWidth={2}
                             pointBorderColor={{from: "serieColor"}}
                             pointLabel="data.yFormatted"

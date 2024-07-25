@@ -20,7 +20,7 @@ interface CategoriesSunburstChartProps {
 }
 
 const ORDER: Record<string, string> = {
-    Excited: "darkgreen",
+    Promoter: "darkgreen",
     Satisfied: "green",
     Neutral: "grey",
     Unsatisfied: "orange",
@@ -88,10 +88,10 @@ export default forwardRef(function CategoriesSunburstChart(
         order: Record<string, string>
     ): string => {
         if (score <= 1) return order["Frustrated"];
-        if (score <= 2) return order["Unsatisfied"];
-        if (score <= 3) return order["Neutral"];
-        if (score <= 4) return order["Satisfied"];
-        return order["Excited"];
+        if (score <= 2.5) return order["Unsatisfied"];
+        if (score <= 3.5) return order["Neutral"];
+        if (score <= 4.5) return order["Satisfied"];
+        return order["Promoter"];
     };
     const theme = useTheme();
 
@@ -178,7 +178,7 @@ export default forwardRef(function CategoriesSunburstChart(
                                     category: product,
                                     color: `hsl(${feedbackcategoryHashToHue(
                                         product
-                                    )}, 70%, 50%)`,
+                                    )}, 80%, 40%)`,
                                     children: [],
                                 });
                             }
@@ -194,7 +194,7 @@ export default forwardRef(function CategoriesSunburstChart(
                                     category: subcategory,
                                     color: `hsl(${feedbackcategoryHashToHue(
                                         subcategory
-                                    )}, 70%, 50%)`,
+                                    )}, 80%, 40%)`,
                                     children: [],
                                 };
                                 subcategoryMap.push(subcategoryNode);
@@ -209,7 +209,7 @@ export default forwardRef(function CategoriesSunburstChart(
                                     category: feedback_category,
                                     color: `hsl(${feedbackcategoryHashToHue(
                                         feedback_category
-                                    )}, 70%, 50%)`,
+                                    )}, 80%, 40%)`,
                                     mentions: 0,
                                 };
                                 feedbackMap.push(feedbackNode);
@@ -285,11 +285,13 @@ export default forwardRef(function CategoriesSunburstChart(
             <ButtonBase
                 component={Paper}
                 sx={{
+                    justifyContent: "start",
+                    minHeight: 800,
                     display: "flex",
                     flexDirection: "column",
                     alignItems: "center",
-                    justifyContent: "space-between",
                     p: 2,
+                    gap: 4,
                     borderRadius: 4,
                     flex: 1,
                     cursor: "pointer",
@@ -321,10 +323,8 @@ export default forwardRef(function CategoriesSunburstChart(
                 ) : (
                     <Box
                         sx={{
-                            display: "flex",
-                            gap: 2,
                             width: "100%",
-                            height: 600,
+                            height: 300,
                         }}
                     >
                         <ResponsiveSunburst
@@ -334,8 +334,9 @@ export default forwardRef(function CategoriesSunburstChart(
                             id="category"
                             value="mentions"
                             cornerRadius={2}
-                            borderWidth={2}
-                            borderColor={{theme: "grid.line.stroke"}}
+                            borderWidth={4}
+                            // background / grid.line.stroke / labels.text.fill / "color" / "#..."
+                            borderColor="white"
                             colors={(bar) => barColors[bar.id]}
                             // To make use of hsl from each component
                             inheritColorFromParent={false}
@@ -350,6 +351,7 @@ export default forwardRef(function CategoriesSunburstChart(
                             arcLabelsRadiusOffset={0.35}
                             arcLabelsSkipAngle={60}
                             arcLabelsTextColor={{theme: "labels.text.fill"}}
+                            animate={false}
                             // tooltip={(e) =>
                             //     t.createElement(
                             //         l,
@@ -377,13 +379,17 @@ export default forwardRef(function CategoriesSunburstChart(
                                 gap: 1,
                                 width: "100%",
                                 alignItems: "center",
+                                mt: 4,
                             }}
                         >
                             <Typography
                                 variant="body2"
                                 color="textSecondary"
                                 component="div"
-                                sx={{gridColumn: "1 / span 1"}}
+                                sx={{
+                                    gridColumn: "1 / span 1",
+                                    textAlign: "center",
+                                }}
                             >
                                 Categories
                             </Typography>
@@ -403,8 +409,8 @@ export default forwardRef(function CategoriesSunburstChart(
                                 color="textSecondary"
                                 component="div"
                                 sx={{
-                                    textAlign: "right",
                                     gridColumn: "3 / span 1",
+                                    textAlign: "center",
                                 }}
                             >
                                 Avg Sentiment
@@ -439,10 +445,10 @@ export default forwardRef(function CategoriesSunburstChart(
                                         />
                                         <Typography
                                             variant="body2"
-                                            sx={{ml: 1}}
+                                            sx={{ml: 1, textAlign: "center"}}
                                         >
-                                            {category.product} &gt;{" "}
-                                            {category.subcategory} &gt;{" "}
+                                            {category.product} <br />↓<br />
+                                            {category.subcategory} <br />↓<br />
                                             {category.feedback_category}
                                         </Typography>
                                     </Box>
@@ -459,18 +465,25 @@ export default forwardRef(function CategoriesSunburstChart(
                                         variant="body2"
                                         sx={{
                                             gridColumn: "3 / span 1",
-                                            textAlign: "right",
+                                            textAlign: "center",
                                             color: getColorByOrder(
                                                 category.averageSentimentScore,
                                                 ORDER
                                             ),
+                                            fontWeight: "bold",
                                         }}
                                     >
                                         {category.averageSentimentScore.toFixed(
                                             1
-                                        )}
+                                        )}{" "}
                                         / 5
                                     </Typography>
+                                    <Box
+                                        sx={{
+                                            gridColumn: "1 / span 3",
+                                            borderBottom: "1px solid #ccc",
+                                        }}
+                                    />
                                 </React.Fragment>
                             ))}
                         </Box>
