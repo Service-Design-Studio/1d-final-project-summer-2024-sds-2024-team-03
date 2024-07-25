@@ -1,28 +1,28 @@
-Feature: Select Products, Sources, and Upload
+Feature: Select Subcategories, Sources, and Upload
 
-Scenario: Hovering on a product dropdown option updates its color
+Scenario: Hovering on a subcategory dropdown option updates its color
   Given I am on the Upload Data page
-  When I click on the "Products" dropdown button
-  And I hover over a product dropdown option
-  Then the product dropdown option should be highlighted on hover
+  When I click on the "Subcategories" dropdown button
+  And I hover over a subcategory dropdown option
+  Then the subcategory dropdown option should be highlighted on hover
 
 Scenario: Available dropdown options
   Given I am on the Upload Data page
-  And there are products in the dataset
-  When I click on the "Products" dropdown button
-  Then I should see all 18 products arranged alphabetically as dropdown options
+  And there are subcategories in the dataset
+  When I click on the "Subcategories" dropdown button
+  Then I should see all 36 subcategories arranged alphabetically as dropdown options
 
 Scenario: No selection of dropdown option 
   Given I am on the Upload Data page
   And the sources selected are: 'Product Survey'
-  When no Products dropdown options are selected
-  Then I should see "Products" in the text field of the dropdown button
+  When no Subcategories dropdown options are selected
+  Then I should see "Subcategories" in the text field of the dropdown button
 
 Scenario: Reset selection by refreshing
   Given I am on the Upload Data page
   When I refresh the page
   Then I should still be on the Upload Data page
-  And I should see "Products" in the text field of the dropdown button
+  And I should see "Subcategories" in the text field of the dropdown button
 
 Scenario: Hovering on a source dropdown option updates its color
   Given I am on the Upload Data page
@@ -38,7 +38,7 @@ Scenario: Available dropdown options
 
 Scenario: No selection of dropdown option 
   Given I am on the Upload Data page
-  And the products selected are: 'Investments'
+  And the subcategories selected are: 'Cheque'
   When no Sources dropdown options are selected
   Then I should see "Sources" in the text field of the dropdown button
 
@@ -52,25 +52,19 @@ Scenario: Reset selection by refreshing
 Scenario: Upload 1 file
   Given I am on the Upload Data page
   And the sources selected are: 'Call Centre'
-  And the products selected are: 'Investments'
+  And the subcategories selected are: 'Cheque'
   When I upload a valid file using the file input
-  Then a Modal should open, informing a successful upload of the 'Investments' and 'Call Centre' and filename
+  Then a Modal should open, informing a successful upload of the 'Cheque' and 'Call Centre' and filename
 
-Scenario: Invalid upload
-  Given I am on the Upload Data page
-  When I upload an invalid file using the file input
-  Then a Modal should open, informing an unsuccessful upload
-
-Scenario: Unable to upload due to unselected product and source
+Scenario: Unable to upload due to unselected subcategory and source
   Given I am on the Upload page
-  When I do not select any product or source
-  And I simply drag and drop a file of valid extension and data format
-  Then I should be alerted "Please select a product and source"
-  And my file should not be uploaded
+  When I click on the "Subcategories" dropdown button
+  And I do not select any subcategory or source
+  And I upload a valid file using the file input
+  Then I should be alerted "Please select a subcategory and source."
 
-Scenario: Unable to upload due to valid file extension format
+Scenario: Unable to upload due to invalid file extension
   Given I am on the Upload page
-  When I have selected a product and source
-  And I drag and drop a file of invalid extension format
-  Then I should be alerted "Please upload a file of valid X extension format"
-  And my file should not be uploaded
+  When I select a subcategory and source
+  And I upload an invalid file using the file input
+  Then I should be alerted "Invalid file format."
