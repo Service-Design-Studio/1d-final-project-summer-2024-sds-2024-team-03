@@ -8,16 +8,16 @@ Scenario: Display at most top 5 positive categories
   When the date is set from '01/01/2024' to '10/01/2024'
   And the sources selected are: 'Product Survey'
   And the products selected are: 'Investments'
-  Then I should see a widget titled 'Top 5 Positive Categories'
-  And I should see 5 subcategories with the most positive sentiments
-  And with the 5 most positive sentiments sorted in descending order
+  Then I should see a widget titled 'Top 5 Negative Categories'
+  And I should see 5 subcategories with the most negative sentiments
+  And with the 5 most negative sentiments sorted in descending order
   
 Scenario: Clicking widget redirects to Analytics page
   Given I am on the Dashboard page
   When the date is set from '01/01/2024' to '10/01/2024'
   And the sources selected are: 'Product Survey'
   And the products selected are: 'Investments'
-  When I click on the 'overall-sentimentcategoriesgraph' widget
+  And I click on the 'overall-sentimentcategoriesgraph' widget
   Then I should be redirected to 'Analytics' page
   
 Scenario: Insufficient overall data
@@ -32,5 +32,5 @@ Scenario: Less than 5 categories
   When the date is set from '08/01/2024' to '10/01/2024'
   And the sources selected are: 'Product Survey'
   And the products selected are: 'Investments'
-  When there is less than 5 categories in the category graph
+  And there are less than 5 categories in the category graph
   Then I should see only those categories
