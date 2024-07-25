@@ -1,12 +1,12 @@
-And (/I should see 5 subcategories with the most positive sentiments/) do
-    expect(page).to have_content("null > Staff Related") 
-    expect(page).to have_content("United Trust (UT) products > Staff Related")
-    expect(page).to have_content("NonUT products > Application Related")
+And (/I should see 5 subcategories with the most negative sentiments/) do
+    expect(page).to have_content("United Trust (UT) products > Application Related") 
     expect(page).to have_content("NonUT products > Fee Related")
-    expect(page).to have_content("United Trust (UT) products > Application Related")
+    expect(page).to have_content("NonUT products > Application Related")
+    expect(page).to have_content("United Trust (UT) products > Staff Related")
+    expect(page).to have_content("null > Staff Related")
 end
 
-And(/with the 5 most positive sentiments sorted in descending order/) do
+And(/with the 5 most negative sentiments sorted in descending order/) do
     parent_elements = all("g[transform='translate(250,10)']")
     parent_element = parent_elements.first
     
@@ -23,8 +23,8 @@ And(/with the 5 most positive sentiments sorted in descending order/) do
     expect(content).to include(expected_text)
 end  
 
-When (/there is less than 5 categories in the category graph/) do
-    expect(page).to have_content("null > Staff Related")
+When (/there are less than 5 categories in the category graph/) do
+    expect(page).to have_no_css("g[transform='translate(0,122)']")
 end
 
 Then (/I should see only those categories/) do
