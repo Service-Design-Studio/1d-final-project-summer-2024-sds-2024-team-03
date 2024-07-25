@@ -654,7 +654,6 @@ export default forwardRef(function SentimentCategoriesGraph(
                     p: 2,
                     borderRadius: 4,
                     boxShadow: "0px 0px 20px rgba(0, 0, 0, 0.1)",
-                    transition: "transform 0.3s ease-in-out",
                     flex: 1,
                 }}
                 id="detailed-sentimentcategoriesgraph"
@@ -1085,7 +1084,7 @@ export default forwardRef(function SentimentCategoriesGraph(
                             theme.palette.mode === "dark"
                                 ? "#1a1a1a"
                                 : "#f9f9f9",
-                        transform: "scaleX(1.01) scaleY(1.02)",
+                        transform: "scaleX(1.01) scaleY(1.01)",
                     },
                 }}
                 id="overall-sentimentcategoriesgraph"

@@ -399,7 +399,6 @@ export default forwardRef(function SentimentScoreGraph(
                     p: 2,
                     borderRadius: 4,
                     boxShadow: "0px 0px 20px rgba(0, 0, 0, 0.1)",
-                    transition: "transform 0.3s ease-in-out",
                     flex: 1,
                 }}
                 id="detailed-sentimentscoregraph"
@@ -699,7 +698,7 @@ export default forwardRef(function SentimentScoreGraph(
                             theme.palette.mode === "dark"
                                 ? "#1a1a1a"
                                 : "#f9f9f9",
-                        transform: "scaleX(1.015) scaleY(1.03)",
+                        transform: "scaleX(1.01) scaleY(1.02)",
                     },
                 }}
                 id="overall-sentimentscoregraph"
