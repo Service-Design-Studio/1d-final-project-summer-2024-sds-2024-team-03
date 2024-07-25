@@ -698,7 +698,7 @@ export default forwardRef(function SentimentScoreGraph(
                             theme.palette.mode === "dark"
                                 ? "#1a1a1a"
                                 : "#f9f9f9",
-                        transform: "scaleX(1.015) scaleY(1.03)",
+                        transform: "scaleX(1.01) scaleY(1.02)",
                     },
                 }}
                 id="overall-sentimentscoregraph"

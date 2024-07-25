@@ -1084,7 +1084,7 @@ export default forwardRef(function SentimentCategoriesGraph(
                             theme.palette.mode === "dark"
                                 ? "#1a1a1a"
                                 : "#f9f9f9",
-                        transform: "scaleX(1.01) scaleY(1.02)",
+                        transform: "scaleX(1.01) scaleY(1.01)",
                     },
                 }}
                 id="overall-sentimentcategoriesgraph"
