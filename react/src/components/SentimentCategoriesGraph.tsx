@@ -407,7 +407,7 @@ export default forwardRef(function SentimentCategoriesGraph(
                             );
 
                             return {
-                                category: key,
+                                category: key.split(" > ")[1],
                                 Frustrated: percentage(
                                     sentimentScores.filter(
                                         (score) => score <= 1

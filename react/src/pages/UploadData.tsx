@@ -1,6 +1,5 @@
 import React, {useEffect, useState} from "react";
 import {Box, Grid} from "@mui/material";
-import FilterProduct from "../components/FilterProduct";
 import FilterSource from "../components/FilterSource";
 import {FileDrop} from "../components/UploadData/Uploader";
 import Logs from "../components/UploadData/Logs";
@@ -32,7 +31,6 @@ export default function UploadData({}: UploadDataProps) {
     const [subcategories, setSubcategories] = useState<string[]>([]);
     const [selectedSource, setSelectedSource] = useState<string[]>([]);
     const [selectedSubcategory, setSelectedSubcategory] = useState<string>("");
-    const [graphSubcategories, setGraphSubcategories] = useState<string[]>([]);
     const handleSubcategoryChange = (event: SelectChangeEvent<string>) => {
         const {
             target: {value},
@@ -56,13 +54,13 @@ export default function UploadData({}: UploadDataProps) {
         <Container maxWidth="lg" sx={{mx: "auto", px: 2}}>
             <h1>Upload Data</h1>
             <Grid container spacing={2} padding={2}>
-                <Grid xs={6} padding={1}>
+                <Grid item xs={6} padding={1}>
                     <FormControl sx={{m: 0, width: "100%"}}>
                         <InputLabel
                             id="uploaddata-filter-subcategory-label"
                             sx={{fontWeight: "bold"}}
                         >
-                            Subcategories
+                            Subcategory
                         </InputLabel>
                         <Select
                             labelId="uploaddata-filter-subcategory-label"
@@ -103,19 +101,21 @@ export default function UploadData({}: UploadDataProps) {
                                     </MenuItem>
                                 ))
                             ) : (
-                                <MenuItem disabled>No data</MenuItem>
+                                <MenuItem disabled>
+                                    No data from selection
+                                </MenuItem>
                             )}
                         </Select>
                     </FormControl>
                 </Grid>
-                <Grid xs={6} padding={1}>
+                <Grid item xs={6} padding={1}>
                     <FilterSource
                         selectedSource={selectedSource}
                         setSelectedSource={setSelectedSource}
                         multiple={false}
                     />
                 </Grid>
-                <Grid xs={9} padding={1}>
+                <Grid item xs={9} padding={1}>
                     <FileDrop
                         selectedSubcategory={selectedSubcategory}
                         selectedSource={selectedSource}

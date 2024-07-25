@@ -84,6 +84,7 @@ export default function Dashboard({
         const PADDING = 10;
         const MARGIN = 20;
         const PAGE_HEIGHT = 297;
+        const PAGE_WIDTH = 210;
         const LIMIT_Y = PAGE_HEIGHT - MARGIN;
 
         const pdf = new jsPDF();
@@ -95,12 +96,7 @@ export default function Dashboard({
             scale: number
         ) => {
             if (ref.current && ref.current.img) {
-                const blob = await domtoimage.toBlob(ref.current.img, {
-                    style: {
-                        borderRadius: "10px",
-                        border: "2px solid black",
-                    },
-                });
+                const blob = await domtoimage.toBlob(ref.current.img, {});
                 const reader = new FileReader();
                 return new Promise<[number, number]>((resolve) => {
                     reader.onloadend = () => {
@@ -207,7 +203,7 @@ export default function Dashboard({
 
         [prevImageWidth, prevImageHeight] = await addScaledImageToPDF(
             reportRefs.SentimentDistributionRef,
-            prevImageWidth + PADDING,
+            PAGE_WIDTH - prevImageWidth - MARGIN - MARGIN,
             prevY + PADDING
         );
         prevY += prevImageHeight + PADDING;
