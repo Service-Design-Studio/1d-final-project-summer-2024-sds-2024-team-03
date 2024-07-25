@@ -73,7 +73,7 @@ const StyledTableRow = styled(TableRow)(({theme}) => ({
 }));
 
 const ORDER: Record<string, string> = {
-    Excited: "darkgreen",
+    Promoter: "darkgreen",
     Satisfied: "green",
     Neutral: "grey",
     Unsatisfied: "orange",
@@ -129,8 +129,8 @@ export default forwardRef(function SentimentCategoriesGraph(
         NeutralColor: string;
         Satisfied: number;
         SatisfiedColor: string;
-        Excited: number;
-        ExcitedColor: string;
+        Promoter: number;
+        PromoterColor: string;
     };
 
     const [graphSubcategories, setGraphSubcategories] = useState<string[]>([]);
@@ -151,10 +151,10 @@ export default forwardRef(function SentimentCategoriesGraph(
         order: Record<string, string>
     ): string => {
         if (score <= 1) return order["Frustrated"];
-        if (score <= 2) return order["Unsatisfied"];
-        if (score <= 3) return order["Neutral"];
-        if (score <= 4) return order["Satisfied"];
-        return order["Excited"];
+        if (score <= 2.5) return order["Unsatisfied"];
+        if (score <= 3.5) return order["Neutral"];
+        if (score <= 4.5) return order["Satisfied"];
+        return order["Promoter"];
     };
 
     const handleBarClick = (bar: any) => {
@@ -228,13 +228,13 @@ export default forwardRef(function SentimentCategoriesGraph(
                 a.Frustrated,
                 a.Unsatisfied,
                 a.Satisfied,
-                a.Excited,
+                a.Promoter,
             ];
             const bValues = [
                 b.Frustrated,
                 b.Unsatisfied,
                 b.Satisfied,
-                b.Excited,
+                b.Promoter,
             ];
 
             if (negative) {
@@ -245,14 +245,14 @@ export default forwardRef(function SentimentCategoriesGraph(
                     }
                 }
                 for (let i = 3; i > 1; i--) {
-                    // If still not returned, consider the less of Satisfied then Excited
+                    // If still not returned, consider the less of Satisfied then Promoter
                     if (aValues[i] !== bValues[i]) {
                         return bValues[i] - aValues[i];
                     }
                 }
             } else {
                 for (let i = 3; i > 1; i--) {
-                    // For highest to lowest positive, only consider Satisfied then Excited
+                    // For highest to lowest positive, only consider Satisfied then Promoter
                     if (aValues[i] !== bValues[i]) {
                         return aValues[i] - bValues[i];
                     }
@@ -382,7 +382,7 @@ export default forwardRef(function SentimentCategoriesGraph(
                                         ),
                                         ORDER
                                     ),
-                                    Excited: getColorByOrder(
+                                    Promoter: getColorByOrder(
                                         average(
                                             sentimentScores.filter(
                                                 (score) => score > 4
@@ -432,11 +432,11 @@ export default forwardRef(function SentimentCategoriesGraph(
                                     ).length
                                 ),
                                 SatisfiedColor: colors.Satisfied,
-                                Excited: percentage(
+                                Promoter: percentage(
                                     sentimentScores.filter((score) => score > 4)
                                         .length
                                 ),
-                                ExcitedColor: colors.Excited,
+                                PromoterColor: colors.Promoter,
                             };
                         });
                         console.log(barsData);
@@ -520,7 +520,7 @@ export default forwardRef(function SentimentCategoriesGraph(
                                         ),
                                         ORDER
                                     ),
-                                    Excited: getColorByOrder(
+                                    Promoter: getColorByOrder(
                                         average(
                                             scores.filter((score) => score > 4)
                                         ),
@@ -563,10 +563,10 @@ export default forwardRef(function SentimentCategoriesGraph(
                                     ).length
                                 ),
                                 SatisfiedColor: colors.Satisfied,
-                                Excited: percentage(
+                                Promoter: percentage(
                                     scores.filter((score) => score > 4).length
                                 ),
-                                ExcitedColor: colors.Excited,
+                                PromoterColor: colors.Promoter,
                             };
                         });
 
@@ -596,8 +596,8 @@ export default forwardRef(function SentimentCategoriesGraph(
                           .slice(bars.length - 5, bars.length)
                           .map((bar) => {
                               return `${
-                                  bar.Excited > 0
-                                      ? `${bar.Excited}% were <b>Excited</b> and `
+                                  bar.Promoter > 0
+                                      ? `${bar.Promoter}% were <b>Promoter</b> and `
                                       : ""
                               }${
                                   bar.Satisfied > 0
@@ -904,10 +904,8 @@ export default forwardRef(function SentimentCategoriesGraph(
                                 enableGridX={true}
                                 labelSkipWidth={12}
                                 labelSkipHeight={12}
-                                labelTextColor={{
-                                    from: "color",
-                                    modifiers: [["darker", 1.6]],
-                                }}
+                                // background / grid.line.stroke / labels.text.fill / "color" / "#..."
+                                labelTextColor={{theme: "background"}}
                                 legends={[]}
                                 role="application"
                                 ariaLabel="Sentiment Categorisation"
@@ -1054,7 +1052,6 @@ export default forwardRef(function SentimentCategoriesGraph(
         <Box
             sx={{
                 display: "flex",
-                mt: 2,
                 width: "100%",
                 flexDirection: "column",
             }}
@@ -1066,7 +1063,6 @@ export default forwardRef(function SentimentCategoriesGraph(
                     display: "flex",
                     flexDirection: "column",
                     alignItems: "center",
-                    justifyContent: "center",
                     p: 2,
                     borderRadius: 4,
                     flex: 1,
@@ -1089,14 +1085,13 @@ export default forwardRef(function SentimentCategoriesGraph(
                 <Box
                     sx={{
                         display: "flex",
+                        flexDirection: "column",
                         width: "100%",
                         alignItems: "stretch",
                         gap: 2,
-                        mt: 1,
-                        mb: 1,
                     }}
                 >
-                    <Box sx={{width: "50%"}}>
+                    <Box sx={{width: "100%"}}>
                         <Typography variant="h6" sx={{fontWeight: "bold"}}>
                             Top 5 Positive Categories
                         </Typography>
@@ -1110,7 +1105,7 @@ export default forwardRef(function SentimentCategoriesGraph(
                                     display: "flex",
                                     gap: 2,
                                     mt: 2,
-                                    height: 200,
+                                    height: 350,
                                 }}
                             >
                                 <ResponsiveBar
@@ -1118,8 +1113,8 @@ export default forwardRef(function SentimentCategoriesGraph(
                                         bars.length - 5,
                                         bars.length
                                     )}
-                                    keys={Object.keys(ORDER).reverse()}
-                                    colors={Object.values(ORDER).reverse()}
+                                    keys={Object.keys(ORDER)}
+                                    colors={Object.values(ORDER)}
                                     indexBy="category"
                                     margin={{
                                         top: 10,
@@ -1213,11 +1208,11 @@ export default forwardRef(function SentimentCategoriesGraph(
                         )}
                     </Box>
                     <Divider
-                        orientation="vertical"
+                        orientation="horizontal"
                         flexItem
                         sx={{borderRightWidth: 2, borderColor: "black"}}
                     />
-                    <Box sx={{width: "50%"}}>
+                    <Box sx={{width: "100%"}}>
                         <Typography variant="h6" sx={{fontWeight: "bold"}}>
                             Top 5 Negative Categories
                         </Typography>
@@ -1231,7 +1226,7 @@ export default forwardRef(function SentimentCategoriesGraph(
                                     display: "flex",
                                     gap: 2,
                                     mt: 2,
-                                    height: 200,
+                                    height: 350,
                                 }}
                             >
                                 <ResponsiveBar
