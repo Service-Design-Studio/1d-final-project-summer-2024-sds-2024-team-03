@@ -24,12 +24,11 @@ Then(/a Modal should open, informing a successful upload of the '(.*)' and '(.*)
   expect(modal_title.text).to include("Uploaded successfully")
 end
 
-Then(/I should be alerted "(.*)"/) do |modal_text|
-  modal_text = find('#modal-title')
-  expect(modal_text).not_to be_nil
-
-  # Check that the modal contains the correct text
-  expect(modal_text).to include("modal_text")
+Then(/I should be alerted "(.*)"/) do |message|
+  modal = find('#modal-title')
+  expect(modal).not_to be_nil
+  modal_text = modal.text
+  expect(modal_text).to include(message)
 end
 
 When(/I do not select any subcategory or source/) do
