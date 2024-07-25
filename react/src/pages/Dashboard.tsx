@@ -1,14 +1,5 @@
-import React, {useState, useRef} from "react";
-import {
-    Box,
-    Paper,
-    Typography,
-    Divider,
-    Button,
-    Dialog,
-    DialogTitle,
-} from "@mui/material";
-import CloseIcon from "@mui/icons-material/Close";
+import React, {useRef} from "react";
+import {Box, Paper, Typography, Divider, Button} from "@mui/material";
 import dayjs, {Dayjs} from "dayjs";
 import Calendar from "../components/Calendar";
 import FilterProduct from "../components/FilterProduct";
@@ -20,6 +11,7 @@ import CategoriesSunburstChart from "../components/Dashboard/CategoriesSunburstC
 import SentimentCategoriesGraph from "../components/SentimentCategoriesGraph";
 import domtoimage from "dom-to-image-more";
 import {jsPDF} from "jspdf";
+import useDetectScroll, {Direction} from "@smakss/react-scroll-direction";
 
 interface DashboardProps {
     setFromDate: React.Dispatch<React.SetStateAction<Dayjs>>;
@@ -44,9 +36,7 @@ export default function Dashboard({
     setSelectedSource,
     setSelectedMenu,
 }: DashboardProps) {
-    const [openDialog, setOpenDialog] = useState(false);
-    const [pdfDataUrl, setPdfDataUrl] = useState<string | null>(null);
-
+    const {scrollDir, scrollPosition} = useDetectScroll();
     type CustomRef<T> = {
         img: T;
         reportDesc?: string;
@@ -290,9 +280,6 @@ export default function Dashboard({
         });
 
         // const pdfDataUrl = pdf.output("dataurlstring");
-        // setPdfDataUrl(pdfDataUrl);
-        // setOpenDialog(true);
-
         pdf.save(
             `${dayjs().format("DD/MM/YYYY")}_report_generated_for_${dayjs(
                 fromDate
@@ -320,46 +307,19 @@ export default function Dashboard({
                     Generate Report
                 </Button>
             </Box>
-            <Dialog
-                open={openDialog}
-                onClose={() => setOpenDialog(false)}
-                maxWidth="lg"
-                fullWidth
-            >
-                <DialogTitle
-                    id="scroll-dialog-title"
-                    style={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                        alignItems: "center",
-                        fontWeight: "bold",
-                    }}
-                >
-                    PDF Preview
-                    <Button
-                        onClick={() => setOpenDialog(false)}
-                        sx={{borderRadius: 4}}
-                    >
-                        <CloseIcon />
-                    </Button>
-                </DialogTitle>
-                <Box sx={{p: 2}}>
-                    {pdfDataUrl && (
-                        <iframe
-                            src={pdfDataUrl}
-                            width="100%"
-                            height="700px"
-                        ></iframe>
-                    )}
-                </Box>
-            </Dialog>
+
+            {/* Sticky, Freezes while scrolling */}
             <Box
                 sx={{
+                    position: "sticky",
+                    top: 74,
                     display: "flex",
                     flexDirection: {xs: "column", sm: "row"},
                     gap: 2,
                     mb: 7,
                     justifyContent: "flex-start",
+                    zIndex: 1000, // Ensure it's above other content
+                    backgroundColor: scrollPosition.top > 0 ? "white" : null,
                 }}
             >
                 <Box sx={{flexBasis: {xs: "100%", sm: "40%"}, flexGrow: 1}}>
@@ -385,7 +345,6 @@ export default function Dashboard({
                     />
                 </Box>
             </Box>
-
             <Box
                 sx={{
                     display: "flex",
@@ -498,18 +457,26 @@ export default function Dashboard({
                     mt: 2,
                 }}
             >
-                <Box sx={{flex: 6, display: "flex", alignItems: "stretch"}}>
-                    <SentimentScoreGraph
-                        ref={reportRefs.SentimentScoreGraphRef}
-                        fromDate={fromDate}
-                        toDate={toDate}
-                        selectedProduct={selectedProduct}
-                        selectedSource={selectedSource}
-                        isDetailed={false}
-                        setSelectedMenu={setSelectedMenu}
-                    />
-                </Box>
-                <Box sx={{flex: 4, display: "flex", alignItems: "stretch"}}>
+                <SentimentScoreGraph
+                    ref={reportRefs.SentimentScoreGraphRef}
+                    fromDate={fromDate}
+                    toDate={toDate}
+                    selectedProduct={selectedProduct}
+                    selectedSource={selectedSource}
+                    isDetailed={false}
+                    setSelectedMenu={setSelectedMenu}
+                />
+            </Box>
+            <Box
+                sx={{
+                    display: "flex",
+                    width: "100%",
+                    alignItems: "stretch",
+                    gap: 2,
+                    mt: 2,
+                }}
+            >
+                <Box sx={{flex: 5, display: "flex", alignItems: "stretch"}}>
                     <CategoriesSunburstChart
                         ref={reportRefs.CategoriesSunburstChartRef}
                         fromDate={fromDate}
@@ -519,16 +486,18 @@ export default function Dashboard({
                         setSelectedMenu={setSelectedMenu}
                     />
                 </Box>
+                <Box sx={{flex: 5, display: "flex", alignItems: "stretch"}}>
+                    <SentimentCategoriesGraph
+                        ref={reportRefs.SentimentCategoriesGraphRef}
+                        fromDate={fromDate}
+                        toDate={toDate}
+                        selectedProduct={selectedProduct}
+                        selectedSource={selectedSource}
+                        isDetailed={false}
+                        setSelectedMenu={setSelectedMenu}
+                    />
+                </Box>
             </Box>
-            <SentimentCategoriesGraph
-                ref={reportRefs.SentimentCategoriesGraphRef}
-                fromDate={fromDate}
-                toDate={toDate}
-                selectedProduct={selectedProduct}
-                selectedSource={selectedSource}
-                isDetailed={false}
-                setSelectedMenu={setSelectedMenu}
-            />
         </Box>
     );
 }
