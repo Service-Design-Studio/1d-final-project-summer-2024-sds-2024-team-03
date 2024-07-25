@@ -27,8 +27,10 @@ export default function FolderList() {
       .then((response) => response.json())
       .then((data) =>
         setLogs(
-          data.sort((a: { log_message: string }, b: { log_message: string }) =>
-            a.log_message.localeCompare(b.log_message)
+          data.sort(
+            (a: { created_at: string }, b: { created_at: string }) =>
+              new Date(b.created_at).getTime() -
+              new Date(a.created_at).getTime()
           )
         )
       );
