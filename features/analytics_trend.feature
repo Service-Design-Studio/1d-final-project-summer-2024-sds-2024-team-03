@@ -61,7 +61,7 @@ Scenario: Selection from 1 dropdown option updates the visualizations
   And I click on the 'Feedback Category' dropdown button
   And I click on 'Application Related'
   Then I should see a widget titled 'Sentiment Trend for United Trust (UT) products'
-  And the X-ticks are dates in the format MMM 'YY
+  And the X-ticks show 4 months in the format MMM 'YY
   And the Y-ticks are 0 to 5 in step 1
 
 Scenario: Label appears when hovering over data plot
