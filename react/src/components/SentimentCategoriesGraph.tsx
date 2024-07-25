@@ -795,8 +795,8 @@ export default forwardRef(function SentimentCategoriesGraph(
                                 }
                                 colors={
                                     sortPositive
-                                        ? Object.keys(ORDER)
-                                        : Object.keys(ORDER).reverse()
+                                        ? Object.values(ORDER)
+                                        : Object.values(ORDER).reverse()
                                 }
                                 indexBy="category"
                                 margin={{
