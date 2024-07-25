@@ -73,8 +73,8 @@ const StyledTableRow = styled(TableRow)(({theme}) => ({
 }));
 
 const ORDER: Record<string, string> = {
-    Promoter: "darkgreen",
-    Satisfied: "green",
+    Promoter: "green",
+    Satisfied: "lightgreen",
     Neutral: "grey",
     Unsatisfied: "orange",
     Frustrated: "red",
@@ -1198,10 +1198,7 @@ export default forwardRef(function SentimentCategoriesGraph(
                                     enableGridX={true}
                                     labelSkipWidth={12}
                                     labelSkipHeight={12}
-                                    labelTextColor={{
-                                        from: "color",
-                                        modifiers: [["darker", 1.6]],
-                                    }}
+                                    labelTextColor="black"
                                     legends={[]}
                                     role="application"
                                     ariaLabel="Sentiment Categorisation"
@@ -1319,10 +1316,7 @@ export default forwardRef(function SentimentCategoriesGraph(
                                     enableGridX={true}
                                     labelSkipWidth={12}
                                     labelSkipHeight={12}
-                                    labelTextColor={{
-                                        from: "color",
-                                        modifiers: [["darker", 1.6]],
-                                    }}
+                                    labelTextColor="black"
                                     legends={[]}
                                     role="application"
                                     ariaLabel="Sentiment Categorisation"
