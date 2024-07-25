@@ -303,7 +303,21 @@ export default function Dashboard({
                 }}
             >
                 <h1>Overview Dashboard</h1>
-                <Button variant="outlined" onClick={handleGenerateReport}>
+                <Button 
+                    variant="outlined" 
+                    sx={{ 
+                        backgroundColor: "#e00",
+                        color: "#fff",
+                        border: 0,
+                        fontWeight: "bold",
+                        borderRadius: 2,
+                        "&:hover": {
+                            backgroundColor: "#c00",
+                            border: 0,
+                        }
+                    }} 
+                    onClick={handleGenerateReport}
+                >
                     Generate Report
                 </Button>
             </Box>
