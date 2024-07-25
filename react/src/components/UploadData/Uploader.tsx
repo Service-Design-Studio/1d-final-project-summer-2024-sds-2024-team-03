@@ -109,7 +109,7 @@ export function FileDrop({
     if (ext && !["csv"].includes(ext[1]) && !/^xls/i.test(ext[1])) {
       setModalContent([
         <Typography key="error" variant="h6" component="div" sx={{ fontWeight: 'bold' }}>Error</Typography>,
-        <Typography key="message" variant="body1" component="div">Invalid file extension.</Typography>,
+        <Typography key="message" variant="body1" component="div">Invalid file format.</Typography>,
       ]);
       setOpenModal(true);
     } else {
