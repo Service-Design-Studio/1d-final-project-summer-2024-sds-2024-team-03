@@ -286,7 +286,7 @@ export default forwardRef(function CategoriesSunburstChart(
                 component={Paper}
                 sx={{
                     justifyContent: "start",
-                    minHeight: 800,
+                    // minHeight: 800,
                     display: "flex",
                     flexDirection: "column",
                     alignItems: "center",
@@ -297,7 +297,7 @@ export default forwardRef(function CategoriesSunburstChart(
                     cursor: "pointer",
                     boxShadow: "0px 0px 20px rgba(0, 0, 0, 0.1)",
                     backgroundColor:
-                        theme.palette.mode === "dark" ? "#151515" : "#ffffff",
+                        theme.palette.mode === "dark" ? "#151515" : "#fff",
                     transition: "transform 0.3s ease-in-out",
                     "&:hover": {
                         backgroundColor:
@@ -336,7 +336,7 @@ export default forwardRef(function CategoriesSunburstChart(
                             cornerRadius={2}
                             borderWidth={4}
                             // background / grid.line.stroke / labels.text.fill / "color" / "#..."
-                            borderColor="white"
+                            borderColor={theme.palette.mode === 'dark' ? '#222222' : '#fff'}
                             colors={(bar) => barColors[bar.id]}
                             // To make use of hsl from each component
                             inheritColorFromParent={false}
@@ -352,6 +352,25 @@ export default forwardRef(function CategoriesSunburstChart(
                             arcLabelsSkipAngle={60}
                             arcLabelsTextColor={{theme: "labels.text.fill"}}
                             animate={false}
+                            tooltip={({ id, value, color, percentage }) => (
+                                <Paper
+                                  sx={{
+                                    padding: "9px 12px",
+                                    borderRadius: "10px",
+                                    backgroundColor:
+                                      theme.palette.mode === "dark" ? "#111" : "#fff",
+                                    boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.2)",
+                                    color: theme.palette.mode === "dark" ? "#fff" : "#000",
+                                  }}
+                                >
+                                  <Typography variant="body2" style={{ color, fontWeight: "bold"}}>
+                                    {id}
+                                  </Typography>
+                                  <Typography variant="body2">
+                                    {value} ({Math.round(percentage * 10) / 10}%)
+                                  </Typography>
+                                </Paper>
+                              )}
                             // tooltip={(e) =>
                             //     t.createElement(
                             //         l,
@@ -383,37 +402,40 @@ export default forwardRef(function CategoriesSunburstChart(
                             }}
                         >
                             <Typography
-                                variant="body2"
+                                variant="body1"
                                 color="textSecondary"
                                 component="div"
                                 sx={{
                                     gridColumn: "1 / span 1",
                                     textAlign: "center",
+                                    fontWeight: "bold"
                                 }}
                             >
                                 Categories
                             </Typography>
                             <Typography
-                                variant="body2"
+                                variant="body1"
                                 color="textSecondary"
                                 component="div"
                                 sx={{
                                     textAlign: "center",
                                     gridColumn: "2 / span 1",
+                                    fontWeight: "bold"
                                 }}
                             >
                                 Total Mentions
                             </Typography>
                             <Typography
-                                variant="body2"
+                                variant="body1"
                                 color="textSecondary"
                                 component="div"
                                 sx={{
                                     gridColumn: "3 / span 1",
                                     textAlign: "center",
+                                    fontWeight: "bold"
                                 }}
                             >
-                                Avg Sentiment
+                                Avg. Sentiment
                             </Typography>
                             <Box
                                 sx={{
