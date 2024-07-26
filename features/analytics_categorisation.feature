@@ -29,7 +29,7 @@ Scenario: Selecting a subcategory adds it to the listbox
   And I click on the 'Subcategory' dropdown button in the Sentiment Categorisation widget
   And I click on 'United Trust (UT) products'
   Then I should see 'United Trust (UT) products' in the text field of the Sentiment Categorisation dropdown button
-  And I should see 2 subcategories with the most positive sentiments '> Application Related' and '> Staff Related' sorted in descending order
+  And I should see 2 subcategories with the most positive sentiments 'Application Related' and 'Staff Related' sorted in descending order
   
 Scenario: Selection from 1 dropdown option updates the visualizations
   Given I am on the Analytics page
@@ -39,7 +39,7 @@ Scenario: Selection from 1 dropdown option updates the visualizations
   And I click on the 'Subcategory' dropdown button in the Sentiment Categorisation widget
   And I click on 'United Trust (UT) products'
   Then the X-ticks are integers from 0 to 100 with step 10
-  And the Y-ticks show 'United Trust (UT) products' > 'Staff Related'
+  And the Y-ticks show 'Staff Related'
   And I should be able to hover over it to reveal the label 'Frustrated' and percentage '50'
   And a 'sort' button and 'view all' button dropdown
   
@@ -50,9 +50,9 @@ Scenario: Sort positive to negative sentiment in descending order and vice versa
   And the products selected are: 'Investments'
   And I click on the 'Subcategory' dropdown button in the Sentiment Categorisation widget
   And I click on 'United Trust (UT) products'
-  And the subcategories are currently sorted in descending order of positive sentiment '> Staff Related' and '> Fee Related'
+  And the subcategories are currently sorted in descending order of positive sentiment 'Staff Related' and 'Fee Related'
   And I click on the 'sort' button
-  Then I should see the subcategories sorted in descending order of negative sentiment '> Application Related' and '> Staff Related'
+  Then I should see the subcategories sorted in descending order of negative sentiment 'Application Related' and 'Staff Related'
   
 Scenario: View all
   Given I am on the Analytics page
@@ -62,7 +62,7 @@ Scenario: View all
   And I click on the 'Subcategory' dropdown button in the Sentiment Categorisation widget
   And I click on 'United Trust (UT) products'
   And I click 'view all'
-  Then I should see the top 3 subcategories sorted in this descending order '> Staff Related', '> Application Related', '> Fee Related'
+  Then I should see the top 3 subcategories sorted in this descending order 'Staff Related', 'Application Related', 'Fee Related'
   
 Scenario: View less
   Given I am on the Analytics page
@@ -82,7 +82,7 @@ Scenario: Look into a specific subcategory
   And the products selected are: 'Investments'
   And I click on the 'Subcategory' dropdown button in the Sentiment Categorisation widget
   And I click on 'United Trust (UT) products'
-  And I click on the red portion in the 'United Trust (UT) products > Staff Related'
+  And I click on the red portion under 'Staff Related'
   Then I should see a pop-up with the relevant data
   
 Scenario: Filter resets on page refresh
@@ -103,4 +103,4 @@ Scenario: Insufficient overall data
   And I click on 'United Trust (UT) products'
   Then I should see only 1 subcategory
   And clicking on 'view all' would not add more subcategories to view
-  And clicking 'sort' does not change the displayed subcategory '> Staff Related'
+  And clicking 'sort' does not change the displayed subcategory 'Staff Related'
