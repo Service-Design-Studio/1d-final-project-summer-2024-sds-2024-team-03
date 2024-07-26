@@ -1,4 +1,4 @@
-And("columns {string}, {string} and {string}") do |col1, col2, col3|
+And(/columns "(.*)", "(.*)" and "(.*)"/) do |col1, col2, col3|
   expect(page).to have_css('div', text: col1)
   expect(page).to have_css('div', text: col2)
   expect(page).to have_css('div', text: col3)
@@ -6,9 +6,9 @@ end
 
 And(/top 3 rows with the highest 'Total Mentions', sorted in descending order/) do
   # This assumes the rows are sorted by the backend and displayed in the correct order
-  categories = ["Investments > NonUT products > Fee Related",
-                "Investments > United Trust (UT) products > Staff Related",
-                "Investments > NonUT products > Application Related"]
+  categories = ["Investments\n↓\nNonUT products\n↓\nFee Related",
+                "Investments\n↓\nUnited Trust (UT) products\n↓\nStaff Related",
+                "Investments\n↓\nNonUT products\n↓\nApplication Related"]
 
   mentions = page.all('div[role="grid"] div:nth-child(2)').map(&:text).map(&:to_i)
   expect(mentions).to eq mentions.sort.reverse
