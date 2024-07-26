@@ -110,9 +110,7 @@ end
 When(/I click on the red portion under '(.*)'/) do |product_subcategory|
   red_rect = find('rect[fill="red"][aria-label*="' + product_subcategory + '"]', visible: true)
   red_rect.hover
-  sleep(5)
   red_rect.click
-  sleep(5)
 end
 
 Then(/I should see a pop-up with the relevant data/) do

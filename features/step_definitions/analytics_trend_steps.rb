@@ -43,7 +43,7 @@ end
 
 And(/I should be able to hover over it to reveal the date '(.*)' and score '(.*)'/) do |date, score|
   find('body').click
-  circle = find('circle[fill="transparent"][stroke="#1f77b4"][stroke-width="2"]', visible: true)
+  circle = find('circle[r="4"][fill="#1f77b4"][stroke="#1f77b4"][stroke-width="2"]', visible: true)
   circle.hover
   hoverlabel = find('[style*="pointer-events"][style*="position: absolute"]')
   expect(hoverlabel).to have_content(date)
