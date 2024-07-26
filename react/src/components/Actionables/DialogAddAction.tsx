@@ -38,15 +38,16 @@ export default function FormDialog() {
   const handleClose = () => {
     setOpen(false);
   };
-  const fabStyle = {
+  const fabStyle: SxProps = {
     position: "fixed",
     bottom: 72,
     right: 72,
+    boxShadow: "0px 8px 20px rgba(0, 0, 0, 0.2)",
   };
 
   const fab = {
     color: "secondary" as "secondary",
-    sx: fabStyle as SxProps,
+    sx: fabStyle,
     icon: <AddIcon />,
     label: "Add",
   };
@@ -89,8 +90,8 @@ export default function FormDialog() {
         <DialogTitle>Add an Action</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            Please enter an action and choose it's category. The action will be
-            automatically assigned to "In Progress" status.
+            Please enter an action and choose its category. The action will 
+            automatically be assigned the status 'In Progress'.
           </DialogContentText>
           <TextField
             autoFocus

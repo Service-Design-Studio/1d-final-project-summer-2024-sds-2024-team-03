@@ -314,11 +314,11 @@ export function FileDrop({
             fontSize: "1.1rem",
             boxShadow: 0,
             backgroundColor:
-              theme.palette.mode === "dark" ? "#8D0000" : "#BD0000",
+              theme.palette.mode === "dark" ? "#C00" : "#E00",
             padding: "0.5rem 2rem",
             "&:hover": {
               backgroundColor:
-                theme.palette.mode === "dark" ? "#720000" : "#980000",
+                theme.palette.mode === "dark" ? "#A00" : "#C00",
               boxShadow: 0,
             },
           }}

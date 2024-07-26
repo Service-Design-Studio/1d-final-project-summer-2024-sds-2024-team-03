@@ -47,6 +47,12 @@ export default function ScrollDialog() {
         size="small"
         variant="contained"
         color="secondary"
+        sx={{
+          boxShadow:0,
+          "&:hover": {
+            boxShadow: 0,
+          }
+        }}
       >
         View Analytics
       </Button>
