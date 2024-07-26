@@ -25,7 +25,7 @@ Then(/I should see all the feedback categories '(.*)' and '(.*)'/) do |item1, it
   end
 end
 
-And(/the X-ticks are dates in the format MMM 'YY/) do
+And(/the X-ticks show 4 months in the format MMM 'YY/) do
   find('body').click # close dropdown
   expected_values = ["Feb '24", "Mar '24", "Apr '24", "May '24"]
   expected_values.each do |value|

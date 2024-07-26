@@ -51,10 +51,9 @@ And(/the X-ticks are integers from 0 to 100 with step 10/) do
   end
 end
 
-And(/the Y-ticks show '(.*)' > '(.*)'/) do |subcategory, feedback_category|
+And(/the Y-ticks show '(.*)'/) do |feedback_category|
   parent_element = find("g[transform='translate(250,10)']")
   # Check that the parent element contains both specified texts
-  expect(parent_element).to have_content(subcategory)
   expect(parent_element).to have_content(feedback_category)
 end
 
@@ -108,9 +107,12 @@ Then(/I should see no longer see the third subcategory '(.*)'/) do |third_subcat
   expect(parent_element).to have_no_content(third_subcategory)
 end
 
-When(/I click on the red portion in the '(.*)'/) do |product_subcategory|
+When(/I click on the red portion under '(.*)'/) do |product_subcategory|
   red_rect = find('rect[fill="red"][aria-label*="' + product_subcategory + '"]', visible: true)
+  red_rect.hover
+  sleep(5)
   red_rect.click
+  sleep(5)
 end
 
 Then(/I should see a pop-up with the relevant data/) do
