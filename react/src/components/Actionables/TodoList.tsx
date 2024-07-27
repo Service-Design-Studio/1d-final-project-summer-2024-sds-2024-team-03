@@ -83,9 +83,6 @@ const TodoList: React.FC<TodoListProps> = ({ data }) => {
       item.actionable_category.toLowerCase() === "to amplify".toLowerCase()
   );
 
-  console.log("toAmplifyDatat", toAmplifyData);
-  console.log("data no split", data);
-
   return (
     <div>
       <Accordion

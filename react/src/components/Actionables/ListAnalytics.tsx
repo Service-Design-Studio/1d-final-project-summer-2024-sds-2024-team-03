@@ -4,22 +4,39 @@ import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemText from "@mui/material/ListItemText";
+import Typography from "@mui/material/Typography";
 
-export default function BasicList() {
+import { Actionable } from "./Interfaces";
+
+export default function BasicList(actionable: Actionable) {
+  let feedbackJson = actionable.feedback_json;
+  let x;
+  try {
+    console.log("feedbackJson", feedbackJson);
+    x = JSON.parse(feedbackJson);
+    if (Array.isArray(x) && x.length === 1 && x[0] === null) {
+      x = null;
+    }
+  } catch {
+    feedbackJson = actionable.feedback_json;
+    x = null;
+  }
+  console.log("x", x);
   return (
     <Box sx={{ width: "100%", bgcolor: "background.paper" }}>
       <nav aria-label="main mailbox folders">
         <List>
-          <ListItem disablePadding>
-            <ListItemButton>
-              <ListItemText primary="Feedback in the morning sun shine on the ATM  machine is too bright and therefore not able to see anything on the screen feedback should put some sunshine blinds  ayer rajah market, infront of ntuc ATM screen not clear due to the sun (left machine)" />
-            </ListItemButton>
-          </ListItem>
-          <ListItem disablePadding>
-            <ListItemButton component="a" href="#simple-list">
-              <ListItemText primary="Cm work at grassroots and he take his own money to help the community exchange their coins to cash. Hence he end up with many coins to deposit. He heard rumours that the DBS CDM always spoil and best to us POSB CDM instead. His experience with tanjong pagar AND tiong bahru has always been smooth, having the coins deposit complete in les than 60 seconds while the CDM at DBS says will take a while." />
-            </ListItemButton>
-          </ListItem>
+          {x === null || x.length === 0 ? (
+            <Typography>No data available</Typography>
+          ) : (
+            x.map((item: string, index: number) => (
+              <ListItem key={index} disablePadding>
+                <ListItemButton>
+                  <ListItemText primary={item} />
+                </ListItemButton>
+              </ListItem>
+            ))
+          )}
         </List>
       </nav>
     </Box>

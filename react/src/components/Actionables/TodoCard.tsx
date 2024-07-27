@@ -116,7 +116,7 @@ const MyCard: React.FC<MyCardProps> = ({
           >
             Change Status
           </Button>
-          <DialogAnalytics />
+          <DialogAnalytics {...actionable} />
           <Menu
             id="demo-positioned-menu"
             aria-labelledby="demo-positioned-button"
