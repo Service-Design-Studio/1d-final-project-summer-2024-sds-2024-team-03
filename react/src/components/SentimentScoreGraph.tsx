@@ -741,7 +741,7 @@ export default forwardRef(function SentimentScoreGraph(
               pointLabelYOffset={-12}
               enableTouchCrosshair={true}
               useMesh={true}
-              // label styling
+              // styling of hover label
               tooltip={({ point }) => (
                 <div
                   style={{

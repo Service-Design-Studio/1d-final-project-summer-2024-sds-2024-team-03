@@ -367,6 +367,7 @@ export default function Dashboard({
                     gap: 2,
                     alignItems: "stretch",
                     flexDirection: "row",
+                    height: 230
                 }}
             >
                 <OverallSentimentScore
