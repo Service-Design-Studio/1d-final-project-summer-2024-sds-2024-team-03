@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useState, useEffect } from "react";
 import { styled } from "@mui/material/styles";
 import ArrowForwardIosSharpIcon from "@mui/icons-material/ArrowForwardIosSharp";
 import MuiAccordion, { AccordionProps } from "@mui/material/Accordion";
@@ -56,11 +56,50 @@ const AccordionDetails = styled(MuiAccordionDetails)(({ theme }) => ({
 }));
 
 const TodoList: React.FC<TodoListProps> = ({ data }) => {
+  // useState for actionable_category
+  const [dataToFix, setDataToFix] = useState<Actionable[]>([]);
+  const [dataToKeepInMind, setDataToKeepInMind] = useState<Actionable[]>([]);
+  const [dataToPromote, setDataToPromote] = useState<Actionable[]>([]);
+  const [dataToAmplify, setDataToAmplify] = useState<Actionable[]>([]);
+
   const [expanded, setExpanded] = React.useState<string | false>("panel1");
   const handleChange =
     (panel: string) => (event: React.SyntheticEvent, newExpanded: boolean) => {
       setExpanded(newExpanded ? panel : false);
     };
+
+  // Categorise accordion by actionable_category
+  const toFixData = data.filter(
+    (item: Actionable) =>
+      item.actionable_category.toLowerCase() === "to fix".toLowerCase()
+  );
+  useEffect(() => {
+    setDataToFix(toFixData);
+  }, []);
+
+  const toKeepInMindData = data.filter(
+    (item: Actionable) =>
+      item.actionable_category.toLowerCase() === "to keep in mind".toLowerCase()
+  );
+  useEffect(() => {
+    setDataToKeepInMind(toKeepInMindData);
+  }, []);
+
+  const toPromoteData = data.filter(
+    (item: Actionable) =>
+      item.actionable_category.toLowerCase() === "to promote".toLowerCase()
+  );
+  useEffect(() => {
+    setDataToPromote(toPromoteData);
+  }, []);
+
+  const toAmplifyData = data.filter(
+    (item: Actionable) =>
+      item.actionable_category.toLowerCase() === "to amplify".toLowerCase()
+  );
+  useEffect(() => {
+    setDataToAmplify(toAmplifyData);
+  }, []);
 
   return (
     <div>
@@ -82,7 +121,7 @@ const TodoList: React.FC<TodoListProps> = ({ data }) => {
           </Box>
         </AccordionSummary>
         <AccordionDetails>
-          {data.map((item) => (
+          {dataToFix.map((item) => (
             <TodoCard key={item.id} {...item} />
           ))}
         </AccordionDetails>
@@ -105,12 +144,9 @@ const TodoList: React.FC<TodoListProps> = ({ data }) => {
           </Box>
         </AccordionSummary>
         <AccordionDetails>
-          <Typography>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse
-            malesuada lacus ex, sit amet blandit leo lobortis eget. Lorem ipsum
-            dolor sit amet, consectetur adipiscing elit. Suspendisse malesuada
-            lacus ex, sit amet blandit leo lobortis eget.
-          </Typography>
+          {dataToKeepInMind.map((item) => (
+            <TodoCard key={item.id} {...item} />
+          ))}
         </AccordionDetails>
       </Accordion>
       <Accordion
@@ -129,12 +165,9 @@ const TodoList: React.FC<TodoListProps> = ({ data }) => {
           </Box>
         </AccordionSummary>
         <AccordionDetails>
-          <Typography>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse
-            malesuada lacus ex, sit amet blandit leo lobortis eget. Lorem ipsum
-            dolor sit amet, consectetur adipiscing elit. Suspendisse malesuada
-            lacus ex, sit amet blandit leo lobortis eget.
-          </Typography>
+          {dataToPromote.map((item) => (
+            <TodoCard key={item.id} {...item} />
+          ))}
         </AccordionDetails>
       </Accordion>
       <Accordion
@@ -155,12 +188,9 @@ const TodoList: React.FC<TodoListProps> = ({ data }) => {
           </Box>
         </AccordionSummary>
         <AccordionDetails>
-          <Typography>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse
-            malesuada lacus ex, sit amet blandit leo lobortis eget. Lorem ipsum
-            dolor sit amet, consectetur adipiscing elit. Suspendisse malesuada
-            lacus ex, sit amet blandit leo lobortis eget.
-          </Typography>
+          {dataToAmplify.map((item) => (
+            <TodoCard key={item.id} {...item} />
+          ))}
         </AccordionDetails>
       </Accordion>
     </div>
