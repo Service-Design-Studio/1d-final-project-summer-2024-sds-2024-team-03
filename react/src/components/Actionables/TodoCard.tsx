@@ -15,8 +15,12 @@ import ListItemText from "@mui/material/ListItemText";
 import NewReleasesTwoToneIcon from "@mui/icons-material/NewReleasesTwoTone";
 import RotateRightTwoToneIcon from "@mui/icons-material/RotateRightTwoTone";
 import CheckCircleTwoToneIcon from "@mui/icons-material/CheckCircleTwoTone";
+import DeleteTwoToneIcon from "@mui/icons-material/DeleteTwoTone";
 
 import DialogAnalytics from "./DialogAnalytics";
+
+//IMPORT INTERFACE
+import { Actionable } from "./Interfaces";
 
 const bull = (
   <Box
@@ -32,6 +36,7 @@ interface MyCardProps {
   open: boolean;
   handleClick: (event: React.MouseEvent<HTMLElement>) => void;
   handleClose: () => void;
+  actionable: Actionable;
 }
 
 const MyCard: React.FC<MyCardProps> = ({
@@ -39,7 +44,17 @@ const MyCard: React.FC<MyCardProps> = ({
   open,
   handleClick,
   handleClose,
+  actionable,
 }) => {
+  const feedbackCategory = actionable.feedback_category;
+  let uniqueData; //uniqueData is used in the scope(try catch) and in render, therefore need declare outside
+  try {
+    const x = JSON.parse(feedbackCategory); //convert back to JSON
+    uniqueData = Array.from(new Set(x)).join(", "); //dedupe and convert to comma separated string
+  } catch {
+    uniqueData = feedbackCategory; // in case string isn't proper JSON
+  }
+
   return (
     <React.Fragment>
       <CardContent>
@@ -57,7 +72,7 @@ const MyCard: React.FC<MyCardProps> = ({
             color="text.secondary"
             gutterBottom
           >
-            Application
+            {uniqueData}
           </Typography>
         </Box>
         <Box sx={{ display: "flex", alignItems: "center" }}>
@@ -74,12 +89,11 @@ const MyCard: React.FC<MyCardProps> = ({
             color="text.secondary"
             gutterBottom
           >
-            Credit Card
+            {actionable.subproduct}
           </Typography>
         </Box>
         <Typography variant="h6" component="div">
-          Actionjerg klafdsjfo eti wo4herl kngafds ;kofjgwt4k jegr afsdi fjb
-          kwerasd z
+          {actionable.action} {actionable.status}
         </Typography>
       </CardContent>
       <CardActions>
@@ -90,6 +104,7 @@ const MyCard: React.FC<MyCardProps> = ({
             width: "100%",
           }}
         >
+          <DeleteTwoToneIcon style={{ color: "#808080" }} />
           <Button
             id="demo-positioned-button"
             aria-controls={open ? "demo-positioned-menu" : undefined}
@@ -147,7 +162,8 @@ const MyCard: React.FC<MyCardProps> = ({
   );
 };
 
-export default function OutlinedCard() {
+// MAIN CARD
+export default function OutlinedCard(actionable: Actionable) {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -164,6 +180,7 @@ export default function OutlinedCard() {
           open={open}
           handleClick={handleClick}
           handleClose={handleClose}
+          actionable={actionable}
         />
       </Card>
     </Paper>

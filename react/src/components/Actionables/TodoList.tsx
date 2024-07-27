@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useState, useEffect } from "react";
 import { styled } from "@mui/material/styles";
 import ArrowForwardIosSharpIcon from "@mui/icons-material/ArrowForwardIosSharp";
 import MuiAccordion, { AccordionProps } from "@mui/material/Accordion";
@@ -14,6 +14,10 @@ import NotificationsActiveTwoToneIcon from "@mui/icons-material/NotificationsAct
 import MovingIcon from "@mui/icons-material/Moving";
 import CampaignTwoToneIcon from "@mui/icons-material/CampaignTwoTone";
 import TodoCard from "./TodoCard";
+
+//Import Interfaces
+import { Actionable } from "./Interfaces";
+import { TodoListProps } from "./Interfaces";
 
 const Accordion = styled((props: AccordionProps) => (
   <MuiAccordion disableGutters elevation={0} square {...props} />
@@ -51,12 +55,36 @@ const AccordionDetails = styled(MuiAccordionDetails)(({ theme }) => ({
   borderTop: "1px solid rgba(0, 0, 0, .125)",
 }));
 
-export default function CustomizedAccordions() {
+const TodoList: React.FC<TodoListProps> = ({ data }) => {
   const [expanded, setExpanded] = React.useState<string | false>("panel1");
   const handleChange =
     (panel: string) => (event: React.SyntheticEvent, newExpanded: boolean) => {
       setExpanded(newExpanded ? panel : false);
     };
+
+  // Categorise accordion by actionable_category
+  const toFixData = data.filter(
+    (item: Actionable) =>
+      item.actionable_category.toLowerCase() === "to fix".toLowerCase()
+  );
+
+  const toKeepInMindData = data.filter(
+    (item: Actionable) =>
+      item.actionable_category.toLowerCase() === "to keep in mind".toLowerCase()
+  );
+
+  const toPromoteData = data.filter(
+    (item: Actionable) =>
+      item.actionable_category.toLowerCase() === "to promote".toLowerCase()
+  );
+
+  const toAmplifyData = data.filter(
+    (item: Actionable) =>
+      item.actionable_category.toLowerCase() === "to amplify".toLowerCase()
+  );
+
+  console.log("toAmplifyDatat", toAmplifyData);
+  console.log("data no split", data);
 
   return (
     <div>
@@ -78,8 +106,9 @@ export default function CustomizedAccordions() {
           </Box>
         </AccordionSummary>
         <AccordionDetails>
-          <TodoCard />
-          <TodoCard />
+          {toFixData.map((item) => (
+            <TodoCard key={item.id} {...item} />
+          ))}
         </AccordionDetails>
       </Accordion>
       <Accordion
@@ -100,12 +129,9 @@ export default function CustomizedAccordions() {
           </Box>
         </AccordionSummary>
         <AccordionDetails>
-          <Typography>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse
-            malesuada lacus ex, sit amet blandit leo lobortis eget. Lorem ipsum
-            dolor sit amet, consectetur adipiscing elit. Suspendisse malesuada
-            lacus ex, sit amet blandit leo lobortis eget.
-          </Typography>
+          {toKeepInMindData.map((item) => (
+            <TodoCard key={item.id} {...item} />
+          ))}
         </AccordionDetails>
       </Accordion>
       <Accordion
@@ -124,12 +150,9 @@ export default function CustomizedAccordions() {
           </Box>
         </AccordionSummary>
         <AccordionDetails>
-          <Typography>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse
-            malesuada lacus ex, sit amet blandit leo lobortis eget. Lorem ipsum
-            dolor sit amet, consectetur adipiscing elit. Suspendisse malesuada
-            lacus ex, sit amet blandit leo lobortis eget.
-          </Typography>
+          {toPromoteData.map((item) => (
+            <TodoCard key={item.id} {...item} />
+          ))}
         </AccordionDetails>
       </Accordion>
       <Accordion
@@ -150,14 +173,13 @@ export default function CustomizedAccordions() {
           </Box>
         </AccordionSummary>
         <AccordionDetails>
-          <Typography>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse
-            malesuada lacus ex, sit amet blandit leo lobortis eget. Lorem ipsum
-            dolor sit amet, consectetur adipiscing elit. Suspendisse malesuada
-            lacus ex, sit amet blandit leo lobortis eget.
-          </Typography>
+          {toAmplifyData.map((item) => (
+            <TodoCard key={item.id} {...item} />
+          ))}
         </AccordionDetails>
       </Accordion>
     </div>
   );
-}
+};
+
+export default TodoList;

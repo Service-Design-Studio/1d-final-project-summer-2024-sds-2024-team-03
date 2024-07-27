@@ -1,16 +1,30 @@
 ## CURL Test Actionable Page
 
 ```bash
+# CREATE RESTful
 curl -X POST http://localhost:3000/actionables.json \
      -H "Content-Type: application/json" \
      -d '{
            "actionable": {
-             "action": "New Actionable",
-             "status": "In Progress",
-             "subproduct": "Credit Card",
-             "actionable_category": "To Fix",
-             "feedback_category": "Application",
+             "action": "New Actionable 3",
+             "status": "New",
+             "subproduct": "currency card",
+             "actionable_category": "To Promote",
+             "feedback_category": "application",
              "feedback_json": "sucks"
+           }
+         }'
+
+# READ RESTful
+curl -X GET http://localhost:3000/actionables.json \
+     -H "Content-Type: application/json"
+
+# UPDATE RESTful
+curl -X PATCH "http://localhost:3000/actionables/592.json" \
+     -H "Content-Type: application/json" \
+     -d '{
+           "actionable": {
+             "status": "done"
            }
          }'
 ```

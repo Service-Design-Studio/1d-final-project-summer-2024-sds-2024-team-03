@@ -1,7 +1,8 @@
 class ActionablesController < ApplicationController
   before_action :set_actionable, only: %i[ show edit update destroy ]
-  skip_before_action :verify_authenticity_token, only: [:create]
+  skip_before_action :verify_authenticity_token, only: [:create, :update]
 
+  # READ RESTful API
   # GET /actionables or /actionables.json
   def index
     @actionables = Actionable.all
@@ -20,6 +21,7 @@ class ActionablesController < ApplicationController
   def edit
   end
 
+  # CREATE RESTful API
   # POST /actionables or /actionables.json
   def create
     @actionable = Actionable.new(actionable_params)
@@ -35,6 +37,7 @@ class ActionablesController < ApplicationController
     end
   end
 
+  # UPDATE RESTfulAPI
   # PATCH/PUT /actionables/1 or /actionables/1.json
   def update
     respond_to do |format|

@@ -1,11 +1,10 @@
-import * as React from "react";
+import React, { useState, useEffect } from "react";
 import Box from "@mui/material/Box";
-import dayjs, { Dayjs } from "dayjs";
 import FilterProduct from "../components/FilterProduct";
 import FilterSource from "../components/FilterSource";
 import Grid from "@mui/material/Grid";
 import Calendar from "../components/Calendar";
-import Todo from "../components/Actionables/TodoList";
+import TodoList from "../components/Actionables/TodoList";
 import Chip from "@mui/material/Chip";
 import NewReleasesTwoToneIcon from "@mui/icons-material/NewReleasesTwoTone";
 import RotateRightTwoToneIcon from "@mui/icons-material/RotateRightTwoTone";
@@ -13,16 +12,11 @@ import CheckCircleTwoToneIcon from "@mui/icons-material/CheckCircleTwoTone";
 import { useTheme } from "@mui/material/styles";
 import DialogAddAction from "../components/Actionables/DialogAddAction";
 
-interface ActionablesProps {
-  setFromDate: React.Dispatch<React.SetStateAction<Dayjs>>;
-  fromDate: Dayjs;
-  setToDate: React.Dispatch<React.SetStateAction<Dayjs>>;
-  toDate: Dayjs;
-  selectedProduct: string[];
-  setSelectedProduct: React.Dispatch<React.SetStateAction<string[]>>;
-  selectedSource: string[];
-  setSelectedSource: React.Dispatch<React.SetStateAction<string[]>>;
-}
+//IMPORT INTERFACE
+import {
+  ActionablesPageProps,
+  Actionable,
+} from "../components/Actionables/Interfaces";
 
 export default function Actionables({
   setFromDate,
@@ -33,15 +27,59 @@ export default function Actionables({
   setSelectedProduct,
   selectedSource,
   setSelectedSource,
-}: ActionablesProps) {
+}: ActionablesPageProps) {
   const theme = useTheme();
   const transitionDuration = {
     enter: theme.transitions.duration.enteringScreen,
     exit: theme.transitions.duration.leavingScreen,
   };
+
+  const [data, setData] = useState<Actionable[]>([]);
+
+  const [dataNew, setDataNew] = useState<Actionable[]>([]);
+  const [dataInProgress, setDataInProgress] = useState<Actionable[]>([]);
+  const [dataDone, setDataDone] = useState<Actionable[]>([]);
+
+  const fetchData = async () => {
+    try {
+      const response = await fetch("http://localhost:3000/actionables.json", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+
+      const result: Actionable[] = await response.json();
+      const newData = result.filter(
+        (item: Actionable) => item.status.toLowerCase() === "new".toLowerCase()
+      );
+      setDataNew(newData);
+      const inProgressData = result.filter(
+        (item: Actionable) =>
+          item.status.toLowerCase() === "in progress".toLowerCase()
+      );
+      setDataInProgress(inProgressData);
+      const doneData = result.filter(
+        (item: Actionable) => item.status.toLowerCase() === "done".toLowerCase()
+      );
+      setDataDone(doneData);
+
+      setData(result);
+    } catch (error) {}
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []); // Empty dependency array ensures this runs once when the component mounts
+
   return (
     <Box sx={{ maxWidth: "lg", mx: "auto", px: 2 }}>
       <h1>Actionables</h1>
+      <div>{data && <pre>{JSON.stringify(data, null, 2)}</pre>}</div>
       <Box
         sx={{
           display: "flex",
@@ -85,7 +123,7 @@ export default function Actionables({
               sx={{ mb: 2 }}
             />
 
-            <Todo />
+            <TodoList data={dataNew} />
           </Grid>
           <Grid item xs={4}>
             <Chip
@@ -101,7 +139,7 @@ export default function Actionables({
                 },
               }}
             />
-            <Todo />
+            <TodoList data={dataInProgress} />
           </Grid>
           <Grid item xs={4}>
             <Chip
@@ -117,7 +155,7 @@ export default function Actionables({
                 },
               }}
             />
-            <Todo />
+            <TodoList data={dataDone} />
           </Grid>
         </Grid>
       </Box>
