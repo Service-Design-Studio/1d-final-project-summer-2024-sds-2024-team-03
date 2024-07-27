@@ -323,7 +323,7 @@ export default forwardRef(function CategoriesSunburstChart(
                 ) : (
                     <Box
                         sx={{
-                            width: "100%",
+                            width: "95%",
                             height: 300,
                         }}
                     >
@@ -364,7 +364,7 @@ export default forwardRef(function CategoriesSunburstChart(
                                   }}
                                 >
                                   <Typography variant="body2" style={{ color, fontWeight: "bold"}}>
-                                    {id}
+                                    {id ?? "Others"}
                                   </Typography>
                                   <Typography variant="body2">
                                     {value} ({Math.round(percentage * 10) / 10}%)
@@ -394,21 +394,29 @@ export default forwardRef(function CategoriesSunburstChart(
                         <Box
                             sx={{
                                 display: "grid",
-                                gridTemplateColumns: "1fr 1fr 1fr",
+                                gridTemplateColumns: "4fr 3fr 3fr",
                                 gap: 1,
                                 width: "100%",
                                 alignItems: "center",
                                 mt: 4,
                             }}
                         >
+                            <Box
+                                sx={{
+                                    gridColumn: "1 / span 3",
+                                    borderBottom: "2px solid #ccc",
+                                    mb: 1.5
+                                }}
+                            />
                             <Typography
                                 variant="body1"
                                 color="textSecondary"
                                 component="div"
                                 sx={{
                                     gridColumn: "1 / span 1",
-                                    textAlign: "center",
-                                    fontWeight: "bold"
+                                    textAlign: "left",
+                                    fontWeight: "bold",
+                                    pl: 2
                                 }}
                             >
                                 Categories
@@ -432,53 +440,71 @@ export default forwardRef(function CategoriesSunburstChart(
                                 sx={{
                                     gridColumn: "3 / span 1",
                                     textAlign: "center",
-                                    fontWeight: "bold"
+                                    fontWeight: "bold",
+                                    pr: 2
                                 }}
                             >
                                 Avg. Sentiment
                             </Typography>
-                            <Box
-                                sx={{
-                                    gridColumn: "1 / span 3",
-                                    borderBottom: "1px solid #ccc",
-                                }}
-                            />
                             {topCategories.map((category, index) => (
-                                <React.Fragment key={index}>
+                                <Box
+                                    key={index}
+                                    sx={{
+                                        display: "flex",
+                                        alignItems: "center",
+                                        gap: 1,
+                                        p: 1.5,
+                                        my: 0.5,
+                                        borderRadius: 3,
+                                        boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.1)",
+                                        bgcolor: "background.paper",
+                                        gridColumn: "1 / span 3", // Ensure full width for each row
+                                    }}
+                                >
                                     <Box
                                         sx={{
-                                            display: "flex",
-                                            alignItems: "center",
-                                            gridColumn: "1 / span 1",
+                                        display: "flex",
+                                        alignItems: "center",
+                                        gridColumn: "1 / span 1",
+                                        width: "40%"
                                         }}
                                     >
                                         <Box
-                                            sx={{
-                                                width: 18,
-                                                height: 18,
-                                                borderRadius: "50%",
-                                                backgroundColor:
-                                                    barColors[
-                                                        category
-                                                            .feedback_category
-                                                    ],
-                                                flexShrink: 0,
-                                            }}
+                                        /*
+                                        sx={{
+                                            width: 18,
+                                            height: 18,
+                                            borderRadius: "50%",
+                                            backgroundColor: barColors[category.feedback_category],
+                                            flexShrink: 0,
+                                        }}
+                                        */
                                         />
                                         <Typography
-                                            variant="body2"
-                                            sx={{ml: 1, textAlign: "center"}}
+                                        variant="body2"
+                                        sx={{ ml: 1, textAlign: "left" }}
                                         >
-                                            {category.product} <br />↓<br />
-                                            {category.subcategory} <br />↓<br />
-                                            {category.feedback_category}
+                                            <span style={{ fontSize: '1.1rem', fontWeight: 'bold' }}>
+                                                {category.product ? category.product : "Others"}
+                                            </span>
+                                            <br />
+                                            <span style={{ color: "grey", fontSize: '1rem', fontWeight: 'bold' }}>
+                                                {category.subcategory ? category.subcategory : "Others"}
+                                            </span>
+                                            <br />
+                                            <span style={{ color: barColors[category.feedback_category], fontWeight: 'bold' }}>
+                                                {category.feedback_category ? category.feedback_category : "Others"}
+                                            </span>
                                         </Typography>
                                     </Box>
                                     <Typography
                                         variant="body2"
                                         sx={{
-                                            gridColumn: "2 / span 1",
-                                            textAlign: "center",
+                                        gridColumn: "2 / span 1",
+                                        textAlign: "center",
+                                        fontWeight: "bold",
+                                        fontSize: "1.3rem",
+                                        width: "30%"
                                         }}
                                     >
                                         {category.mentions}
@@ -486,27 +512,20 @@ export default forwardRef(function CategoriesSunburstChart(
                                     <Typography
                                         variant="body2"
                                         sx={{
-                                            gridColumn: "3 / span 1",
-                                            textAlign: "center",
-                                            color: getColorByOrder(
-                                                category.averageSentimentScore,
-                                                ORDER
-                                            ),
-                                            fontWeight: "bold",
+                                        gridColumn: "3 / span 1",
+                                        textAlign: "center",
+                                        color: getColorByOrder(
+                                            category.averageSentimentScore,
+                                            ORDER
+                                        ),
+                                        fontWeight: "bold",
+                                        fontSize: "1.3rem",
+                                        width: "30%"
                                         }}
                                     >
-                                        {category.averageSentimentScore.toFixed(
-                                            1
-                                        )}{" "}
-                                        / 5
+                                        {category.averageSentimentScore.toFixed(1)} / 5
                                     </Typography>
-                                    <Box
-                                        sx={{
-                                            gridColumn: "1 / span 3",
-                                            borderBottom: "1px solid #ccc",
-                                        }}
-                                    />
-                                </React.Fragment>
+                                </Box>
                             ))}
                         </Box>
                     </Box>

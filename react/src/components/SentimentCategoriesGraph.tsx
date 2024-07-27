@@ -970,7 +970,7 @@ export default forwardRef(function SentimentCategoriesGraph(
                   display: "flex",
                   gap: 2,
                   mt: 2,
-                  height: 350,
+                  height: 325,
                 }}
               >
                 <ResponsiveBar
@@ -1088,7 +1088,7 @@ export default forwardRef(function SentimentCategoriesGraph(
                   display: "flex",
                   gap: 2,
                   mt: 2,
-                  height: 350,
+                  height: 325,
                 }}
               >
                 <ResponsiveBar
