@@ -778,7 +778,7 @@ export default forwardRef(function SentimentCategoriesGraph(
                   tickSize: 5,
                   tickPadding: 5,
                   tickRotation: 0,
-                  legend: "Percent",
+                  legend: "Percentage",
                   legendPosition: "middle",
                   legendOffset: 32,
                   truncateTickAt: 0,
