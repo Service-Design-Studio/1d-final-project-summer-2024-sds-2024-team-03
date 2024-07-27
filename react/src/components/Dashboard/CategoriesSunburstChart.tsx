@@ -7,7 +7,7 @@ import React, {
     useImperativeHandle,
 } from "react";
 import {Theme, useTheme} from "@mui/material/styles";
-import {Paper, Box, Typography, ButtonBase} from "@mui/material";
+import {Paper, Box, Typography, ButtonBase, Rating} from "@mui/material";
 import {Dayjs} from "dayjs";
 import {ResponsiveSunburst} from "@nivo/sunburst";
 
@@ -456,9 +456,10 @@ export default forwardRef(function CategoriesSunburstChart(
                                         p: 1.5,
                                         my: 0.5,
                                         borderRadius: 3,
-                                        boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.1)",
-                                        bgcolor: "background.paper",
+                                        bgcolor: theme.palette.mode === "dark" ? "#000" : "#eee",
                                         gridColumn: "1 / span 3", // Ensure full width for each row
+                                        "&:hover": {
+                                            backgroundColor: theme.palette.mode === "dark" ? "#111" : "#ddd",}
                                     }}
                                 >
                                     <Box
@@ -509,22 +510,38 @@ export default forwardRef(function CategoriesSunburstChart(
                                     >
                                         {category.mentions}
                                     </Typography>
-                                    <Typography
-                                        variant="body2"
+                                    <Box
                                         sx={{
-                                        gridColumn: "3 / span 1",
-                                        textAlign: "center",
-                                        color: getColorByOrder(
-                                            category.averageSentimentScore,
-                                            ORDER
-                                        ),
-                                        fontWeight: "bold",
-                                        fontSize: "1.3rem",
-                                        width: "30%"
+                                        ml: 1.5,
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                        alignItems: 'center', // Center items horizontally
+                                        justifyContent: 'center', // Center items vertically if needed
+                                        textAlign: 'center', // Center text alignment
                                         }}
                                     >
-                                        {category.averageSentimentScore.toFixed(1)} / 5
-                                    </Typography>
+                                        <Typography
+                                            variant="body2"
+                                            sx={{
+                                            gridColumn: "3 / span 1",
+                                            textAlign: "center",
+                                            color: getColorByOrder(category.averageSentimentScore,ORDER),
+                                            fontWeight: "bold",
+                                            fontSize: "1.3rem",
+                                            width: "30%"
+                                            }}
+                                        >
+                                            {category.averageSentimentScore.toFixed(1)}
+                                        </Typography>
+                                        <Rating
+                                            name="read-only"
+                                            value={category.averageSentimentScore} // Assuming averageSentimentScore is between 0 and 5
+                                            precision={0.1} // Adjust the precision if needed
+                                            readOnly
+                                            size="small" // Adjust the size as needed
+                                            sx={{ color: theme.palette.mode === "dark" ? "#666" : "#999", }}
+                                        />
+                                    </Box>
                                 </Box>
                             ))}
                         </Box>
