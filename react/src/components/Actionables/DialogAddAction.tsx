@@ -74,6 +74,18 @@ export default function FormDialog({
     string[]
   >([]);
 
+  const [actionValue, setActionValue] = useState("");
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setActionValue(event.target.value);
+  };
+
+  const [actionableCategory, setActionableCategory] = useState("");
+  const handleActionableCategoryChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setActionableCategory(event.target.value);
+  };
+
   const handleSubcategoryChange = (event: SelectChangeEvent<string>) => {
     //extract the value for an event target within an event handler function
     const value = event.target.value; //value is what you select, event.target is used for selection
@@ -86,6 +98,36 @@ export default function FormDialog({
     setSelectedFeedbackcategories(
       typeof value === "string" ? value.split(",") : value
     );
+  };
+
+  const handleAddClick = async () => {
+    try {
+      const response = await fetch("http://localhost:3000/actionables.json", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          actionable: {
+            action: actionValue,
+            status: "In Progress",
+            subproduct: selectedSubcategory,
+            actionable_category: actionableCategory,
+            feedback_category: JSON.stringify(selectedFeedbackcategories),
+            feedback_json: "[]",
+          },
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+
+      const data = await response.json();
+      console.log("Success:", data);
+    } catch (error) {
+      console.error("Error:", error);
+    }
   };
 
   /* USE EFFECT: a hook executed at different times depending on how it's written
@@ -226,19 +268,21 @@ useEffect(() => {
         <DialogTitle>Add an Action</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            Please enter an action and choose its category. The action will 
+            Please enter an action and choose its category. The action will
             automatically be assigned the status 'In Progress'.
           </DialogContentText>
           <TextField
             autoFocus
             required
             margin="dense"
-            id="addAction"
-            name="addAction"
+            id="actionID"
+            name="actionName"
             label="Enter Action"
             type="text"
             fullWidth
             variant="standard"
+            value={actionValue}
+            onChange={handleInputChange}
           />
 
           <Box sx={{ display: "flex", gap: 2, mt: 1, width: "80%" }}>
@@ -344,6 +388,8 @@ useEffect(() => {
             <RadioGroup
               aria-labelledby="demo-radio-buttons-group-label"
               name="radio-buttons-group"
+              value={actionableCategory}
+              onChange={handleActionableCategoryChange}
             >
               <FormControlLabel
                 value="toFix"
@@ -411,6 +457,7 @@ useEffect(() => {
             size="small"
             variant="contained"
             color="secondary"
+            onClick={handleAddClick}
           >
             Add
           </Button>
