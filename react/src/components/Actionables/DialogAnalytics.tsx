@@ -7,7 +7,9 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import ListAnalytics from "./ListAnalytics";
 
-export default function ScrollDialog() {
+import { Actionable } from "./Interfaces";
+
+export default function ScrollDialog(actionable: Actionable) {
   const [open, setOpen] = React.useState(false);
   const [scroll, setScroll] = React.useState<DialogProps["scroll"]>("paper");
 
@@ -48,10 +50,10 @@ export default function ScrollDialog() {
         variant="contained"
         color="secondary"
         sx={{
-          boxShadow:0,
+          boxShadow: 0,
           "&:hover": {
             boxShadow: 0,
-          }
+          },
         }}
       >
         View Analytics
@@ -71,7 +73,7 @@ export default function ScrollDialog() {
             ref={descriptionElementRef}
             tabIndex={-1}
           >
-            <ListAnalytics />
+            <ListAnalytics {...actionable} />
           </DialogContentText>
         </DialogContent>
         <DialogActions>
