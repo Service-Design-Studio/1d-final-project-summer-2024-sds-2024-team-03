@@ -56,12 +56,6 @@ const AccordionDetails = styled(MuiAccordionDetails)(({ theme }) => ({
 }));
 
 const TodoList: React.FC<TodoListProps> = ({ data }) => {
-  // useState for actionable_category
-  const [dataToFix, setDataToFix] = useState<Actionable[]>([]);
-  const [dataToKeepInMind, setDataToKeepInMind] = useState<Actionable[]>([]);
-  const [dataToPromote, setDataToPromote] = useState<Actionable[]>([]);
-  const [dataToAmplify, setDataToAmplify] = useState<Actionable[]>([]);
-
   const [expanded, setExpanded] = React.useState<string | false>("panel1");
   const handleChange =
     (panel: string) => (event: React.SyntheticEvent, newExpanded: boolean) => {
@@ -73,33 +67,24 @@ const TodoList: React.FC<TodoListProps> = ({ data }) => {
     (item: Actionable) =>
       item.actionable_category.toLowerCase() === "to fix".toLowerCase()
   );
-  useEffect(() => {
-    setDataToFix(toFixData);
-  }, []);
 
   const toKeepInMindData = data.filter(
     (item: Actionable) =>
       item.actionable_category.toLowerCase() === "to keep in mind".toLowerCase()
   );
-  useEffect(() => {
-    setDataToKeepInMind(toKeepInMindData);
-  }, []);
 
   const toPromoteData = data.filter(
     (item: Actionable) =>
       item.actionable_category.toLowerCase() === "to promote".toLowerCase()
   );
-  useEffect(() => {
-    setDataToPromote(toPromoteData);
-  }, []);
 
   const toAmplifyData = data.filter(
     (item: Actionable) =>
       item.actionable_category.toLowerCase() === "to amplify".toLowerCase()
   );
-  useEffect(() => {
-    setDataToAmplify(toAmplifyData);
-  }, []);
+
+  console.log("toAmplifyDatat", toAmplifyData);
+  console.log("data no split", data);
 
   return (
     <div>
@@ -121,7 +106,7 @@ const TodoList: React.FC<TodoListProps> = ({ data }) => {
           </Box>
         </AccordionSummary>
         <AccordionDetails>
-          {dataToFix.map((item) => (
+          {toFixData.map((item) => (
             <TodoCard key={item.id} {...item} />
           ))}
         </AccordionDetails>
@@ -144,7 +129,7 @@ const TodoList: React.FC<TodoListProps> = ({ data }) => {
           </Box>
         </AccordionSummary>
         <AccordionDetails>
-          {dataToKeepInMind.map((item) => (
+          {toKeepInMindData.map((item) => (
             <TodoCard key={item.id} {...item} />
           ))}
         </AccordionDetails>
@@ -165,7 +150,7 @@ const TodoList: React.FC<TodoListProps> = ({ data }) => {
           </Box>
         </AccordionSummary>
         <AccordionDetails>
-          {dataToPromote.map((item) => (
+          {toPromoteData.map((item) => (
             <TodoCard key={item.id} {...item} />
           ))}
         </AccordionDetails>
@@ -188,7 +173,7 @@ const TodoList: React.FC<TodoListProps> = ({ data }) => {
           </Box>
         </AccordionSummary>
         <AccordionDetails>
-          {dataToAmplify.map((item) => (
+          {toAmplifyData.map((item) => (
             <TodoCard key={item.id} {...item} />
           ))}
         </AccordionDetails>

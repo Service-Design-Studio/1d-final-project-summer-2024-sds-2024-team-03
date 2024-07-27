@@ -46,6 +46,15 @@ const MyCard: React.FC<MyCardProps> = ({
   handleClose,
   actionable,
 }) => {
+  const feedbackCategory = actionable.feedback_category;
+  let uniqueData; //uniqueData is used in the scope(try catch) and in render, therefore need declare outside
+  try {
+    const x = JSON.parse(feedbackCategory); //convert back to JSON
+    uniqueData = Array.from(new Set(x)).join(", "); //dedupe and convert to comma separated string
+  } catch {
+    uniqueData = feedbackCategory; // in case string isn't proper JSON
+  }
+
   return (
     <React.Fragment>
       <CardContent>
@@ -63,7 +72,7 @@ const MyCard: React.FC<MyCardProps> = ({
             color="text.secondary"
             gutterBottom
           >
-            {actionable.feedback_category}
+            {uniqueData}
           </Typography>
         </Box>
         <Box sx={{ display: "flex", alignItems: "center" }}>
