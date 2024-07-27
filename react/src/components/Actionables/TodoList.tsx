@@ -15,6 +15,10 @@ import MovingIcon from "@mui/icons-material/Moving";
 import CampaignTwoToneIcon from "@mui/icons-material/CampaignTwoTone";
 import TodoCard from "./TodoCard";
 
+//Import Interfaces
+import { Actionable } from "./Interfaces";
+import { TodoListProps } from "./Interfaces";
+
 const Accordion = styled((props: AccordionProps) => (
   <MuiAccordion disableGutters elevation={0} square {...props} />
 ))(({ theme }) => ({
@@ -51,7 +55,7 @@ const AccordionDetails = styled(MuiAccordionDetails)(({ theme }) => ({
   borderTop: "1px solid rgba(0, 0, 0, .125)",
 }));
 
-export default function CustomizedAccordions() {
+const TodoList: React.FC<TodoListProps> = ({ data }) => {
   const [expanded, setExpanded] = React.useState<string | false>("panel1");
   const handleChange =
     (panel: string) => (event: React.SyntheticEvent, newExpanded: boolean) => {
@@ -78,8 +82,9 @@ export default function CustomizedAccordions() {
           </Box>
         </AccordionSummary>
         <AccordionDetails>
-          <TodoCard />
-          <TodoCard />
+          {data.map((item) => (
+            <TodoCard key={item.id} {...item} />
+          ))}
         </AccordionDetails>
       </Accordion>
       <Accordion
@@ -160,4 +165,6 @@ export default function CustomizedAccordions() {
       </Accordion>
     </div>
   );
-}
+};
+
+export default TodoList;
