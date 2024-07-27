@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useEffect, useState } from "react";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import Dialog from "@mui/material/Dialog";
@@ -23,7 +23,143 @@ import { deepPurple } from "@mui/material/colors";
 import { deepOrange } from "@mui/material/colors";
 import { teal } from "@mui/material/colors";
 
-export default function FormDialog() {
+import { Dayjs } from "dayjs";
+import Box from "@mui/material/Box";
+import OutlinedInput from "@mui/material/OutlinedInput";
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import Select, { SelectChangeEvent } from "@mui/material/Select";
+import Chip from "@mui/material/Chip";
+
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+const MenuProps = {
+  PaperProps: {
+    style: {
+      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+      width: 250,
+      borderRadius: 18,
+      marginTop: "18px",
+    },
+  },
+};
+
+interface DialogAddActionProps {
+  // TYPESCRIPT: to make the variables strong type
+  fromDate: Dayjs;
+  toDate: Dayjs;
+  selectedProduct: string[];
+  selectedSource: string[];
+  isDetailed: boolean;
+}
+
+export default function FormDialog({
+  // SYNTAX: {variable} : type of variable
+  fromDate,
+  toDate,
+  selectedProduct,
+  selectedSource,
+  isDetailed,
+}: DialogAddActionProps) {
+  // useState: has a "getter" and setter, the end is the default value
+  // useState VS Props: useState is for internal communication within a component, Props is for intercomponent communication
+  const fromDate_string = fromDate.format("DD/MM/YYYY");
+  const toDate_string = toDate.format("DD/MM/YYYY");
+  const [selectedSubcategory, setSelectedSubcategory] = useState<string>("");
+  const [selectedFeedbackcategories, setSelectedFeedbackcategories] = useState<
+    string[]
+  >([]);
+  const [graphSubcategories, setGraphSubcategories] = useState<string[]>([]);
+  const [graphFeedbackcategories, setGraphFeedbackcategories] = useState<
+    string[]
+  >([]);
+
+  const handleSubcategoryChange = (event: SelectChangeEvent<string>) => {
+    //extract the value for an event target within an event handler function
+    const value = event.target.value; //value is what you select, event.target is used for selection
+    setSelectedSubcategory((prevValue) => (prevValue === value ? "" : value)); //specify what is the selected subcat
+    setSelectedFeedbackcategories([]); //reset the feedback_cat to blank when there is a change in subcat
+  };
+
+  const handleFeedbackcategoryChange = (event: SelectChangeEvent<string[]>) => {
+    const value = event.target.value;
+    setSelectedFeedbackcategories(
+      typeof value === "string" ? value.split(",") : value
+    );
+  };
+
+  /* USE EFFECT: a hook executed at different times depending on how it's written
+
+1. Initial Render, run only once at the start --> empty dependency array []
+useEffect(() => {
+  // Code to run on initial render
+}, []);
+
+2. On Every Render, useEffect runs after every render --> no dependency array
+useEffect(() => {
+  // Code to run after every render
+});
+
+3. On Specific State/Prop Change, useEffect only run when those dependencies change
+useEffect(() => {
+  // Code to run when selectedSubcategory changes
+}, [selectedSubcategory]);
+
+4. On Component Unmount, useEffect return cleanup function that runs when component unmount or before effect runs again
+useEffect(() => {
+  // Code to run on mount
+
+  return () => {
+    // Cleanup code to run on unmount
+  };
+}, []);
+
+*/
+  useEffect(() => {
+    //
+    const urlPrefix =
+      process.env.NODE_ENV === "development" //mode that application runs in
+        ? "http://localhost:3000"
+        : "https://jbaaam-yl5rojgcbq-et.a.run.app";
+    if (isDetailed) {
+      fetch(
+        `${urlPrefix}/analytics/get_sentiment_scores?fromDate=${fromDate_string}&toDate=${toDate_string}&product=${selectedProduct}&source=${selectedSource}`
+      )
+        .then((response) => response.json())
+        .then((data: Record<string, string>[]) => {
+          if (data.length > 0) {
+            setGraphSubcategories(
+              //called when a unique list of subcategories extracted from data array
+              // iterate over data array and finds "subcategory", resulting in a new array containing only subcat values
+              // Set will store unique values of the subcat
+              Array.from(new Set(data.map(({ subcategory }) => subcategory)))
+            );
+            const filteredSubcategories = data.filter((item) => {
+              //called to include items where subcat matches selectedsubcat
+              if (item.subcategory)
+                return item.subcategory.includes(selectedSubcategory);
+            });
+            setGraphFeedbackcategories(
+              Array.from(
+                new Set(
+                  filteredSubcategories.map(
+                    ({ feedback_category }) => feedback_category
+                  )
+                )
+              )
+            );
+          }
+        });
+    }
+  }, [
+    fromDate,
+    toDate,
+    selectedProduct,
+    selectedSource,
+    selectedSubcategory,
+    selectedFeedbackcategories,
+  ]);
+
   const theme = useTheme();
   const transitionDuration = {
     enter: theme.transitions.duration.enteringScreen,
@@ -103,6 +239,102 @@ export default function FormDialog() {
             fullWidth
             variant="standard"
           />
+
+          <Box sx={{ display: "flex", gap: 2, mt: 1, width: "80%" }}>
+            <FormControl sx={{ m: 0, width: "50%" }}>
+              <InputLabel id="detailed-sentimentscoregraph-filter-subcategory-label">
+                Subcategories
+              </InputLabel>
+              <Select
+                labelId="detailed-sentimentscoregraph-filter-subcategory-label"
+                id="detailed-sentimentscoregraph-filter-subcategory"
+                multiple={false}
+                value={selectedSubcategory}
+                onChange={handleSubcategoryChange}
+                input={
+                  <OutlinedInput
+                    id="detailed-sentimentscoregraph-select-subcategory"
+                    label="subcategory"
+                    sx={{
+                      borderRadius: 4,
+                    }}
+                  />
+                }
+                renderValue={(selected) => (
+                  <Box
+                    sx={{
+                      display: "flex",
+                      flexWrap: "wrap",
+                      gap: 0.5,
+                    }}
+                  >
+                    <Chip key={selected} label={selected} />
+                  </Box>
+                )}
+                MenuProps={MenuProps}
+              >
+                {graphSubcategories.length > 0 ? (
+                  graphSubcategories.sort().map((subcategory: string) => (
+                    <MenuItem
+                      key={subcategory}
+                      value={subcategory}
+                      className="subcategory-option"
+                    >
+                      {subcategory}
+                    </MenuItem>
+                  ))
+                ) : (
+                  <MenuItem disabled>No data from selection</MenuItem>
+                )}
+              </Select>
+            </FormControl>
+            <FormControl
+              sx={{ m: 0, width: "50%" }}
+              disabled={!selectedSubcategory}
+            >
+              <InputLabel id="detailed-sentimentscoregraph-filter-feedbackcategory-label">
+                Feedback Categories
+              </InputLabel>
+              <Select
+                labelId="detailed-sentimentscoregraph-filter-feedbackcategory-label"
+                id="detailed-sentimentscoregraph-filter-feedbackcategory"
+                multiple
+                value={selectedFeedbackcategories}
+                onChange={handleFeedbackcategoryChange}
+                input={
+                  <OutlinedInput
+                    id="detailed-sentimentscoregraph-select-feedbackcategory"
+                    label="feedbackcategory"
+                    sx={{
+                      borderRadius: 4,
+                    }}
+                  />
+                }
+                renderValue={(selected) => (
+                  <Box
+                    sx={{
+                      display: "flex",
+                      flexWrap: "wrap",
+                      gap: 0.5,
+                    }}
+                  >
+                    {selected.map((value) => (
+                      <Chip key={value} label={value} />
+                    ))}
+                  </Box>
+                )}
+                MenuProps={MenuProps}
+              >
+                {graphFeedbackcategories
+                  .sort()
+                  .map((feedbackcategory: string) => (
+                    <MenuItem key={feedbackcategory} value={feedbackcategory}>
+                      {feedbackcategory}
+                    </MenuItem>
+                  ))}
+              </Select>
+            </FormControl>
+          </Box>
 
           <FormControl>
             <FormLabel id="demo-radio-buttons-group-label" sx={{ mt: 2 }}>

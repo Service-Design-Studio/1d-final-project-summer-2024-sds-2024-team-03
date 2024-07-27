@@ -122,7 +122,13 @@ export default function Actionables({
         </Grid>
       </Box>
 
-      <DialogAddAction />
+      <DialogAddAction
+        fromDate={fromDate}
+        toDate={toDate}
+        selectedProduct={selectedProduct}
+        selectedSource={selectedSource}
+        isDetailed={true}
+      />
     </Box>
   );
 }

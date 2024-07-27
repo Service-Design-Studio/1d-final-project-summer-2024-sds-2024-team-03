@@ -1,3 +1,20 @@
+## CURL Test Actionable Page
+
+```bash
+curl -X POST http://localhost:3000/actionables.json \
+     -H "Content-Type: application/json" \
+     -d '{
+           "actionable": {
+             "action": "New Actionable",
+             "status": "In Progress",
+             "subproduct": "Credit Card",
+             "actionable_category": "To Fix",
+             "feedback_category": "Application",
+             "feedback_json": "sucks"
+           }
+         }'
+```
+
 ## Test Upload File with CURL
 
 Based on the routes.rb:
