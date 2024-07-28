@@ -120,7 +120,15 @@ export default function Actionables({
               label="NEW"
               color="secondary"
               variant="outlined"
-              sx={{ mb: 2 }}
+              sx={{ 
+                mb: 2,
+                borderRadius: 3,
+                backgroundColor: "rgba(232, 0, 0, 0.2)",
+                fontWeight: "bold",
+                py: 2,
+                px: 0.5,
+                borderWidth: 2,
+              }}
             />
 
             <TodoList data={dataNew} />
@@ -134,6 +142,12 @@ export default function Actionables({
                 mb: 2,
                 color: "#DA5707",
                 borderColor: "#DA5707",
+                borderRadius: 3,
+                backgroundColor: "rgba(218, 87, 7, 0.2)",
+                fontWeight: "bold",
+                py: 2,
+                px: 0.5,
+                borderWidth: 2,
                 "& .MuiChip-icon": {
                   color: "#DA5707",
                 },
@@ -150,6 +164,12 @@ export default function Actionables({
                 mb: 2,
                 color: "#208306",
                 borderColor: "#208306",
+                borderRadius: 3,
+                backgroundColor: "rgba(32, 131, 6, 0.2)",
+                fontWeight: "bold",
+                py: 2,
+                px: 0.5,
+                borderWidth: 2,
                 "& .MuiChip-icon": {
                   color: "#208306",
                 },

@@ -306,13 +306,13 @@ export default function Dashboard({
                 <Button 
                     variant="outlined" 
                     sx={{ 
-                        backgroundColor: "#e00",
+                        backgroundColor: "#e80000",
                         color: "#fff",
                         border: 0,
                         fontWeight: "bold",
                         borderRadius: 2,
                         "&:hover": {
-                            backgroundColor: "#c00",
+                            backgroundColor: "#b80000",
                             border: 0,
                         }
                     }} 

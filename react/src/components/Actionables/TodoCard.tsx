@@ -113,6 +113,7 @@ const MyCard: React.FC<MyCardProps> = ({
             onClick={handleClick}
             size="small"
             color="secondary"
+            sx={{fontWeight: "bold"}}
           >
             Change Status
           </Button>
