@@ -28,4 +28,9 @@ export interface Actionable {
 // TodoList.tsx
 export interface TodoListProps {
   data: Actionable[];
+  setRefresh: React.Dispatch<React.SetStateAction<number>>;
+}
+export interface ActionableWithRefresh {
+  actionable: Actionable;
+  setRefresh: React.Dispatch<React.SetStateAction<number>>;
 }

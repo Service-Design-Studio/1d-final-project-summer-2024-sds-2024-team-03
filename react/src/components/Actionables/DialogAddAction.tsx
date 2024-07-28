@@ -51,6 +51,7 @@ interface DialogAddActionProps {
   selectedProduct: string[];
   selectedSource: string[];
   isDetailed: boolean;
+  setRefresh: React.Dispatch<React.SetStateAction<number>>;
 }
 
 export default function FormDialog({
@@ -60,6 +61,7 @@ export default function FormDialog({
   selectedProduct,
   selectedSource,
   isDetailed,
+  setRefresh,
 }: DialogAddActionProps) {
   // useState: has a "getter" and setter, the end is the default value
   // useState VS Props: useState is for internal communication within a component, Props is for intercomponent communication
@@ -125,6 +127,9 @@ export default function FormDialog({
 
       const data = await response.json();
       console.log("Success:", data);
+      const random_val = Math.random();
+      setRefresh(random_val);
+      console.log("randomval", random_val);
     } catch (error) {
       console.error("Error:", error);
     }
@@ -392,7 +397,7 @@ useEffect(() => {
               onChange={handleActionableCategoryChange}
             >
               <FormControlLabel
-                value="toFix"
+                value="to Fix"
                 control={
                   <Radio
                     sx={{
@@ -406,7 +411,7 @@ useEffect(() => {
                 label="To Fix"
               />
               <FormControlLabel
-                value="toKeepInMind"
+                value="to Keep In Mind"
                 control={
                   <Radio
                     sx={{
@@ -420,7 +425,7 @@ useEffect(() => {
                 label="To Keep In Mind"
               />
               <FormControlLabel
-                value="toPromote"
+                value="to Promote"
                 control={
                   <Radio
                     sx={{
@@ -434,7 +439,7 @@ useEffect(() => {
                 label="To Promote"
               />
               <FormControlLabel
-                value="toAmplify"
+                value="to Amplify"
                 control={
                   <Radio
                     sx={{

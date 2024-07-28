@@ -40,8 +40,6 @@ export default function ScrollDialog(actionable: Actionable) {
     console.log("useEffect open: ", open);
   }, [open]);
 
-  console.log("=> open:", open);
-
   return (
     <React.Fragment>
       <Button
