@@ -50,6 +50,7 @@ export default function ScrollDialog(actionable: Actionable) {
         variant="contained"
         color="secondary"
         sx={{
+          fontWeight: "bold",
           boxShadow: 0,
           "&:hover": {
             boxShadow: 0,
