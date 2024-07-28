@@ -34,6 +34,8 @@ export default function Actionables({
     exit: theme.transitions.duration.leavingScreen,
   };
 
+  const [refresh, setRefresh] = useState(0);
+
   const [data, setData] = useState<Actionable[]>([]);
 
   const [dataNew, setDataNew] = useState<Actionable[]>([]);
@@ -74,12 +76,11 @@ export default function Actionables({
 
   useEffect(() => {
     fetchData();
-  }, []); // Empty dependency array ensures this runs once when the component mounts
+  }, [refresh]); // Empty dependency array ensures this runs once when the component mounts
 
   return (
     <Box sx={{ maxWidth: "lg", mx: "auto", px: 2 }}>
       <h1>Actionables</h1>
-      <div>{data && <pre>{JSON.stringify(data, null, 2)}</pre>}</div>
       <Box
         sx={{
           display: "flex",
@@ -120,7 +121,7 @@ export default function Actionables({
               label="NEW"
               color="secondary"
               variant="outlined"
-              sx={{ 
+              sx={{
                 mb: 2,
                 borderRadius: 3,
                 backgroundColor: "rgba(232, 0, 0, 0.2)",
@@ -131,7 +132,7 @@ export default function Actionables({
               }}
             />
 
-            <TodoList data={dataNew} />
+            <TodoList data={dataNew} setRefresh={setRefresh} />
           </Grid>
           <Grid item xs={4}>
             <Chip
@@ -153,7 +154,7 @@ export default function Actionables({
                 },
               }}
             />
-            <TodoList data={dataInProgress} />
+            <TodoList data={dataInProgress} setRefresh={setRefresh} />
           </Grid>
           <Grid item xs={4}>
             <Chip
@@ -175,7 +176,7 @@ export default function Actionables({
                 },
               }}
             />
-            <TodoList data={dataDone} />
+            <TodoList data={dataDone} setRefresh={setRefresh} />
           </Grid>
         </Grid>
       </Box>
@@ -186,6 +187,7 @@ export default function Actionables({
         selectedProduct={selectedProduct}
         selectedSource={selectedSource}
         isDetailed={true}
+        setRefresh={setRefresh}
       />
     </Box>
   );

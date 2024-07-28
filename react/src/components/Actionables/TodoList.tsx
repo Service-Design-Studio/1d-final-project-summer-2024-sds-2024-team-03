@@ -55,7 +55,9 @@ const AccordionDetails = styled(MuiAccordionDetails)(({ theme }) => ({
   borderTop: "1px solid rgba(0, 0, 0, .125)",
 }));
 
-const TodoList: React.FC<TodoListProps> = ({ data }) => {
+//default
+export default function TodoList({ data, setRefresh }: TodoListProps) {
+  //const TodoList: React.FC<TodoListProps> = ({ data, refresh }) => {
   const [expanded, setExpanded] = React.useState<string | false>("panel1");
   const handleChange =
     (panel: string) => (event: React.SyntheticEvent, newExpanded: boolean) => {
@@ -104,7 +106,7 @@ const TodoList: React.FC<TodoListProps> = ({ data }) => {
         </AccordionSummary>
         <AccordionDetails>
           {toFixData.map((item) => (
-            <TodoCard key={item.id} {...item} />
+            <TodoCard key={item.id} actionable={item} setRefresh={setRefresh} />
           ))}
         </AccordionDetails>
       </Accordion>
@@ -127,7 +129,7 @@ const TodoList: React.FC<TodoListProps> = ({ data }) => {
         </AccordionSummary>
         <AccordionDetails>
           {toKeepInMindData.map((item) => (
-            <TodoCard key={item.id} {...item} />
+            <TodoCard key={item.id} actionable={item} setRefresh={setRefresh} />
           ))}
         </AccordionDetails>
       </Accordion>
@@ -148,7 +150,7 @@ const TodoList: React.FC<TodoListProps> = ({ data }) => {
         </AccordionSummary>
         <AccordionDetails>
           {toPromoteData.map((item) => (
-            <TodoCard key={item.id} {...item} />
+            <TodoCard key={item.id} actionable={item} setRefresh={setRefresh} />
           ))}
         </AccordionDetails>
       </Accordion>
@@ -171,12 +173,10 @@ const TodoList: React.FC<TodoListProps> = ({ data }) => {
         </AccordionSummary>
         <AccordionDetails>
           {toAmplifyData.map((item) => (
-            <TodoCard key={item.id} {...item} />
+            <TodoCard key={item.id} actionable={item} setRefresh={setRefresh} />
           ))}
         </AccordionDetails>
       </Accordion>
     </div>
   );
-};
-
-export default TodoList;
+}
