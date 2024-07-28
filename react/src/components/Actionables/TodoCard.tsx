@@ -55,6 +55,37 @@ const MyCard: React.FC<MyCardProps> = ({
     uniqueData = feedbackCategory; // in case string isn't proper JSON
   }
 
+  //API call for status update
+  const handleStatusChange =
+    (val: string) => async (event: React.MouseEvent<HTMLElement>) => {
+      console.log("val", val);
+      try {
+        const response = await fetch(
+          `http://localhost:3000/actionables/${actionable.id}.json`,
+          {
+            method: "PATCH",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              actionable: {
+                status: val,
+              },
+            }),
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+
+        const data = await response.json();
+        console.log("Status updated successfully:", data);
+      } catch (error) {
+        console.error("Failed to update status:", error);
+      }
+    };
+
   return (
     <React.Fragment>
       <CardContent>
@@ -132,14 +163,14 @@ const MyCard: React.FC<MyCardProps> = ({
               horizontal: "left",
             }}
           >
-            <MenuItem onClick={handleClose}>
+            <MenuItem onClick={handleStatusChange("New")}>
               <ListItemIcon>
                 <NewReleasesTwoToneIcon style={{ color: "#8D1927" }} />
               </ListItemIcon>
               <ListItemText primary="New" style={{ color: "#8D1927" }} />
             </MenuItem>
 
-            <MenuItem onClick={handleClose}>
+            <MenuItem onClick={handleStatusChange("In Progress")}>
               <ListItemIcon>
                 <RotateRightTwoToneIcon style={{ color: "#DA5707" }} />
               </ListItemIcon>
@@ -149,7 +180,7 @@ const MyCard: React.FC<MyCardProps> = ({
               />
             </MenuItem>
 
-            <MenuItem onClick={handleClose}>
+            <MenuItem onClick={handleStatusChange("Done")}>
               <ListItemIcon>
                 <CheckCircleTwoToneIcon style={{ color: "#208306" }} />
               </ListItemIcon>
