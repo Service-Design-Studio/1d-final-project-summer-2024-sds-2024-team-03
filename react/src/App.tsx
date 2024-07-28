@@ -54,7 +54,7 @@ const lightTheme = createTheme({
       default: "#E9E9EB", // Explicitly set the background color to light grey
     },
     secondary: {
-      main: "#E00", // Red color for light theme
+      main: "#E80000", // Red color for light theme
     },
   },
 });
@@ -170,7 +170,7 @@ export default function MainApp() {
                       color="inherit"
                       onClick={() => setSelectedMenu(item.key)}
                       sx={{
-                        borderRadius: 4,
+                        borderRadius: 3,
                         padding: "0rem 1rem",
                         backgroundColor:
                           selectedMenu === item.key
@@ -187,7 +187,7 @@ export default function MainApp() {
                   <Button
                     color="inherit"
                     onClick={toggleDarkMode}
-                    sx={{ borderRadius: 4 }}
+                    sx={{ borderRadius: 3 }}
                   >
                     {darkMode ? <Brightness4Icon /> : <WbSunnyIcon />}
                   </Button>
