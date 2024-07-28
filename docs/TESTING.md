@@ -27,6 +27,10 @@ curl -X PATCH "http://localhost:3000/actionables/592.json" \
              "status": "done"
            }
          }'
+
+# DELETE RESTful
+curl -X DELETE "http://localhost:3000/actionables/592.json" \
+     -H "Content-Type: application/json"
 ```
 
 ## Test Upload File with CURL

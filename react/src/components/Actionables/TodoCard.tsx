@@ -1,3 +1,5 @@
+//2 COMPONENTS IN THIS FILE: MYCARD
+
 import * as React from "react";
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
@@ -55,6 +57,33 @@ const MyCard: React.FC<MyCardProps> = ({
     uniqueData = feedbackCategory; // in case string isn't proper JSON
   }
 
+  //API call for delete
+  //const url = `http://localhost:3000/actionables/${actionable.id}.json`;
+  const handleDelete = async (event: React.MouseEvent<HTMLElement>) => {
+    try {
+      const response = await fetch(
+        `http://localhost:3000/actionables/${actionable.id}.json`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (response.ok) {
+        console.log("Actionable was successfully destroyed.");
+        // Handle successful deletion, e.g., update the UI
+      } else {
+        console.error("Failed to destroy actionable.");
+        // Handle failure, e.g., show an error message
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      // Handle network error
+    }
+  };
+
   //API call for status update
   const handleStatusChange =
     (val: string) => async (event: React.MouseEvent<HTMLElement>) => {
@@ -86,6 +115,7 @@ const MyCard: React.FC<MyCardProps> = ({
       }
     };
 
+  //
   return (
     <React.Fragment>
       <CardContent>
@@ -135,7 +165,12 @@ const MyCard: React.FC<MyCardProps> = ({
             width: "100%",
           }}
         >
-          <DeleteTwoToneIcon style={{ color: "#808080" }} />
+          <button
+            onClick={handleDelete}
+            style={{ background: "none", border: "none", cursor: "pointer" }}
+          >
+            <DeleteTwoToneIcon style={{ color: "#808080" }} />
+          </button>
           <Button
             id="demo-positioned-button"
             aria-controls={open ? "demo-positioned-menu" : undefined}
@@ -144,7 +179,7 @@ const MyCard: React.FC<MyCardProps> = ({
             onClick={handleClick}
             size="small"
             color="secondary"
-            sx={{fontWeight: "bold"}}
+            sx={{ fontWeight: "bold" }}
           >
             Change Status
           </Button>
