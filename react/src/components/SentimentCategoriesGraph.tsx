@@ -593,7 +593,18 @@ export default forwardRef(function SentimentCategoriesGraph(
             <Button
               variant="outlined"
               onClick={() => setSortPositive(!sortPositive)}
-              sx={{ marginRight: 2 }}
+              sx={{ 
+                marginRight: 2,
+                borderRadius: 2,
+                border: 0,
+                backgroundColor: theme.palette.mode === "dark" ? "#555" : "#888",
+                color: "#fff",
+                fontWeight: "bold",
+                "&:hover": {
+                  border: 0,
+                  backgroundColor:theme.palette.mode === "dark" ? "#777" : "#AAA",
+                }
+              }}
             >
               Sort
             </Button>
@@ -699,9 +710,12 @@ export default forwardRef(function SentimentCategoriesGraph(
                 tooltip={({ id, indexValue, value, color }) => (
                   <div
                     style={{
-                      padding: "10px",
-                      backgroundColor: "white",
-                      boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+                      padding: "9px 12px",
+                      borderRadius: "10px",
+                      backgroundColor:
+                        theme.palette.mode === "dark" ? "#333" : "#fff",
+                      boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.2)",
+                      color: theme.palette.mode === "dark" ? "#fff" : "#000",
                     }}
                   >
                     <div
@@ -780,7 +794,7 @@ export default forwardRef(function SentimentCategoriesGraph(
                   tickRotation: 0,
                   legend: "Percentage",
                   legendPosition: "middle",
-                  legendOffset: 32,
+                  legendOffset: 40,
                   truncateTickAt: 0,
                 }}
                 axisLeft={{
@@ -796,10 +810,38 @@ export default forwardRef(function SentimentCategoriesGraph(
                 labelSkipWidth={12}
                 labelSkipHeight={12}
                 // background / grid.line.stroke / labels.text.fill / "color" / "#..."
-                labelTextColor="white"
+                labelTextColor="rgba(255, 255, 255, 0.9)"
                 legends={[]}
                 role="application"
                 ariaLabel="Sentiment Categorisation"
+                theme={{
+                  labels: {
+                    text: {
+                      fontWeight: "bold",
+                    },
+                  },
+                  axis: {
+                    legend: {
+                      text: {
+                        fontWeight: "bold",
+                        fill: theme.palette.mode === 'dark' ? '#ccc' : '#222',
+                      },
+                    },
+                    ticks: {
+                      line: {
+                        stroke: theme.palette.mode === 'dark' ? '#ccc' : '#222',
+                      },
+                      text: {
+                        fill: theme.palette.mode === 'dark' ? '#ccc' : '#222',
+                      },
+                    },
+                  },
+                  grid: {
+                    line: {
+                      stroke: theme.palette.mode === 'dark' ? '#555' : '#CCC',
+                    },
+                  },
+                }}
                 barAriaLabel={(e) =>
                   e.id +
                   ": " +
@@ -909,7 +951,19 @@ export default forwardRef(function SentimentCategoriesGraph(
         <Button
           variant="outlined"
           onClick={() => setViewAll(!viewAll)}
-          sx={{ alignSelf: "flex-end", mt: 2 }}
+          sx={{ 
+            alignSelf: "flex-end",
+            mt: 2,
+            borderRadius: 2,
+            border: 0,
+            backgroundColor: theme.palette.mode === "dark" ? "#555" : "#888",
+            color: "#fff",
+            fontWeight: "bold",
+            "&:hover": {
+              border: 0,
+              backgroundColor:theme.palette.mode === "dark" ? "#777" : "#AAA",
+            }
+          }}
         >
           {viewAll ? "View Less" : "View All"}
         </Button>
@@ -970,7 +1024,7 @@ export default forwardRef(function SentimentCategoriesGraph(
                   display: "flex",
                   gap: 2,
                   mt: 2,
-                  height: 325,
+                  height: 320,
                 }}
               >
                 <ResponsiveBar
@@ -1039,7 +1093,7 @@ export default forwardRef(function SentimentCategoriesGraph(
                     tickRotation: 0,
                     legend: "Percentage",
                     legendPosition: "middle",
-                    legendOffset: 32,
+                    legendOffset: 40,
                     truncateTickAt: 0,
                   }}
                   axisLeft={{
@@ -1054,7 +1108,7 @@ export default forwardRef(function SentimentCategoriesGraph(
                   enableGridX={true}
                   labelSkipWidth={12}
                   labelSkipHeight={12}
-                  labelTextColor="black"
+                  labelTextColor="rgba(255, 255, 255, 0.9)"
                   legends={[]}
                   role="application"
                   ariaLabel="Sentiment Categorisation"
@@ -1065,14 +1119,73 @@ export default forwardRef(function SentimentCategoriesGraph(
                     " for Subcategory: " +
                     e.indexValue
                   }
+                  theme={{
+                    labels: {
+                      text: {
+                        fontWeight: "bold",
+                      },
+                    },
+                    axis: {
+                      legend: {
+                        text: {
+                          fontWeight: "bold",
+                          fill: theme.palette.mode === 'dark' ? '#CCC' : '#222',
+                        },
+                      },
+                      ticks: {
+                        line: {
+                          stroke: theme.palette.mode === 'dark' ? '#999' : '#222',
+                        },
+                        text: {
+                          fill: theme.palette.mode === 'dark' ? '#999' : '#222',
+                        },
+                      },
+                    },
+                    grid: {
+                      line: {
+                        stroke: theme.palette.mode === 'dark' ? '#555' : '#CCC',
+                      },
+                    },
+                  }}
+                  tooltip={({ id, indexValue, value, color }) => (
+                    <div
+                      style={{
+                        padding: "9px 12px",
+                        borderRadius: "10px",
+                        backgroundColor:
+                          theme.palette.mode === "dark" ? "#333" : "#fff",
+                        boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.2)",
+                        color: theme.palette.mode === "dark" ? "#fff" : "#000",
+                      }}
+                    >
+                      <div
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                        }}
+                      >
+                        <div
+                          style={{
+                            width: "12px",
+                            height: "12px",
+                            backgroundColor: color,
+                            marginRight: "8px",
+                          }}
+                        ></div>
+                        <Typography variant="body2">
+                          {id} — {indexValue}: <b>{value}%</b>
+                        </Typography>
+                      </div>
+                    </div>
+                  )}
                 />
               </Box>
             )}
           </Box>
-          <Divider
-            orientation="horizontal"
-            flexItem
-            sx={{ borderRightWidth: 2, borderColor: "black" }}
+          <Box
+              sx={{
+                borderBottom: `2px solid ${theme.palette.mode === "dark" ? "#444" : "#ccc"}`,
+              }}
           />
           <Box sx={{ width: "100%" }}>
             <Typography variant="h6" sx={{ fontWeight: "bold" }}>
@@ -1088,7 +1201,7 @@ export default forwardRef(function SentimentCategoriesGraph(
                   display: "flex",
                   gap: 2,
                   mt: 2,
-                  height: 325,
+                  height: 320,
                 }}
               >
                 <ResponsiveBar
@@ -1157,7 +1270,7 @@ export default forwardRef(function SentimentCategoriesGraph(
                     tickRotation: 0,
                     legend: "Percentage",
                     legendPosition: "middle",
-                    legendOffset: 32,
+                    legendOffset: 40,
                     truncateTickAt: 0,
                   }}
                   axisLeft={{
@@ -1172,7 +1285,7 @@ export default forwardRef(function SentimentCategoriesGraph(
                   enableGridX={true}
                   labelSkipWidth={12}
                   labelSkipHeight={12}
-                  labelTextColor="black"
+                  labelTextColor="rgba(255, 255, 255, 0.9)"
                   legends={[]}
                   role="application"
                   ariaLabel="Sentiment Categorisation"
@@ -1183,6 +1296,65 @@ export default forwardRef(function SentimentCategoriesGraph(
                     " for Subcategory: " +
                     e.indexValue
                   }
+                  theme={{
+                    labels: {
+                      text: {
+                        fontWeight: "bold",
+                      },
+                    },
+                    axis: {
+                      legend: {
+                        text: {
+                          fontWeight: "bold",
+                          fill: theme.palette.mode === 'dark' ? '#CCC' : '#222',
+                        },
+                      },
+                      ticks: {
+                        line: {
+                          stroke: theme.palette.mode === 'dark' ? '#999' : '#222',
+                        },
+                        text: {
+                          fill: theme.palette.mode === 'dark' ? '#999' : '#222',
+                        },
+                      },
+                    },
+                    grid: {
+                      line: {
+                        stroke: theme.palette.mode === 'dark' ? '#555' : '#CCC',
+                      },
+                    },
+                  }}
+                  tooltip={({ id, indexValue, value, color }) => (
+                    <div
+                      style={{
+                        padding: "9px 12px",
+                        borderRadius: "10px",
+                        backgroundColor:
+                          theme.palette.mode === "dark" ? "#333" : "#fff",
+                        boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.2)",
+                        color: theme.palette.mode === "dark" ? "#fff" : "#000",
+                      }}
+                    >
+                      <div
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                        }}
+                      >
+                        <div
+                          style={{
+                            width: "12px",
+                            height: "12px",
+                            backgroundColor: color,
+                            marginRight: "8px",
+                          }}
+                        ></div>
+                        <Typography variant="body2">
+                          {id} — {indexValue}: <b>{value}%</b>
+                        </Typography>
+                      </div>
+                    </div>
+                  )}
                 />
               </Box>
             )}

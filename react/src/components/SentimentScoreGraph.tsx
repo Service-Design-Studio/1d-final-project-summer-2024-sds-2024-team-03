@@ -561,6 +561,32 @@ export default forwardRef(function SentimentScoreGraph(
               pointLabelYOffset={-12}
               enableTouchCrosshair={true}
               useMesh={true}
+              theme={{
+                axis: {
+                  ticks: {
+                    text: {
+                      fill: theme.palette.mode === 'dark' ? '#999' : '#222',
+                    },
+                  },
+                },
+                legends: {
+                  text: {
+                    fontWeight: "bold",
+                    fill: theme.palette.mode === 'dark' ? '#CCC' : '#222',
+                  },
+                },
+                grid: {
+                  line: {
+                    stroke: theme.palette.mode === 'dark' ? '#555' : '#CCC',
+                  },
+                },
+                crosshair: {
+                  line: {
+                    stroke: theme.palette.mode === 'dark' ? '#777' : '#AAA',
+                    strokeWidth: 2,
+                  },
+                },
+              }}
               // label styling
               tooltip={({ point }) => (
                 <div
@@ -741,6 +767,26 @@ export default forwardRef(function SentimentScoreGraph(
               pointLabelYOffset={-12}
               enableTouchCrosshair={true}
               useMesh={true}
+              theme={{
+                axis: {
+                  ticks: {
+                    text: {
+                      fill: theme.palette.mode === 'dark' ? '#999' : '#222',
+                    },
+                  },
+                },
+                grid: {
+                  line: {
+                    stroke: theme.palette.mode === 'dark' ? '#555' : '#CCC',
+                  },
+                },
+                crosshair: {
+                  line: {
+                    stroke: theme.palette.mode === 'dark' ? '#777' : '#AAA',
+                    strokeWidth: 2,
+                  },
+                },
+              }}
               // styling of hover label
               tooltip={({ point }) => (
                 <div

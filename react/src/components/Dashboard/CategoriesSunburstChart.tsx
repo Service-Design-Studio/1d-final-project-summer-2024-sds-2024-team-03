@@ -404,7 +404,7 @@ export default forwardRef(function CategoriesSunburstChart(
                             <Box
                                 sx={{
                                     gridColumn: "1 / span 3",
-                                    borderBottom: "2px solid #ccc",
+                                    borderBottom: `2px solid ${theme.palette.mode === "dark" ? "#444" : "#ccc"}`,
                                     mb: 1.5
                                 }}
                             />
@@ -456,10 +456,10 @@ export default forwardRef(function CategoriesSunburstChart(
                                         p: 1.5,
                                         my: 0.5,
                                         borderRadius: 3,
-                                        bgcolor: theme.palette.mode === "dark" ? "#000" : "#eee",
+                                        bgcolor: theme.palette.mode === "dark" ? "#151515" : "#eee",
                                         gridColumn: "1 / span 3", // Ensure full width for each row
                                         "&:hover": {
-                                            backgroundColor: theme.palette.mode === "dark" ? "#111" : "#ddd",}
+                                            backgroundColor: theme.palette.mode === "dark" ? "#0d0d0d" : "#ddd",}
                                     }}
                                 >
                                     <Box
