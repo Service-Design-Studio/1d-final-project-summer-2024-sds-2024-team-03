@@ -20,9 +20,9 @@ Rails.application.routes.draw do
     post 'uploads', on: :collection # Added upload action as a collection route
   end
 
-  resources :actionables do
-    get 'get_num_action_items', on: :collection
-  end
+  # resources :actionables do
+  #   get 'get_num_action_items', on: :collection
+  # end
 
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
