@@ -48,7 +48,6 @@ export default function FilterProduct({
             .then((response) => response.json())
             .then((data) => setProducts(data.sort()));
     }, []);
-    // setProducts(PRODUCTS)
 
     const handleChange = (event: SelectChangeEvent<string[]>) => {
         const {

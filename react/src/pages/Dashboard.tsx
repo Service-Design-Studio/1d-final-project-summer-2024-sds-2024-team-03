@@ -1,4 +1,4 @@
-import React, {useRef} from "react";
+import React, {useRef, useEffect, useState} from "react";
 import {Box, Paper, Typography, Divider, Button} from "@mui/material";
 import dayjs, {Dayjs} from "dayjs";
 import Calendar from "../components/Calendar";
@@ -36,6 +36,9 @@ export default function Dashboard({
     setSelectedSource,
     setSelectedMenu,
 }: DashboardProps) {
+    const [actionablesNum, setActionablesNum] = useState<
+        Record<string, string>
+    >({});
     const {scrollDir, scrollPosition} = useDetectScroll();
     type CustomRef<T> = {
         img: T;
@@ -287,6 +290,16 @@ export default function Dashboard({
         );
     };
 
+    useEffect(() => {
+        const urlPrefix =
+            process.env.NODE_ENV === "development"
+                ? "http://localhost:3000"
+                : "https://jbaaam-yl5rojgcbq-et.a.run.app";
+        fetch(`${urlPrefix}/analytics/filter_products`)
+            .then((response) => response.json())
+            .then((data) => setActionablesNum(data));
+    }, []);
+
     return (
         <Box
             sx={{
@@ -303,9 +316,9 @@ export default function Dashboard({
                 }}
             >
                 <h1>Overview Dashboard</h1>
-                <Button 
-                    variant="outlined" 
-                    sx={{ 
+                <Button
+                    variant="outlined"
+                    sx={{
                         backgroundColor: "#e80000",
                         color: "#fff",
                         border: 0,
@@ -314,8 +327,8 @@ export default function Dashboard({
                         "&:hover": {
                             backgroundColor: "#b80000",
                             border: 0,
-                        }
-                    }} 
+                        },
+                    }}
                     onClick={handleGenerateReport}
                 >
                     Generate Report
@@ -367,7 +380,7 @@ export default function Dashboard({
                     gap: 2,
                     alignItems: "stretch",
                     flexDirection: "row",
-                    height: 230
+                    height: 230,
                 }}
             >
                 <OverallSentimentScore
@@ -414,53 +427,37 @@ export default function Dashboard({
                             gap: 1,
                         }}
                     >
-                        <Box sx={{flex: "1 1 25%", textAlign: "center"}}>
-                            <Typography
-                                variant="body1"
-                                sx={{fontWeight: "bold"}}
-                            >
-                                To Promote
-                            </Typography>
-                            <Typography variant="body2" color="grey">
-                                Maintain user-friendly staff
-                            </Typography>
-                        </Box>
-                        <Divider orientation="vertical" flexItem />
-                        <Box sx={{flex: "1 1 25%", textAlign: "center"}}>
-                            <Typography
-                                variant="body1"
-                                sx={{fontWeight: "bold"}}
-                            >
-                                To Amplify
-                            </Typography>
-                            <Typography variant="body2" color="grey">
-                                Price
-                            </Typography>
-                        </Box>
-                        <Divider orientation="vertical" flexItem />
-                        <Box sx={{flex: "1 1 25%", textAlign: "center"}}>
-                            <Typography
-                                variant="body1"
-                                sx={{fontWeight: "bold"}}
-                            >
-                                Keep in Mind
-                            </Typography>
-                            <Typography variant="body2" color="grey">
-                                More efficient card replacement
-                            </Typography>
-                        </Box>
-                        <Divider orientation="vertical" flexItem />
-                        <Box sx={{flex: "1 1 25%", textAlign: "center"}}>
-                            <Typography
-                                variant="body1"
-                                sx={{fontWeight: "bold"}}
-                            >
-                                To Fix
-                            </Typography>
-                            <Typography variant="body2" color="grey">
-                                PayLah! disruptions
-                            </Typography>
-                        </Box>
+                        {Object.entries(actionablesNum).map(
+                            ([actionable, actionableNum], index, array) => (
+                                <React.Fragment key={actionable}>
+                                    <Box
+                                        sx={{
+                                            flex: "1 1 25%",
+                                            textAlign: "center",
+                                        }}
+                                    >
+                                        <Typography
+                                            variant="body1"
+                                            sx={{fontWeight: "bold"}}
+                                        >
+                                            {actionable} ({actionableNum})
+                                        </Typography>
+                                        <Typography
+                                            variant="body2"
+                                            color="grey"
+                                        >
+                                            actionables[actionable][0]
+                                        </Typography>
+                                    </Box>
+                                    {index < array.length - 1 && (
+                                        <Divider
+                                            orientation="vertical"
+                                            flexItem
+                                        />
+                                    )}
+                                </React.Fragment>
+                            )
+                        )}
                     </Box>
                 </Paper>
                 {/* setSelectedMenu = {setSelectedMenu} */}

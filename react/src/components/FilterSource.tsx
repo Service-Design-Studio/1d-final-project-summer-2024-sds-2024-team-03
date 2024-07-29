@@ -49,8 +49,6 @@ export default function FilterSource({
             .then((data) => setSources(data.sort()));
     }, []);
 
-    // setSources(SOURCES)
-
     const handleChange = (event: SelectChangeEvent<string[]>) => {
         const {
             target: {value},
