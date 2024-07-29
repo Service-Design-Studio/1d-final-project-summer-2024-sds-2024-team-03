@@ -65,6 +65,6 @@ class LogsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def log_params
-      params.require(:log).permit(:log_date, :log_message)
+      params.require(:log).permit(:log_message, :status)
     end
 end
