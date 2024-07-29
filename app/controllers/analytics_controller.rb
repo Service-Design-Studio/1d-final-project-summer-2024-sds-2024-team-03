@@ -31,8 +31,7 @@ class AnalyticsController < ApplicationController
   end
 
   def filter_products
-    # CHANGE ONCE REAL DATA USED [ "Cards", "Unsecured Loans", "Secured Loans", "Digital Channels", "Investments", "DBS Treasures", "Self-Service Banking", "Insurance", "Deposits", "Contact Center", "Webpages", "Remittance", "Others"]
-    @products = private_filter(:product)
+    @products = [ "Cards", "Unsecured Loans", "Secured Loans", "Digital Channels", "Investments", "DBS Treasures", "Self-Service Banking", "Insurance", "Deposits", "Contact Center", "Webpages", "Remittance", "Others"]
     render json: @products
   end
 
@@ -42,8 +41,7 @@ class AnalyticsController < ApplicationController
   end
 
   def filter_sources
-    # CHANGE ONCE REAL DATA USED ["Service Request", "CSS", "5 Star Logout", "Social Media", "Problem Survey"]
-    @sources = private_filter(:source)
+    @sources = ["Service Request", "CSS", "5 Star Logout", "Social Media", "Problem Solution"]
     render json: @sources
   end
 
