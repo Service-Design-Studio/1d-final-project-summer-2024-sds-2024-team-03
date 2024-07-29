@@ -2,12 +2,6 @@ class ActionablesController < ApplicationController
   before_action :set_actionable, only: %i[ show edit update destroy ]
   skip_before_action :verify_authenticity_token, only: [:create, :update, :destroy]
 
-  # def get_num_action_items
-  #   @num_action_items = Actionable.select(:actionable_category, 'COUNT(actionable_category)')
-  #                                 .group(:actionable_category)
-  #   render json: @num_action_items
-  # end
-
   # READ RESTful API
   # GET /actionables or /actionables.json
   def index

@@ -6,6 +6,7 @@ import FilterProduct from "../components/FilterProduct";
 import FilterSource from "../components/FilterSource";
 import OverallSentimentScore from "../components/Dashboard/OverallSentimentScore";
 import SentimentDistribution from "../components/Dashboard/SentimentDistribution";
+import ActionsProgress from "../components/Dashboard/ActionsProgress";
 import SentimentScoreGraph from "../components/SentimentScoreGraph";
 import CategoriesSunburstChart from "../components/Dashboard/CategoriesSunburstChart";
 import SentimentCategoriesGraph from "../components/SentimentCategoriesGraph";
@@ -36,9 +37,6 @@ export default function Dashboard({
     setSelectedSource,
     setSelectedMenu,
 }: DashboardProps) {
-    const [actionablesNum, setActionablesNum] = useState<
-        Record<string, string>
-    >({});
     const {scrollDir, scrollPosition} = useDetectScroll();
     type CustomRef<T> = {
         img: T;
@@ -290,22 +288,6 @@ export default function Dashboard({
         );
     };
 
-    useEffect(() => {
-        const urlPrefix =
-            process.env.NODE_ENV === "development"
-                ? "http://localhost:3000"
-                : "https://jbaaam-yl5rojgcbq-et.a.run.app";
-        setActionablesNum({
-            "To Fix": "16",
-            "To Keep In Mind": "1",
-            "To Promote": "5",
-            "To Amplify": "8",
-        });
-        // fetch(`${urlPrefix}/actionables/get_num_action_items`)
-        //     .then((response) => response.json())
-        //     .then((data) => setActionablesNum(data));
-    }, []);
-
     return (
         <Box
             sx={{
@@ -406,67 +388,10 @@ export default function Dashboard({
                     selectedSource={selectedSource}
                     setSelectedMenu={setSelectedMenu}
                 />
-
-                <Paper
-                    sx={{
-                        p: 2,
-                        borderRadius: 4,
-                        flex: 2,
-                        display: "flex",
-                        flexDirection: "column",
-                        justifyContent: "flex-start",
-                        boxShadow: "0px 0px 20px rgba(0, 0, 0, 0.1)",
-                    }}
-                >
-                    <Typography
-                        variant="h6"
-                        sx={{width: "100%", fontWeight: "bold", mb: 2}}
-                    >
-                        New Action Items
-                    </Typography>
-                    <Box
-                        sx={{
-                            display: "flex",
-                            justifyContent: "space-between",
-                            alignItems: "top",
-                            flexDirection: "row",
-                            gap: 1,
-                        }}
-                    >
-                        {Object.entries(actionablesNum).map(
-                            ([actionable, actionableNum], index, array) => (
-                                <React.Fragment key={actionable}>
-                                    <Box
-                                        sx={{
-                                            flex: "1 1 25%",
-                                            textAlign: "center",
-                                        }}
-                                    >
-                                        <Typography
-                                            variant="body1"
-                                            sx={{fontWeight: "bold"}}
-                                        >
-                                            {actionable} ({actionableNum})
-                                        </Typography>
-                                        <Typography
-                                            variant="body2"
-                                            color="grey"
-                                        >
-                                            actionables[actionable][0]
-                                        </Typography>
-                                    </Box>
-                                    {index < array.length - 1 && (
-                                        <Divider
-                                            orientation="vertical"
-                                            flexItem
-                                        />
-                                    )}
-                                </React.Fragment>
-                            )
-                        )}
-                    </Box>
-                </Paper>
-                {/* setSelectedMenu = {setSelectedMenu} */}
+                <ActionsProgress
+                    ref={reportRefs.OverallSentimentScoreRef}
+                    setSelectedMenu={setSelectedMenu}
+                />
             </Box>
             <Box
                 sx={{
