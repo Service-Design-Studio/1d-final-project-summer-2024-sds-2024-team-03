@@ -295,9 +295,15 @@ export default function Dashboard({
             process.env.NODE_ENV === "development"
                 ? "http://localhost:3000"
                 : "https://jbaaam-yl5rojgcbq-et.a.run.app";
-        fetch(`${urlPrefix}/analytics/filter_products`)
-            .then((response) => response.json())
-            .then((data) => setActionablesNum(data));
+        setActionablesNum({
+            "To Fix": "16",
+            "To Keep In Mind": "1",
+            "To Promote": "5",
+            "To Amplify": "8",
+        });
+        // fetch(`${urlPrefix}/actionables/get_num_action_items`)
+        //     .then((response) => response.json())
+        //     .then((data) => setActionablesNum(data));
     }, []);
 
     return (
