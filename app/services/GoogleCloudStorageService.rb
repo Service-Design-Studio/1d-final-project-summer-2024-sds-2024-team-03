@@ -1,6 +1,11 @@
 # app/services/google_cloud_storage_service.rb
 require "google/cloud/storage"
 
+storage = Google::Cloud::Storage.new(
+  project_id: "jbaaam",
+  credentials: "jbaaam-upload-key.json"
+)
+
 class GoogleCloudStorageService
   def initialize(bucket_name)
     @storage = Google::Cloud::Storage.new(project: "jbaaam")
@@ -11,7 +16,6 @@ class GoogleCloudStorageService
     print("enter upload")
     file = @bucket.create_file(file.path, destination_path)
     print("file")
-    file.acl.add_writer("user-#{1007059@mymail.sutd.edu.sg}")
     file.public_url
   end
 end
