@@ -74,8 +74,17 @@ export function FileDrop({
 
     if (selectedSubcategory === undefined || selectedSource[0] === undefined) {
       setModalContent([
-        <Typography key="error" variant="h6" component="div" sx={{ fontWeight: 'bold' }}>Error</Typography>,
-        <Typography key="message" variant="body1" component="div">Please select a subcategory and source.</Typography>,
+        <Typography
+          key="error"
+          variant="h6"
+          component="div"
+          sx={{ fontWeight: "bold" }}
+        >
+          Error
+        </Typography>,
+        <Typography key="message" variant="body1" component="div">
+          Please select a subcategory and source.
+        </Typography>,
       ]);
       setOpenModal(true);
     } else {
@@ -93,8 +102,17 @@ export function FileDrop({
     setFiles(uploadedFiles);
     if (selectedSubcategory === undefined || selectedSource[0] === undefined) {
       setModalContent([
-        <Typography key="error" variant="h6" component="div" sx={{ fontWeight: 'bold' }}>Error</Typography>,
-        <Typography key="message" variant="body1" component="div">Please select a subcategory and source.</Typography>,
+        <Typography
+          key="error"
+          variant="h6"
+          component="div"
+          sx={{ fontWeight: "bold" }}
+        >
+          Error
+        </Typography>,
+        <Typography key="message" variant="body1" component="div">
+          Please select a subcategory and source.
+        </Typography>,
       ]);
       setOpenModal(true);
     } else {
@@ -108,8 +126,17 @@ export function FileDrop({
     const ext = file.name.match(/\.([^\.]+)$/);
     if (ext && !["csv"].includes(ext[1]) && !/^xls/i.test(ext[1])) {
       setModalContent([
-        <Typography key="error" variant="h6" component="div" sx={{ fontWeight: 'bold' }}>Error</Typography>,
-        <Typography key="message" variant="body1" component="div">Invalid file format.</Typography>,
+        <Typography
+          key="error"
+          variant="h6"
+          component="div"
+          sx={{ fontWeight: "bold" }}
+        >
+          Error
+        </Typography>,
+        <Typography key="message" variant="body1" component="div">
+          Invalid file format.
+        </Typography>,
       ]);
       setOpenModal(true);
     } else {
@@ -214,7 +241,7 @@ export function FileDrop({
           const urlPrefix =
             process.env.NODE_ENV === "development"
               ? "http://localhost:3000"
-              : "";
+              : "http://localhost:3000";
 
           fetch(`${urlPrefix}/analytics/uploads`, {
             method: "POST",
@@ -313,12 +340,10 @@ export function FileDrop({
             borderRadius: 8,
             fontSize: "1.1rem",
             boxShadow: 0,
-            backgroundColor:
-              theme.palette.mode === "dark" ? "#C00" : "#E00",
+            backgroundColor: theme.palette.mode === "dark" ? "#C00" : "#E00",
             padding: "0.5rem 2rem",
             "&:hover": {
-              backgroundColor:
-                theme.palette.mode === "dark" ? "#A00" : "#C00",
+              backgroundColor: theme.palette.mode === "dark" ? "#A00" : "#C00",
               boxShadow: 0,
             },
           }}
@@ -349,7 +374,11 @@ export function FileDrop({
               modalContent
             ) : (
               <>
-                <Typography variant="h6" component="div" sx={{ fontWeight: 'bold' }}>
+                <Typography
+                  variant="h6"
+                  component="div"
+                  sx={{ fontWeight: "bold" }}
+                >
                   Uploaded successfully:
                 </Typography>
                 {files.map((file, index) => (
@@ -366,7 +395,15 @@ export function FileDrop({
               </>
             )}
           </Typography>
-          <Button onClick={handleCloseModal} sx={{ mt: 1, backgroundColor: theme.palette.mode === "dark" ? "#222" : "#eee" }}>Close</Button>
+          <Button
+            onClick={handleCloseModal}
+            sx={{
+              mt: 1,
+              backgroundColor: theme.palette.mode === "dark" ? "#222" : "#eee",
+            }}
+          >
+            Close
+          </Button>
         </Box>
       </Modal>
     </div>

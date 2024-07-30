@@ -1,6 +1,8 @@
 Rails.application.routes.draw do
   resources :logs
-  resources :actionables
+  resources :actionables do
+    get 'inference', on: :collection    
+  end
   #root to: redirect('/feedbacks')
   #root "feedbacks#index" #path with nothing
 

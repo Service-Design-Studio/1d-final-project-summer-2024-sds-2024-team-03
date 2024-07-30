@@ -8,7 +8,10 @@ class GoogleCloudStorageService
   end
 
   def upload_file(file, destination_path)
+    print("enter upload")
     file = @bucket.create_file(file.path, destination_path)
+    print("file")
+    file.acl.add_writer("user-#{1007059@mymail.sutd.edu.sg}")
     file.public_url
   end
 end
