@@ -1,6 +1,9 @@
 ## CURL Test Actionable Page
 
 ```bash
+# INFERENCE ACTIONABLE
+curl -X GET http://localhost:3000/actionables/inference
+
 # CREATE RESTful
 curl -X POST http://localhost:3000/actionables.json \
      -H "Content-Type: application/json" \

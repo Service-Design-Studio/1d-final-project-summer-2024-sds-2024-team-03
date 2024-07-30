@@ -61,6 +61,17 @@ class ActionablesController < ApplicationController
     end
   end
 
+  def inference
+    print("inference")
+    products = params[:product].split(',')
+    sources = params[:source].split(',')
+    fromDate = params[:fromDate] 
+    toDate = params[:toDate]
+
+    @products = [ "Cards", "Unsecured Loans", "Secured Loans", "Digital Channels", "Investments", "DBS Treasures", "Self-Service Banking", "Insurance", "Deposits", "Contact Center", "Webpages", "Remittance", "Others"]
+    render json: @products
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_actionable

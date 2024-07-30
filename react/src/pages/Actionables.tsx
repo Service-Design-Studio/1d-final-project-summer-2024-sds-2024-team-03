@@ -11,6 +11,7 @@ import RotateRightTwoToneIcon from "@mui/icons-material/RotateRightTwoTone";
 import CheckCircleTwoToneIcon from "@mui/icons-material/CheckCircleTwoTone";
 import { useTheme } from "@mui/material/styles";
 import DialogAddAction from "../components/Actionables/DialogAddAction";
+import useDebounce from "../components/Actionables/useDebounce";
 
 //IMPORT INTERFACE
 import {
@@ -29,6 +30,16 @@ export default function Actionables({
   setSelectedSource,
 }: ActionablesPageProps) {
   const theme = useTheme();
+  const fromDate_string = fromDate.format("DD/MM/YYYY");
+  const toDate_string = toDate.format("DD/MM/YYYY");
+
+  const combinedFilters = {
+    fromDate_string,
+    toDate_string,
+    selectedProduct,
+    selectedSource,
+  };
+  const debouncedCombinedFilters = useDebounce(combinedFilters, 5000); // 10000ms debounce delay
   const transitionDuration = {
     enter: theme.transitions.duration.enteringScreen,
     exit: theme.transitions.duration.leavingScreen,
@@ -77,6 +88,23 @@ export default function Actionables({
   useEffect(() => {
     fetchData();
   }, [refresh]); // Empty dependency array ensures this runs once when the component mounts
+
+  useEffect(() => {
+    if (debouncedCombinedFilters) {
+      const urlPrefix =
+        process.env.NODE_ENV === "development"
+          ? "http://localhost:3000"
+          : "https://jbaaam-yl5rojgcbq-et.a.run.app";
+      fetch(
+        //ENDPOINT
+        // urlPrefix/controller_name/function(only if custom)?parameters&parameters
+        `${urlPrefix}/actionables/inference?fromDate=${fromDate_string}&toDate=${toDate_string}&product=${selectedProduct}&source=${selectedSource}`
+      ).then((response) => {
+        console.log("response inference", response);
+        return response.json();
+      });
+    }
+  }, [debouncedCombinedFilters]);
 
   return (
     <Box sx={{ maxWidth: "lg", mx: "auto", px: 2 }}>
