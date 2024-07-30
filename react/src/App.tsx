@@ -143,7 +143,7 @@ export default function MainApp() {
         }}
       >
         <CssBaseline />
-        <MuiAppBar position="fixed" sx={{ height: 64, boxShadow: 0, borderBottom: theme => `2px solid ${theme.palette.mode === 'dark' ? '#252525' : '#f00'}` }}>
+        <MuiAppBar position="fixed" sx={{ height: 64, boxShadow: 0, borderBottom: theme => `2.5px solid ${theme.palette.mode === 'dark' ? '#555' : '#f00'}` }}>
           <Toolbar
             sx={{
               height: "100%",

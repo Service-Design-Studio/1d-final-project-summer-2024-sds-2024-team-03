@@ -661,7 +661,6 @@ export default forwardRef(function SentimentCategoriesGraph(
                 <Box
                     sx={{
                         display: "flex",
-                        alignItems: "center",
                         justifyContent: "space-between",
                         width: "100%",
                     }}
@@ -669,7 +668,6 @@ export default forwardRef(function SentimentCategoriesGraph(
                     <Box
                         sx={{
                             display: "flex",
-                            alignItems: "center",
                             justifyContent: "space-between",
                             flexGrow: 1,
                         }}
@@ -679,6 +677,7 @@ export default forwardRef(function SentimentCategoriesGraph(
                                 display: "flex",
                                 justifyContent: "flex-start",
                                 flexGrow: 1,
+                                alignItems: "flex-start",
                             }}
                         >
                             <Typography
@@ -691,12 +690,18 @@ export default forwardRef(function SentimentCategoriesGraph(
                                 variant="h6"
                                 sx={{fontWeight: "bold"}}
                                 style={{
-                                    color: sortPositive ? "darkgreen" : "red",
+                                    color: sortPositive ? "green" : "red",
                                 }}
                             >
                                 {sortPositive ? "(Positive)" : "(Negative)"}
                             </Typography>
                         </Box>
+                        <Box
+                            sx={{
+                                display: "flex",
+                                alignItems: "center",
+                            }}
+                        >
                         <Button
                             variant="outlined"
                             onClick={() => setSortPositive(!sortPositive)}
@@ -721,8 +726,9 @@ export default forwardRef(function SentimentCategoriesGraph(
                         >
                             Sort
                         </Button>
+                        </Box>
                     </Box>
-                    <FormControl sx={{m: 0, width: "20%"}}>
+                    <FormControl sx={{m: 0, width: "22%"}}>
                         <InputLabel id="detailed-sentimentcategoriesgraph-filter-subcategory-label">
                             Subcategories
                         </InputLabel>

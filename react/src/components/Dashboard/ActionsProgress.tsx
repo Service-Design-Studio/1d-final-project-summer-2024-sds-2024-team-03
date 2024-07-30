@@ -104,7 +104,7 @@ export default forwardRef(function ActionsProgress(
                 justifyContent: "center",
                 p: 2,
                 borderRadius: 4,
-                flex: 1,
+                flex: 2,
                 cursor: "pointer",
                 height: "100%",
                 boxShadow: "0px 0px 20px rgba(0, 0, 0, 0.1)",
@@ -120,15 +120,17 @@ export default forwardRef(function ActionsProgress(
             id="actions-progress"
             onClick={() => setSelectedMenu("actionables")}
         >
-            <Typography variant="h6" sx={{fontWeight: "bold", mb: 1}}>
-                Actions Progress
-            </Typography>
+            <Box sx={{width: "100%", justifyContent: "flex-start"}}>
+                <Typography variant="h6" sx={{fontWeight: "bold", mb: 1, }}>
+                    Actions Progress
+                </Typography>
+            </Box>
             <Box
                 sx={{
                     display: "flex",
                     gap: 2,
                     mt: 2,
-                    height: 100,
+                    height: "100%",
                 }}
             >
                 <ResponsiveBar
