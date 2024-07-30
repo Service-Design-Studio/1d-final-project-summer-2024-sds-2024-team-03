@@ -241,7 +241,7 @@ export function FileDrop({
           const urlPrefix =
             process.env.NODE_ENV === "development"
               ? "http://localhost:3000"
-              : "http://localhost:3000";
+              : "";
 
           fetch(`${urlPrefix}/analytics/uploads`, {
             method: "POST",
