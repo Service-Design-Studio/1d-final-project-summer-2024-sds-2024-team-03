@@ -394,7 +394,7 @@ export default forwardRef(function SentimentScoreGraph(
               ? ` ${selectedSubcategory}`
               : " Selected Subcategories"}
           </Typography>
-          <Box sx={{ display: "flex", gap: 2, mt: 1, width: "80%" }}>
+          <Box sx={{ display: "flex", gap: 2, width: "85%" }}>
             <FormControl sx={{ m: 0, width: "50%" }}>
               <InputLabel id="detailed-sentimentscoregraph-filter-subcategory-label">
                 Subcategories
