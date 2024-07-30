@@ -237,6 +237,7 @@ export function FileDrop({
             : "";
 
           formData.append("file", newFile);
+          console.log("env", process.env.NODE_ENV);
           console.log("X-CSRF-Token", csrfToken);
           const urlPrefix =
             process.env.NODE_ENV === "development"
