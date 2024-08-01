@@ -6,7 +6,7 @@ import FilterProduct from "../components/FilterProduct";
 import FilterSource from "../components/FilterSource";
 import OverallSentimentScore from "../components/Dashboard/OverallSentimentScore";
 import SentimentDistribution from "../components/Dashboard/SentimentDistribution";
-import ActionsProgress from "../components/Dashboard/ActionsProgress";
+import ActionsProgress from "../components/Dashboard/ActionsCompleted";
 import SentimentScoreGraph from "../components/SentimentScoreGraph";
 import CategoriesSunburstChart from "../components/Dashboard/CategoriesSunburstChart";
 import SentimentCategoriesGraph from "../components/SentimentCategoriesGraph";
@@ -52,6 +52,10 @@ export default function Dashboard({
             img: document.createElement("div"),
             reportDesc: "",
         }),
+        ActionsProgressRef: useRef<CustomRef<HTMLDivElement>>({
+            img: document.createElement("div"),
+            reportDesc: "",
+        }),
         SentimentScoreGraphRef: useRef<CustomRef<HTMLDivElement>>({
             img: document.createElement("div"),
             reportDesc: "",
@@ -64,7 +68,6 @@ export default function Dashboard({
             img: document.createElement("div"),
             reportDesc: "",
         }),
-        // ActionablesRef
     };
 
     const handleGenerateReport = async () => {
@@ -167,24 +170,32 @@ export default function Dashboard({
 
         pdf.setFontSize(16);
         prevY = addText(
-            `DBS VOCUS generated on ${dayjs().format("DD/MM/YYYY")}`,
+            `DBS VOCUS generated on ${dayjs().format("DD MMM 'YY")}`,
             MARGIN,
-            MARGIN
+            MARGIN,
+            20
         );
         pdf.setFontSize(12);
         prevY = addText(
-            `Report for ${dayjs(fromDate).format("DD/MM/YYYY")} - ${dayjs(
+            `Report for ${dayjs(fromDate).format("DD MMM 'YY")} - ${dayjs(
                 toDate
-            ).format("DD/MM/YYYY")}`,
+            ).format("DD MMM 'YY")}`,
             MARGIN,
-            prevY
+            prevY,
+            20
         );
         prevY = addText(
             `Products: ${selectedProduct.join(", ")}`,
             MARGIN,
-            prevY
+            prevY,
+            16
         );
-        prevY = addText(`Sources: ${selectedSource.join(", ")}`, MARGIN, prevY);
+        prevY = addText(
+            `Sources: ${selectedSource.join(", ")}`,
+            MARGIN,
+            prevY,
+            16
+        );
 
         [prevImageWidth, prevImageHeight] = await addScaledImageToPDF(
             reportRefs.OverallSentimentScoreRef,
@@ -379,7 +390,6 @@ export default function Dashboard({
                     selectedSource={selectedSource}
                     setSelectedMenu={setSelectedMenu}
                 />
-
                 <SentimentDistribution
                     ref={reportRefs.SentimentDistributionRef}
                     fromDate={fromDate}
@@ -389,7 +399,7 @@ export default function Dashboard({
                     setSelectedMenu={setSelectedMenu}
                 />
                 <ActionsProgress
-                    ref={reportRefs.OverallSentimentScoreRef}
+                    ref={reportRefs.ActionsProgressRef}
                     setSelectedMenu={setSelectedMenu}
                 />
             </Box>
