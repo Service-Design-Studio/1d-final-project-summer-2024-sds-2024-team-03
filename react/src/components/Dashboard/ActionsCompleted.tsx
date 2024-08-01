@@ -7,9 +7,24 @@ import React, {
     useImperativeHandle,
 } from "react";
 import {Theme, useTheme} from "@mui/material/styles";
-import {Paper, Typography, Box, ButtonBase, Divider} from "@mui/material";
+import {
+    Paper,
+    Typography,
+    Box,
+    ButtonBase,
+    Table,
+    TableBody,
+    TableCell,
+    TableContainer,
+    TableRow,
+    styled,
+} from "@mui/material";
 import {Actionable} from "../Actionables/Interfaces";
 import {ResponsiveBar} from "@nivo/bar";
+
+const StyledTableCell = styled(TableCell)({
+    borderBottom: "none",
+});
 
 interface ActionsProgressProps {
     setSelectedMenu: React.Dispatch<React.SetStateAction<string>>;
@@ -17,10 +32,10 @@ interface ActionsProgressProps {
 
 type Bar = {
     category: string;
-    inProgress: number;
-    inProgressColor: string;
-    done: number;
-    doneColor: string;
+    "In Progress": number;
+    "In Progress Color": string;
+    Done: number;
+    "Done Color": string;
 };
 
 type CustomRef<T> = {
@@ -34,16 +49,16 @@ export default forwardRef(function ActionsProgress(
 ) {
     const [actionsProgressPct, setActionsProgressPct] = useState<Bar>({
         category: "Actions",
-        inProgress: 0,
-        inProgressColor: "red",
-        done: 0,
-        doneColor: "green",
+        "In Progress": 0,
+        "In Progress Color": "orange",
+        Done: 0,
+        "Done Color": "green",
     });
     const [actionsProgressRaw, setActionsProgressRaw] = useState<
         Record<string, number>
     >({
-        inProgress: 0,
-        done: 0,
+        "In Progress": 0,
+        Done: 0,
     });
     const theme = useTheme();
 
@@ -64,21 +79,23 @@ export default forwardRef(function ActionsProgress(
                     (item: Actionable) =>
                         item.status.toLowerCase() === "done".toLowerCase()
                 );
+                console.log(inProgressData);
+                console.log(doneData);
                 const totalDataLen = inProgressData.length + doneData.length;
                 setActionsProgressPct((prevState) => ({
                     ...prevState,
-                    inProgress: parseFloat(
+                    "In Progress": parseFloat(
                         ((100 * inProgressData.length) / totalDataLen).toFixed(
                             1
                         )
                     ),
-                    done: parseFloat(
+                    Done: parseFloat(
                         ((100 * doneData.length) / totalDataLen).toFixed(1)
                     ),
                 }));
                 setActionsProgressRaw({
-                    inProgress: inProgressData.length,
-                    done: doneData.length,
+                    "In Progress": inProgressData.length,
+                    Done: doneData.length,
                 });
             });
     }, []);
@@ -88,7 +105,7 @@ export default forwardRef(function ActionsProgress(
         ref,
         () => ({
             img: internalRef.current!,
-            reportDesc: `The actionables progress is as shown.`,
+            reportDesc: `The progress on the actionables is as shown.`,
         }),
         [actionsProgressPct]
     );
@@ -121,28 +138,72 @@ export default forwardRef(function ActionsProgress(
             onClick={() => setSelectedMenu("actionables")}
         >
             <Box sx={{width: "100%", justifyContent: "flex-start"}}>
-                <Typography variant="h6" sx={{fontWeight: "bold", mb: 1, }}>
-                    Actions Progress
+                <Typography variant="h6" sx={{fontWeight: "bold", mb: 1}}>
+                    Actions Completed
                 </Typography>
+                <TableContainer>
+                    <Table aria-label="action progress table">
+                        <TableBody>
+                            <TableRow>
+                                {Object.keys(actionsProgressRaw)
+                                    .reverse()
+                                    .map((key) => (
+                                        <StyledTableCell
+                                            key={key}
+                                            align="center"
+                                        >
+                                            <Typography
+                                                sx={{
+                                                    color: actionsProgressPct[
+                                                        `${key} Color` as keyof Bar
+                                                    ],
+                                                }}
+                                            >
+                                                {key}
+                                            </Typography>
+                                        </StyledTableCell>
+                                    ))}
+                            </TableRow>
+                            <TableRow>
+                                {Object.entries(actionsProgressRaw)
+                                    .reverse()
+                                    .map(([key, value], index) => (
+                                        <StyledTableCell
+                                            key={index}
+                                            align="center"
+                                        >
+                                            <Typography
+                                                sx={{
+                                                    color: actionsProgressPct[
+                                                        `${key} Color` as keyof Bar
+                                                    ],
+                                                }}
+                                            >
+                                                {value}
+                                            </Typography>
+                                        </StyledTableCell>
+                                    ))}
+                            </TableRow>
+                        </TableBody>
+                    </Table>
+                </TableContainer>
             </Box>
             <Box
                 sx={{
                     display: "flex",
-                    gap: 2,
-                    mt: 2,
-                    height: "100%",
+                    height: 100,
+                    width: "100%",
                 }}
             >
                 <ResponsiveBar
                     data={[actionsProgressPct]}
-                    keys={["inProgress", "done"]}
+                    keys={["Done", "In Progress"]}
                     colors={[
-                        actionsProgressPct["inProgressColor"],
-                        actionsProgressPct["doneColor"],
+                        actionsProgressPct["Done Color"],
+                        actionsProgressPct["In Progress Color"],
                     ]}
                     indexBy="category"
                     margin={{
-                        top: 10,
                         right: 10,
                         bottom: 10,
                         left: 10,
@@ -195,13 +256,15 @@ export default forwardRef(function ActionsProgress(
                     axisRight={null}
                     axisBottom={null}
                     axisLeft={null}
-                    enableGridX={true}
+                    enableGridX={false}
+                    enableLabel={false}
+                    label={(d) => `${d.value}%`}
                     labelSkipWidth={12}
                     labelSkipHeight={12}
                     labelTextColor="rgba(255, 255, 255, 0.9)"
                     legends={[]}
                     role="application"
-                    ariaLabel="Actions Progress"
+                    ariaLabel="Actions Completed"
                     barAriaLabel={(e) =>
                         e.id +
                         ": " +

@@ -251,20 +251,18 @@ export default forwardRef(function CategoriesSunburstChart(
             img: internalRef.current!,
             reportDesc:
                 topCategories.length > 0
-                    ? `For the top 3 most mentioned, ${topCategories
-                          .map((category) => {
-                              return `product <u>${
-                                  category.product
-                              }</u>, subcategory <u>${
-                                  category.subcategory
-                              }</u>, feedback category <u>${
-                                  category.feedback_category
-                              }</u> has ${
-                                  category.mentions
-                              } total mentions, with an average sentiment score of ${category.averageSentimentScore.toFixed(
-                                  1
-                              )} / 5.\n`;
-                          })
+                    ? `The top 3 most mentioned ${topCategories
+                          .map((category, i) => (
+                              <li key={i}>
+                                  {/* {category.product} */}
+                                  {category.subcategory} |{" "}
+                                  {category.feedback_category} has
+                                  {category.mentions} total mentions, with an
+                                  average sentiment score of
+                                  {category.averageSentimentScore.toFixed(1)} /
+                                  5.
+                              </li>
+                          ))
                           .join(" ")}`
                     : "No data.",
         }),
@@ -336,7 +334,11 @@ export default forwardRef(function CategoriesSunburstChart(
                             cornerRadius={2}
                             borderWidth={4}
                             // background / grid.line.stroke / labels.text.fill / "color" / "#..."
-                            borderColor={theme.palette.mode === 'dark' ? '#222222' : '#fff'}
+                            borderColor={
+                                theme.palette.mode === "dark"
+                                    ? "#222222"
+                                    : "#fff"
+                            }
                             colors={(bar) => barColors[bar.id]}
                             // To make use of hsl from each component
                             inheritColorFromParent={false}
@@ -352,25 +354,35 @@ export default forwardRef(function CategoriesSunburstChart(
                             arcLabelsSkipAngle={60}
                             arcLabelsTextColor={{theme: "labels.text.fill"}}
                             animate={false}
-                            tooltip={({ id, value, color, percentage }) => (
+                            tooltip={({id, value, color, percentage}) => (
                                 <Paper
-                                  sx={{
-                                    padding: "9px 12px",
-                                    borderRadius: "10px",
-                                    backgroundColor:
-                                      theme.palette.mode === "dark" ? "#111" : "#fff",
-                                    boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.2)",
-                                    color: theme.palette.mode === "dark" ? "#fff" : "#000",
-                                  }}
+                                    sx={{
+                                        padding: "9px 12px",
+                                        borderRadius: "10px",
+                                        backgroundColor:
+                                            theme.palette.mode === "dark"
+                                                ? "#111"
+                                                : "#fff",
+                                        boxShadow:
+                                            "0px 0px 10px rgba(0, 0, 0, 0.2)",
+                                        color:
+                                            theme.palette.mode === "dark"
+                                                ? "#fff"
+                                                : "#000",
+                                    }}
                                 >
-                                  <Typography variant="body2" style={{ color, fontWeight: "bold"}}>
-                                    {id ?? "Others"}
-                                  </Typography>
-                                  <Typography variant="body2">
-                                    {value} ({Math.round(percentage * 10) / 10}%)
-                                  </Typography>
+                                    <Typography
+                                        variant="body2"
+                                        style={{color, fontWeight: "bold"}}
+                                    >
+                                        {id ?? "Others"}
+                                    </Typography>
+                                    <Typography variant="body2">
+                                        {value} (
+                                        {Math.round(percentage * 10) / 10}%)
+                                    </Typography>
                                 </Paper>
-                              )}
+                            )}
                             // tooltip={(e) =>
                             //     t.createElement(
                             //         l,
@@ -404,8 +416,12 @@ export default forwardRef(function CategoriesSunburstChart(
                             <Box
                                 sx={{
                                     gridColumn: "1 / span 3",
-                                    borderBottom: `2px solid ${theme.palette.mode === "dark" ? "#444" : "#ccc"}`,
-                                    mb: 1.5
+                                    borderBottom: `2px solid ${
+                                        theme.palette.mode === "dark"
+                                            ? "#444"
+                                            : "#ccc"
+                                    }`,
+                                    mb: 1.5,
                                 }}
                             />
                             <Typography
@@ -416,7 +432,7 @@ export default forwardRef(function CategoriesSunburstChart(
                                     gridColumn: "1 / span 1",
                                     textAlign: "left",
                                     fontWeight: "bold",
-                                    pl: 2
+                                    pl: 2,
                                 }}
                             >
                                 Categories
@@ -428,7 +444,7 @@ export default forwardRef(function CategoriesSunburstChart(
                                 sx={{
                                     textAlign: "center",
                                     gridColumn: "2 / span 1",
-                                    fontWeight: "bold"
+                                    fontWeight: "bold",
                                 }}
                             >
                                 Total Mentions
@@ -441,7 +457,7 @@ export default forwardRef(function CategoriesSunburstChart(
                                     gridColumn: "3 / span 1",
                                     textAlign: "center",
                                     fontWeight: "bold",
-                                    pr: 2
+                                    pr: 2,
                                 }}
                             >
                                 Avg. Sentiment
@@ -456,18 +472,25 @@ export default forwardRef(function CategoriesSunburstChart(
                                         p: 1.5,
                                         my: 0.5,
                                         borderRadius: 3,
-                                        bgcolor: theme.palette.mode === "dark" ? "#151515" : "#eee",
+                                        bgcolor:
+                                            theme.palette.mode === "dark"
+                                                ? "#151515"
+                                                : "#eee",
                                         gridColumn: "1 / span 3", // Ensure full width for each row
                                         "&:hover": {
-                                            backgroundColor: theme.palette.mode === "dark" ? "#0d0d0d" : "#ddd",}
+                                            backgroundColor:
+                                                theme.palette.mode === "dark"
+                                                    ? "#0d0d0d"
+                                                    : "#ddd",
+                                        },
                                     }}
                                 >
                                     <Box
                                         sx={{
-                                        display: "flex",
-                                        alignItems: "center",
-                                        gridColumn: "1 / span 1",
-                                        width: "40%"
+                                            display: "flex",
+                                            alignItems: "center",
+                                            gridColumn: "1 / span 1",
+                                            width: "40%",
                                         }}
                                     >
                                         <Box
@@ -482,64 +505,102 @@ export default forwardRef(function CategoriesSunburstChart(
                                         */
                                         />
                                         <Typography
-                                        variant="body2"
-                                        sx={{ ml: 1, textAlign: "left" }}
+                                            variant="body2"
+                                            sx={{ml: 1, textAlign: "left"}}
                                         >
-                                            <span style={{ fontSize: '1.1rem', fontWeight: 'bold' }}>
-                                                {category.product ? category.product : "Others"}
+                                            <span
+                                                style={{
+                                                    fontSize: "1.1rem",
+                                                    fontWeight: "bold",
+                                                }}
+                                            >
+                                                {category.product
+                                                    ? category.product
+                                                    : "Others"}
                                             </span>
                                             <br />
-                                            <span style={{ color: "grey", fontSize: '1rem', fontWeight: 'bold' }}>
-                                                {category.subcategory ? category.subcategory : "Others"}
+                                            <span
+                                                style={{
+                                                    color: "grey",
+                                                    fontSize: "1rem",
+                                                    fontWeight: "bold",
+                                                }}
+                                            >
+                                                {category.subcategory
+                                                    ? category.subcategory
+                                                    : "Others"}
                                             </span>
                                             <br />
-                                            <span style={{ color: barColors[category.feedback_category], fontWeight: 'bold' }}>
-                                                {category.feedback_category ? category.feedback_category : "Others"}
+                                            <span
+                                                style={{
+                                                    color: barColors[
+                                                        category
+                                                            .feedback_category
+                                                    ],
+                                                    fontWeight: "bold",
+                                                }}
+                                            >
+                                                {category.feedback_category
+                                                    ? category.feedback_category
+                                                    : "Others"}
                                             </span>
                                         </Typography>
                                     </Box>
                                     <Typography
                                         variant="body2"
                                         sx={{
-                                        gridColumn: "2 / span 1",
-                                        textAlign: "center",
-                                        fontWeight: "bold",
-                                        fontSize: "1.3rem",
-                                        width: "30%"
+                                            gridColumn: "2 / span 1",
+                                            textAlign: "center",
+                                            fontWeight: "bold",
+                                            fontSize: "1.3rem",
+                                            width: "30%",
                                         }}
                                     >
                                         {category.mentions}
                                     </Typography>
                                     <Box
                                         sx={{
-                                        ml: 1.5,
-                                        display: 'flex',
-                                        flexDirection: 'column',
-                                        alignItems: 'center', // Center items horizontally
-                                        justifyContent: 'center', // Center items vertically if needed
-                                        textAlign: 'center', // Center text alignment
+                                            ml: 1.5,
+                                            display: "flex",
+                                            flexDirection: "column",
+                                            alignItems: "center", // Center items horizontally
+                                            justifyContent: "center", // Center items vertically if needed
+                                            textAlign: "center", // Center text alignment
                                         }}
                                     >
                                         <Typography
                                             variant="body2"
                                             sx={{
-                                            gridColumn: "3 / span 1",
-                                            textAlign: "center",
-                                            color: getColorByOrder(category.averageSentimentScore,ORDER),
-                                            fontWeight: "bold",
-                                            fontSize: "1.3rem",
-                                            width: "30%"
+                                                gridColumn: "3 / span 1",
+                                                textAlign: "center",
+                                                color: getColorByOrder(
+                                                    category.averageSentimentScore,
+                                                    ORDER
+                                                ),
+                                                fontWeight: "bold",
+                                                fontSize: "1.3rem",
+                                                width: "30%",
                                             }}
                                         >
-                                            {category.averageSentimentScore.toFixed(1)}
+                                            {category.averageSentimentScore.toFixed(
+                                                1
+                                            )}
                                         </Typography>
                                         <Rating
                                             name="read-only"
-                                            value={category.averageSentimentScore} // Assuming averageSentimentScore is between 0 and 5
+                                            value={
+                                                category.averageSentimentScore
+                                            } // Assuming averageSentimentScore is between 0 and 5
                                             precision={0.1} // Adjust the precision if needed
                                             readOnly
                                             size="small" // Adjust the size as needed
-                                            sx={{ color: theme.palette.mode === "dark" ? "#666" : "#999", }}
+                                            sx={{
+                                                color:
+                                                    theme.palette.mode ===
+                                                    "dark"
+                                                        ? "#666"
+                                                        : "#999",
+                                            }}
                                         />
                                     </Box>
                                 </Box>

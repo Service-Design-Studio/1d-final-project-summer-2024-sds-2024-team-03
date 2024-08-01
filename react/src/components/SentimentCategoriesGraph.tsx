@@ -595,40 +595,50 @@ export default forwardRef(function SentimentCategoriesGraph(
                     ? `${sortBySentiment(bars)
                           .slice(bars.length - 5, bars.length)
                           .map((bar) => {
-                              return `${
-                                  bar.Promoter > 0
-                                      ? `${bar.Promoter}% were <b>Promoter</b> and `
-                                      : ""
-                              }${
-                                  bar.Satisfied > 0
-                                      ? `${bar.Satisfied}% were <b>Satisfied</b>`
-                                      : ""
-                              } about product <u>${
+                              let description = "";
+
+                              if (bar.Promoter > 0) {
+                                  description += `${bar.Promoter}% promoted`;
+                              }
+                              if (bar.Satisfied > 0) {
+                                  if (bar.Promoter > 0) {
+                                      description += " and ";
+                                  }
+                                  description += `${bar.Satisfied}% were Satisfied about `;
+                              }
+
+                              description += `${
                                   bar.category.split(" > ")[0]
-                              }</u> and subcategory <u>${
+                              } | ${
                                   bar.category.split(" > ")[1]
-                              }</u>, demonstrating strong support.\n`;
+                              }, demonstrating strong support.\n`;
+
+                              return description;
                           })
-                          .join(" ")}
-                \n
-                However, ${sortBySentiment(bars)
-                    .slice(bars.length - 5, bars.length)
-                    .map((bar) => {
-                        return `${
-                            bar.Frustrated > 0
-                                ? `${bar.Frustrated}% were <b>Frustrated</b> and `
-                                : ""
-                        }${
-                            bar.Unsatisfied > 0
-                                ? `${bar.Unsatisfied}% were <b>Unsatisfied</b>`
-                                : ""
-                        } about product <u>${
-                            bar.category.split(" > ")[0]
-                        }</u> and subcategory <u>${
-                            bar.category.split(" > ")[1]
-                        }</u>, suggesting areas for improvement.\n`;
-                    })
-                    .join(" ")}`
+                          .join("\n")}
+            \n
+            However, ${sortBySentiment(bars, true)
+                .slice(bars.length - 5, bars.length)
+                .map((bar) => {
+                    let description = "";
+
+                    if (bar.Frustrated > 0) {
+                        description += `${bar.Frustrated}% were Frustrated`;
+                    }
+                    if (bar.Unsatisfied > 0) {
+                        if (bar.Frustrated > 0) {
+                            description += " and ";
+                        }
+                        description += `${bar.Unsatisfied}% were Unsatisfied about `;
+                    }
+
+                    description += `${bar.category.split(" > ")[0]} | ${
+                        bar.category.split(" > ")[1]
+                    }, suggesting areas for improvement.\n`;
+
+                    return description;
+                })
+                .join("\n")}`
                     : "No data.",
         }),
         [bars]
@@ -702,30 +712,30 @@ export default forwardRef(function SentimentCategoriesGraph(
                                 alignItems: "center",
                             }}
                         >
-                        <Button
-                            variant="outlined"
-                            onClick={() => setSortPositive(!sortPositive)}
-                            sx={{
-                                marginRight: 2,
-                                borderRadius: 2,
-                                border: 0,
-                                backgroundColor:
-                                    theme.palette.mode === "dark"
-                                        ? "#555"
-                                        : "#888",
-                                color: "#fff",
-                                fontWeight: "bold",
-                                "&:hover": {
+                            <Button
+                                variant="outlined"
+                                onClick={() => setSortPositive(!sortPositive)}
+                                sx={{
+                                    marginRight: 2,
+                                    borderRadius: 2,
                                     border: 0,
                                     backgroundColor:
                                         theme.palette.mode === "dark"
-                                            ? "#777"
-                                            : "#AAA",
-                                },
-                            }}
-                        >
-                            Sort
-                        </Button>
+                                            ? "#555"
+                                            : "#888",
+                                    color: "#fff",
+                                    fontWeight: "bold",
+                                    "&:hover": {
+                                        border: 0,
+                                        backgroundColor:
+                                            theme.palette.mode === "dark"
+                                                ? "#777"
+                                                : "#AAA",
+                                    },
+                                }}
+                            >
+                                Sort
+                            </Button>
                         </Box>
                     </Box>
                     <FormControl sx={{m: 0, width: "22%"}}>

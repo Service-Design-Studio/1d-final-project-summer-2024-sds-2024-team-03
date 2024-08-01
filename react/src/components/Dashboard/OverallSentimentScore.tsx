@@ -7,7 +7,15 @@ import React, {
     useImperativeHandle,
 } from "react";
 import {Theme, useTheme} from "@mui/material/styles";
-import {Paper, Box, Typography, ButtonBase} from "@mui/material";
+import {
+    Paper,
+    Box,
+    Typography,
+    ButtonBase,
+    Tooltip,
+    IconButton,
+} from "@mui/material";
+import InfoIcon from "@mui/icons-material/Info";
 import dayjs, {Dayjs} from "dayjs";
 
 interface OverallSentimentScoreProps {
@@ -112,7 +120,13 @@ export default forwardRef(function OverallSentimentScore(
                     : overallSentimentScoreChange < 0
                     ? "decrease"
                     : "change"
-            } compared to the same interval from ${prevFromDate_string} - ${fromDate_string}, .`,
+            } compared to the same duration from ${dayjs(
+                prevFromDate_string,
+                "DD/MM/YYYY"
+            ).format("DD MMM' YY")} - ${dayjs(
+                fromDate_string,
+                "DD/MM/YYYY"
+            ).format("DD MMM' YY")}.`,
         }),
         [overallSentimentScore, overallSentimentScoreChange, fromDate]
     );
@@ -144,7 +158,28 @@ export default forwardRef(function OverallSentimentScore(
             id="overall-sentiment-score"
             onClick={() => setSelectedMenu("analytics")}
         >
-            <Box sx={{width: "100%", justifyContent: "flex-start"}}>
+            <Box
+                sx={{
+                    width: "100%",
+                    justifyContent: "flex-start",
+                    flexDirection: "row",
+                    display: "flex",
+                }}
+            >
+                <Tooltip
+                    title={
+                        <span>
+                            Displays the averaged sentiment score of all VOCUS
+                            and compares it to an equal duration:
+                            <br /> {prevFromDate_string} - {fromDate_string}
+                        </span>
+                    }
+                    arrow
+                >
+                    <IconButton>
+                        <InfoIcon />
+                    </IconButton>
+                </Tooltip>
                 <Typography variant="h6" style={{fontWeight: "bold"}}>
                     Overall Sentiment Score
                 </Typography>
