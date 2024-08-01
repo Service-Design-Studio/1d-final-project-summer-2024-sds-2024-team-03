@@ -55,7 +55,7 @@ export default function ScrollDialog(actionable: Actionable) {
           },
         }}
       >
-        View Analytics
+        View Data
       </Button>
       <Dialog
         open={open}
