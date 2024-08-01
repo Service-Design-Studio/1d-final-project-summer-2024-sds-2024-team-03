@@ -112,63 +112,68 @@ export default forwardRef(function SentimentDistribution(
             id="sentiment-distribution"
             onClick={() => setSelectedMenu("analytics")}
         >
-            <Typography variant="h6" sx={{fontWeight: "bold", mb: 1}}>
-                Distribution of Sentiment
-            </Typography>
-            {Object.entries(order)
-                .reverse()
-                .map(([sentiment, sentimentColor]) => {
-                    const sentimentValue = parseFloat(
-                        sentimentDistribution[sentiment] || "0"
-                    );
-                    const barWidth = 1.5 * (sentimentValue / 100) * MAXBARWIDTH;
+            <Box sx={{width: "100%", justifyContent: "flex-start"}}>
+                <Typography variant="h6" sx={{fontWeight: "bold", mb: 1}}>
+                    Distribution of Sentiment
+                </Typography>
+            </Box>
+            <Box sx={{ height: "100%" }} >
+                {Object.entries(order)
+                    .reverse()
+                    .map(([sentiment, sentimentColor]) => {
+                        const sentimentValue = parseFloat(
+                            sentimentDistribution[sentiment] || "0"
+                        );
+                        const barWidth = 1.5 * (sentimentValue / 100) * MAXBARWIDTH;
 
-                    return (
-                        <Box sx={{display: "flex", mb: 1}} key={sentiment}>
-                            <Typography
-                                sx={{mr: 1, textAlign: "right", width: 80}}
-                                variant="body1"
-                                color="grey"
-                            >
-                                {sentiment}
-                            </Typography>
-                            <Divider
-                                orientation="vertical"
-                                flexItem
-                                sx={{
-                                    borderRightWidth: 2,
-                                    borderColor: "black",
-                                }}
-                            />
-                            <Box
-                                sx={{
-                                    display: "flex",
-                                    alignItems: "center",
-                                    width: MAXBARWIDTH,
-                                }}
-                            >
-                                <Box
-                                    sx={{
-                                        borderTopRightRadius: 10,
-                                        borderBottomRightRadius: 10,
-                                        backgroundColor: sentimentColor,
-                                        width: barWidth, // Adjusted width based on percentage
-                                        height: "20px", // Ensure visibility of the bar
-                                    }}
-                                ></Box>
+                        return (
+                            <Box sx={{display: "flex", mb: 1}} key={sentiment}>
                                 <Typography
-                                    sx={{ml: 1, width: 45}}
+                                    sx={{mr: 1, textAlign: "right", width: 80}}
                                     variant="body1"
                                     color="grey"
                                 >
-                                    {sentimentDistribution[sentiment]
-                                        ? `${sentimentDistribution[sentiment]}%`
-                                        : "0%"}
+                                    {sentiment}
                                 </Typography>
+                                <Divider
+                                    orientation="vertical"
+                                    flexItem
+                                    sx={{
+                                        borderRightWidth: 2,
+                                        borderColor: "black",
+                                    }}
+                                />
+                                <Box
+                                    sx={{
+                                        display: "flex",
+                                        alignItems: "center",
+                                        width: MAXBARWIDTH,
+                                    }}
+                                >
+                                    <Box
+                                        sx={{
+                                            borderTopRightRadius: 10,
+                                            borderBottomRightRadius: 10,
+                                            backgroundColor: sentimentColor,
+                                            width: barWidth, // Adjusted width based on percentage
+                                            height: "20px", // Ensure visibility of the bar
+                                        }}
+                                    ></Box>
+                                    <Typography
+                                        sx={{ml: 1, width: 45}}
+                                        variant="body1"
+                                        color="grey"
+                                    >
+                                        {sentimentDistribution[sentiment]
+                                            ? `${sentimentDistribution[sentiment]}%`
+                                            : "0%"}
+                                    </Typography>
+                                </Box>
                             </Box>
-                        </Box>
-                    );
-                })}
+                        );
+                    })
+                }
+            </Box>
         </ButtonBase>
     );
 });
