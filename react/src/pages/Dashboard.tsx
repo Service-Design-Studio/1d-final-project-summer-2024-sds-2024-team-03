@@ -6,7 +6,7 @@ import FilterProduct from "../components/FilterProduct";
 import FilterSource from "../components/FilterSource";
 import OverallSentimentScore from "../components/Dashboard/OverallSentimentScore";
 import SentimentDistribution from "../components/Dashboard/SentimentDistribution";
-import ActionsCompleted from "../components/Dashboard/ActionsCompleted";
+import ActionsCompleted from "../components/Dashboard/ActionsTracked";
 import SentimentScoreGraph from "../components/SentimentScoreGraph";
 import CategoriesSunburstChart from "../components/Dashboard/CategoriesSunburstChart";
 import SentimentCategoriesGraph from "../components/SentimentCategoriesGraph";
@@ -52,7 +52,7 @@ export default function Dashboard({
             img: document.createElement("div"),
             reportDesc: "",
         }),
-        ActionsCompletedRef: useRef<CustomRef<HTMLDivElement>>({
+        ActionsTrackedRef: useRef<CustomRef<HTMLDivElement>>({
             img: document.createElement("div"),
             reportDesc: "",
         }),
@@ -268,14 +268,14 @@ export default function Dashboard({
         // prevY = MARGIN;
         // pdf.addPage();
         // [prevImageWidth, prevImageHeight] = await addScaledImageToPDF(
-        //     reportRefs.ActionsCompletedRef,
+        //     reportRefs.ActionsTrackedRef,
         //     0,
         //     prevY
         // );
 
         // prevY += prevImageHeight + PADDING;
         // prevY = addText(
-        //     reportRefs.ActionsCompletedRef.current?.reportDesc ?? "",
+        //     reportRefs.ActionsTrackedRef.current?.reportDesc ?? "",
         //     MARGIN,
         //     prevY + PADDING
         // );
@@ -347,7 +347,7 @@ export default function Dashboard({
                     // pb: 1,
                     // justifyContent: "flex-start",
                     justifyContent: "center",
-                    alignItems: "center",
+                    alignItems: scrollPosition.top > 0 ? "center" : null,
                     zIndex: 1000, // Ensure it's above other content
                     backgroundColor: scrollPosition.top > 0 ? "white" : null,
                     borderRadius: 4,
@@ -402,7 +402,7 @@ export default function Dashboard({
                     setSelectedMenu={setSelectedMenu}
                 />
                 <ActionsCompleted
-                    ref={reportRefs.ActionsCompletedRef}
+                    ref={reportRefs.ActionsTrackedRef}
                     setSelectedMenu={setSelectedMenu}
                 />
             </Box>

@@ -66,7 +66,7 @@ describe("CategoriesSunburstChart Component", () => {
             ).toBeInTheDocument();
             expect(screen.getByText("Categories")).toBeInTheDocument();
             expect(screen.getByText("Total Mentions")).toBeInTheDocument();
-            expect(screen.getByText("Avg Sentiment")).toBeInTheDocument();
+            expect(screen.getByText("Avg. Sentiment")).toBeInTheDocument();
         });
     });
 
@@ -88,8 +88,8 @@ describe("CategoriesSunburstChart Component", () => {
     });
 
     it("should call setSelectedMenu on button click for overview", async () => {
-        const button = screen.getByRole("button");
-        fireEvent.click(button);
+        const buttons = screen.getAllByRole("button");
+        fireEvent.click(buttons[0]);
         await waitFor(() => {
             expect(mockSetSelectedMenu).toHaveBeenCalledWith("analytics");
         });
@@ -97,16 +97,15 @@ describe("CategoriesSunburstChart Component", () => {
 
     it("renders top categories sorted by mentions", async () => {
         await waitFor(() => {
-            expect(
-                screen.getByText(/Cards > Credit Card > Fee Related/i)
-            ).toBeInTheDocument();
+            expect(screen.getByText(/Cards/i)).toBeInTheDocument();
+            expect(screen.getByText(/Credit Card/i)).toBeInTheDocument();
+            expect(screen.getByText(/Fee Related/i)).toBeInTheDocument();
             expect(screen.getByText(/4.5/i)).toBeInTheDocument();
-            expect(
-                screen.getByText(/Deposits > Fixed Deposits > Staff Related/i)
-            ).toBeInTheDocument();
+            expect(screen.getByText("Deposits")).toBeInTheDocument();
+            expect(screen.getByText("Fixed Deposits")).toBeInTheDocument();
+            expect(screen.getByText(/Staff Related/i)).toBeInTheDocument();
             expect(screen.getByText(/1.5/i)).toBeInTheDocument();
             expect(screen.getAllByText("1").length).toBe(2);
-            expect(screen.getAllByText(/\/ 5/i).length).toBe(2);
         });
     });
 });

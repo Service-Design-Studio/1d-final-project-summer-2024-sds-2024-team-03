@@ -97,11 +97,11 @@ describe("UploadData Components", () => {
     it("renders Upload Data page", async () => {
         expect(await screen.findByText(/Upload Data/i)).toBeInTheDocument();
         expect(
-            await screen.findByLabelText(/Subcategory/i)
+            await screen.findByLabelText(/Subcategories/i)
         ).toBeInTheDocument();
         expect(await screen.findByLabelText(/Sources/i)).toBeInTheDocument();
         expect(
-            await screen.findByText("Drag and drop CSV or XLS files here")
+            await screen.findByText("Drag and drop CSV files here")
         ).toBeInTheDocument();
     });
 });

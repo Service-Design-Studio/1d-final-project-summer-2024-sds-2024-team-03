@@ -706,8 +706,8 @@ export default forwardRef(function SentimentCategoriesGraph(
                                       data.feedback_category
                                   } on ${data.date}:\n"${
                                       data.feedback.includes(": ")
-                                          ? data.feedback.split(": ")[1]
-                                          : data.feedback
+                                          ? data.feedback.split(": ")[1].trim()
+                                          : data.feedback.trim()
                                   }"`
                           )
                           .join(
@@ -748,8 +748,8 @@ export default forwardRef(function SentimentCategoriesGraph(
                                       data.feedback_category
                                   } on ${data.date}:\n"${
                                       data.feedback.includes(": ")
-                                          ? data.feedback.split(": ")[1]
-                                          : data.feedback
+                                          ? data.feedback.split(": ")[1].trim()
+                                          : data.feedback.trim()
                                   }"`
                           )
                           .join("\n\n")}`

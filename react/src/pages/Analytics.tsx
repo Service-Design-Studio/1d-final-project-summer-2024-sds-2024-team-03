@@ -6,6 +6,7 @@ import FilterSource from "../components/FilterSource";
 import Calendar from "../components/Calendar";
 import SentimentScoreGraph from "../components/SentimentScoreGraph";
 import SentimentCategoriesGraph from "../components/SentimentCategoriesGraph";
+import useDetectScroll, {Direction} from "@smakss/react-scroll-direction";
 
 interface AnalyticsProps {
     setFromDate: React.Dispatch<React.SetStateAction<Dayjs>>;
@@ -28,16 +29,26 @@ export default function Analytics({
     selectedSource,
     setSelectedSource,
 }: AnalyticsProps) {
+    const {scrollDir, scrollPosition} = useDetectScroll();
     return (
         <Box sx={{maxWidth: "lg", mx: "auto", px: 2}}>
             <h1>Analytics</h1>
+            {/* Sticky, Freezes while scrolling */}
             <Box
                 sx={{
+                    position: "sticky",
+                    top: 74,
                     display: "flex",
                     flexDirection: {xs: "column", sm: "row"},
                     gap: 2,
-                    justifyContent: "flex-start",
                     mb: 7,
+                    // pb: 1,
+                    // justifyContent: "flex-start",
+                    justifyContent: "center",
+                    alignItems: scrollPosition.top > 0 ? "center" : null,
+                    zIndex: 1000, // Ensure it's above other content
+                    backgroundColor: scrollPosition.top > 0 ? "white" : null,
+                    borderRadius: 4,
                 }}
             >
                 <Box sx={{flexBasis: {xs: "100%", sm: "40%"}, flexGrow: 1}}>

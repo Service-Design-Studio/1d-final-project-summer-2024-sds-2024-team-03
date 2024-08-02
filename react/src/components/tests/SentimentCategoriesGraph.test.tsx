@@ -116,8 +116,8 @@ describe("SentimentCategoriesGraph Component", () => {
 
     it("should call setSelectedMenu on button click for overview", async () => {
         renderSentimentCategoriesGraph();
-        const button = screen.getByRole("button");
-        fireEvent.click(button);
+        const buttons = screen.getAllByRole("button");
+        fireEvent.click(buttons[0]);
         await waitFor(() => {
             expect(mockSetSelectedMenu).toHaveBeenCalledWith("analytics");
         });
