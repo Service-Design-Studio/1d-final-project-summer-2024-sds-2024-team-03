@@ -20,7 +20,7 @@ describe("Logs component", () => {
     it("renders correctly", () => {
         fetchMock.mockResponseOnce(JSON.stringify([]));
         render(<Logs />);
-        expect(screen.getByRole("list")).toBeInTheDocument();
+        expect(screen.getAllByRole("paragraph").length).toBe(2);
     });
 
     it("fetches logs and renders them in the correct order", async () => {
@@ -33,7 +33,7 @@ describe("Logs component", () => {
         render(<Logs />);
 
         await waitFor(() => {
-            expect(screen.getAllByRole("listitem").length).toBe(2);
+            expect(screen.getAllByRole("paragraph").length).toBe(2);
         });
 
         const items = screen.getAllByRole("listitem");

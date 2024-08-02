@@ -11,6 +11,7 @@ import CheckCircleTwoToneIcon from "@mui/icons-material/CheckCircleTwoTone";
 import {useTheme} from "@mui/material/styles";
 import DialogAddAction from "../components/Actionables/DialogAddAction";
 import useDebounce from "../components/Actionables/useDebounce";
+import useDetectScroll, {Direction} from "@smakss/react-scroll-direction";
 
 //IMPORT INTERFACE
 import {
@@ -28,6 +29,7 @@ export default function Actionables({
     selectedSource,
     setSelectedSource,
 }: ActionablesPageProps) {
+    const {scrollDir, scrollPosition} = useDetectScroll();
     const theme = useTheme();
     const fromDate_string = fromDate.format("DD/MM/YYYY");
     const toDate_string = toDate.format("DD/MM/YYYY");
@@ -113,13 +115,22 @@ export default function Actionables({
     return (
         <Box sx={{maxWidth: "lg", mx: "auto", px: 2}}>
             <h1>Actionables</h1>
+            {/* Sticky, Freezes while scrolling */}
             <Box
                 sx={{
+                    position: "sticky",
+                    top: 74,
                     display: "flex",
                     flexDirection: {xs: "column", sm: "row"},
                     gap: 2,
-                    justifyContent: "flex-start",
                     mb: 7,
+                    // pb: 1,
+                    // justifyContent: "flex-start",
+                    justifyContent: "center",
+                    alignItems: scrollPosition.top > 0 ? "center" : null,
+                    zIndex: 1000, // Ensure it's above other content
+                    backgroundColor: scrollPosition.top > 0 ? "white" : null,
+                    borderRadius: 4,
                 }}
             >
                 <Box sx={{flexBasis: {xs: "100%", sm: "40%"}, flexGrow: 1}}>

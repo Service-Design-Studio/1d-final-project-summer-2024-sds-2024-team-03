@@ -91,8 +91,8 @@ describe("OverallSentimentScore Component", () => {
     });
 
     it("should call setSelectedMenu on button click", async () => {
-        const button = screen.getByRole("button");
-        fireEvent.click(button);
+        const buttons = screen.getAllByRole("button");
+        fireEvent.click(buttons[0]);
         await waitFor(() => {
             expect(mockSetSelectedMenu).toHaveBeenCalledWith("analytics");
         });
