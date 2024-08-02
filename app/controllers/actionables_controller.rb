@@ -1,3 +1,5 @@
+require 'net/http'
+require 'json'
 class ActionablesController < ApplicationController
   before_action :set_actionable, only: %i[ show edit update destroy ]
   skip_before_action :verify_authenticity_token, only: [:create, :update, :destroy]
@@ -62,14 +64,16 @@ class ActionablesController < ApplicationController
   end
 
   def inference
-    print("inference")
     products = params[:product].split(',')
     sources = params[:source].split(',')
     fromDate = params[:fromDate] 
     toDate = params[:toDate]
 
-    @products = [ "Cards", "Unsecured Loans", "Secured Loans", "Digital Channels", "Investments", "DBS Treasures", "Self-Service Banking", "Insurance", "Deposits", "Contact Center", "Webpages", "Remittance", "Others"]
-    render json: @products
+    url = URI.parse('https://asia-southeast1-jbaaam.cloudfunctions.net/generate-actions?product=Contact%20Center&product=Digital%20Channels&product=Secured%20Loans&from_date=04-03-2024&to_date=22-05-2024&source=Product%20Survey&source=Social%20Media')
+    response = Net::HTTP.get_response(url)
+    result = JSON.parse(response.body)
+
+    render json: result
   end
 
   private

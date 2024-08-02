@@ -39,7 +39,9 @@ export default function Actionables({
     selectedProduct,
     selectedSource,
   };
+  console.log("=> combinedFilters", combinedFilters);
   const debouncedCombinedFilters = useDebounce(combinedFilters, 5000); // 10000ms debounce delay
+  console.log("=> debouncedCombinedFilters", debouncedCombinedFilters);
   const transitionDuration = {
     enter: theme.transitions.duration.enteringScreen,
     exit: theme.transitions.duration.leavingScreen,
@@ -91,6 +93,7 @@ export default function Actionables({
 
   useEffect(() => {
     if (debouncedCombinedFilters) {
+      console.log("=> useEffect debouncedCombinedFilters changed ");
       const urlPrefix =
         process.env.NODE_ENV === "development"
           ? "http://localhost:3000"

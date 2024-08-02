@@ -157,7 +157,7 @@ export default function OutlinedCard({
             </Typography>
           </Box>
           <Typography variant="h6" component="div">
-            {actionable.action} {actionable.status}
+            {actionable.action}
           </Typography>
         </CardContent>
         <CardActions>

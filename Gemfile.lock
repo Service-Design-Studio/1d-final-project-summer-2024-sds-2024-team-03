@@ -99,6 +99,7 @@ GEM
       bigdecimal
       rexml
     crass (1.0.6)
+    csv (3.3.0)
     cucumber (9.2.0)
       builder (~> 3.2)
       cucumber-ci-environment (> 9, < 11)
@@ -195,6 +196,10 @@ GEM
       os (>= 0.9, < 2.0)
       signet (>= 0.16, < 2.a)
     hashdiff (1.1.0)
+    httparty (0.22.0)
+      csv
+      mini_mime (>= 1.0.0)
+      multi_xml (>= 0.5.2)
     httpclient (2.8.3)
     i18n (1.14.5)
       concurrent-ruby (~> 1.0)
@@ -226,6 +231,8 @@ GEM
     msgpack (1.7.2)
     multi_json (1.15.0)
     multi_test (1.1.0)
+    multi_xml (0.7.1)
+      bigdecimal (~> 3.1)
     mutex_m (0.2.0)
     net-http (0.4.1)
       uri
@@ -409,6 +416,7 @@ DEPENDENCIES
   debug
   factory_bot_rails
   google-cloud-storage
+  httparty
   importmap-rails
   jbuilder
   pg (>= 0.18, < 2.0)
