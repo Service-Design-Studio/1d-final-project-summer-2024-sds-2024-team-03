@@ -345,7 +345,9 @@ export default function Dashboard({
                     gap: 2,
                     mb: 7,
                     // pb: 1,
-                    justifyContent: "flex-start",
+                    // justifyContent: "flex-start",
+                    justifyContent: "center",
+                    alignItems: "center",
                     zIndex: 1000, // Ensure it's above other content
                     backgroundColor: scrollPosition.top > 0 ? "white" : null,
                     borderRadius: 4,

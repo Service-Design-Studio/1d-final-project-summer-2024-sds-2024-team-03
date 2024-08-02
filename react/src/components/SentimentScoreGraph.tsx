@@ -7,7 +7,15 @@ import React, {
     useImperativeHandle,
 } from "react";
 import {Theme, useTheme} from "@mui/material/styles";
-import {Paper, Box, Typography, ButtonBase} from "@mui/material";
+import {
+    Paper,
+    Box,
+    Typography,
+    ButtonBase,
+    Tooltip,
+    IconButton,
+} from "@mui/material";
+import InfoIcon from "@mui/icons-material/Info";
 import {Dayjs} from "dayjs";
 import {ResponsiveLine} from "@nivo/line";
 import OutlinedInput from "@mui/material/OutlinedInput";
@@ -413,6 +421,23 @@ export default forwardRef(function SentimentScoreGraph(
                         mb: 2,
                     }}
                 >
+                    <Tooltip
+                        title={
+                            <span>
+                                Displays the trend of averaged VOCUS sentiment
+                                score <b>per day</b>
+                                <br />
+                                You may select multiple Feedback Categories
+                                <br />
+                                <b>Hover</b> to view specific date and scores
+                            </span>
+                        }
+                        arrow
+                    >
+                        <IconButton>
+                            <InfoIcon />
+                        </IconButton>
+                    </Tooltip>
                     <Typography
                         variant="h6"
                         sx={{fontWeight: "bold", width: "100%"}}
@@ -742,18 +767,52 @@ export default forwardRef(function SentimentScoreGraph(
                 id="overall-sentimentscoregraph"
                 onClick={() => setSelectedMenu!("analytics")}
             >
-                <Typography
-                    variant="h6"
-                    sx={{fontWeight: "bold", width: "100%"}}
+                <Box
+                    sx={{
+                        display: "flex",
+                        width: "100%",
+                        flexDirection: "row",
+                        mb: 2,
+                    }}
                 >
-                    Sentiment Trend for Selected Product(s)
-                </Typography>
-                <Typography
-                    color="grey"
-                    sx={{fontWeight: "600", mb: 2, width: "100%"}}
-                >
-                    across all subcategories
-                </Typography>
+                    <Tooltip
+                        title={
+                            <span>
+                                Displays the trend of averaged VOCUS sentiment
+                                score <b>per day</b>
+                                <br />
+                                <b>Hover</b> to view specific date and scores
+                            </span>
+                        }
+                        arrow
+                    >
+                        <IconButton>
+                            <InfoIcon />
+                        </IconButton>
+                    </Tooltip>
+                    <Box
+                        sx={{
+                            display: "flex",
+                            width: "100%",
+                            flexDirection: "column",
+                            justifyContent: "space-between",
+                            mb: 2,
+                        }}
+                    >
+                        <Typography
+                            variant="h6"
+                            sx={{fontWeight: "bold", width: "100%"}}
+                        >
+                            Sentiment Trend for Selected Product(s)
+                        </Typography>
+                        <Typography
+                            color="grey"
+                            sx={{fontWeight: "600", mb: 2, width: "100%"}}
+                        >
+                            across all subcategories
+                        </Typography>
+                    </Box>
+                </Box>
                 {sentimentScores.length === 0 ? (
                     <Typography variant="body2" color="grey">
                         No data

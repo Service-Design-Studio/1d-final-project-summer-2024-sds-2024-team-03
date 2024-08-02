@@ -7,7 +7,16 @@ import React, {
     useImperativeHandle,
 } from "react";
 import {Theme, useTheme} from "@mui/material/styles";
-import {Paper, Box, Typography, ButtonBase, Rating} from "@mui/material";
+import {
+    Paper,
+    Box,
+    Typography,
+    ButtonBase,
+    Rating,
+    Tooltip,
+    IconButton,
+} from "@mui/material";
+import InfoIcon from "@mui/icons-material/Info";
 import {Dayjs} from "dayjs";
 import {ResponsiveSunburst} from "@nivo/sunburst";
 
@@ -311,6 +320,117 @@ export default forwardRef(function CategoriesSunburstChart(
                     variant="h6"
                     sx={{width: "100%", fontWeight: "bold"}}
                 >
+                    <Tooltip
+                        title={
+                            <Box
+                                sx={{
+                                    width: 300,
+                                    height: 400,
+                                }}
+                            >
+                                <span>
+                                    The chart represents the corresponding
+                                    frequency of Products, Subcategories and
+                                    Feedback Categories
+                                    <br />
+                                    <b>Hover</b> for more information
+                                </span>
+                                <ResponsiveSunburst
+                                    data={{
+                                        children: [
+                                            {
+                                                key: "Product",
+                                                color: "hsl(297, 70%, 50%)",
+                                                children: [
+                                                    {
+                                                        key: "Subcategory",
+                                                        color: "hsl(201, 70%, 50%)",
+                                                        children: [
+                                                            {
+                                                                key: "Feedback Category",
+                                                                color: "hsl(81, 70%, 50%)",
+                                                                value: 100,
+                                                            },
+                                                        ],
+                                                    },
+                                                ],
+                                            },
+                                        ],
+                                    }}
+                                    margin={{
+                                        bottom: 10,
+                                        right: 15,
+                                    }}
+                                    id="key"
+                                    value="value"
+                                    cornerRadius={2}
+                                    borderWidth={2}
+                                    borderColor={
+                                        theme.palette.mode === "dark"
+                                            ? "#222222"
+                                            : "#fff"
+                                    }
+                                    colors={{scheme: "pastel2"}}
+                                    inheritColorFromParent={false}
+                                    childColor={{
+                                        from: "color",
+                                        modifiers: [["brighter", 0.3]],
+                                    }}
+                                    enableArcLabels={true}
+                                    arcLabel="id"
+                                    arcLabelsRadiusOffset={0.35}
+                                    arcLabelsTextColor="black"
+                                    animate={false}
+                                    tooltip={({
+                                        id,
+                                        value,
+                                        color,
+                                        percentage,
+                                    }) => (
+                                        <Paper
+                                            sx={{
+                                                padding: "9px 12px",
+                                                borderRadius: "10px",
+                                                backgroundColor:
+                                                    theme.palette.mode ===
+                                                    "dark"
+                                                        ? "#111"
+                                                        : "#fff",
+                                                boxShadow:
+                                                    "0px 0px 10px rgba(0, 0, 0, 0.2)",
+                                                color:
+                                                    theme.palette.mode ===
+                                                    "dark"
+                                                        ? "#fff"
+                                                        : "#000",
+                                            }}
+                                        >
+                                            <Typography
+                                                variant="body2"
+                                                style={{
+                                                    color,
+                                                    fontWeight: "bold",
+                                                }}
+                                            >
+                                                {id ?? "Others"}
+                                            </Typography>
+                                            <Typography variant="body2">
+                                                {value} (
+                                                {Math.round(percentage * 10) /
+                                                    10}
+                                                %)
+                                            </Typography>
+                                        </Paper>
+                                    )}
+                                />
+                            </Box>
+                        }
+                        arrow
+                    >
+                        <IconButton>
+                            <InfoIcon />
+                        </IconButton>
+                    </Tooltip>
                     Distribution of Categories
                 </Typography>
                 {components.length === 0 ? (
@@ -382,25 +502,6 @@ export default forwardRef(function CategoriesSunburstChart(
                                     </Typography>
                                 </Paper>
                             )}
-                            // tooltip={(e) =>
-                            //     t.createElement(
-                            //         l,
-                            //         {style: {color: e.color}},
-                            //         t.createElement(u, null, "id"),
-                            //         t.createElement(c, null, e.id),
-                            //         t.createElement(u, null, "value"),
-                            //         t.createElement(c, null, e.value),
-                            //         t.createElement(u, null, "percentage"),
-                            //         t.createElement(
-                            //             c,
-                            //             null,
-                            //             Math.round(100 * e.percentage) / 100,
-                            //             "%"
-                            //         ),
-                            //         t.createElement(u, null, "color"),
-                            //         t.createElement(c, null, e.color)
-                            //     )
-                            // }
                         />
                         <Box
                             sx={{
