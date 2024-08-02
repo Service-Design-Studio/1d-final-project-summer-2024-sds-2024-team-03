@@ -97,7 +97,6 @@ export default forwardRef(function SentimentScoreGraph(
         const formattedDate = new Intl.DateTimeFormat("en-GB", options).format(
             date
         );
-        console.log(dateString, formattedDate);
         return formattedDate;
     };
 
@@ -265,7 +264,6 @@ export default forwardRef(function SentimentScoreGraph(
             )
                 .then((response) => response.json())
                 .then((data: Record<string, string>[]) => {
-                    console.log(data);
                     if (data.length > 0) {
                         setSentimentScores([
                             {
@@ -554,7 +552,7 @@ export default forwardRef(function SentimentScoreGraph(
                                 format: "%d %b %y",
                                 precision: "day",
                             }}
-                            xFormat={`time: %d %b %y`}
+                            xFormat={`time: %d %b '%y`}
                             yScale={{
                                 type: "linear",
                                 min: 0,
@@ -783,7 +781,7 @@ export default forwardRef(function SentimentScoreGraph(
                                 format: "%d %b %y",
                                 precision: "day",
                             }}
-                            xFormat={`time: %d %b %y`}
+                            xFormat={`time: %d %b '%y`}
                             yScale={{
                                 type: "linear",
                                 min: 0,

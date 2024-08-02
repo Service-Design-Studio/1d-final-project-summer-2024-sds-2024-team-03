@@ -251,19 +251,18 @@ export default forwardRef(function CategoriesSunburstChart(
             img: internalRef.current!,
             reportDesc:
                 topCategories.length > 0
-                    ? `The top 3 most mentioned ${topCategories
-                          .map((category, i) => (
-                              <li key={i}>
-                                  {/* {category.product} */}
-                                  {category.subcategory} |{" "}
-                                  {category.feedback_category} has
-                                  {category.mentions} total mentions, with an
-                                  average sentiment score of
-                                  {category.averageSentimentScore.toFixed(1)} /
-                                  5.
-                              </li>
-                          ))
-                          .join(" ")}`
+                    ? `The top 3 most mentioned:\n${topCategories
+                          .map(
+                              (category) =>
+                                  `• ${category.subcategory} | ${
+                                      category.feedback_category
+                                  } has ${
+                                      category.mentions
+                                  } total mentions, with an average sentiment score of ${category.averageSentimentScore.toFixed(
+                                      1
+                                  )} / 5.\n`
+                          )
+                          .join("")}`
                     : "No data.",
         }),
         [topCategories] // Adjust the dependency array if necessary

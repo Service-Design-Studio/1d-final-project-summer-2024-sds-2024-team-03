@@ -114,19 +114,22 @@ export default forwardRef(function OverallSentimentScore(
         ref,
         () => ({
             img: internalRef.current!,
-            reportDesc: `There was an overall sentiment score of ${overallSentimentScore} / 5, which was a ${overallSentimentScoreChange}% ${
-                overallSentimentScoreChange > 0
-                    ? "increase"
-                    : overallSentimentScoreChange < 0
-                    ? "decrease"
-                    : "change"
-            } compared to the same duration from ${dayjs(
-                prevFromDate_string,
-                "DD/MM/YYYY"
-            ).format("DD MMM' YY")} - ${dayjs(
-                fromDate_string,
-                "DD/MM/YYYY"
-            ).format("DD MMM' YY")}.`,
+            reportDesc: `There was an overall sentiment score of ${overallSentimentScore} / 5${
+                overallSentimentScore &&
+                `, which was a ${overallSentimentScoreChange}% ${
+                    overallSentimentScoreChange > 0
+                        ? "increase"
+                        : overallSentimentScoreChange < 0
+                        ? "decrease"
+                        : "change"
+                } compared to the same duration from ${dayjs(
+                    prevFromDate_string,
+                    "DD/MM/YYYY"
+                ).format("DD MMM 'YY")} - ${dayjs(
+                    fromDate_string,
+                    "DD/MM/YYYY"
+                ).format("DD MMM 'YY")}}`
+            }.`,
         }),
         [overallSentimentScore, overallSentimentScoreChange, fromDate]
     );
