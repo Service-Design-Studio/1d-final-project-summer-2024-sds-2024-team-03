@@ -254,7 +254,7 @@ export default forwardRef(function CategoriesSunburstChart(
                     ? `The top 3 most mentioned:\n${topCategories
                           .map(
                               (category) =>
-                                  `• ${category.subcategory} | ${
+                                  `   • ${category.subcategory} | ${
                                       category.feedback_category
                                   } has ${
                                       category.mentions

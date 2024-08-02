@@ -139,6 +139,10 @@ export default forwardRef(function SentimentCategoriesGraph(
     const [sortPositive, setSortPositive] = useState<boolean>(true);
     const [viewAll, setViewAll] = useState(false);
 
+    const [eg, setEg] = useState<Record<string, Record<string, DataRecord[]>>>({
+        highSentiment: {},
+        lowSentiment: {},
+    });
     const [dataGroupedByFeedbackcategory, setDataGroupedByFeedbackcategory] =
         useState<Record<string, DataRecord[]>>({});
     const [selectedBarData, setSelectedBarData] = useState<any[]>([]);
@@ -455,6 +459,76 @@ export default forwardRef(function SentimentCategoriesGraph(
                 .then((response) => response.json())
                 .then((data: DataRecord[]) => {
                     if (data.length > 0) {
+                        const highSentimentEg = data
+                            .filter((item) => {
+                                if (item.sentiment_score)
+                                    return (
+                                        parseFloat(item.sentiment_score) > 4.5
+                                    );
+                            })
+                            .reduce(
+                                (
+                                    acc,
+                                    {
+                                        subcategory,
+                                        feedback_category,
+                                        sentiment_score,
+                                        date,
+                                        product,
+                                        feedback,
+                                        source,
+                                    }
+                                ) => {
+                                    const key = feedback_category;
+                                    (acc[key] = acc[key] || []).push({
+                                        subcategory,
+                                        feedback_category,
+                                        sentiment_score,
+                                        date,
+                                        product,
+                                        feedback,
+                                        source,
+                                    });
+                                    return acc;
+                                },
+                                {} as Record<string, DataRecord[]>
+                            );
+
+                        const lowSentimentEg = data
+                            .filter((item) => {
+                                if (item.sentiment_score)
+                                    return (
+                                        parseFloat(item.sentiment_score) <= 1
+                                    );
+                            })
+                            .reduce(
+                                (
+                                    acc,
+                                    {
+                                        subcategory,
+                                        feedback_category,
+                                        sentiment_score,
+                                        date,
+                                        product,
+                                        feedback,
+                                        source,
+                                    }
+                                ) => {
+                                    const key = feedback_category;
+                                    (acc[key] = acc[key] || []).push({
+                                        subcategory,
+                                        feedback_category,
+                                        sentiment_score,
+                                        date,
+                                        product,
+                                        feedback,
+                                        source,
+                                    });
+                                    return acc;
+                                },
+                                {} as Record<string, DataRecord[]>
+                            );
+
                         const dataGroupedByFeedbackcategory = data.reduce(
                             (
                                 acc,
@@ -572,6 +646,10 @@ export default forwardRef(function SentimentCategoriesGraph(
 
                         console.log(barsData);
                         setBars(barsData);
+                        setEg({
+                            highSentiment: highSentimentEg,
+                            lowSentiment: lowSentimentEg,
+                        });
                     } else {
                         setBars([]);
                     }
@@ -592,8 +670,9 @@ export default forwardRef(function SentimentCategoriesGraph(
             img: internalRef.current!,
             reportDesc:
                 bars.length > 0
-                    ? `Demonstrates strong support -\n${sortBySentiment(bars)
+                    ? `Demonstrates strong support\n${sortBySentiment(bars)
                           .slice(bars.length - 5, bars.length)
+                          .reverse()
                           .map((bar) => {
                               let description = "   • ";
 
@@ -613,30 +692,50 @@ export default forwardRef(function SentimentCategoriesGraph(
 
                               return description;
                           })
-                          .join("\n")}
-            \n\n
-            Areas for improvement -\n${sortBySentiment(bars, true)
-                .slice(bars.length - 5, bars.length)
-                .map((bar) => {
-                    let description = "   • ";
+                          .join("\n")}Some examples\n${Object.values(
+                          eg.highSentiment
+                      )
+                          .flat()
+                          .map(
+                              (data) =>
+                                  `   • ${data.subcategory} | ${data.feedback_category} on ${data.date}: ${data.feedback}`
+                          )
+                          .join(
+                              "\n"
+                          )}\n\nAreas for improvement\n${sortBySentiment(
+                          bars,
+                          true
+                      )
+                          .slice(bars.length - 5, bars.length)
+                          .reverse()
+                          .map((bar) => {
+                              let description = "   • ";
 
-                    if (bar.Frustrated > 0) {
-                        description += `${bar.Frustrated}% frustrated`;
-                    }
-                    if (bar.Unsatisfied > 0) {
-                        if (bar.Frustrated > 0) {
-                            description += " and ";
-                        }
-                        description += `${bar.Unsatisfied}% unsatisfied`;
-                    }
+                              if (bar.Frustrated > 0) {
+                                  description += `${bar.Frustrated}% frustrated`;
+                              }
+                              if (bar.Unsatisfied > 0) {
+                                  if (bar.Frustrated > 0) {
+                                      description += " and ";
+                                  }
+                                  description += `${bar.Unsatisfied}% unsatisfied`;
+                              }
 
-                    description += ` about ${bar.category.split(" > ")[0]} | ${
-                        bar.category.split(" > ")[1]
-                    }`;
+                              description += ` about ${
+                                  bar.category.split(" > ")[0]
+                              } | ${bar.category.split(" > ")[1]}`;
 
-                    return description;
-                })
-                .join("\n")}`
+                              return description;
+                          })
+                          .join("\n")}Some examples\n${Object.values(
+                          eg.lowSentiment
+                      )
+                          .flat()
+                          .map(
+                              (data) =>
+                                  `   • ${data.subcategory} | ${data.feedback_category} on ${data.date}: ${data.feedback}`
+                          )
+                          .join("\n")}`
                     : "No data.",
         }),
         [bars]

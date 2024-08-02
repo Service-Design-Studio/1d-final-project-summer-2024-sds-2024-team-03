@@ -128,7 +128,7 @@ export default forwardRef(function OverallSentimentScore(
                 ).format("DD MMM 'YY")} - ${dayjs(
                     fromDate_string,
                     "DD/MM/YYYY"
-                ).format("DD MMM 'YY")}}`
+                ).format("DD MMM 'YY")}`
             }.`,
         }),
         [overallSentimentScore, overallSentimentScoreChange, fromDate]
