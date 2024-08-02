@@ -949,7 +949,7 @@ export default forwardRef(function SentimentCategoriesGraph(
                                 gap: 2,
                                 mt: 2,
                                 width: "100%",
-                                height: 800,
+                                height: viewAll ? 800 : 200,
                             }}
                         >
                             <React.Fragment>
@@ -1019,42 +1019,22 @@ export default forwardRef(function SentimentCategoriesGraph(
                                         >
                                             <div
                                                 style={{
-                                                    padding: "9px 12px",
-                                                    borderRadius: "10px",
-                                                    backgroundColor:
-                                                        theme.palette.mode ===
-                                                        "dark"
-                                                            ? "#333"
-                                                            : "#fff",
-                                                    boxShadow:
-                                                        "0px 0px 10px rgba(0, 0, 0, 0.2)",
-                                                    color:
-                                                        theme.palette.mode ===
-                                                        "dark"
-                                                            ? "#fff"
-                                                            : "#000",
+                                                    display: "flex",
+                                                    alignItems: "center",
                                                 }}
                                             >
                                                 <div
                                                     style={{
-                                                        display: "flex",
-                                                        alignItems: "center",
+                                                        width: "12px",
+                                                        height: "12px",
+                                                        backgroundColor: color,
+                                                        marginRight: "8px",
                                                     }}
-                                                >
-                                                    <div
-                                                        style={{
-                                                            width: "12px",
-                                                            height: "12px",
-                                                            backgroundColor:
-                                                                color,
-                                                            marginRight: "8px",
-                                                        }}
-                                                    ></div>
-                                                    <Typography variant="body2">
-                                                        {id} — {indexValue}:{" "}
-                                                        <b>{value}%</b>
-                                                    </Typography>
-                                                </div>
+                                                ></div>
+                                                <Typography variant="body2">
+                                                    {id} — {indexValue}:{" "}
+                                                    <b>{value}%</b>
+                                                </Typography>
                                             </div>
                                             <div
                                                 style={{
