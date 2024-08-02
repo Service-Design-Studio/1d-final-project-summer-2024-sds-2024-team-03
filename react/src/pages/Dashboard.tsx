@@ -145,7 +145,8 @@ export default function Dashboard({
                 ref === reportRefs.OverallSentimentScoreRef ||
                 ref === reportRefs.SentimentDistributionRef
                     ? 0.35
-                    : ref === reportRefs.CategoriesSunburstChartRef
+                    : ref === reportRefs.CategoriesSunburstChartRef ||
+                      ref === reportRefs.SentimentCategoriesGraphRef
                     ? 0.5
                     : 0.85;
             return await addImageToPDF(ref, x, y, scale);
@@ -267,24 +268,24 @@ export default function Dashboard({
         // prevY = MARGIN;
         // pdf.addPage();
         // [prevImageWidth, prevImageHeight] = await addScaledImageToPDF(
-        //     reportRefs.SentimentCategoriesGraphRef,
+        //     reportRefs.ActionsCompletedRef,
         //     0,
         //     prevY
         // );
 
         // prevY += prevImageHeight + PADDING;
         // prevY = addText(
-        //     reportRefs.SentimentCategoriesGraphRef.current?.reportDesc ?? "",
+        //     reportRefs.ActionsCompletedRef.current?.reportDesc ?? "",
         //     MARGIN,
         //     prevY + PADDING
         // );
 
         pdf.setProperties({
             title: `${dayjs().format(
-                "DD/MM/YYYY"
+                "DD-MM-YYYY"
             )}_report_generated_for_${dayjs(fromDate).format(
-                "DD/MM/YYYY"
-            )}-${dayjs(toDate).format("DD/MM/YYYY")}`,
+                "DD-MM-YYYY"
+            )}-${dayjs(toDate).format("DD-MM-YYYY")}`,
             subject: "DBS VOCUS",
             author: "SUTD JBAAAM!",
             keywords: "generated, javascript, web 2.0, ajax",
@@ -293,9 +294,9 @@ export default function Dashboard({
 
         // const pdfDataUrl = pdf.output("dataurlstring");
         pdf.save(
-            `${dayjs().format("DD/MM/YYYY")}_report_generated_for_${dayjs(
+            `${dayjs().format("DD-MM-YYYY")}_report_generated_for_${dayjs(
                 fromDate
-            ).format("DD/MM/YYYY")}-${dayjs(toDate).format("DD/MM/YYYY")}.pdf`
+            ).format("DD-MM-YYYY")}-${dayjs(toDate).format("DD-MM-YYYY")}.pdf`
         );
     };
 

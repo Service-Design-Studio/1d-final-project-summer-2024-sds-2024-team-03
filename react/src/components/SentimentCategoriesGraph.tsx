@@ -592,10 +592,10 @@ export default forwardRef(function SentimentCategoriesGraph(
             img: internalRef.current!,
             reportDesc:
                 bars.length > 0
-                    ? `${sortBySentiment(bars)
+                    ? `Demonstrates strong support -\n${sortBySentiment(bars)
                           .slice(bars.length - 5, bars.length)
                           .map((bar) => {
-                              let description = "";
+                              let description = "   • ";
 
                               if (bar.Promoter > 0) {
                                   description += `${bar.Promoter}% promoted`;
@@ -604,37 +604,35 @@ export default forwardRef(function SentimentCategoriesGraph(
                                   if (bar.Promoter > 0) {
                                       description += " and ";
                                   }
-                                  description += `${bar.Satisfied}% were Satisfied about `;
+                                  description += `${bar.Satisfied}% satisfied`;
                               }
 
-                              description += `${
+                              description += ` about ${
                                   bar.category.split(" > ")[0]
-                              } | ${
-                                  bar.category.split(" > ")[1]
-                              }, demonstrating strong support.\n`;
+                              } | ${bar.category.split(" > ")[1]}`;
 
                               return description;
                           })
                           .join("\n")}
-            \n
-            However, ${sortBySentiment(bars, true)
+            \n\n
+            Areas for improvement -\n${sortBySentiment(bars, true)
                 .slice(bars.length - 5, bars.length)
                 .map((bar) => {
-                    let description = "";
+                    let description = "   • ";
 
                     if (bar.Frustrated > 0) {
-                        description += `${bar.Frustrated}% were Frustrated`;
+                        description += `${bar.Frustrated}% frustrated`;
                     }
                     if (bar.Unsatisfied > 0) {
                         if (bar.Frustrated > 0) {
                             description += " and ";
                         }
-                        description += `${bar.Unsatisfied}% were Unsatisfied about `;
+                        description += `${bar.Unsatisfied}% unsatisfied`;
                     }
 
-                    description += `${bar.category.split(" > ")[0]} | ${
+                    description += ` about ${bar.category.split(" > ")[0]} | ${
                         bar.category.split(" > ")[1]
-                    }, suggesting areas for improvement.\n`;
+                    }`;
 
                     return description;
                 })
