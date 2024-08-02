@@ -3,21 +3,36 @@ import FilterProduct from "../components/FilterProduct";
 import FilterSource from "../components/FilterSource";
 import Calendar from "../components/Calendar";
 import TodoList from "../components/Actionables/TodoList";
-import {Chip, Grid, Box, styled, Tooltip, IconButton} from "@mui/material";
+import DialogAddAction from "../components/Actionables/DialogAddAction";
+import useDebounce from "../components/Actionables/useDebounce";
+import {
+    ActionablesPageProps,
+    Actionable,
+} from "../components/Actionables/Interfaces";
+import {
+    Chip,
+    Grid,
+    Box,
+    styled,
+    Tooltip,
+    IconButton,
+    TooltipProps,
+    tooltipClasses,
+} from "@mui/material";
 import InfoIcon from "@mui/icons-material/Info";
 import NewReleasesTwoToneIcon from "@mui/icons-material/NewReleasesTwoTone";
 import RotateRightTwoToneIcon from "@mui/icons-material/RotateRightTwoTone";
 import CheckCircleTwoToneIcon from "@mui/icons-material/CheckCircleTwoTone";
 import {useTheme} from "@mui/material/styles";
-import DialogAddAction from "../components/Actionables/DialogAddAction";
-import useDebounce from "../components/Actionables/useDebounce";
 import useDetectScroll, {Direction} from "@smakss/react-scroll-direction";
 
-//IMPORT INTERFACE
-import {
-    ActionablesPageProps,
-    Actionable,
-} from "../components/Actionables/Interfaces";
+const CustomWidthTooltip = styled(({className, ...props}: TooltipProps) => (
+    <Tooltip {...props} classes={{popper: className}} />
+))({
+    [`& .${tooltipClasses.tooltip}`]: {
+        maxWidth: 230,
+    },
+});
 
 export default function Actionables({
     setFromDate,
@@ -158,39 +173,35 @@ export default function Actionables({
             </Box>
             <Box sx={{flexGrow: 1}}>
                 <Grid container spacing={2}>
-                    <Grid item xs={4}>
-                        <Tooltip
-                            title={
-                                <span>
-                                    <b>New</b> actionables are always
-                                    regenerated, move them to <b>In Progress</b>{" "}
-                                    or <b>Done</b>!
-                                </span>
-                            }
-                            arrow
-                        >
-                            <IconButton>
-                                <InfoIcon />
-                            </IconButton>
-                        </Tooltip>
-                        <Chip
-                            icon={<NewReleasesTwoToneIcon />}
-                            label="NEW"
-                            color="secondary"
-                            variant="outlined"
-                            sx={{
-                                mb: 2,
-                                borderRadius: 3,
-                                backgroundColor: "rgba(232, 0, 0, 0.2)",
-                                fontWeight: "bold",
-                                py: 2,
-                                px: 0.5,
-                                borderWidth: 2,
-                            }}
-                        />
-
-                        <TodoList data={dataNew} setRefresh={setRefresh} />
-                    </Grid>
+                    <CustomWidthTooltip
+                        title={
+                            <span>
+                                <b>NEW</b> actionables are always regenerated,
+                                move them to <b>IN PROGRESS</b> or <b>DONE</b>!
+                            </span>
+                        }
+                        arrow
+                        placement="left-start"
+                    >
+                        <Grid item xs={4}>
+                            <Chip
+                                icon={<NewReleasesTwoToneIcon />}
+                                label="NEW"
+                                color="secondary"
+                                variant="outlined"
+                                sx={{
+                                    mb: 2,
+                                    borderRadius: 3,
+                                    backgroundColor: "rgba(232, 0, 0, 0.2)",
+                                    fontWeight: "bold",
+                                    py: 2,
+                                    px: 0.5,
+                                    borderWidth: 2,
+                                }}
+                            />
+                            <TodoList data={dataNew} setRefresh={setRefresh} />
+                        </Grid>
+                    </CustomWidthTooltip>
                     <Grid item xs={4}>
                         <Chip
                             icon={<RotateRightTwoToneIcon />}
