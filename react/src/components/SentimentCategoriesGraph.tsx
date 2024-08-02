@@ -35,6 +35,8 @@ import {
     Chip,
     styled,
     Tooltip,
+    TooltipProps,
+    tooltipClasses,
     IconButton,
 } from "@mui/material";
 import InfoIcon from "@mui/icons-material/Info";
@@ -54,6 +56,15 @@ const MenuProps = {
         },
     },
 };
+
+const CustomWidthTooltip = styled(({className, ...props}: TooltipProps) => (
+    <Tooltip {...props} classes={{popper: className}} />
+))({
+    [`& .${tooltipClasses.tooltip}`]: {
+        maxWidth: 250,
+    },
+});
+
 const StyledTableCell = styled(TableCell)(({theme}) => ({
     [`&.${tableCellClasses.head}`]: {
         backgroundColor: theme.palette.common.black,
@@ -760,245 +771,234 @@ export default forwardRef(function SentimentCategoriesGraph(
 
     /* Must have parent container with a defined size */
     return isDetailed ? (
-        <Box
-            ref={internalRef}
-            sx={{
-                display: "flex",
-                gap: 2,
-                width: "100%",
-                flexDirection: "row",
-            }}
+        <CustomWidthTooltip
+            title={
+                <span>
+                    Frequency of sentiments for the Feedback Category of the
+                    selected Subcategory
+                    <br />
+                    <br />
+                    <b>Sort</b> Positive or Negative sentiments
+                    <br />
+                    <b>View</b> All or Less Feedback Categories
+                    <br />
+                    <b>Click</b> to view related VOCUS
+                    <br />
+                    <b>Hover</b> for more information
+                </span>
+            }
+            arrow
+            placement="right-start"
         >
-            <Paper
+            <Box
+                ref={internalRef}
                 sx={{
                     display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    p: 2,
-                    borderRadius: 4,
-                    boxShadow: "0px 0px 20px rgba(0, 0, 0, 0.1)",
-                    flex: 1,
+                    gap: 2,
+                    width: "100%",
+                    flexDirection: "row",
                 }}
-                id="detailed-sentimentcategoriesgraph"
             >
-                <Box
+                <Paper
                     sx={{
                         display: "flex",
-                        justifyContent: "space-between",
-                        width: "100%",
+                        flexDirection: "column",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        p: 2,
+                        borderRadius: 4,
+                        boxShadow: "0px 0px 20px rgba(0, 0, 0, 0.1)",
+                        flex: 1,
                     }}
+                    id="detailed-sentimentcategoriesgraph"
                 >
                     <Box
                         sx={{
                             display: "flex",
                             justifyContent: "space-between",
-                            flexGrow: 1,
+                            width: "100%",
                         }}
                     >
                         <Box
                             sx={{
                                 display: "flex",
-                                justifyContent: "flex-start",
+                                justifyContent: "space-between",
                                 flexGrow: 1,
-                                alignItems: "flex-start",
                             }}
                         >
-                            <Tooltip
-                                title={
-                                    <span>
-                                        Frequency of sentiments for the Feedback
-                                        Category of the selected Subcategory
-                                        <br />
-                                        <b>Sort</b> Positive or Negative
-                                        sentiments
-                                        <br />
-                                        <b>View</b> All or Less Feedback
-                                        Categories
-                                        <br />
-                                        <b>Click</b> to view related VOCUS
-                                        <br />
-                                        <b>Hover</b> for more information
-                                    </span>
-                                }
-                                arrow
-                            >
-                                <IconButton>
-                                    <InfoIcon />
-                                </IconButton>
-                            </Tooltip>
-                            <Typography
-                                variant="h6"
-                                sx={{fontWeight: "bold", mr: 1}}
-                            >
-                                Sentiment Categorisation
-                            </Typography>
-                            <Typography
-                                variant="h6"
-                                sx={{fontWeight: "bold"}}
-                                style={{
-                                    color: sortPositive ? "green" : "red",
+                            <Box
+                                sx={{
+                                    display: "flex",
+                                    justifyContent: "flex-start",
+                                    flexGrow: 1,
+                                    alignItems: "flex-start",
                                 }}
                             >
-                                {sortPositive ? "(Positive)" : "(Negative)"}
-                            </Typography>
-                        </Box>
-                        <Box
-                            sx={{
-                                display: "flex",
-                                alignItems: "center",
-                            }}
-                        >
-                            <Button
-                                variant="outlined"
-                                onClick={() => setSortPositive(!sortPositive)}
+                                <Typography
+                                    variant="h6"
+                                    sx={{fontWeight: "bold", mr: 1}}
+                                >
+                                    Sentiment Categorisation
+                                </Typography>
+                                <Typography
+                                    variant="h6"
+                                    sx={{fontWeight: "bold"}}
+                                    style={{
+                                        color: sortPositive ? "green" : "red",
+                                    }}
+                                >
+                                    {sortPositive ? "(Positive)" : "(Negative)"}
+                                </Typography>
+                            </Box>
+                            <Box
                                 sx={{
-                                    marginRight: 2,
-                                    borderRadius: 2,
-                                    border: 0,
-                                    backgroundColor:
-                                        theme.palette.mode === "dark"
-                                            ? "#555"
-                                            : "#888",
-                                    color: "#fff",
-                                    fontWeight: "bold",
-                                    "&:hover": {
+                                    display: "flex",
+                                    alignItems: "center",
+                                }}
+                            >
+                                <Button
+                                    variant="outlined"
+                                    onClick={() =>
+                                        setSortPositive(!sortPositive)
+                                    }
+                                    sx={{
+                                        marginRight: 2,
+                                        borderRadius: 2,
                                         border: 0,
                                         backgroundColor:
                                             theme.palette.mode === "dark"
-                                                ? "#777"
-                                                : "#AAA",
-                                    },
-                                }}
-                            >
-                                Sort
-                            </Button>
-                        </Box>
-                    </Box>
-                    <FormControl sx={{m: 0, width: "22%"}}>
-                        <InputLabel id="detailed-sentimentcategoriesgraph-filter-subcategory-label">
-                            Subcategories
-                        </InputLabel>
-                        <Select
-                            labelId="detailed-sentimentcategoriesgraph-filter-subcategory-label"
-                            id="detailed-sentimentcategoriesgraph-filter-subcategory"
-                            multiple={false}
-                            value={selectedSubcategory}
-                            onChange={handleSubcategoryChange}
-                            input={
-                                <OutlinedInput
-                                    id="detailed-sentimentcategoriesgraph-select-subcategory"
-                                    label="Subcategory"
-                                    sx={{borderRadius: 4}}
-                                />
-                            }
-                            renderValue={(selected) => (
-                                <Box
-                                    sx={{
-                                        display: "flex",
-                                        flexWrap: "wrap",
-                                        gap: 0.5,
-                                    }}
-                                >
-                                    <Chip key={selected} label={selected} />
-                                </Box>
-                            )}
-                            MenuProps={MenuProps}
-                        >
-                            {graphSubcategories.length > 0 ? (
-                                graphSubcategories.sort().map((subcategory) => (
-                                    <MenuItem
-                                        key={subcategory}
-                                        value={subcategory}
-                                        className="subcategory-option"
-                                    >
-                                        {subcategory}
-                                    </MenuItem>
-                                ))
-                            ) : (
-                                <MenuItem disabled>
-                                    No data from selection
-                                </MenuItem>
-                            )}
-                        </Select>
-                    </FormControl>
-                </Box>
-                {bars.length === 0 ? (
-                    <Typography
-                        variant="body2"
-                        color="grey"
-                        sx={{marginTop: 2}}
-                    >
-                        No data
-                    </Typography>
-                ) : (
-                    <Box
-                        sx={{
-                            display: "flex",
-                            gap: 2,
-                            mt: 2,
-                            width: "100%",
-                            height: 200,
-                        }}
-                    >
-                        <React.Fragment>
-                            <ResponsiveBar
-                                onClick={handleBarClick}
-                                data={
-                                    viewAll && sortPositive
-                                        ? sortBySentiment(bars)
-                                        : sortPositive
-                                        ? sortBySentiment(bars).slice(
-                                              bars.length - 5,
-                                              bars.length
-                                          )
-                                        : viewAll
-                                        ? sortBySentiment(bars, true)
-                                        : sortBySentiment(bars, true).slice(
-                                              bars.length - 5,
-                                              bars.length
-                                          )
-                                }
-                                keys={
-                                    sortPositive
-                                        ? Object.keys(ORDER)
-                                        : Object.keys(ORDER).reverse()
-                                }
-                                colors={
-                                    sortPositive
-                                        ? Object.values(ORDER)
-                                        : Object.values(ORDER).reverse()
-                                }
-                                indexBy="category"
-                                margin={{
-                                    top: 10,
-                                    right: 50,
-                                    bottom: 50,
-                                    left: 250,
-                                }}
-                                padding={0.3}
-                                minValue={0}
-                                maxValue={100}
-                                layout="horizontal"
-                                valueScale={{type: "linear"}}
-                                indexScale={{type: "band", round: true}}
-                                tooltip={({id, indexValue, value, color}) => (
-                                    <div
-                                        style={{
-                                            padding: "9px 12px",
-                                            borderRadius: "10px",
+                                                ? "#555"
+                                                : "#888",
+                                        color: "#fff",
+                                        fontWeight: "bold",
+                                        "&:hover": {
+                                            border: 0,
                                             backgroundColor:
                                                 theme.palette.mode === "dark"
-                                                    ? "#333"
-                                                    : "#fff",
-                                            boxShadow:
-                                                "0px 0px 10px rgba(0, 0, 0, 0.2)",
-                                            color:
-                                                theme.palette.mode === "dark"
-                                                    ? "#fff"
-                                                    : "#000",
+                                                    ? "#777"
+                                                    : "#AAA",
+                                        },
+                                    }}
+                                >
+                                    Sort
+                                </Button>
+                            </Box>
+                        </Box>
+                        <FormControl sx={{m: 0, width: "22%"}}>
+                            <InputLabel id="detailed-sentimentcategoriesgraph-filter-subcategory-label">
+                                Subcategories
+                            </InputLabel>
+                            <Select
+                                labelId="detailed-sentimentcategoriesgraph-filter-subcategory-label"
+                                id="detailed-sentimentcategoriesgraph-filter-subcategory"
+                                multiple={false}
+                                value={selectedSubcategory}
+                                onChange={handleSubcategoryChange}
+                                input={
+                                    <OutlinedInput
+                                        id="detailed-sentimentcategoriesgraph-select-subcategory"
+                                        label="Subcategory"
+                                        sx={{borderRadius: 4}}
+                                    />
+                                }
+                                renderValue={(selected) => (
+                                    <Box
+                                        sx={{
+                                            display: "flex",
+                                            flexWrap: "wrap",
+                                            gap: 0.5,
                                         }}
                                     >
+                                        <Chip key={selected} label={selected} />
+                                    </Box>
+                                )}
+                                MenuProps={MenuProps}
+                            >
+                                {graphSubcategories.length > 0 ? (
+                                    graphSubcategories
+                                        .sort()
+                                        .map((subcategory) => (
+                                            <MenuItem
+                                                key={subcategory}
+                                                value={subcategory}
+                                                className="subcategory-option"
+                                            >
+                                                {subcategory}
+                                            </MenuItem>
+                                        ))
+                                ) : (
+                                    <MenuItem disabled>
+                                        No data from selection
+                                    </MenuItem>
+                                )}
+                            </Select>
+                        </FormControl>
+                    </Box>
+                    {bars.length === 0 ? (
+                        <Typography
+                            variant="body2"
+                            color="grey"
+                            sx={{marginTop: 2}}
+                        >
+                            No data
+                        </Typography>
+                    ) : (
+                        <Box
+                            sx={{
+                                display: "flex",
+                                gap: 2,
+                                mt: 2,
+                                width: "100%",
+                                height: 800,
+                            }}
+                        >
+                            <React.Fragment>
+                                <ResponsiveBar
+                                    onClick={handleBarClick}
+                                    data={
+                                        viewAll && sortPositive
+                                            ? sortBySentiment(bars)
+                                            : sortPositive
+                                            ? sortBySentiment(bars).slice(
+                                                  bars.length - 5,
+                                                  bars.length
+                                              )
+                                            : viewAll
+                                            ? sortBySentiment(bars, true)
+                                            : sortBySentiment(bars, true).slice(
+                                                  bars.length - 5,
+                                                  bars.length
+                                              )
+                                    }
+                                    keys={
+                                        sortPositive
+                                            ? Object.keys(ORDER)
+                                            : Object.keys(ORDER).reverse()
+                                    }
+                                    colors={
+                                        sortPositive
+                                            ? Object.values(ORDER)
+                                            : Object.values(ORDER).reverse()
+                                    }
+                                    indexBy="category"
+                                    margin={{
+                                        top: 10,
+                                        right: 50,
+                                        bottom: 50,
+                                        left: 250,
+                                    }}
+                                    padding={0.3}
+                                    minValue={0}
+                                    maxValue={100}
+                                    layout="horizontal"
+                                    valueScale={{type: "linear"}}
+                                    indexScale={{type: "band", round: true}}
+                                    tooltip={({
+                                        id,
+                                        indexValue,
+                                        value,
+                                        color,
+                                    }) => (
                                         <div
                                             style={{
                                                 padding: "9px 12px",
@@ -1019,300 +1019,331 @@ export default forwardRef(function SentimentCategoriesGraph(
                                         >
                                             <div
                                                 style={{
-                                                    display: "flex",
-                                                    alignItems: "center",
+                                                    padding: "9px 12px",
+                                                    borderRadius: "10px",
+                                                    backgroundColor:
+                                                        theme.palette.mode ===
+                                                        "dark"
+                                                            ? "#333"
+                                                            : "#fff",
+                                                    boxShadow:
+                                                        "0px 0px 10px rgba(0, 0, 0, 0.2)",
+                                                    color:
+                                                        theme.palette.mode ===
+                                                        "dark"
+                                                            ? "#fff"
+                                                            : "#000",
                                                 }}
                                             >
                                                 <div
                                                     style={{
-                                                        width: "12px",
-                                                        height: "12px",
-                                                        backgroundColor: color,
-                                                        marginRight: "8px",
+                                                        display: "flex",
+                                                        alignItems: "center",
                                                     }}
-                                                ></div>
-                                                <Typography variant="body2">
-                                                    {id} — {indexValue}:{" "}
-                                                    <b>{value}%</b>
-                                                </Typography>
+                                                >
+                                                    <div
+                                                        style={{
+                                                            width: "12px",
+                                                            height: "12px",
+                                                            backgroundColor:
+                                                                color,
+                                                            marginRight: "8px",
+                                                        }}
+                                                    ></div>
+                                                    <Typography variant="body2">
+                                                        {id} — {indexValue}:{" "}
+                                                        <b>{value}%</b>
+                                                    </Typography>
+                                                </div>
+                                            </div>
+                                            <div
+                                                style={{
+                                                    color: "grey",
+                                                    fontStyle: "italic",
+                                                    marginTop: "5px",
+                                                }}
+                                            >
+                                                <strong>Click</strong> to view
+                                                related VOCUS
                                             </div>
                                         </div>
-                                        <div
-                                            style={{
-                                                color: "grey",
-                                                fontStyle: "italic",
-                                                marginTop: "5px",
-                                            }}
-                                        >
-                                            <strong>Click</strong> to view
-                                            related VOCUS
-                                        </div>
-                                    </div>
-                                )}
-                                defs={[
-                                    {
-                                        id: "dots",
-                                        type: "patternDots",
-                                        background: "inherit",
-                                        color: "#38bcb2",
-                                        size: 4,
-                                        padding: 1,
-                                        stagger: true,
-                                    },
-                                    {
-                                        id: "lines",
-                                        type: "patternLines",
-                                        background: "inherit",
-                                        color: "#eed312",
-                                        rotation: -45,
-                                        lineWidth: 6,
-                                        spacing: 10,
-                                    },
-                                ]}
-                                // fill={[
-                                //     {
-                                //         match: {
-                                //             id: "Frustrated",
-                                //         },
-                                //         id: "dots",
-                                //     },
-                                //     {
-                                //         match: {
-                                //             id: "Neutral",
-                                //         },
-                                //         id: "lines",
-                                //     },
-                                // ]}
-                                borderColor={{
-                                    from: "color",
-                                    modifiers: [["darker", 1.6]],
-                                }}
-                                axisTop={null}
-                                axisRight={null}
-                                axisBottom={{
-                                    tickSize: 5,
-                                    tickPadding: 5,
-                                    tickRotation: 0,
-                                    legend: "Percentage",
-                                    legendPosition: "middle",
-                                    legendOffset: 40,
-                                    truncateTickAt: 0,
-                                }}
-                                axisLeft={{
-                                    tickSize: 5,
-                                    tickPadding: 5,
-                                    tickRotation: 0,
-                                    legend: "",
-                                    legendPosition: "middle",
-                                    legendOffset: -40,
-                                    truncateTickAt: 0,
-                                }}
-                                enableGridX={true}
-                                labelSkipWidth={12}
-                                labelSkipHeight={12}
-                                // background / grid.line.stroke / labels.text.fill / "color" / "#..."
-                                labelTextColor="rgba(255, 255, 255, 0.9)"
-                                legends={[]}
-                                role="application"
-                                ariaLabel="Sentiment Categorisation"
-                                theme={{
-                                    labels: {
-                                        text: {
-                                            fontWeight: "bold",
+                                    )}
+                                    defs={[
+                                        {
+                                            id: "dots",
+                                            type: "patternDots",
+                                            background: "inherit",
+                                            color: "#38bcb2",
+                                            size: 4,
+                                            padding: 1,
+                                            stagger: true,
                                         },
-                                    },
-                                    axis: {
-                                        legend: {
+                                        {
+                                            id: "lines",
+                                            type: "patternLines",
+                                            background: "inherit",
+                                            color: "#eed312",
+                                            rotation: -45,
+                                            lineWidth: 6,
+                                            spacing: 10,
+                                        },
+                                    ]}
+                                    // fill={[
+                                    //     {
+                                    //         match: {
+                                    //             id: "Frustrated",
+                                    //         },
+                                    //         id: "dots",
+                                    //     },
+                                    //     {
+                                    //         match: {
+                                    //             id: "Neutral",
+                                    //         },
+                                    //         id: "lines",
+                                    //     },
+                                    // ]}
+                                    borderColor={{
+                                        from: "color",
+                                        modifiers: [["darker", 1.6]],
+                                    }}
+                                    axisTop={null}
+                                    axisRight={null}
+                                    axisBottom={{
+                                        tickSize: 5,
+                                        tickPadding: 5,
+                                        tickRotation: 0,
+                                        legend: "Percentage",
+                                        legendPosition: "middle",
+                                        legendOffset: 40,
+                                        truncateTickAt: 0,
+                                    }}
+                                    axisLeft={{
+                                        tickSize: 5,
+                                        tickPadding: 5,
+                                        tickRotation: 0,
+                                        legend: "",
+                                        legendPosition: "middle",
+                                        legendOffset: -40,
+                                        truncateTickAt: 0,
+                                    }}
+                                    enableGridX={true}
+                                    labelSkipWidth={12}
+                                    labelSkipHeight={12}
+                                    // background / grid.line.stroke / labels.text.fill / "color" / "#..."
+                                    labelTextColor="rgba(255, 255, 255, 0.9)"
+                                    legends={[]}
+                                    role="application"
+                                    ariaLabel="Sentiment Categorisation"
+                                    theme={{
+                                        labels: {
                                             text: {
                                                 fontWeight: "bold",
-                                                fill:
-                                                    theme.palette.mode ===
-                                                    "dark"
-                                                        ? "#ccc"
-                                                        : "#222",
                                             },
                                         },
-                                        ticks: {
+                                        axis: {
+                                            legend: {
+                                                text: {
+                                                    fontWeight: "bold",
+                                                    fill:
+                                                        theme.palette.mode ===
+                                                        "dark"
+                                                            ? "#ccc"
+                                                            : "#222",
+                                                },
+                                            },
+                                            ticks: {
+                                                line: {
+                                                    stroke:
+                                                        theme.palette.mode ===
+                                                        "dark"
+                                                            ? "#ccc"
+                                                            : "#222",
+                                                },
+                                                text: {
+                                                    fill:
+                                                        theme.palette.mode ===
+                                                        "dark"
+                                                            ? "#ccc"
+                                                            : "#222",
+                                                },
+                                            },
+                                        },
+                                        grid: {
                                             line: {
                                                 stroke:
                                                     theme.palette.mode ===
                                                     "dark"
-                                                        ? "#ccc"
-                                                        : "#222",
-                                            },
-                                            text: {
-                                                fill:
-                                                    theme.palette.mode ===
-                                                    "dark"
-                                                        ? "#ccc"
-                                                        : "#222",
+                                                        ? "#555"
+                                                        : "#CCC",
                                             },
                                         },
-                                    },
-                                    grid: {
-                                        line: {
-                                            stroke:
-                                                theme.palette.mode === "dark"
-                                                    ? "#555"
-                                                    : "#CCC",
-                                        },
-                                    },
-                                }}
-                                barAriaLabel={(e) =>
-                                    e.id +
-                                    ": " +
-                                    e.formattedValue +
-                                    " for Subcategory: " +
-                                    e.indexValue
-                                }
-                            />
-                            <Dialog
-                                PaperProps={{style: {borderRadius: 18}}}
-                                open={open}
-                                onClose={handleClose}
-                                scroll={scroll}
-                                maxWidth="lg"
-                                aria-labelledby="scroll-dialog-title"
-                                aria-describedby="scroll-dialog-description"
-                            >
-                                <DialogTitle
-                                    id="scroll-dialog-title"
-                                    style={{
-                                        display: "flex",
-                                        justifyContent: "space-between",
-                                        alignItems: "center",
-                                        fontWeight: "bold",
                                     }}
+                                    barAriaLabel={(e) =>
+                                        e.id +
+                                        ": " +
+                                        e.formattedValue +
+                                        " for Subcategory: " +
+                                        e.indexValue
+                                    }
+                                />
+                                <Dialog
+                                    PaperProps={{style: {borderRadius: 18}}}
+                                    open={open}
+                                    onClose={handleClose}
+                                    scroll={scroll}
+                                    maxWidth="lg"
+                                    aria-labelledby="scroll-dialog-title"
+                                    aria-describedby="scroll-dialog-description"
                                 >
-                                    Relevant data
-                                    <Button
-                                        onClick={handleClose}
-                                        sx={{borderRadius: 4}}
+                                    <DialogTitle
+                                        id="scroll-dialog-title"
+                                        style={{
+                                            display: "flex",
+                                            justifyContent: "space-between",
+                                            alignItems: "center",
+                                            fontWeight: "bold",
+                                        }}
                                     >
-                                        <CloseIcon />
-                                    </Button>
-                                </DialogTitle>
-                                <DialogContent dividers={scroll === "paper"}>
-                                    <DialogContentText
-                                        id="scroll-dialog-description"
-                                        ref={descriptionElementRef}
-                                        tabIndex={-1}
-                                    >
-                                        <TableContainer
-                                            component={Paper}
-                                            sx={{
-                                                borderRadius: 4,
-                                                mt: 1,
-                                                mb: 1,
-                                                boxShadow:
-                                                    "0px 0px 20px rgba(0, 0, 0, 0.2)",
-                                            }}
+                                        Relevant data
+                                        <Button
+                                            onClick={handleClose}
+                                            sx={{borderRadius: 4}}
                                         >
-                                            <Table
-                                                sx={{minWidth: 700}}
-                                                aria-label="customized table"
+                                            <CloseIcon />
+                                        </Button>
+                                    </DialogTitle>
+                                    <DialogContent
+                                        dividers={scroll === "paper"}
+                                    >
+                                        <DialogContentText
+                                            id="scroll-dialog-description"
+                                            ref={descriptionElementRef}
+                                            tabIndex={-1}
+                                        >
+                                            <TableContainer
+                                                component={Paper}
+                                                sx={{
+                                                    borderRadius: 4,
+                                                    mt: 1,
+                                                    mb: 1,
+                                                    boxShadow:
+                                                        "0px 0px 20px rgba(0, 0, 0, 0.2)",
+                                                }}
                                             >
-                                                <TableHead>
-                                                    <TableRow>
-                                                        <StyledTableCell>
-                                                            Date
-                                                        </StyledTableCell>
-                                                        <StyledTableCell align="left">
-                                                            Feedback
-                                                        </StyledTableCell>
-                                                        <StyledTableCell align="left">
-                                                            Source
-                                                        </StyledTableCell>
-                                                        <StyledTableCell align="left">
-                                                            Product
-                                                        </StyledTableCell>
-                                                        <StyledTableCell align="left">
-                                                            Subcategory
-                                                        </StyledTableCell>
-                                                        <StyledTableCell align="left">
-                                                            Feedback Category
-                                                        </StyledTableCell>
-                                                        <StyledTableCell align="left">
-                                                            Sentiment Score
-                                                        </StyledTableCell>
-                                                    </TableRow>
-                                                </TableHead>
-                                                <TableBody>
-                                                    {selectedBarData.map(
-                                                        (row, index) => (
-                                                            <StyledTableRow
-                                                                key={index}
-                                                            >
-                                                                <StyledTableCell>
-                                                                    {row.date}
-                                                                </StyledTableCell>
-                                                                <StyledTableCell align="left">
-                                                                    {
-                                                                        row.feedback
-                                                                    }
-                                                                </StyledTableCell>
-                                                                <StyledTableCell align="left">
-                                                                    {row.source}
-                                                                </StyledTableCell>
-                                                                <StyledTableCell align="left">
-                                                                    {
-                                                                        row.product
-                                                                    }
-                                                                </StyledTableCell>
-                                                                <StyledTableCell align="left">
-                                                                    {
-                                                                        row.subcategory
-                                                                    }
-                                                                </StyledTableCell>
-                                                                <StyledTableCell align="left">
-                                                                    {
-                                                                        row.feedback_category
-                                                                    }
-                                                                </StyledTableCell>
-                                                                <StyledTableCell align="left">
-                                                                    {parseFloat(
-                                                                        row.sentiment_score
-                                                                    ).toFixed(
-                                                                        1
-                                                                    )}
-                                                                </StyledTableCell>
-                                                            </StyledTableRow>
-                                                        )
-                                                    )}
-                                                </TableBody>
-                                            </Table>
-                                        </TableContainer>
-                                    </DialogContentText>
-                                </DialogContent>
-                            </Dialog>
-                        </React.Fragment>
-                    </Box>
-                )}
-                <Button
-                    variant="outlined"
-                    onClick={() => setViewAll(!viewAll)}
-                    sx={{
-                        alignSelf: "flex-end",
-                        mt: 2,
-                        borderRadius: 2,
-                        border: 0,
-                        backgroundColor:
-                            theme.palette.mode === "dark" ? "#555" : "#888",
-                        color: "#fff",
-                        fontWeight: "bold",
-                        "&:hover": {
+                                                <Table
+                                                    sx={{minWidth: 700}}
+                                                    aria-label="customized table"
+                                                >
+                                                    <TableHead>
+                                                        <TableRow>
+                                                            <StyledTableCell>
+                                                                Date
+                                                            </StyledTableCell>
+                                                            <StyledTableCell align="left">
+                                                                Feedback
+                                                            </StyledTableCell>
+                                                            <StyledTableCell align="left">
+                                                                Source
+                                                            </StyledTableCell>
+                                                            <StyledTableCell align="left">
+                                                                Product
+                                                            </StyledTableCell>
+                                                            <StyledTableCell align="left">
+                                                                Subcategory
+                                                            </StyledTableCell>
+                                                            <StyledTableCell align="left">
+                                                                Feedback
+                                                                Category
+                                                            </StyledTableCell>
+                                                            <StyledTableCell align="left">
+                                                                Sentiment Score
+                                                            </StyledTableCell>
+                                                        </TableRow>
+                                                    </TableHead>
+                                                    <TableBody>
+                                                        {selectedBarData.map(
+                                                            (row, index) => (
+                                                                <StyledTableRow
+                                                                    key={index}
+                                                                >
+                                                                    <StyledTableCell>
+                                                                        {
+                                                                            row.date
+                                                                        }
+                                                                    </StyledTableCell>
+                                                                    <StyledTableCell align="left">
+                                                                        {
+                                                                            row.feedback
+                                                                        }
+                                                                    </StyledTableCell>
+                                                                    <StyledTableCell align="left">
+                                                                        {
+                                                                            row.source
+                                                                        }
+                                                                    </StyledTableCell>
+                                                                    <StyledTableCell align="left">
+                                                                        {
+                                                                            row.product
+                                                                        }
+                                                                    </StyledTableCell>
+                                                                    <StyledTableCell align="left">
+                                                                        {
+                                                                            row.subcategory
+                                                                        }
+                                                                    </StyledTableCell>
+                                                                    <StyledTableCell align="left">
+                                                                        {
+                                                                            row.feedback_category
+                                                                        }
+                                                                    </StyledTableCell>
+                                                                    <StyledTableCell align="left">
+                                                                        {parseFloat(
+                                                                            row.sentiment_score
+                                                                        ).toFixed(
+                                                                            1
+                                                                        )}
+                                                                    </StyledTableCell>
+                                                                </StyledTableRow>
+                                                            )
+                                                        )}
+                                                    </TableBody>
+                                                </Table>
+                                            </TableContainer>
+                                        </DialogContentText>
+                                    </DialogContent>
+                                </Dialog>
+                            </React.Fragment>
+                        </Box>
+                    )}
+                    <Button
+                        variant="outlined"
+                        onClick={() => setViewAll(!viewAll)}
+                        sx={{
+                            alignSelf: "flex-end",
+                            mt: 2,
+                            borderRadius: 2,
                             border: 0,
                             backgroundColor:
-                                theme.palette.mode === "dark" ? "#777" : "#AAA",
-                        },
-                    }}
-                >
-                    {viewAll ? "View Less" : "View All"}
-                </Button>
-            </Paper>
-        </Box>
+                                theme.palette.mode === "dark" ? "#555" : "#888",
+                            color: "#fff",
+                            fontWeight: "bold",
+                            "&:hover": {
+                                border: 0,
+                                backgroundColor:
+                                    theme.palette.mode === "dark"
+                                        ? "#777"
+                                        : "#AAA",
+                            },
+                        }}
+                    >
+                        {viewAll ? "View Less" : "View All"}
+                    </Button>
+                </Paper>
+            </Box>
+        </CustomWidthTooltip>
     ) : (
         <Box
+            ref={internalRef}
             sx={{
                 display: "flex",
                 width: "100%",
@@ -1320,7 +1351,6 @@ export default forwardRef(function SentimentCategoriesGraph(
             }}
         >
             <ButtonBase
-                ref={internalRef}
                 component={Paper}
                 sx={{
                     display: "flex",
@@ -1354,224 +1384,224 @@ export default forwardRef(function SentimentCategoriesGraph(
                         gap: 2,
                     }}
                 >
-                    <Box sx={{width: "100%"}}>
-                        <Typography variant="h6" sx={{fontWeight: "bold"}}>
-                            <Tooltip
-                                title={
-                                    <span>
-                                        Descending frequency of Promoter, then
-                                        Satisfied sentiments for Subcategory
-                                        &gt; Feedback Category
-                                        <br />
-                                        <b>Hover</b> for more information
-                                    </span>
-                                }
-                                arrow
-                            >
-                                <IconButton>
-                                    <InfoIcon />
-                                </IconButton>
-                            </Tooltip>
-                            Top 5 Positive Categories
-                        </Typography>
-                        {bars.length === 0 ? (
-                            <Typography variant="body2" color="grey">
-                                No data
+                    <Tooltip
+                        title={
+                            <span>
+                                Descending frequency of Promoter, then Satisfied
+                                sentiments for Subcategory &gt; Feedback
+                                Category
+                                <br />
+                                <br />
+                                <b>Hover</b> for more information
+                            </span>
+                        }
+                        arrow
+                        placement="right-start"
+                    >
+                        <Box sx={{width: "100%"}}>
+                            <Typography variant="h6" sx={{fontWeight: "bold"}}>
+                                Top 5 Positive Categories
                             </Typography>
-                        ) : (
-                            <Box
-                                sx={{
-                                    display: "flex",
-                                    gap: 2,
-                                    mt: 2,
-                                    height: 320,
-                                }}
-                            >
-                                <ResponsiveBar
-                                    data={sortBySentiment(bars).slice(
-                                        bars.length - 5,
-                                        bars.length
-                                    )}
-                                    keys={Object.keys(ORDER)}
-                                    colors={Object.values(ORDER)}
-                                    indexBy="category"
-                                    margin={{
-                                        top: 10,
-                                        right: 10,
-                                        bottom: 50,
-                                        left: 250,
+                            {bars.length === 0 ? (
+                                <Typography variant="body2" color="grey">
+                                    No data
+                                </Typography>
+                            ) : (
+                                <Box
+                                    sx={{
+                                        display: "flex",
+                                        gap: 2,
+                                        mt: 2,
+                                        height: 320,
                                     }}
-                                    padding={0.3}
-                                    minValue={0}
-                                    maxValue={100}
-                                    layout="horizontal"
-                                    valueScale={{type: "linear"}}
-                                    indexScale={{type: "band", round: true}}
-                                    defs={[
-                                        {
-                                            id: "dots",
-                                            type: "patternDots",
-                                            background: "inherit",
-                                            color: "#38bcb2",
-                                            size: 4,
-                                            padding: 1,
-                                            stagger: true,
-                                        },
-                                        {
-                                            id: "lines",
-                                            type: "patternLines",
-                                            background: "inherit",
-                                            color: "#eed312",
-                                            rotation: -45,
-                                            lineWidth: 6,
-                                            spacing: 10,
-                                        },
-                                    ]}
-                                    // fill={[
-                                    //     {
-                                    //         match: {
-                                    //             id: "Frustrated",
-                                    //         },
-                                    //         id: "dots",
-                                    //     },
-                                    //     {
-                                    //         match: {
-                                    //             id: "Neutral",
-                                    //         },
-                                    //         id: "lines",
-                                    //     },
-                                    // ]}
-                                    borderColor={{
-                                        from: "color",
-                                        modifiers: [["darker", 1.6]],
-                                    }}
-                                    axisTop={null}
-                                    axisRight={null}
-                                    axisBottom={{
-                                        tickSize: 5,
-                                        tickPadding: 5,
-                                        tickRotation: 0,
-                                        legend: "Percentage",
-                                        legendPosition: "middle",
-                                        legendOffset: 40,
-                                        truncateTickAt: 0,
-                                    }}
-                                    axisLeft={{
-                                        tickSize: 5,
-                                        tickPadding: 5,
-                                        tickRotation: 0,
-                                        legend: "",
-                                        legendPosition: "middle",
-                                        legendOffset: -40,
-                                        truncateTickAt: 0,
-                                    }}
-                                    enableGridX={true}
-                                    labelSkipWidth={12}
-                                    labelSkipHeight={12}
-                                    labelTextColor="rgba(255, 255, 255, 0.9)"
-                                    legends={[]}
-                                    role="application"
-                                    ariaLabel="Sentiment Categorisation"
-                                    barAriaLabel={(e) =>
-                                        e.id +
-                                        ": " +
-                                        e.formattedValue +
-                                        " for Subcategory: " +
-                                        e.indexValue
-                                    }
-                                    theme={{
-                                        labels: {
-                                            text: {
-                                                fontWeight: "bold",
+                                >
+                                    <ResponsiveBar
+                                        data={sortBySentiment(bars).slice(
+                                            bars.length - 5,
+                                            bars.length
+                                        )}
+                                        keys={Object.keys(ORDER)}
+                                        colors={Object.values(ORDER)}
+                                        indexBy="category"
+                                        margin={{
+                                            top: 10,
+                                            right: 10,
+                                            bottom: 50,
+                                            left: 250,
+                                        }}
+                                        padding={0.3}
+                                        minValue={0}
+                                        maxValue={100}
+                                        layout="horizontal"
+                                        valueScale={{type: "linear"}}
+                                        indexScale={{type: "band", round: true}}
+                                        defs={[
+                                            {
+                                                id: "dots",
+                                                type: "patternDots",
+                                                background: "inherit",
+                                                color: "#38bcb2",
+                                                size: 4,
+                                                padding: 1,
+                                                stagger: true,
                                             },
-                                        },
-                                        axis: {
-                                            legend: {
+                                            {
+                                                id: "lines",
+                                                type: "patternLines",
+                                                background: "inherit",
+                                                color: "#eed312",
+                                                rotation: -45,
+                                                lineWidth: 6,
+                                                spacing: 10,
+                                            },
+                                        ]}
+                                        // fill={[
+                                        //     {
+                                        //         match: {
+                                        //             id: "Frustrated",
+                                        //         },
+                                        //         id: "dots",
+                                        //     },
+                                        //     {
+                                        //         match: {
+                                        //             id: "Neutral",
+                                        //         },
+                                        //         id: "lines",
+                                        //     },
+                                        // ]}
+                                        borderColor={{
+                                            from: "color",
+                                            modifiers: [["darker", 1.6]],
+                                        }}
+                                        axisTop={null}
+                                        axisRight={null}
+                                        axisBottom={{
+                                            tickSize: 5,
+                                            tickPadding: 5,
+                                            tickRotation: 0,
+                                            legend: "Percentage",
+                                            legendPosition: "middle",
+                                            legendOffset: 40,
+                                            truncateTickAt: 0,
+                                        }}
+                                        axisLeft={{
+                                            tickSize: 5,
+                                            tickPadding: 5,
+                                            tickRotation: 0,
+                                            legend: "",
+                                            legendPosition: "middle",
+                                            legendOffset: -40,
+                                            truncateTickAt: 0,
+                                        }}
+                                        enableGridX={true}
+                                        labelSkipWidth={12}
+                                        labelSkipHeight={12}
+                                        labelTextColor="rgba(255, 255, 255, 0.9)"
+                                        legends={[]}
+                                        role="application"
+                                        ariaLabel="Sentiment Categorisation"
+                                        barAriaLabel={(e) =>
+                                            e.id +
+                                            ": " +
+                                            e.formattedValue +
+                                            " for Subcategory: " +
+                                            e.indexValue
+                                        }
+                                        theme={{
+                                            labels: {
                                                 text: {
                                                     fontWeight: "bold",
-                                                    fill:
-                                                        theme.palette.mode ===
-                                                        "dark"
-                                                            ? "#CCC"
-                                                            : "#222",
                                                 },
                                             },
-                                            ticks: {
+                                            axis: {
+                                                legend: {
+                                                    text: {
+                                                        fontWeight: "bold",
+                                                        fill:
+                                                            theme.palette
+                                                                .mode === "dark"
+                                                                ? "#CCC"
+                                                                : "#222",
+                                                    },
+                                                },
+                                                ticks: {
+                                                    line: {
+                                                        stroke:
+                                                            theme.palette
+                                                                .mode === "dark"
+                                                                ? "#999"
+                                                                : "#222",
+                                                    },
+                                                    text: {
+                                                        fill:
+                                                            theme.palette
+                                                                .mode === "dark"
+                                                                ? "#999"
+                                                                : "#222",
+                                                    },
+                                                },
+                                            },
+                                            grid: {
                                                 line: {
                                                     stroke:
                                                         theme.palette.mode ===
                                                         "dark"
-                                                            ? "#999"
-                                                            : "#222",
-                                                },
-                                                text: {
-                                                    fill:
-                                                        theme.palette.mode ===
-                                                        "dark"
-                                                            ? "#999"
-                                                            : "#222",
+                                                            ? "#555"
+                                                            : "#CCC",
                                                 },
                                             },
-                                        },
-                                        grid: {
-                                            line: {
-                                                stroke:
-                                                    theme.palette.mode ===
-                                                    "dark"
-                                                        ? "#555"
-                                                        : "#CCC",
-                                            },
-                                        },
-                                    }}
-                                    tooltip={({
-                                        id,
-                                        indexValue,
-                                        value,
-                                        color,
-                                    }) => (
-                                        <div
-                                            style={{
-                                                padding: "9px 12px",
-                                                borderRadius: "10px",
-                                                backgroundColor:
-                                                    theme.palette.mode ===
-                                                    "dark"
-                                                        ? "#333"
-                                                        : "#fff",
-                                                boxShadow:
-                                                    "0px 0px 10px rgba(0, 0, 0, 0.2)",
-                                                color:
-                                                    theme.palette.mode ===
-                                                    "dark"
-                                                        ? "#fff"
-                                                        : "#000",
-                                            }}
-                                        >
+                                        }}
+                                        tooltip={({
+                                            id,
+                                            indexValue,
+                                            value,
+                                            color,
+                                        }) => (
                                             <div
                                                 style={{
-                                                    display: "flex",
-                                                    alignItems: "center",
+                                                    padding: "9px 12px",
+                                                    borderRadius: "10px",
+                                                    backgroundColor:
+                                                        theme.palette.mode ===
+                                                        "dark"
+                                                            ? "#333"
+                                                            : "#fff",
+                                                    boxShadow:
+                                                        "0px 0px 10px rgba(0, 0, 0, 0.2)",
+                                                    color:
+                                                        theme.palette.mode ===
+                                                        "dark"
+                                                            ? "#fff"
+                                                            : "#000",
                                                 }}
                                             >
                                                 <div
                                                     style={{
-                                                        width: "12px",
-                                                        height: "12px",
-                                                        backgroundColor: color,
-                                                        marginRight: "8px",
+                                                        display: "flex",
+                                                        alignItems: "center",
                                                     }}
-                                                ></div>
-                                                <Typography variant="body2">
-                                                    {id} — {indexValue}:{" "}
-                                                    <b>{value}%</b>
-                                                </Typography>
+                                                >
+                                                    <div
+                                                        style={{
+                                                            width: "12px",
+                                                            height: "12px",
+                                                            backgroundColor:
+                                                                color,
+                                                            marginRight: "8px",
+                                                        }}
+                                                    ></div>
+                                                    <Typography variant="body2">
+                                                        {id} — {indexValue}:{" "}
+                                                        <b>{value}%</b>
+                                                    </Typography>
+                                                </div>
                                             </div>
-                                        </div>
-                                    )}
-                                />
-                            </Box>
-                        )}
-                    </Box>
+                                        )}
+                                    />
+                                </Box>
+                            )}
+                        </Box>
+                    </Tooltip>
                     <Box
                         sx={{
                             borderBottom: `2px solid ${
@@ -1579,224 +1609,224 @@ export default forwardRef(function SentimentCategoriesGraph(
                             }`,
                         }}
                     />
-                    <Box sx={{width: "100%"}}>
-                        <Typography variant="h6" sx={{fontWeight: "bold"}}>
-                            <Tooltip
-                                title={
-                                    <span>
-                                        Descending frequency of Frustrated, then
-                                        Unsatisfied sentiments for Subcategory
-                                        &gt; Feedback Category
-                                        <br />
-                                        Hover for more information
-                                    </span>
-                                }
-                                arrow
-                            >
-                                <IconButton>
-                                    <InfoIcon />
-                                </IconButton>
-                            </Tooltip>
-                            Top 5 Negative Categories
-                        </Typography>
-                        {bars.length === 0 ? (
-                            <Typography variant="body2" color="grey">
-                                No data
+                    <Tooltip
+                        title={
+                            <span>
+                                Descending frequency of Frustrated, then
+                                Unsatisfied sentiments for Subcategory &gt;
+                                Feedback Category
+                                <br />
+                                <br />
+                                <b>Hover</b> for more information
+                            </span>
+                        }
+                        arrow
+                        placement="right-start"
+                    >
+                        <Box sx={{width: "100%"}}>
+                            <Typography variant="h6" sx={{fontWeight: "bold"}}>
+                                Top 5 Negative Categories
                             </Typography>
-                        ) : (
-                            <Box
-                                sx={{
-                                    display: "flex",
-                                    gap: 2,
-                                    mt: 2,
-                                    height: 320,
-                                }}
-                            >
-                                <ResponsiveBar
-                                    data={sortBySentiment(bars, true).slice(
-                                        bars.length - 5,
-                                        bars.length
-                                    )}
-                                    keys={Object.keys(ORDER).reverse()}
-                                    colors={Object.values(ORDER).reverse()}
-                                    indexBy="category"
-                                    margin={{
-                                        top: 10,
-                                        right: 10,
-                                        bottom: 50,
-                                        left: 250,
+                            {bars.length === 0 ? (
+                                <Typography variant="body2" color="grey">
+                                    No data
+                                </Typography>
+                            ) : (
+                                <Box
+                                    sx={{
+                                        display: "flex",
+                                        gap: 2,
+                                        mt: 2,
+                                        height: 320,
                                     }}
-                                    padding={0.3}
-                                    minValue={0}
-                                    maxValue={100}
-                                    layout="horizontal"
-                                    valueScale={{type: "linear"}}
-                                    indexScale={{type: "band", round: true}}
-                                    defs={[
-                                        {
-                                            id: "dots",
-                                            type: "patternDots",
-                                            background: "inherit",
-                                            color: "#38bcb2",
-                                            size: 4,
-                                            padding: 1,
-                                            stagger: true,
-                                        },
-                                        {
-                                            id: "lines",
-                                            type: "patternLines",
-                                            background: "inherit",
-                                            color: "#eed312",
-                                            rotation: -45,
-                                            lineWidth: 6,
-                                            spacing: 10,
-                                        },
-                                    ]}
-                                    // fill={[
-                                    //     {
-                                    //         match: {
-                                    //             id: "Frustrated",
-                                    //         },
-                                    //         id: "dots",
-                                    //     },
-                                    //     {
-                                    //         match: {
-                                    //             id: "Neutral",
-                                    //         },
-                                    //         id: "lines",
-                                    //     },
-                                    // ]}
-                                    borderColor={{
-                                        from: "color",
-                                        modifiers: [["darker", 1.6]],
-                                    }}
-                                    axisTop={null}
-                                    axisRight={null}
-                                    axisBottom={{
-                                        tickSize: 5,
-                                        tickPadding: 5,
-                                        tickRotation: 0,
-                                        legend: "Percentage",
-                                        legendPosition: "middle",
-                                        legendOffset: 40,
-                                        truncateTickAt: 0,
-                                    }}
-                                    axisLeft={{
-                                        tickSize: 5,
-                                        tickPadding: 5,
-                                        tickRotation: 0,
-                                        legend: "",
-                                        legendPosition: "middle",
-                                        legendOffset: -40,
-                                        truncateTickAt: 0,
-                                    }}
-                                    enableGridX={true}
-                                    labelSkipWidth={12}
-                                    labelSkipHeight={12}
-                                    labelTextColor="rgba(255, 255, 255, 0.9)"
-                                    legends={[]}
-                                    role="application"
-                                    ariaLabel="Sentiment Categorisation"
-                                    barAriaLabel={(e) =>
-                                        e.id +
-                                        ": " +
-                                        e.formattedValue +
-                                        " for Subcategory: " +
-                                        e.indexValue
-                                    }
-                                    theme={{
-                                        labels: {
-                                            text: {
-                                                fontWeight: "bold",
+                                >
+                                    <ResponsiveBar
+                                        data={sortBySentiment(bars, true).slice(
+                                            bars.length - 5,
+                                            bars.length
+                                        )}
+                                        keys={Object.keys(ORDER).reverse()}
+                                        colors={Object.values(ORDER).reverse()}
+                                        indexBy="category"
+                                        margin={{
+                                            top: 10,
+                                            right: 10,
+                                            bottom: 50,
+                                            left: 250,
+                                        }}
+                                        padding={0.3}
+                                        minValue={0}
+                                        maxValue={100}
+                                        layout="horizontal"
+                                        valueScale={{type: "linear"}}
+                                        indexScale={{type: "band", round: true}}
+                                        defs={[
+                                            {
+                                                id: "dots",
+                                                type: "patternDots",
+                                                background: "inherit",
+                                                color: "#38bcb2",
+                                                size: 4,
+                                                padding: 1,
+                                                stagger: true,
                                             },
-                                        },
-                                        axis: {
-                                            legend: {
+                                            {
+                                                id: "lines",
+                                                type: "patternLines",
+                                                background: "inherit",
+                                                color: "#eed312",
+                                                rotation: -45,
+                                                lineWidth: 6,
+                                                spacing: 10,
+                                            },
+                                        ]}
+                                        // fill={[
+                                        //     {
+                                        //         match: {
+                                        //             id: "Frustrated",
+                                        //         },
+                                        //         id: "dots",
+                                        //     },
+                                        //     {
+                                        //         match: {
+                                        //             id: "Neutral",
+                                        //         },
+                                        //         id: "lines",
+                                        //     },
+                                        // ]}
+                                        borderColor={{
+                                            from: "color",
+                                            modifiers: [["darker", 1.6]],
+                                        }}
+                                        axisTop={null}
+                                        axisRight={null}
+                                        axisBottom={{
+                                            tickSize: 5,
+                                            tickPadding: 5,
+                                            tickRotation: 0,
+                                            legend: "Percentage",
+                                            legendPosition: "middle",
+                                            legendOffset: 40,
+                                            truncateTickAt: 0,
+                                        }}
+                                        axisLeft={{
+                                            tickSize: 5,
+                                            tickPadding: 5,
+                                            tickRotation: 0,
+                                            legend: "",
+                                            legendPosition: "middle",
+                                            legendOffset: -40,
+                                            truncateTickAt: 0,
+                                        }}
+                                        enableGridX={true}
+                                        labelSkipWidth={12}
+                                        labelSkipHeight={12}
+                                        labelTextColor="rgba(255, 255, 255, 0.9)"
+                                        legends={[]}
+                                        role="application"
+                                        ariaLabel="Sentiment Categorisation"
+                                        barAriaLabel={(e) =>
+                                            e.id +
+                                            ": " +
+                                            e.formattedValue +
+                                            " for Subcategory: " +
+                                            e.indexValue
+                                        }
+                                        theme={{
+                                            labels: {
                                                 text: {
                                                     fontWeight: "bold",
-                                                    fill:
-                                                        theme.palette.mode ===
-                                                        "dark"
-                                                            ? "#CCC"
-                                                            : "#222",
                                                 },
                                             },
-                                            ticks: {
+                                            axis: {
+                                                legend: {
+                                                    text: {
+                                                        fontWeight: "bold",
+                                                        fill:
+                                                            theme.palette
+                                                                .mode === "dark"
+                                                                ? "#CCC"
+                                                                : "#222",
+                                                    },
+                                                },
+                                                ticks: {
+                                                    line: {
+                                                        stroke:
+                                                            theme.palette
+                                                                .mode === "dark"
+                                                                ? "#999"
+                                                                : "#222",
+                                                    },
+                                                    text: {
+                                                        fill:
+                                                            theme.palette
+                                                                .mode === "dark"
+                                                                ? "#999"
+                                                                : "#222",
+                                                    },
+                                                },
+                                            },
+                                            grid: {
                                                 line: {
                                                     stroke:
                                                         theme.palette.mode ===
                                                         "dark"
-                                                            ? "#999"
-                                                            : "#222",
-                                                },
-                                                text: {
-                                                    fill:
-                                                        theme.palette.mode ===
-                                                        "dark"
-                                                            ? "#999"
-                                                            : "#222",
+                                                            ? "#555"
+                                                            : "#CCC",
                                                 },
                                             },
-                                        },
-                                        grid: {
-                                            line: {
-                                                stroke:
-                                                    theme.palette.mode ===
-                                                    "dark"
-                                                        ? "#555"
-                                                        : "#CCC",
-                                            },
-                                        },
-                                    }}
-                                    tooltip={({
-                                        id,
-                                        indexValue,
-                                        value,
-                                        color,
-                                    }) => (
-                                        <div
-                                            style={{
-                                                padding: "9px 12px",
-                                                borderRadius: "10px",
-                                                backgroundColor:
-                                                    theme.palette.mode ===
-                                                    "dark"
-                                                        ? "#333"
-                                                        : "#fff",
-                                                boxShadow:
-                                                    "0px 0px 10px rgba(0, 0, 0, 0.2)",
-                                                color:
-                                                    theme.palette.mode ===
-                                                    "dark"
-                                                        ? "#fff"
-                                                        : "#000",
-                                            }}
-                                        >
+                                        }}
+                                        tooltip={({
+                                            id,
+                                            indexValue,
+                                            value,
+                                            color,
+                                        }) => (
                                             <div
                                                 style={{
-                                                    display: "flex",
-                                                    alignItems: "center",
+                                                    padding: "9px 12px",
+                                                    borderRadius: "10px",
+                                                    backgroundColor:
+                                                        theme.palette.mode ===
+                                                        "dark"
+                                                            ? "#333"
+                                                            : "#fff",
+                                                    boxShadow:
+                                                        "0px 0px 10px rgba(0, 0, 0, 0.2)",
+                                                    color:
+                                                        theme.palette.mode ===
+                                                        "dark"
+                                                            ? "#fff"
+                                                            : "#000",
                                                 }}
                                             >
                                                 <div
                                                     style={{
-                                                        width: "12px",
-                                                        height: "12px",
-                                                        backgroundColor: color,
-                                                        marginRight: "8px",
+                                                        display: "flex",
+                                                        alignItems: "center",
                                                     }}
-                                                ></div>
-                                                <Typography variant="body2">
-                                                    {id} — {indexValue}:{" "}
-                                                    <b>{value}%</b>
-                                                </Typography>
+                                                >
+                                                    <div
+                                                        style={{
+                                                            width: "12px",
+                                                            height: "12px",
+                                                            backgroundColor:
+                                                                color,
+                                                            marginRight: "8px",
+                                                        }}
+                                                    ></div>
+                                                    <Typography variant="body2">
+                                                        {id} — {indexValue}:{" "}
+                                                        <b>{value}%</b>
+                                                    </Typography>
+                                                </div>
                                             </div>
-                                        </div>
-                                    )}
-                                />
-                            </Box>
-                        )}
-                    </Box>
+                                        )}
+                                    />
+                                </Box>
+                            )}
+                        </Box>
+                    </Tooltip>
                 </Box>
             </ButtonBase>
         </Box>

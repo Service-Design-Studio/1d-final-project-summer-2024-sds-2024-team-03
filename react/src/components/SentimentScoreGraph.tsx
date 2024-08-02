@@ -13,6 +13,9 @@ import {
     Typography,
     ButtonBase,
     Tooltip,
+    TooltipProps,
+    tooltipClasses,
+    styled,
     IconButton,
 } from "@mui/material";
 import InfoIcon from "@mui/icons-material/Info";
@@ -37,6 +40,14 @@ const MenuProps = {
         },
     },
 };
+
+const CustomWidthTooltip = styled(({className, ...props}: TooltipProps) => (
+    <Tooltip {...props} classes={{popper: className}} />
+))({
+    [`& .${tooltipClasses.tooltip}`]: {
+        maxWidth: 250,
+    },
+});
 
 type CustomRef<T> = {
     img: T;
@@ -389,412 +400,49 @@ export default forwardRef(function SentimentScoreGraph(
 
     /* Must have parent container with a defined size */
     return isDetailed ? (
-        <Box
-            ref={internalRef}
-            sx={{
-                display: "flex",
-                gap: 2,
-                width: "100%",
-                flexDirection: "row",
-            }}
+        <CustomWidthTooltip
+            title={
+                <span>
+                    Displays the trend of averaged VOCUS sentiment score{" "}
+                    <b>per day</b>
+                    <br />
+                    You may select multiple Feedback Categories
+                    <br />
+                    <br />
+                    <b>Hover</b> to view specific date and scores
+                </span>
+            }
+            arrow
+            placement="right-start"
         >
-            <Paper
+            <Box
+                ref={internalRef}
                 sx={{
                     display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    p: 2,
-                    borderRadius: 4,
-                    boxShadow: "0px 0px 20px rgba(0, 0, 0, 0.1)",
-                    flex: 1,
+                    gap: 2,
+                    width: "100%",
+                    flexDirection: "row",
                 }}
-                id="detailed-sentimentscoregraph"
             >
-                <Box
+                <Paper
                     sx={{
                         display: "flex",
-                        gap: 2,
-                        width: "100%",
-                        flexDirection: "row",
-                        justifyContent: "space-between",
-                        mb: 2,
+                        flexDirection: "column",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        p: 2,
+                        borderRadius: 4,
+                        boxShadow: "0px 0px 20px rgba(0, 0, 0, 0.1)",
+                        flex: 1,
                     }}
+                    id="detailed-sentimentscoregraph"
                 >
-                    <Tooltip
-                        title={
-                            <span>
-                                Displays the trend of averaged VOCUS sentiment
-                                score <b>per day</b>
-                                <br />
-                                You may select multiple Feedback Categories
-                                <br />
-                                <b>Hover</b> to view specific date and scores
-                            </span>
-                        }
-                        arrow
-                    >
-                        <IconButton>
-                            <InfoIcon />
-                        </IconButton>
-                    </Tooltip>
-                    <Typography
-                        variant="h6"
-                        sx={{fontWeight: "bold", width: "100%"}}
-                    >
-                        Sentiment Trend for
-                        {selectedSubcategory
-                            ? ` ${selectedSubcategory}`
-                            : " Selected Subcategories"}
-                    </Typography>
-                    <Box sx={{display: "flex", gap: 2, width: "85%"}}>
-                        <FormControl sx={{m: 0, width: "50%"}}>
-                            <InputLabel id="detailed-sentimentscoregraph-filter-subcategory-label">
-                                Subcategories
-                            </InputLabel>
-                            <Select
-                                labelId="detailed-sentimentscoregraph-filter-subcategory-label"
-                                id="detailed-sentimentscoregraph-filter-subcategory"
-                                multiple={false}
-                                value={selectedSubcategory}
-                                onChange={handleSubcategoryChange}
-                                input={
-                                    <OutlinedInput
-                                        id="detailed-sentimentscoregraph-select-subcategory"
-                                        label="subcategory"
-                                        sx={{
-                                            borderRadius: 4,
-                                        }}
-                                    />
-                                }
-                                renderValue={(selected) => (
-                                    <Box
-                                        sx={{
-                                            display: "flex",
-                                            flexWrap: "wrap",
-                                            gap: 0.5,
-                                        }}
-                                    >
-                                        <Chip key={selected} label={selected} />
-                                    </Box>
-                                )}
-                                MenuProps={MenuProps}
-                            >
-                                {graphSubcategories.length > 0 ? (
-                                    graphSubcategories
-                                        .sort()
-                                        .map((subcategory: string) => (
-                                            <MenuItem
-                                                key={subcategory}
-                                                value={subcategory}
-                                                className="subcategory-option"
-                                            >
-                                                {subcategory}
-                                            </MenuItem>
-                                        ))
-                                ) : (
-                                    <MenuItem disabled>
-                                        No data from selection
-                                    </MenuItem>
-                                )}
-                            </Select>
-                        </FormControl>
-                        <FormControl
-                            sx={{m: 0, width: "50%"}}
-                            disabled={!selectedSubcategory}
-                        >
-                            <InputLabel id="detailed-sentimentscoregraph-filter-feedbackcategory-label">
-                                Feedback Categories
-                            </InputLabel>
-                            <Select
-                                labelId="detailed-sentimentscoregraph-filter-feedbackcategory-label"
-                                id="detailed-sentimentscoregraph-filter-feedbackcategory"
-                                multiple
-                                value={selectedFeedbackcategories}
-                                onChange={handleFeedbackcategoryChange}
-                                input={
-                                    <OutlinedInput
-                                        id="detailed-sentimentscoregraph-select-feedbackcategory"
-                                        label="feedbackcategory"
-                                        sx={{
-                                            borderRadius: 4,
-                                        }}
-                                    />
-                                }
-                                renderValue={(selected) => (
-                                    <Box
-                                        sx={{
-                                            display: "flex",
-                                            flexWrap: "wrap",
-                                            gap: 0.5,
-                                        }}
-                                    >
-                                        {selected.map((value) => (
-                                            <Chip key={value} label={value} />
-                                        ))}
-                                    </Box>
-                                )}
-                                MenuProps={MenuProps}
-                            >
-                                {graphFeedbackcategories
-                                    .sort()
-                                    .map((feedbackcategory: string) => (
-                                        <MenuItem
-                                            key={feedbackcategory}
-                                            value={feedbackcategory}
-                                        >
-                                            {feedbackcategory}
-                                        </MenuItem>
-                                    ))}
-                            </Select>
-                        </FormControl>
-                    </Box>
-                </Box>
-                {sentimentScores.length === 0 ? (
-                    <Typography variant="body2" color="grey">
-                        No data
-                    </Typography>
-                ) : (
                     <Box
                         sx={{
                             display: "flex",
                             gap: 2,
-                            mt: 2,
                             width: "100%",
-                            height: 300,
-                        }}
-                    >
-                        <ResponsiveLine
-                            data={sentimentScores}
-                            margin={{
-                                top: 20,
-                                right: 20,
-                                bottom: 80,
-                                left: 40,
-                            }}
-                            xScale={{
-                                type: "time",
-                                format: "%d %b %y",
-                                precision: "day",
-                            }}
-                            xFormat={`time: %d %b '%y`}
-                            yScale={{
-                                type: "linear",
-                                min: 0,
-                                max: 5,
-                                stacked: false,
-                                reverse: false,
-                            }}
-                            yFormat=" >+.1f"
-                            curve="linear"
-                            axisTop={null}
-                            axisRight={null}
-                            axisBottom={{
-                                tickSize: 5,
-                                tickPadding: 5,
-                                tickRotation: 0,
-                                legend: "",
-                                legendOffset: 36,
-                                legendPosition: "middle",
-                                truncateTickAt: 0,
-                                format: "%b '%y",
-                                tickValues: "every 1 month",
-                            }}
-                            axisLeft={{
-                                tickSize: 5,
-                                tickPadding: 5,
-                                tickRotation: 0,
-                                legend: "",
-                                legendOffset: -40,
-                                legendPosition: "middle",
-                                truncateTickAt: 0,
-                                tickValues: [0, 1, 2, 3, 4, 5],
-                            }}
-                            enableGridX={false}
-                            colors={{scheme: "category10"}}
-                            pointSize={8}
-                            // theme: background / theme: grid.line.stroke / theme: labels.text.fill / "color" / "#..."
-                            pointColor={{from: "color"}}
-                            pointBorderWidth={2}
-                            pointBorderColor={{from: "serieColor"}}
-                            pointLabel="data.yFormatted"
-                            pointLabelYOffset={-12}
-                            enableTouchCrosshair={true}
-                            useMesh={true}
-                            theme={{
-                                axis: {
-                                    ticks: {
-                                        text: {
-                                            fill:
-                                                theme.palette.mode === "dark"
-                                                    ? "#999"
-                                                    : "#222",
-                                        },
-                                    },
-                                },
-                                legends: {
-                                    text: {
-                                        fontWeight: "bold",
-                                        fill:
-                                            theme.palette.mode === "dark"
-                                                ? "#CCC"
-                                                : "#222",
-                                    },
-                                },
-                                grid: {
-                                    line: {
-                                        stroke:
-                                            theme.palette.mode === "dark"
-                                                ? "#555"
-                                                : "#CCC",
-                                    },
-                                },
-                                crosshair: {
-                                    line: {
-                                        stroke:
-                                            theme.palette.mode === "dark"
-                                                ? "#777"
-                                                : "#AAA",
-                                        strokeWidth: 2,
-                                    },
-                                },
-                            }}
-                            // label styling
-                            tooltip={({point}) => (
-                                <div
-                                    style={{
-                                        background:
-                                            theme.palette.mode === "dark"
-                                                ? "#333"
-                                                : "#fff",
-                                        boxShadow:
-                                            "0px 0px 10px rgba(0, 0, 0, 0.2)",
-                                        padding: "9px 12px",
-                                        borderRadius: "10px",
-                                        fontSize: "0.8rem",
-                                        display: "grid",
-                                        gridTemplateColumns: "auto 1fr",
-                                        gap: "4px",
-                                        alignItems: "center",
-                                    }}
-                                >
-                                    <span
-                                        style={{
-                                            width: 12,
-                                            height: 12,
-                                            backgroundColor: point.serieColor,
-                                            borderRadius: "50%",
-                                            marginRight: 4,
-                                        }}
-                                    />
-                                    <div>
-                                        <div style={{display: "flex"}}>
-                                            <strong>Date:&nbsp;</strong>
-                                            {point.data.xFormatted}
-                                        </div>
-                                        <div style={{display: "flex"}}>
-                                            <strong>Score:&nbsp;</strong>
-                                            {point.data.yFormatted}
-                                        </div>
-                                    </div>
-                                </div>
-                            )}
-                            legends={[
-                                {
-                                    anchor: "bottom",
-                                    direction: "row",
-                                    justify: false,
-                                    translateX: 0,
-                                    translateY: 50,
-                                    itemsSpacing: 20,
-                                    itemDirection: "left-to-right",
-                                    itemWidth: 120,
-                                    itemHeight: 10,
-                                    itemOpacity: 0.75,
-                                    symbolSize: 12,
-                                    symbolShape: "circle",
-                                    symbolBorderColor: "rgba(0, 0, 0, .5)",
-                                    effects: [
-                                        {
-                                            on: "hover",
-                                            style: {
-                                                itemBackground:
-                                                    "rgba(0, 0, 0, .03)",
-                                                itemOpacity: 1,
-                                            },
-                                        },
-                                    ],
-                                },
-                            ]}
-                        />
-                    </Box>
-                )}
-            </Paper>
-        </Box>
-    ) : (
-        <Box
-            ref={internalRef}
-            sx={{
-                display: "flex",
-                gap: 2,
-                width: "100%",
-                flexDirection: "column",
-            }}
-        >
-            <ButtonBase
-                component={Paper}
-                sx={{
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    p: 2,
-                    borderRadius: 4,
-                    flex: 1,
-                    cursor: "pointer",
-                    boxShadow: "0px 0px 20px rgba(0, 0, 0, 0.1)",
-                    backgroundColor:
-                        theme.palette.mode === "dark" ? "#151515" : "#ffffff",
-                    transition: "transform 0.3s ease-in-out",
-                    "&:hover": {
-                        backgroundColor:
-                            theme.palette.mode === "dark"
-                                ? "#1a1a1a"
-                                : "#f9f9f9",
-                        transform: "scaleX(1.01) scaleY(1.02)",
-                    },
-                }}
-                id="overall-sentimentscoregraph"
-                onClick={() => setSelectedMenu!("analytics")}
-            >
-                <Box
-                    sx={{
-                        display: "flex",
-                        width: "100%",
-                        flexDirection: "row",
-                        mb: 2,
-                    }}
-                >
-                    <Tooltip
-                        title={
-                            <span>
-                                Displays the trend of averaged VOCUS sentiment
-                                score <b>per day</b>
-                                <br />
-                                <b>Hover</b> to view specific date and scores
-                            </span>
-                        }
-                        arrow
-                    >
-                        <IconButton>
-                            <InfoIcon />
-                        </IconButton>
-                    </Tooltip>
-                    <Box
-                        sx={{
-                            display: "flex",
-                            width: "100%",
-                            flexDirection: "column",
+                            flexDirection: "row",
                             justifyContent: "space-between",
                             mb: 2,
                         }}
@@ -803,159 +451,532 @@ export default forwardRef(function SentimentScoreGraph(
                             variant="h6"
                             sx={{fontWeight: "bold", width: "100%"}}
                         >
-                            Sentiment Trend for Selected Product(s)
+                            Sentiment Trend for
+                            {selectedSubcategory
+                                ? ` ${selectedSubcategory}`
+                                : " Selected Subcategories"}
                         </Typography>
-                        <Typography
-                            color="grey"
-                            sx={{fontWeight: "600", mb: 2, width: "100%"}}
-                        >
-                            across all subcategories
-                        </Typography>
+                        <Box sx={{display: "flex", gap: 2, width: "85%"}}>
+                            <FormControl sx={{m: 0, width: "50%"}}>
+                                <InputLabel id="detailed-sentimentscoregraph-filter-subcategory-label">
+                                    Subcategories
+                                </InputLabel>
+                                <Select
+                                    labelId="detailed-sentimentscoregraph-filter-subcategory-label"
+                                    id="detailed-sentimentscoregraph-filter-subcategory"
+                                    multiple={false}
+                                    value={selectedSubcategory}
+                                    onChange={handleSubcategoryChange}
+                                    input={
+                                        <OutlinedInput
+                                            id="detailed-sentimentscoregraph-select-subcategory"
+                                            label="subcategory"
+                                            sx={{
+                                                borderRadius: 4,
+                                            }}
+                                        />
+                                    }
+                                    renderValue={(selected) => (
+                                        <Box
+                                            sx={{
+                                                display: "flex",
+                                                flexWrap: "wrap",
+                                                gap: 0.5,
+                                            }}
+                                        >
+                                            <Chip
+                                                key={selected}
+                                                label={selected}
+                                            />
+                                        </Box>
+                                    )}
+                                    MenuProps={MenuProps}
+                                >
+                                    {graphSubcategories.length > 0 ? (
+                                        graphSubcategories
+                                            .sort()
+                                            .map((subcategory: string) => (
+                                                <MenuItem
+                                                    key={subcategory}
+                                                    value={subcategory}
+                                                    className="subcategory-option"
+                                                >
+                                                    {subcategory}
+                                                </MenuItem>
+                                            ))
+                                    ) : (
+                                        <MenuItem disabled>
+                                            No data from selection
+                                        </MenuItem>
+                                    )}
+                                </Select>
+                            </FormControl>
+                            <FormControl
+                                sx={{m: 0, width: "50%"}}
+                                disabled={!selectedSubcategory}
+                            >
+                                <InputLabel id="detailed-sentimentscoregraph-filter-feedbackcategory-label">
+                                    Feedback Categories
+                                </InputLabel>
+                                <Select
+                                    labelId="detailed-sentimentscoregraph-filter-feedbackcategory-label"
+                                    id="detailed-sentimentscoregraph-filter-feedbackcategory"
+                                    multiple
+                                    value={selectedFeedbackcategories}
+                                    onChange={handleFeedbackcategoryChange}
+                                    input={
+                                        <OutlinedInput
+                                            id="detailed-sentimentscoregraph-select-feedbackcategory"
+                                            label="feedbackcategory"
+                                            sx={{
+                                                borderRadius: 4,
+                                            }}
+                                        />
+                                    }
+                                    renderValue={(selected) => (
+                                        <Box
+                                            sx={{
+                                                display: "flex",
+                                                flexWrap: "wrap",
+                                                gap: 0.5,
+                                            }}
+                                        >
+                                            {selected.map((value) => (
+                                                <Chip
+                                                    key={value}
+                                                    label={value}
+                                                />
+                                            ))}
+                                        </Box>
+                                    )}
+                                    MenuProps={MenuProps}
+                                >
+                                    {graphFeedbackcategories
+                                        .sort()
+                                        .map((feedbackcategory: string) => (
+                                            <MenuItem
+                                                key={feedbackcategory}
+                                                value={feedbackcategory}
+                                            >
+                                                {feedbackcategory}
+                                            </MenuItem>
+                                        ))}
+                                </Select>
+                            </FormControl>
+                        </Box>
                     </Box>
-                </Box>
-                {sentimentScores.length === 0 ? (
-                    <Typography variant="body2" color="grey">
-                        No data
-                    </Typography>
-                ) : (
-                    <Box
-                        sx={{
-                            display: "flex",
-                            gap: 2,
-                            mt: 2,
-                            width: "100%",
-                            height: 200,
-                        }}
-                    >
-                        <ResponsiveLine
-                            data={sentimentScores}
-                            margin={{
-                                top: 20,
-                                right: 20,
-                                bottom: 40,
-                                left: 40,
+                    {sentimentScores.length === 0 ? (
+                        <Typography variant="body2" color="grey">
+                            No data
+                        </Typography>
+                    ) : (
+                        <Box
+                            sx={{
+                                display: "flex",
+                                gap: 2,
+                                mt: 2,
+                                width: "100%",
+                                height: 300,
                             }}
-                            xScale={{
-                                type: "time",
-                                format: "%d %b %y",
-                                precision: "day",
-                            }}
-                            xFormat={`time: %d %b '%y`}
-                            yScale={{
-                                type: "linear",
-                                min: 0,
-                                max: 5,
-                                stacked: false,
-                                reverse: false,
-                            }}
-                            yFormat=" >+.1f"
-                            curve="linear"
-                            axisTop={null}
-                            axisRight={null}
-                            axisBottom={{
-                                tickSize: 5,
-                                tickPadding: 5,
-                                tickRotation: 0,
-                                legend: "",
-                                legendOffset: 36,
-                                legendPosition: "middle",
-                                truncateTickAt: 0,
-                                format: "%b '%y",
-                                tickValues: "every 1 month",
-                            }}
-                            axisLeft={{
-                                tickSize: 5,
-                                tickPadding: 5,
-                                tickRotation: 0,
-                                legend: "",
-                                legendOffset: -40,
-                                legendPosition: "middle",
-                                truncateTickAt: 0,
-                                tickValues: [0, 1, 2, 3, 4, 5],
-                            }}
-                            enableGridX={false}
-                            colors={{scheme: "category10"}}
-                            pointSize={8}
-                            pointColor={{theme: "background"}}
-                            pointBorderWidth={2}
-                            pointBorderColor={{from: "serieColor"}}
-                            pointLabel="data.yFormatted"
-                            pointLabelYOffset={-12}
-                            enableTouchCrosshair={true}
-                            useMesh={true}
-                            theme={{
-                                axis: {
-                                    ticks: {
+                        >
+                            <ResponsiveLine
+                                data={sentimentScores}
+                                margin={{
+                                    top: 20,
+                                    right: 20,
+                                    bottom: 80,
+                                    left: 40,
+                                }}
+                                xScale={{
+                                    type: "time",
+                                    format: "%d %b %y",
+                                    precision: "day",
+                                }}
+                                xFormat={`time: %d %b '%y`}
+                                yScale={{
+                                    type: "linear",
+                                    min: 0,
+                                    max: 5,
+                                    stacked: false,
+                                    reverse: false,
+                                }}
+                                yFormat=" >+.1f"
+                                curve="linear"
+                                axisTop={null}
+                                axisRight={null}
+                                axisBottom={{
+                                    tickSize: 5,
+                                    tickPadding: 5,
+                                    tickRotation: 0,
+                                    legend: "",
+                                    legendOffset: 36,
+                                    legendPosition: "middle",
+                                    truncateTickAt: 0,
+                                    format: "%b '%y",
+                                    tickValues: "every 1 month",
+                                }}
+                                axisLeft={{
+                                    tickSize: 5,
+                                    tickPadding: 5,
+                                    tickRotation: 0,
+                                    legend: "",
+                                    legendOffset: -40,
+                                    legendPosition: "middle",
+                                    truncateTickAt: 0,
+                                    tickValues: [0, 1, 2, 3, 4, 5],
+                                }}
+                                enableGridX={false}
+                                colors={{scheme: "category10"}}
+                                pointSize={8}
+                                // theme: background / theme: grid.line.stroke / theme: labels.text.fill / "color" / "#..."
+                                pointColor={{from: "color"}}
+                                pointBorderWidth={2}
+                                pointBorderColor={{from: "serieColor"}}
+                                pointLabel="data.yFormatted"
+                                pointLabelYOffset={-12}
+                                enableTouchCrosshair={true}
+                                useMesh={true}
+                                theme={{
+                                    axis: {
+                                        ticks: {
+                                            text: {
+                                                fill:
+                                                    theme.palette.mode ===
+                                                    "dark"
+                                                        ? "#999"
+                                                        : "#222",
+                                            },
+                                        },
+                                    },
+                                    legends: {
                                         text: {
+                                            fontWeight: "bold",
                                             fill:
                                                 theme.palette.mode === "dark"
-                                                    ? "#999"
+                                                    ? "#CCC"
                                                     : "#222",
                                         },
                                     },
-                                },
-                                grid: {
-                                    line: {
-                                        stroke:
-                                            theme.palette.mode === "dark"
-                                                ? "#555"
-                                                : "#CCC",
+                                    grid: {
+                                        line: {
+                                            stroke:
+                                                theme.palette.mode === "dark"
+                                                    ? "#555"
+                                                    : "#CCC",
+                                        },
                                     },
-                                },
-                                crosshair: {
-                                    line: {
-                                        stroke:
-                                            theme.palette.mode === "dark"
-                                                ? "#777"
-                                                : "#AAA",
-                                        strokeWidth: 2,
+                                    crosshair: {
+                                        line: {
+                                            stroke:
+                                                theme.palette.mode === "dark"
+                                                    ? "#777"
+                                                    : "#AAA",
+                                            strokeWidth: 2,
+                                        },
                                     },
-                                },
-                            }}
-                            // styling of hover label
-                            tooltip={({point}) => (
-                                <div
-                                    style={{
-                                        background:
-                                            theme.palette.mode === "dark"
-                                                ? "#333"
-                                                : "#fff",
-                                        boxShadow:
-                                            "0px 0px 10px rgba(0, 0, 0, 0.2)",
-                                        padding: "9px 12px",
-                                        borderRadius: "10px",
-                                        fontSize: "0.8rem",
-                                        display: "grid",
-                                        gridTemplateColumns: "auto 1fr",
-                                        gap: "4px",
-                                        alignItems: "center",
-                                    }}
-                                >
-                                    <span
+                                }}
+                                // label styling
+                                tooltip={({point}) => (
+                                    <div
                                         style={{
-                                            width: 12,
-                                            height: 12,
-                                            backgroundColor: point.serieColor,
-                                            borderRadius: "50%",
-                                            marginRight: 4,
+                                            background:
+                                                theme.palette.mode === "dark"
+                                                    ? "#333"
+                                                    : "#fff",
+                                            boxShadow:
+                                                "0px 0px 10px rgba(0, 0, 0, 0.2)",
+                                            padding: "9px 12px",
+                                            borderRadius: "10px",
+                                            fontSize: "0.8rem",
+                                            display: "grid",
+                                            gridTemplateColumns: "auto 1fr",
+                                            gap: "4px",
+                                            alignItems: "center",
                                         }}
-                                    />
-                                    <div>
-                                        <div style={{display: "flex"}}>
-                                            <strong>Date:&nbsp;</strong>
-                                            {point.data.xFormatted}
-                                        </div>
-                                        <div style={{display: "flex"}}>
-                                            <strong>Score:&nbsp;</strong>
-                                            {point.data.yFormatted}
+                                    >
+                                        <span
+                                            style={{
+                                                width: 12,
+                                                height: 12,
+                                                backgroundColor:
+                                                    point.serieColor,
+                                                borderRadius: "50%",
+                                                marginRight: 4,
+                                            }}
+                                        />
+                                        <div>
+                                            <div style={{display: "flex"}}>
+                                                <strong>Date:&nbsp;</strong>
+                                                {point.data.xFormatted}
+                                            </div>
+                                            <div style={{display: "flex"}}>
+                                                <strong>Score:&nbsp;</strong>
+                                                {point.data.yFormatted}
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                            )}
-                        />
+                                )}
+                                legends={[
+                                    {
+                                        anchor: "bottom",
+                                        direction: "row",
+                                        justify: false,
+                                        translateX: 0,
+                                        translateY: 50,
+                                        itemsSpacing: 20,
+                                        itemDirection: "left-to-right",
+                                        itemWidth: 120,
+                                        itemHeight: 10,
+                                        itemOpacity: 0.75,
+                                        symbolSize: 12,
+                                        symbolShape: "circle",
+                                        symbolBorderColor: "rgba(0, 0, 0, .5)",
+                                        effects: [
+                                            {
+                                                on: "hover",
+                                                style: {
+                                                    itemBackground:
+                                                        "rgba(0, 0, 0, .03)",
+                                                    itemOpacity: 1,
+                                                },
+                                            },
+                                        ],
+                                    },
+                                ]}
+                            />
+                        </Box>
+                    )}
+                </Paper>
+            </Box>
+        </CustomWidthTooltip>
+    ) : (
+        <CustomWidthTooltip
+            title={
+                <span>
+                    Displays the trend of averaged VOCUS sentiment score{" "}
+                    <b>per day</b>
+                    <br />
+                    <br />
+                    <b>Hover</b> to view specific date and scores
+                </span>
+            }
+            arrow
+            placement="left-start"
+        >
+            <Box
+                ref={internalRef}
+                sx={{
+                    display: "flex",
+                    gap: 2,
+                    width: "100%",
+                    flexDirection: "column",
+                }}
+            >
+                <ButtonBase
+                    component={Paper}
+                    sx={{
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        p: 2,
+                        borderRadius: 4,
+                        flex: 1,
+                        cursor: "pointer",
+                        boxShadow: "0px 0px 20px rgba(0, 0, 0, 0.1)",
+                        backgroundColor:
+                            theme.palette.mode === "dark"
+                                ? "#151515"
+                                : "#ffffff",
+                        transition: "transform 0.3s ease-in-out",
+                        "&:hover": {
+                            backgroundColor:
+                                theme.palette.mode === "dark"
+                                    ? "#1a1a1a"
+                                    : "#f9f9f9",
+                            transform: "scaleX(1.01) scaleY(1.02)",
+                        },
+                    }}
+                    id="overall-sentimentscoregraph"
+                    onClick={() => setSelectedMenu!("analytics")}
+                >
+                    <Box
+                        sx={{
+                            display: "flex",
+                            width: "100%",
+                            flexDirection: "row",
+                            mb: 2,
+                        }}
+                    >
+                        <Box
+                            sx={{
+                                display: "flex",
+                                width: "100%",
+                                flexDirection: "column",
+                                justifyContent: "space-between",
+                                mb: 2,
+                            }}
+                        >
+                            <Typography
+                                variant="h6"
+                                sx={{fontWeight: "bold", width: "100%"}}
+                            >
+                                Sentiment Trend for Selected Product(s)
+                            </Typography>
+                            <Typography
+                                color="grey"
+                                sx={{fontWeight: "600", mb: 2, width: "100%"}}
+                            >
+                                across all subcategories
+                            </Typography>
+                        </Box>
                     </Box>
-                )}
-            </ButtonBase>
-        </Box>
+                    {sentimentScores.length === 0 ? (
+                        <Typography variant="body2" color="grey">
+                            No data
+                        </Typography>
+                    ) : (
+                        <Box
+                            sx={{
+                                display: "flex",
+                                gap: 2,
+                                mt: 2,
+                                width: "100%",
+                                height: 200,
+                            }}
+                        >
+                            <ResponsiveLine
+                                data={sentimentScores}
+                                margin={{
+                                    top: 20,
+                                    right: 20,
+                                    bottom: 40,
+                                    left: 40,
+                                }}
+                                xScale={{
+                                    type: "time",
+                                    format: "%d %b %y",
+                                    precision: "day",
+                                }}
+                                xFormat={`time: %d %b '%y`}
+                                yScale={{
+                                    type: "linear",
+                                    min: 0,
+                                    max: 5,
+                                    stacked: false,
+                                    reverse: false,
+                                }}
+                                yFormat=" >+.1f"
+                                curve="linear"
+                                axisTop={null}
+                                axisRight={null}
+                                axisBottom={{
+                                    tickSize: 5,
+                                    tickPadding: 5,
+                                    tickRotation: 0,
+                                    legend: "",
+                                    legendOffset: 36,
+                                    legendPosition: "middle",
+                                    truncateTickAt: 0,
+                                    format: "%b '%y",
+                                    tickValues: "every 1 month",
+                                }}
+                                axisLeft={{
+                                    tickSize: 5,
+                                    tickPadding: 5,
+                                    tickRotation: 0,
+                                    legend: "",
+                                    legendOffset: -40,
+                                    legendPosition: "middle",
+                                    truncateTickAt: 0,
+                                    tickValues: [0, 1, 2, 3, 4, 5],
+                                }}
+                                enableGridX={false}
+                                colors={{scheme: "category10"}}
+                                pointSize={8}
+                                pointColor={{theme: "background"}}
+                                pointBorderWidth={2}
+                                pointBorderColor={{from: "serieColor"}}
+                                pointLabel="data.yFormatted"
+                                pointLabelYOffset={-12}
+                                enableTouchCrosshair={true}
+                                useMesh={true}
+                                theme={{
+                                    axis: {
+                                        ticks: {
+                                            text: {
+                                                fill:
+                                                    theme.palette.mode ===
+                                                    "dark"
+                                                        ? "#999"
+                                                        : "#222",
+                                            },
+                                        },
+                                    },
+                                    grid: {
+                                        line: {
+                                            stroke:
+                                                theme.palette.mode === "dark"
+                                                    ? "#555"
+                                                    : "#CCC",
+                                        },
+                                    },
+                                    crosshair: {
+                                        line: {
+                                            stroke:
+                                                theme.palette.mode === "dark"
+                                                    ? "#777"
+                                                    : "#AAA",
+                                            strokeWidth: 2,
+                                        },
+                                    },
+                                }}
+                                // styling of hover label
+                                tooltip={({point}) => (
+                                    <div
+                                        style={{
+                                            background:
+                                                theme.palette.mode === "dark"
+                                                    ? "#333"
+                                                    : "#fff",
+                                            boxShadow:
+                                                "0px 0px 10px rgba(0, 0, 0, 0.2)",
+                                            padding: "9px 12px",
+                                            borderRadius: "10px",
+                                            fontSize: "0.8rem",
+                                            display: "grid",
+                                            gridTemplateColumns: "auto 1fr",
+                                            gap: "4px",
+                                            alignItems: "center",
+                                        }}
+                                    >
+                                        <span
+                                            style={{
+                                                width: 12,
+                                                height: 12,
+                                                backgroundColor:
+                                                    point.serieColor,
+                                                borderRadius: "50%",
+                                                marginRight: 4,
+                                            }}
+                                        />
+                                        <div>
+                                            <div style={{display: "flex"}}>
+                                                <strong>Date:&nbsp;</strong>
+                                                {point.data.xFormatted}
+                                            </div>
+                                            <div style={{display: "flex"}}>
+                                                <strong>Score:&nbsp;</strong>
+                                                {point.data.yFormatted}
+                                            </div>
+                                        </div>
+                                    </div>
+                                )}
+                            />
+                        </Box>
+                    )}
+                </ButtonBase>
+            </Box>
+        </CustomWidthTooltip>
     );
 });
