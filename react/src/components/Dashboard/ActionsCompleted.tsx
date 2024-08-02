@@ -26,7 +26,7 @@ const StyledTableCell = styled(TableCell)({
     borderBottom: "none",
 });
 
-interface ActionsProgressProps {
+interface ActionsCompletedProps {
     setSelectedMenu: React.Dispatch<React.SetStateAction<string>>;
 }
 
@@ -43,18 +43,18 @@ type CustomRef<T> = {
     reportDesc?: string;
 };
 
-export default forwardRef(function ActionsProgress(
-    {setSelectedMenu}: ActionsProgressProps,
+export default forwardRef(function ActionsCompleted(
+    {setSelectedMenu}: ActionsCompletedProps,
     ref: ForwardedRef<CustomRef<HTMLDivElement>>
 ) {
-    const [actionsProgressPct, setActionsProgressPct] = useState<Bar>({
+    const [actionsCompletedPct, setActionsCompletedPct] = useState<Bar>({
         category: "Actions",
         "In Progress": 0,
         "In Progress Color": "orange",
         Done: 0,
         "Done Color": "green",
     });
-    const [actionsProgressRaw, setActionsProgressRaw] = useState<
+    const [actionsCompletedRaw, setActionsCompletedRaw] = useState<
         Record<string, number>
     >({
         "In Progress": 0,
@@ -82,7 +82,7 @@ export default forwardRef(function ActionsProgress(
                 console.log(inProgressData);
                 console.log(doneData);
                 const totalDataLen = inProgressData.length + doneData.length;
-                setActionsProgressPct((prevState) => ({
+                setActionsCompletedPct((prevState) => ({
                     ...prevState,
                     "In Progress": parseFloat(
                         ((100 * inProgressData.length) / totalDataLen).toFixed(
@@ -93,7 +93,7 @@ export default forwardRef(function ActionsProgress(
                         ((100 * doneData.length) / totalDataLen).toFixed(1)
                     ),
                 }));
-                setActionsProgressRaw({
+                setActionsCompletedRaw({
                     "In Progress": inProgressData.length,
                     Done: doneData.length,
                 });
@@ -107,7 +107,7 @@ export default forwardRef(function ActionsProgress(
             img: internalRef.current!,
             reportDesc: `The progress on the actionables is as shown.`,
         }),
-        [actionsProgressPct]
+        [actionsCompletedPct]
     );
 
     return (
@@ -134,7 +134,7 @@ export default forwardRef(function ActionsProgress(
                     transform: "scale(1.03)",
                 },
             }}
-            id="actions-progress"
+            id="actions-completed"
             onClick={() => setSelectedMenu("actionables")}
         >
             <Box sx={{width: "100%", justifyContent: "flex-start"}}>
@@ -142,10 +142,10 @@ export default forwardRef(function ActionsProgress(
                     Actions Completed
                 </Typography>
                 <TableContainer>
-                    <Table aria-label="action progress table">
+                    <Table aria-label="actions-completed-table">
                         <TableBody>
                             <TableRow>
-                                {Object.keys(actionsProgressRaw)
+                                {Object.keys(actionsCompletedRaw)
                                     .reverse()
                                     .map((key) => (
                                         <StyledTableCell
@@ -154,7 +154,7 @@ export default forwardRef(function ActionsProgress(
                                         >
                                             <Typography
                                                 sx={{
-                                                    color: actionsProgressPct[
+                                                    color: actionsCompletedPct[
                                                         `${key} Color` as keyof Bar
                                                     ],
                                                 }}
@@ -165,7 +165,7 @@ export default forwardRef(function ActionsProgress(
                                     ))}
                             </TableRow>
                             <TableRow>
-                                {Object.entries(actionsProgressRaw)
+                                {Object.entries(actionsCompletedRaw)
                                     .reverse()
                                     .map(([key, value], index) => (
                                         <StyledTableCell
@@ -174,7 +174,7 @@ export default forwardRef(function ActionsProgress(
                                         >
                                             <Typography
                                                 sx={{
-                                                    color: actionsProgressPct[
+                                                    color: actionsCompletedPct[
                                                         `${key} Color` as keyof Bar
                                                     ],
                                                 }}
@@ -196,11 +196,11 @@ export default forwardRef(function ActionsProgress(
                 }}
             >
                 <ResponsiveBar
-                    data={[actionsProgressPct]}
+                    data={[actionsCompletedPct]}
                     keys={["Done", "In Progress"]}
                     colors={[
-                        actionsProgressPct["Done Color"],
-                        actionsProgressPct["In Progress Color"],
+                        actionsCompletedPct["Done Color"],
+                        actionsCompletedPct["In Progress Color"],
                     ]}
                     indexBy="category"
                     margin={{
@@ -343,7 +343,7 @@ export default forwardRef(function ActionsProgress(
                                     }}
                                 ></div>
                                 <Typography variant="body2">
-                                    {id}: <b>{actionsProgressRaw[id]}</b> items
+                                    {id}: <b>{actionsCompletedRaw[id]}</b> items
                                 </Typography>
                             </div>
                         </div>
