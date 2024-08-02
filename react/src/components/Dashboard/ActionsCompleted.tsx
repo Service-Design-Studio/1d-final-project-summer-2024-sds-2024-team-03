@@ -79,8 +79,6 @@ export default forwardRef(function ActionsCompleted(
                     (item: Actionable) =>
                         item.status.toLowerCase() === "done".toLowerCase()
                 );
-                console.log(inProgressData);
-                console.log(doneData);
                 const totalDataLen = inProgressData.length + doneData.length;
                 setActionsCompletedPct((prevState) => ({
                     ...prevState,
