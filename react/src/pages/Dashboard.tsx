@@ -6,7 +6,7 @@ import FilterProduct from "../components/FilterProduct";
 import FilterSource from "../components/FilterSource";
 import OverallSentimentScore from "../components/Dashboard/OverallSentimentScore";
 import SentimentDistribution from "../components/Dashboard/SentimentDistribution";
-import ActionsProgress from "../components/Dashboard/ActionsCompleted";
+import ActionsCompleted from "../components/Dashboard/ActionsCompleted";
 import SentimentScoreGraph from "../components/SentimentScoreGraph";
 import CategoriesSunburstChart from "../components/Dashboard/CategoriesSunburstChart";
 import SentimentCategoriesGraph from "../components/SentimentCategoriesGraph";
@@ -52,7 +52,7 @@ export default function Dashboard({
             img: document.createElement("div"),
             reportDesc: "",
         }),
-        ActionsProgressRef: useRef<CustomRef<HTMLDivElement>>({
+        ActionsCompletedRef: useRef<CustomRef<HTMLDivElement>>({
             img: document.createElement("div"),
             reportDesc: "",
         }),
@@ -398,8 +398,8 @@ export default function Dashboard({
                     selectedSource={selectedSource}
                     setSelectedMenu={setSelectedMenu}
                 />
-                <ActionsProgress
-                    ref={reportRefs.ActionsProgressRef}
+                <ActionsCompleted
+                    ref={reportRefs.ActionsCompletedRef}
                     setSelectedMenu={setSelectedMenu}
                 />
             </Box>
