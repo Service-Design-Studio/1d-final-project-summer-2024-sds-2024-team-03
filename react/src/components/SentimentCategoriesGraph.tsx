@@ -34,7 +34,10 @@ import {
     SelectChangeEvent,
     Chip,
     styled,
+    Tooltip,
+    IconButton,
 } from "@mui/material";
+import InfoIcon from "@mui/icons-material/Info";
 import CloseIcon from "@mui/icons-material/Close";
 import {Dayjs} from "dayjs";
 import {ResponsiveBar} from "@nivo/bar";
@@ -692,16 +695,23 @@ export default forwardRef(function SentimentCategoriesGraph(
 
                               return description;
                           })
-                          .join("\n")}Some examples\n${Object.values(
+                          .join("\n")}\n\nSome examples\n${Object.values(
                           eg.highSentiment
                       )
                           .flat()
+                          .slice(0, 5)
                           .map(
                               (data) =>
-                                  `   • ${data.subcategory} | ${data.feedback_category} on ${data.date}: ${data.feedback}`
+                                  `   • ${data.subcategory} | ${
+                                      data.feedback_category
+                                  } on ${data.date}:\n"${
+                                      data.feedback.includes(": ")
+                                          ? data.feedback.split(": ")[1]
+                                          : data.feedback
+                                  }"`
                           )
                           .join(
-                              "\n"
+                              "\n\n"
                           )}\n\nAreas for improvement\n${sortBySentiment(
                           bars,
                           true
@@ -727,15 +737,22 @@ export default forwardRef(function SentimentCategoriesGraph(
 
                               return description;
                           })
-                          .join("\n")}Some examples\n${Object.values(
+                          .join("\n")}\n\nSome examples\n${Object.values(
                           eg.lowSentiment
                       )
                           .flat()
+                          .slice(0, 5)
                           .map(
                               (data) =>
-                                  `   • ${data.subcategory} | ${data.feedback_category} on ${data.date}: ${data.feedback}`
+                                  `   • ${data.subcategory} | ${
+                                      data.feedback_category
+                                  } on ${data.date}:\n"${
+                                      data.feedback.includes(": ")
+                                          ? data.feedback.split(": ")[1]
+                                          : data.feedback
+                                  }"`
                           )
-                          .join("\n")}`
+                          .join("\n\n")}`
                     : "No data.",
         }),
         [bars]
@@ -787,6 +804,29 @@ export default forwardRef(function SentimentCategoriesGraph(
                                 alignItems: "flex-start",
                             }}
                         >
+                            <Tooltip
+                                title={
+                                    <span>
+                                        Frequency of sentiments for the Feedback
+                                        Category of the selected Subcategory
+                                        <br />
+                                        <b>Sort</b> Positive or Negative
+                                        sentiments
+                                        <br />
+                                        <b>View</b> All or Less Feedback
+                                        Categories
+                                        <br />
+                                        <b>Click</b> to view related VOCUS
+                                        <br />
+                                        <b>Hover</b> for more information
+                                    </span>
+                                }
+                                arrow
+                            >
+                                <IconButton>
+                                    <InfoIcon />
+                                </IconButton>
+                            </Tooltip>
                             <Typography
                                 variant="h6"
                                 sx={{fontWeight: "bold", mr: 1}}
@@ -961,23 +1001,41 @@ export default forwardRef(function SentimentCategoriesGraph(
                                     >
                                         <div
                                             style={{
-                                                display: "flex",
-                                                alignItems: "center",
-                                                marginBottom: "5px",
+                                                padding: "9px 12px",
+                                                borderRadius: "10px",
+                                                backgroundColor:
+                                                    theme.palette.mode ===
+                                                    "dark"
+                                                        ? "#333"
+                                                        : "#fff",
+                                                boxShadow:
+                                                    "0px 0px 10px rgba(0, 0, 0, 0.2)",
+                                                color:
+                                                    theme.palette.mode ===
+                                                    "dark"
+                                                        ? "#fff"
+                                                        : "#000",
                                             }}
                                         >
                                             <div
                                                 style={{
-                                                    width: "12px",
-                                                    height: "12px",
-                                                    backgroundColor: color,
-                                                    marginRight: "8px",
+                                                    display: "flex",
+                                                    alignItems: "center",
                                                 }}
-                                            ></div>
-                                            <span>
-                                                {id} - {indexValue}:{" "}
-                                                <strong>{value}</strong>
-                                            </span>
+                                            >
+                                                <div
+                                                    style={{
+                                                        width: "12px",
+                                                        height: "12px",
+                                                        backgroundColor: color,
+                                                        marginRight: "8px",
+                                                    }}
+                                                ></div>
+                                                <Typography variant="body2">
+                                                    {id} — {indexValue}:{" "}
+                                                    <b>{value}%</b>
+                                                </Typography>
+                                            </div>
                                         </div>
                                         <div
                                             style={{
@@ -987,7 +1045,7 @@ export default forwardRef(function SentimentCategoriesGraph(
                                             }}
                                         >
                                             <strong>Click</strong> to view
-                                            related data
+                                            related VOCUS
                                         </div>
                                     </div>
                                 )}
@@ -1298,6 +1356,22 @@ export default forwardRef(function SentimentCategoriesGraph(
                 >
                     <Box sx={{width: "100%"}}>
                         <Typography variant="h6" sx={{fontWeight: "bold"}}>
+                            <Tooltip
+                                title={
+                                    <span>
+                                        Descending frequency of Promoter, then
+                                        Satisfied sentiments for Subcategory
+                                        &gt; Feedback Category
+                                        <br />
+                                        <b>Hover</b> for more information
+                                    </span>
+                                }
+                                arrow
+                            >
+                                <IconButton>
+                                    <InfoIcon />
+                                </IconButton>
+                            </Tooltip>
                             Top 5 Positive Categories
                         </Typography>
                         {bars.length === 0 ? (
@@ -1507,6 +1581,22 @@ export default forwardRef(function SentimentCategoriesGraph(
                     />
                     <Box sx={{width: "100%"}}>
                         <Typography variant="h6" sx={{fontWeight: "bold"}}>
+                            <Tooltip
+                                title={
+                                    <span>
+                                        Descending frequency of Frustrated, then
+                                        Unsatisfied sentiments for Subcategory
+                                        &gt; Feedback Category
+                                        <br />
+                                        Hover for more information
+                                    </span>
+                                }
+                                arrow
+                            >
+                                <IconButton>
+                                    <InfoIcon />
+                                </IconButton>
+                            </Tooltip>
                             Top 5 Negative Categories
                         </Typography>
                         {bars.length === 0 ? (

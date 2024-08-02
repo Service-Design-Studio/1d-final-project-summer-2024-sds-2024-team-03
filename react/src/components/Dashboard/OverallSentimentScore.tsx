@@ -172,8 +172,8 @@ export default forwardRef(function OverallSentimentScore(
                 <Tooltip
                     title={
                         <span>
-                            Displays the averaged sentiment score of all VOCUS
-                            and compares it to an equal duration:
+                            Displays the averaged sentiment score of <b>all</b>{" "}
+                            VOCUS and compares it to an equal duration prior:
                             <br /> {prevFromDate_string} - {fromDate_string}
                         </span>
                     }
