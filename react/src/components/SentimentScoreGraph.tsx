@@ -94,14 +94,10 @@ export default forwardRef(function SentimentScoreGraph(
             month: "short",
             year: "2-digit",
         };
-        const [dayPart, monthPart, yearPart] = new Intl.DateTimeFormat(
-            "en-GB",
-            options
-        )
-            .format(date)
-            .split(" ");
-
-        return `${dayPart} ${monthPart} '${yearPart}`;
+        const formattedDate = new Intl.DateTimeFormat("en-GB", options).format(
+            date
+        );
+        return formattedDate;
     };
 
     const feedbackcategoryHashToHue = (feedbackcategory: string) => {
