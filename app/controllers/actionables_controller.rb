@@ -1,3 +1,5 @@
+require 'net/http'
+require 'json'
 class ActionablesController < ApplicationController
   before_action :set_actionable, only: %i[ show edit update destroy ]
   skip_before_action :verify_authenticity_token, only: [:create, :update, :destroy]
@@ -62,14 +64,27 @@ class ActionablesController < ApplicationController
   end
 
   def inference
-    print("inference")
     products = params[:product].split(',')
     sources = params[:source].split(',')
-    fromDate = params[:fromDate] 
+    fromDate = params[:fromDate]    
     toDate = params[:toDate]
+    currentTime = Time.now()
 
-    @products = [ "Cards", "Unsecured Loans", "Secured Loans", "Digital Channels", "Investments", "DBS Treasures", "Self-Service Banking", "Insurance", "Deposits", "Contact Center", "Webpages", "Remittance", "Others"]
-    render json: @products
+    # Construct the query parameters
+    query_params = URI.encode_www_form(
+      products.map { |product| ['product', products] } +
+      sources.map { |source| ['source', sources] } +
+      [['from_date', fromDate], ['to_date', toDate]]
+    )
+    # Construct the full URL
+    url = URI.parse("https://asia-southeast1-jbaaam.cloudfunctions.net/generate-actions?#{query_params}")
+    response = Net::HTTP.get_response(url)
+    
+    #Actionable.where(:status = "new", :created_at < currentTime).destroy()
+    Actionable.where("status = ? AND created_at < ?", "new", currentTime).destroy_all
+    result = JSON.parse(response.body)
+
+    render json: result
   end
 
   private
