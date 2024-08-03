@@ -125,17 +125,17 @@ export default function OutlinedCard({
 
     const actionableCategories = [
         {
-            category: "Generated Actions",
+            status: "Generated Actions",
             icon: <NewReleasesTwoToneIcon style={{color: "#8D1927"}} />,
             color: "#8D1927",
         },
         {
-            category: "In Progress",
+            status: "In Progress",
             icon: <RotateRightTwoToneIcon style={{color: "#DA5707"}} />,
             color: "#DA5707",
         },
         {
-            category: "Done",
+            status: "Done",
             icon: <CheckCircleTwoToneIcon style={{color: "#208306"}} />,
             color: "#208306",
         },
@@ -238,19 +238,17 @@ export default function OutlinedCard({
                             {actionableCategories
                                 .filter(
                                     (cat) =>
-                                        cat.category.toLowerCase() !==
-                                        actionable.actionable_category.toLowerCase()
+                                        cat.status.toLowerCase() !==
+                                        actionable.status.toLowerCase()
                                 )
                                 .map((cat) => (
                                     <MenuItem
-                                        key={cat.category}
-                                        onClick={handleStatusChange(
-                                            cat.category
-                                        )}
+                                        key={cat.status}
+                                        onClick={handleStatusChange(cat.status)}
                                     >
                                         <ListItemIcon>{cat.icon}</ListItemIcon>
                                         <ListItemText
-                                            primary={cat.category}
+                                            primary={cat.status}
                                             style={{color: cat.color}}
                                         />
                                     </MenuItem>
