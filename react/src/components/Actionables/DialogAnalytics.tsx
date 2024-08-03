@@ -185,7 +185,6 @@ export default function ScrollDialog({
                                             feedbackData.map((feedback, i) => (
                                                 <StyledTableRow key={i}>
                                                     <StyledTableCell align="left">
-                                                        `$
                                                         {feedback.includes(": ")
                                                             ? feedback
                                                                   .split(
@@ -193,7 +192,6 @@ export default function ScrollDialog({
                                                                   )[1]
                                                                   .trim()
                                                             : feedback.trim()}
-                                                        `
                                                     </StyledTableCell>
                                                 </StyledTableRow>
                                             ))}

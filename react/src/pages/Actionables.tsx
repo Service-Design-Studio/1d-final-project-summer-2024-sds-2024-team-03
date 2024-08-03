@@ -152,9 +152,10 @@ export default function Actionables({
             // urlPrefix/controller_name/function(only if custom)?parameters&parameters
             `${urlPrefix}/actionables/inference?fromDate=${fromDate_string}&toDate=${toDate_string}&product=${selectedProduct}&source=${selectedSource}`
         ).then((response) => {
-            console.log("response inference", response.json());
+            const data = response.json();
+            console.log("response inference", data);
             setRefresh(Math.random());
-            return response.json();
+            return data;
         });
     };
 

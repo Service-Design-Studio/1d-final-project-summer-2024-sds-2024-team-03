@@ -237,28 +237,54 @@ export default function OutlinedCard({
                                     horizontal: "left",
                                 }}
                             >
-                                {actionableCategories
-                                    .filter(
-                                        (cat) =>
-                                            cat.status.toLowerCase() !==
-                                            actionable.status.toLowerCase()
-                                    )
-                                    .map((cat) => (
-                                        <MenuItem
-                                            key={cat.status}
-                                            onClick={handleStatusChange(
-                                                cat.status
-                                            )}
-                                        >
-                                            <ListItemIcon>
-                                                {cat.icon}
-                                            </ListItemIcon>
-                                            <ListItemText
-                                                primary={cat.status}
-                                                style={{color: cat.color}}
-                                            />
-                                        </MenuItem>
-                                    ))}
+                                {actionable.status.toLowerCase() ===
+                                "generated actions"
+                                    ? actionableCategories
+                                          .filter(
+                                              (cat) =>
+                                                  cat.status.toLowerCase() !==
+                                                  actionable.status.toLowerCase()
+                                          )
+                                          .map((cat) => (
+                                              <MenuItem
+                                                  key={cat.status}
+                                                  onClick={handleStatusChange(
+                                                      cat.status
+                                                  )}
+                                              >
+                                                  <ListItemIcon>
+                                                      {cat.icon}
+                                                  </ListItemIcon>
+                                                  <ListItemText
+                                                      primary={cat.status}
+                                                      style={{color: cat.color}}
+                                                  />
+                                              </MenuItem>
+                                          ))
+                                    : actionableCategories
+                                          .filter(
+                                              (cat) =>
+                                                  cat.status.toLowerCase() !==
+                                                      actionable.status.toLowerCase() &&
+                                                  "generated actions" !==
+                                                      actionable.status.toLowerCase()
+                                          )
+                                          .map((cat) => (
+                                              <MenuItem
+                                                  key={cat.status}
+                                                  onClick={handleStatusChange(
+                                                      cat.status
+                                                  )}
+                                              >
+                                                  <ListItemIcon>
+                                                      {cat.icon}
+                                                  </ListItemIcon>
+                                                  <ListItemText
+                                                      primary={cat.status}
+                                                      style={{color: cat.color}}
+                                                  />
+                                              </MenuItem>
+                                          ))}
                             </Menu>
                         </Box>
                     </CardActions>
