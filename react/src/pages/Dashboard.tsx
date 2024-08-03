@@ -38,6 +38,7 @@ export default function Dashboard({
     setSelectedMenu,
 }: DashboardProps) {
     const {scrollDir, scrollPosition} = useDetectScroll();
+
     type CustomRef<T> = {
         img: T;
         reportDesc?: string;
@@ -300,6 +301,11 @@ export default function Dashboard({
         );
     };
 
+    const disableGenerateReport =
+        selectedProduct.length === 0 ||
+        selectedSource.length === 0 ||
+        reportRefs.SentimentScoreGraphRef.current?.reportDesc === "";
+
     return (
         <Box
             sx={{
@@ -319,7 +325,9 @@ export default function Dashboard({
                 <Button
                     variant="outlined"
                     sx={{
-                        backgroundColor: "#e80000",
+                        backgroundColor: disableGenerateReport
+                            ? "#d3d3d3"
+                            : "#e80000",
                         color: "#fff",
                         border: 0,
                         fontWeight: "bold",
@@ -330,12 +338,7 @@ export default function Dashboard({
                         },
                     }}
                     onClick={handleGenerateReport}
-                    disabled={
-                        selectedProduct.length === 0 ||
-                        selectedSource.length === 0 ||
-                        reportRefs.SentimentScoreGraphRef.current
-                            ?.reportDesc === "No data"
-                    }
+                    disabled={disableGenerateReport}
                 >
                     Generate Report
                 </Button>
