@@ -66,11 +66,22 @@ class ActionablesController < ApplicationController
   def inference
     products = params[:product].split(',')
     sources = params[:source].split(',')
-    fromDate = params[:fromDate] 
+    fromDate = params[:fromDate]    
     toDate = params[:toDate]
+    currentTime = Time.now()
 
-    url = URI.parse('https://asia-southeast1-jbaaam.cloudfunctions.net/generate-actions?product=Contact%20Center&product=Digital%20Channels&product=Secured%20Loans&from_date=04-03-2024&to_date=22-05-2024&source=Product%20Survey&source=Social%20Media')
+    # Construct the query parameters
+    query_params = URI.encode_www_form(
+      products.map { |product| ['product', products] } +
+      sources.map { |source| ['source', sources] } +
+      [['from_date', fromDate], ['to_date', toDate]]
+    )
+    # Construct the full URL
+    url = URI.parse("https://asia-southeast1-jbaaam.cloudfunctions.net/generate-actions?#{query_params}")
     response = Net::HTTP.get_response(url)
+    
+    #Actionable.where(:status = "new", :created_at < currentTime).destroy()
+    Actionable.where("status = ? AND created_at < ?", "new", currentTime).destroy_all
     result = JSON.parse(response.body)
 
     render json: result

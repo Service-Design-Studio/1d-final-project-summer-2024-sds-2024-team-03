@@ -4,7 +4,7 @@ import FilterSource from "../components/FilterSource";
 import Calendar from "../components/Calendar";
 import TodoList from "../components/Actionables/TodoList";
 import DialogAddAction from "../components/Actionables/DialogAddAction";
-import useDebounce from "../components/Actionables/useDebounce";
+import Button from "@mui/material/Button";
 import {
   ActionablesPageProps,
   Actionable,
@@ -49,13 +49,6 @@ export default function Actionables({
   const fromDate_string = fromDate.format("DD/MM/YYYY");
   const toDate_string = toDate.format("DD/MM/YYYY");
 
-  const combinedFilters = {
-    fromDate_string,
-    toDate_string,
-    selectedProduct,
-    selectedSource,
-  };
-  const debouncedCombinedFilters = useDebounce(combinedFilters, 5000); // 10000ms debounce delay
   const transitionDuration = {
     enter: theme.transitions.duration.enteringScreen,
     exit: theme.transitions.duration.leavingScreen,
@@ -105,22 +98,21 @@ export default function Actionables({
     fetchData();
   }, [refresh]); // Empty dependency array ensures this runs once when the component mounts
 
-  useEffect(() => {
-    if (debouncedCombinedFilters) {
-      const urlPrefix =
-        process.env.NODE_ENV === "development"
-          ? "http://localhost:3000"
-          : "https://jbaaam-yl5rojgcbq-et.a.run.app";
-      fetch(
-        //ENDPOINT
-        // urlPrefix/controller_name/function(only if custom)?parameters&parameters
-        `${urlPrefix}/actionables/inference?fromDate=${fromDate_string}&toDate=${toDate_string}&product=${selectedProduct}&source=${selectedSource}`
-      ).then((response) => {
-        console.log("response inference", response);
-        return response.json();
-      });
-    }
-  }, [debouncedCombinedFilters]);
+  const inference = () => {
+    const urlPrefix =
+      process.env.NODE_ENV === "development"
+        ? "http://localhost:3000"
+        : "https://jbaaam-yl5rojgcbq-et.a.run.app";
+    fetch(
+      //ENDPOINT
+      // urlPrefix/controller_name/function(only if custom)?parameters&parameters
+      `${urlPrefix}/actionables/inference?fromDate=${fromDate_string}&toDate=${toDate_string}&product=${selectedProduct}&source=${selectedSource}`
+    ).then((response) => {
+      console.log("response inference", response);
+      setRefresh(Math.random());
+      return response.json();
+    });
+  };
 
   return (
     <Box sx={{ maxWidth: "lg", mx: "auto", px: 2 }}>
@@ -164,6 +156,11 @@ export default function Actionables({
             setSelectedSource={setSelectedSource}
             multiple={true}
           />
+        </Box>
+        <Box sx={{ flexBasis: { xs: "100%", sm: "30%" }, flexGrow: 1 }}>
+          <Button variant="contained" onClick={inference}>
+            Generate Actions
+          </Button>
         </Box>
       </Box>
       <Box sx={{ flexGrow: 1 }}>

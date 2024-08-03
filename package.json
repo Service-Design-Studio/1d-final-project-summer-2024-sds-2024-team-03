@@ -12,6 +12,7 @@
     "lodash": "^4.17.21",
     "papaparse": "^5.4.1",
     "react-window": "^1.8.10",
+    "use-debounce": "^10.0.2",
     "webpack": "^4.46.0",
     "webpack-cli": "^3.3.12",
     "xlsx": "^0.18.5",
