@@ -55,6 +55,7 @@ class AnalyticsController < ApplicationController
                                 .where(product: products)
                                 .where(source: sources)
 
+    # transform_string in model > analytic.rb
     @sentiment_scores = @sentiment_scores.map do |score|
       score.attributes.merge(
         'feedback_category' => Analytic.transform_string(score.feedback_category)
@@ -115,12 +116,6 @@ class AnalyticsController < ApplicationController
 
     def private_filter(attribute)
       Analytic.select(attribute).distinct.pluck(attribute)
-    end
-
-    def self.transform_string(str)
-      str.gsub(/([\/&])/, ' \1 ') # Insert spaces around / and &
-         .split.map(&:capitalize) # Convert to title case
-         .join(' ')
     end
 
     # Only allow a list of trusted parameters through.
