@@ -215,7 +215,11 @@ export default function OutlinedCard({
                         >
                             Change Status
                         </Button>
-                        <DialogAnalytics {...actionable} />
+                        <DialogAnalytics
+                            actionable={actionable}
+                            setRefresh={setRefresh}
+                            forWidget={forWidget}
+                        />
                         <Menu
                             id="demo-positioned-menu"
                             aria-labelledby="demo-positioned-button"
@@ -234,8 +238,8 @@ export default function OutlinedCard({
                             {actionableCategories
                                 .filter(
                                     (cat) =>
-                                        cat.category !==
-                                        actionable.actionable_category
+                                        cat.category.toLowerCase() !==
+                                        actionable.actionable_category.toLowerCase()
                                 )
                                 .map((cat) => (
                                     <MenuItem

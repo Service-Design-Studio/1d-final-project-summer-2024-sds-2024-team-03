@@ -15,11 +15,11 @@ export interface ActionablesPageProps {
 //TodoList.tsx, DATA
 export interface Actionable {
     id: number;
-    action: string;
     status: string;
-    subproduct: string;
     actionable_category: string;
+    subproduct: string;
     feedback_category: string;
+    action: string;
     feedback_json: string;
     created_at: string;
     updated_at: string;
