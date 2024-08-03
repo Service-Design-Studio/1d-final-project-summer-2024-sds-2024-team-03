@@ -135,7 +135,7 @@ export default function Actionables({
           borderRadius: 4,
         }}
       >
-        <Box sx={{ flexBasis: { xs: "100%", sm: "40%" }, flexGrow: 1 }}>
+        <Box sx={{ flexBasis: { xs: "100%", sm: "75%" }, flexGrow: 1 }}>
           <Calendar
             fromDate={fromDate}
             setFromDate={setFromDate}
@@ -143,14 +143,14 @@ export default function Actionables({
             setToDate={setToDate}
           />
         </Box>
-        <Box sx={{ flexBasis: { xs: "100%", sm: "30%" }, flexGrow: 1 }}>
+        <Box sx={{ flexBasis: { xs: "100%", sm: "40%" }, flexGrow: 1 }}>
           <FilterProduct
             selectedProduct={selectedProduct}
             setSelectedProduct={setSelectedProduct}
             multiple={true}
           />
         </Box>
-        <Box sx={{ flexBasis: { xs: "100%", sm: "30%" }, flexGrow: 1 }}>
+        <Box sx={{ flexBasis: { xs: "100%", sm: "40%" }, flexGrow: 1 }}>
           <FilterSource
             selectedSource={selectedSource}
             setSelectedSource={setSelectedSource}
@@ -178,7 +178,7 @@ export default function Actionables({
             <Grid item xs={4}>
               <Chip
                 icon={<NewReleasesTwoToneIcon />}
-                label="NEW"
+                label="GENERATED ACTIONS"
                 color="secondary"
                 variant="outlined"
                 sx={{
