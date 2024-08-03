@@ -77,6 +77,7 @@ export default function ScrollDialog({
 
     try {
         const parsedData = JSON.parse(actionable.feedback_json);
+        console.log("feedbackJson", parsedData);
         if (
             Array.isArray(parsedData) &&
             parsedData.length === 1 &&
@@ -136,24 +137,28 @@ export default function ScrollDialog({
                         ref={descriptionElementRef}
                         tabIndex={-1}
                         sx={{
-                            flex: "1 1 auto",
                             display: "flex",
-                            flexDirection: "column",
+                            flexDirection: "row",
+                            gap: 2,
+                            height: "100%",
+                            overflow: "hidden",
                         }}
                     >
-                        <div style={{flex: "0 1 auto"}}>
+                        <div style={{flexBasis: "30%", flexShrink: 0}}>
                             <TodoCard
                                 key={actionable.id}
                                 actionable={actionable}
                                 setRefresh={setRefresh}
                                 forWidget={`${forWidget}-${actionable.actionable_category}-view_data`}
+                                viewData={true}
                             />
                         </div>
                         <div
                             style={{
-                                flex: "1 1 auto",
-                                overflow: "auto",
-                                marginTop: "1rem",
+                                flexBasis: "70%",
+                                flexGrow: 1,
+                                overflowY: "auto",
+                                height: "calc(100vh - 200px)",
                             }}
                         >
                             <TableContainer
@@ -181,13 +186,16 @@ export default function ScrollDialog({
                                     <TableBody>
                                         {feedbackData &&
                                             feedbackData.map(
-                                                ({feedback}, i) => (
-                                                    <StyledTableRow key={i}>
-                                                        <StyledTableCell align="left">
-                                                            {feedback}
-                                                        </StyledTableCell>
-                                                    </StyledTableRow>
-                                                )
+                                                ({feedback}, i) => {
+                                                    console.log(feedback);
+                                                    return (
+                                                        <StyledTableRow key={i}>
+                                                            <StyledTableCell align="left">
+                                                                {feedback}
+                                                            </StyledTableCell>
+                                                        </StyledTableRow>
+                                                    );
+                                                }
                                             )}
                                     </TableBody>
                                 </Table>

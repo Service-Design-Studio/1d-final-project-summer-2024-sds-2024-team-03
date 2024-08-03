@@ -65,6 +65,7 @@ export default function Actionables({
     const [dataInProgress, setDataInProgress] = useState<Actionable[]>([]);
     const [dataDone, setDataDone] = useState<Actionable[]>([]);
     const [openCfmDialog, setOpenCfmDialog] = useState(false);
+    const [modalContent, setModalContent] = useState<React.ReactNode[]>([]);
     const urlPrefix =
         process.env.NODE_ENV === "development"
             ? "http://localhost:3000"
@@ -107,6 +108,47 @@ export default function Actionables({
     useEffect(() => {
         fetchData();
     }, [refresh]);
+
+    const handleGenerateActionsClick = () => {
+        if (selectedProduct.length === 0 || selectedSource.length === 0) {
+            setModalContent([
+                <Typography
+                    key="error"
+                    variant="h6"
+                    component="div"
+                    sx={{fontWeight: "bold"}}
+                >
+                    Error
+                </Typography>,
+                <Typography key="message" variant="body1" component="div">
+                    Please select product(s) and source(s).
+                </Typography>,
+            ]);
+        } else {
+            setModalContent([
+                <DialogTitle key="dialog-title">Confirmation</DialogTitle>,
+                <DialogContent key="dialog-content">
+                    <Typography>
+                        Are you sure? This will replace all current{" "}
+                        <b>Generated</b> Actions.
+                    </Typography>
+                </DialogContent>,
+                <DialogActions key="dialog-actions">
+                    <Button onClick={() => setOpenCfmDialog(false)}>No</Button>
+                    <Button
+                        onClick={() => {
+                            inference();
+                            setOpenCfmDialog(false);
+                        }}
+                        color="primary"
+                    >
+                        Yes
+                    </Button>
+                </DialogActions>,
+            ]);
+            setOpenCfmDialog(true);
+        }
+    };
 
     const inference = () => {
         fetch(
@@ -166,7 +208,7 @@ export default function Actionables({
                 <Box sx={{flexBasis: {xs: "100%", sm: "30%"}, flexGrow: 1}}>
                     <Button
                         variant="contained"
-                        onClick={() => setOpenCfmDialog(true)}
+                        onClick={handleGenerateActionsClick}
                     >
                         Generate Actions
                     </Button>
@@ -175,27 +217,7 @@ export default function Actionables({
                     open={openCfmDialog}
                     onClose={() => setOpenCfmDialog(false)}
                 >
-                    <DialogTitle>Confirmation</DialogTitle>
-                    <DialogContent>
-                        <Typography>
-                            Are you sure? This will replace all current{" "}
-                            <b>Generated</b> Actions.
-                        </Typography>
-                    </DialogContent>
-                    <DialogActions>
-                        <Button onClick={() => setOpenCfmDialog(false)}>
-                            No
-                        </Button>
-                        <Button
-                            onClick={() => {
-                                inference();
-                                setOpenCfmDialog(false);
-                            }}
-                            color="primary"
-                        >
-                            Yes
-                        </Button>
-                    </DialogActions>
+                    {modalContent}
                 </Dialog>
             </Box>
             <Box sx={{flexGrow: 1}}>
