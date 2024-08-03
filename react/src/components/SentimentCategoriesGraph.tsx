@@ -949,7 +949,8 @@ export default forwardRef(function SentimentCategoriesGraph(
                                 gap: 2,
                                 mt: 2,
                                 width: "100%",
-                                height: viewAll ? 800 : 200,
+                                height:
+                                    viewAll && bars.length >= 10 ? 800 : 400,
                             }}
                         >
                             <React.Fragment>
