@@ -73,7 +73,7 @@ export default function ScrollDialog({
         }
     }, [open]);
 
-    let feedbackData: Array<{feedback: string}> | null = null;
+    let feedbackData: Array<string> | null = null;
 
     try {
         const parsedData = JSON.parse(actionable.feedback_json);
@@ -182,16 +182,21 @@ export default function ScrollDialog({
                                     </TableHead>
                                     <TableBody>
                                         {feedbackData &&
-                                            feedbackData.map((feedback, i) => {
-                                                console.log(feedback);
-                                                return (
-                                                    <StyledTableRow key={i}>
-                                                        <StyledTableCell align="left">
-                                                            feedback
-                                                        </StyledTableCell>
-                                                    </StyledTableRow>
-                                                );
-                                            })}
+                                            feedbackData.map((feedback, i) => (
+                                                <StyledTableRow key={i}>
+                                                    <StyledTableCell align="left">
+                                                        `$
+                                                        {feedback.includes(": ")
+                                                            ? feedback
+                                                                  .split(
+                                                                      ": "
+                                                                  )[1]
+                                                                  .trim()
+                                                            : feedback.trim()}
+                                                        `
+                                                    </StyledTableCell>
+                                                </StyledTableRow>
+                                            ))}
                                     </TableBody>
                                 </Table>
                             </TableContainer>

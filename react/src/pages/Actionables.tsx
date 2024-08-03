@@ -107,7 +107,6 @@ export default function Actionables({
     }, [refresh]);
 
     const handleGenerateActionsClick = () => {
-        console.log(selectedProduct, selectedSource);
         if (selectedProduct.length === 0 || selectedSource.length === 0) {
             setModalContent([
                 <Typography
@@ -210,14 +209,24 @@ export default function Actionables({
                         Generate Actions
                     </Button>
                 </Box>
-                <div>
-                    <Button onClick={handleGenerateActionsClick}>
-                        Generate Actions
-                    </Button>
 
-                    <Modal
-                        open={openCfmModal}
-                        onClose={() => setOpenCfmModal(false)}
+                <Modal
+                    open={openCfmModal}
+                    onClose={() => setOpenCfmModal(false)}
+                    aria-labelledby="modal-content"
+                    aria-describedby="modal-description"
+                >
+                    <Box
+                        sx={{
+                            p: 2.5,
+                            bgcolor: "background.paper",
+                            top: "50%",
+                            left: "50%",
+                            transform: "translate(-50%, -50%)",
+                            position: "absolute",
+                            borderRadius: 3,
+                            boxShadow: "0px 0px 20px rgba(0, 0, 0, 0.1)",
+                        }}
                     >
                         <Typography
                             id="modal-title"
@@ -226,8 +235,8 @@ export default function Actionables({
                         >
                             {modalContent}
                         </Typography>
-                    </Modal>
-                </div>
+                    </Box>
+                </Modal>
             </Box>
             <Box sx={{flexGrow: 1}}>
                 <Grid container spacing={2}>
