@@ -42,6 +42,7 @@ export default function OutlinedCard({
     actionable,
     setRefresh,
     forWidget,
+    viewData = false,
 }: ActionableWithRefresh) {
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
@@ -183,79 +184,85 @@ export default function OutlinedCard({
                         {actionable.action}
                     </Typography>
                 </CardContent>
-                <CardActions>
-                    <Box
-                        sx={{
-                            display: "flex",
-                            justifyContent: "space-between",
-                            width: "100%",
-                        }}
-                    >
-                        <button
-                            onClick={handleDelete}
-                            style={{
-                                background: "none",
-                                border: "none",
-                                cursor: "pointer",
+                {!viewData && (
+                    <CardActions>
+                        <Box
+                            sx={{
+                                display: "flex",
+                                justifyContent: "space-between",
+                                width: "100%",
                             }}
                         >
-                            <DeleteTwoToneIcon style={{color: "#808080"}} />
-                        </button>
-                        <Button
-                            id="demo-positioned-button"
-                            aria-controls={
-                                open ? "demo-positioned-menu" : undefined
-                            }
-                            aria-haspopup="true"
-                            aria-expanded={open ? "true" : undefined}
-                            onClick={handleClick}
-                            size="small"
-                            color="secondary"
-                            sx={{fontWeight: "bold"}}
-                        >
-                            Change Status
-                        </Button>
-                        <DialogAnalytics
-                            actionable={actionable}
-                            setRefresh={setRefresh}
-                            forWidget={forWidget}
-                        />
-                        <Menu
-                            id="demo-positioned-menu"
-                            aria-labelledby="demo-positioned-button"
-                            anchorEl={anchorEl}
-                            open={open}
-                            onClose={handleClose}
-                            anchorOrigin={{
-                                vertical: "top",
-                                horizontal: "left",
-                            }}
-                            transformOrigin={{
-                                vertical: "top",
-                                horizontal: "left",
-                            }}
-                        >
-                            {actionableCategories
-                                .filter(
-                                    (cat) =>
-                                        cat.status.toLowerCase() !==
-                                        actionable.status.toLowerCase()
-                                )
-                                .map((cat) => (
-                                    <MenuItem
-                                        key={cat.status}
-                                        onClick={handleStatusChange(cat.status)}
-                                    >
-                                        <ListItemIcon>{cat.icon}</ListItemIcon>
-                                        <ListItemText
-                                            primary={cat.status}
-                                            style={{color: cat.color}}
-                                        />
-                                    </MenuItem>
-                                ))}
-                        </Menu>
-                    </Box>
-                </CardActions>
+                            <button
+                                onClick={handleDelete}
+                                style={{
+                                    background: "none",
+                                    border: "none",
+                                    cursor: "pointer",
+                                }}
+                            >
+                                <DeleteTwoToneIcon style={{color: "#808080"}} />
+                            </button>
+                            <Button
+                                id="demo-positioned-button"
+                                aria-controls={
+                                    open ? "demo-positioned-menu" : undefined
+                                }
+                                aria-haspopup="true"
+                                aria-expanded={open ? "true" : undefined}
+                                onClick={handleClick}
+                                size="small"
+                                color="secondary"
+                                sx={{fontWeight: "bold"}}
+                            >
+                                Change Status
+                            </Button>
+                            <DialogAnalytics
+                                actionable={actionable}
+                                setRefresh={setRefresh}
+                                forWidget={forWidget}
+                            />
+                            <Menu
+                                id="demo-positioned-menu"
+                                aria-labelledby="demo-positioned-button"
+                                anchorEl={anchorEl}
+                                open={open}
+                                onClose={handleClose}
+                                anchorOrigin={{
+                                    vertical: "top",
+                                    horizontal: "left",
+                                }}
+                                transformOrigin={{
+                                    vertical: "top",
+                                    horizontal: "left",
+                                }}
+                            >
+                                {actionableCategories
+                                    .filter(
+                                        (cat) =>
+                                            cat.status.toLowerCase() !==
+                                            actionable.status.toLowerCase()
+                                    )
+                                    .map((cat) => (
+                                        <MenuItem
+                                            key={cat.status}
+                                            onClick={handleStatusChange(
+                                                cat.status
+                                            )}
+                                        >
+                                            <ListItemIcon>
+                                                {cat.icon}
+                                            </ListItemIcon>
+                                            <ListItemText
+                                                primary={cat.status}
+                                                style={{color: cat.color}}
+                                            />
+                                        </MenuItem>
+                                    ))}
+                            </Menu>
+                        </Box>
+                    </CardActions>
+                )}
             </Card>
         </Paper>
     );

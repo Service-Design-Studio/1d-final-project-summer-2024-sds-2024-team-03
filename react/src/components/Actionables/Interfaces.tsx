@@ -35,4 +35,5 @@ export interface ActionableWithRefresh {
     actionable: Actionable;
     setRefresh: React.Dispatch<React.SetStateAction<number>>;
     forWidget: string;
+    viewData?: boolean;
 }
