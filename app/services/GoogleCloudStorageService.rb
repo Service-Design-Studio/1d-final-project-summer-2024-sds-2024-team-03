@@ -7,7 +7,8 @@ class GoogleCloudStorageService
     @storage = Google::Cloud::Storage.new(
       project_id: "jbaaam",
       credentials: "jbaaam-upload-key.json" # Ensure this path is correct
-    )    @bucket = @storage.bucket(bucket_name)
+    )    
+    @bucket = @storage.bucket(bucket_name)
   end
 
   def upload_file(file, destination_path)
