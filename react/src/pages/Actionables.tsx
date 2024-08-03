@@ -15,10 +15,7 @@ import {
     styled,
     Tooltip,
     Button,
-    Dialog,
-    DialogTitle,
-    DialogContent,
-    DialogActions,
+    Modal,
     Typography,
     TooltipProps,
     tooltipClasses,
@@ -64,7 +61,7 @@ export default function Actionables({
     const [dataNew, setDataNew] = useState<Actionable[]>([]);
     const [dataInProgress, setDataInProgress] = useState<Actionable[]>([]);
     const [dataDone, setDataDone] = useState<Actionable[]>([]);
-    const [openCfmDialog, setOpenCfmDialog] = useState(false);
+    const [openCfmModal, setOpenCfmModal] = useState(false);
     const [modalContent, setModalContent] = useState<React.ReactNode[]>([]);
     const urlPrefix =
         process.env.NODE_ENV === "development"
@@ -110,6 +107,7 @@ export default function Actionables({
     }, [refresh]);
 
     const handleGenerateActionsClick = () => {
+        console.log(selectedProduct, selectedSource);
         if (selectedProduct.length === 0 || selectedSource.length === 0) {
             setModalContent([
                 <Typography
@@ -124,29 +122,28 @@ export default function Actionables({
                     Please select product(s) and source(s).
                 </Typography>,
             ]);
+            setOpenCfmModal(true);
         } else {
             setModalContent([
-                <DialogTitle key="dialog-title">Confirmation</DialogTitle>,
-                <DialogContent key="dialog-content">
-                    <Typography>
-                        Are you sure? This will replace all current{" "}
-                        <b>Generated</b> Actions.
-                    </Typography>
-                </DialogContent>,
-                <DialogActions key="dialog-actions">
-                    <Button onClick={() => setOpenCfmDialog(false)}>No</Button>
+                <Typography key="Modal-content">
+                    Are you sure? This will replace all current <b>Generated</b>{" "}
+                    Actions.
+                </Typography>,
+                <Box sx={{display: "flex", justifyContent: "flex-end", mt: 2}}>
+                    <Button onClick={() => setOpenCfmModal(false)}>No</Button>
                     <Button
                         onClick={() => {
                             inference();
-                            setOpenCfmDialog(false);
+                            setOpenCfmModal(false);
                         }}
                         color="primary"
+                        sx={{ml: 2}}
                     >
                         Yes
                     </Button>
-                </DialogActions>,
+                </Box>,
             ]);
-            setOpenCfmDialog(true);
+            setOpenCfmModal(true);
         }
     };
 
@@ -213,12 +210,24 @@ export default function Actionables({
                         Generate Actions
                     </Button>
                 </Box>
-                <Dialog
-                    open={openCfmDialog}
-                    onClose={() => setOpenCfmDialog(false)}
-                >
-                    {modalContent}
-                </Dialog>
+                <div>
+                    <Button onClick={handleGenerateActionsClick}>
+                        Generate Actions
+                    </Button>
+
+                    <Modal
+                        open={openCfmModal}
+                        onClose={() => setOpenCfmModal(false)}
+                    >
+                        <Typography
+                            id="modal-title"
+                            variant="h6"
+                            component="h2"
+                        >
+                            {modalContent}
+                        </Typography>
+                    </Modal>
+                </div>
             </Box>
             <Box sx={{flexGrow: 1}}>
                 <Grid container spacing={2}>
