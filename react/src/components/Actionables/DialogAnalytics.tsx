@@ -77,7 +77,7 @@ export default function ScrollDialog({
 
     try {
         const parsedData = JSON.parse(actionable.feedback_json);
-        console.log("feedbackJson", parsedData);
+        // console.log("feedbackJson", parsedData);
         if (
             Array.isArray(parsedData) &&
             parsedData.length === 1 &&
@@ -175,9 +175,6 @@ export default function ScrollDialog({
                                 >
                                     <TableHead>
                                         <TableRow>
-                                            <StyledTableCell>
-                                                Date
-                                            </StyledTableCell>
                                             <StyledTableCell align="left">
                                                 Feedback
                                             </StyledTableCell>
@@ -185,18 +182,16 @@ export default function ScrollDialog({
                                     </TableHead>
                                     <TableBody>
                                         {feedbackData &&
-                                            feedbackData.map(
-                                                ({feedback}, i) => {
-                                                    console.log(feedback);
-                                                    return (
-                                                        <StyledTableRow key={i}>
-                                                            <StyledTableCell align="left">
-                                                                {feedback}
-                                                            </StyledTableCell>
-                                                        </StyledTableRow>
-                                                    );
-                                                }
-                                            )}
+                                            feedbackData.map((feedback, i) => {
+                                                console.log(feedback);
+                                                return (
+                                                    <StyledTableRow key={i}>
+                                                        <StyledTableCell align="left">
+                                                            feedback
+                                                        </StyledTableCell>
+                                                    </StyledTableRow>
+                                                );
+                                            })}
                                     </TableBody>
                                 </Table>
                             </TableContainer>
