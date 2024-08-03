@@ -4,6 +4,7 @@ class AnalyticsController < ApplicationController
   #before_action :set_analytic, only: %i[ show edit update destroy ]
   
   def uploads
+    print("AnalyticsController uploads")
     file = params[:file]
 
     if file
