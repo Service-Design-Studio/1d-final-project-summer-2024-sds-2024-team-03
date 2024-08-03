@@ -26,8 +26,7 @@ class AnalyticsController < ApplicationController
     @latest_date = Analytic.select(:date)
                             .order(Arel.sql("TO_DATE(date, 'DD/MM/YYYY') DESC"))
                             .pluck(:date)
-                            # because db got an issue, first is null
-                            .second
+                            .first
     render json: { "earliest_date": @earliest_date, "latest_date": @latest_date }
   end
 
@@ -55,7 +54,7 @@ class AnalyticsController < ApplicationController
                                 .where(product: products)
                                 .where(source: sources)
 
-    # transform_string in model > analytic.rb
+    # transform_string function in model > analytic.rb
     @sentiment_scores = @sentiment_scores.map do |score|
       score.attributes.merge(
         'feedback_category' => Analytic.transform_string(score.feedback_category)
