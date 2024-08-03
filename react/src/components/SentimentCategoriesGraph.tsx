@@ -1253,9 +1253,17 @@ export default forwardRef(function SentimentCategoriesGraph(
                                                                         }
                                                                     </StyledTableCell>
                                                                     <StyledTableCell align="left">
-                                                                        {
-                                                                            row.feedback
-                                                                        }
+                                                                        {`${
+                                                                            row.feedback.includes(
+                                                                                ": "
+                                                                            )
+                                                                                ? row.feedback
+                                                                                      .split(
+                                                                                          ": "
+                                                                                      )[1]
+                                                                                      .trim()
+                                                                                : row.feedback.trim()
+                                                                        }`}
                                                                     </StyledTableCell>
                                                                     <StyledTableCell align="left">
                                                                         {

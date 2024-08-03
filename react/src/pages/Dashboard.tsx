@@ -330,6 +330,12 @@ export default function Dashboard({
                         },
                     }}
                     onClick={handleGenerateReport}
+                    disabled={
+                        selectedProduct.length === 0 ||
+                        selectedSource.length === 0 ||
+                        reportRefs.SentimentScoreGraphRef.current
+                            ?.reportDesc === "No data"
+                    }
                 >
                     Generate Report
                 </Button>
