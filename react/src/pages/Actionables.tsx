@@ -4,7 +4,6 @@ import FilterSource from "../components/FilterSource";
 import Calendar from "../components/Calendar";
 import TodoList from "../components/Actionables/TodoList";
 import DialogAddAction from "../components/Actionables/DialogAddAction";
-import Button from "@mui/material/Button";
 import {
     ActionablesPageProps,
     Actionable,
@@ -15,11 +14,15 @@ import {
     Box,
     styled,
     Tooltip,
-    IconButton,
+    Button,
+    Dialog,
+    DialogTitle,
+    DialogContent,
+    DialogActions,
+    Typography,
     TooltipProps,
     tooltipClasses,
 } from "@mui/material";
-import InfoIcon from "@mui/icons-material/Info";
 import NewReleasesTwoToneIcon from "@mui/icons-material/NewReleasesTwoTone";
 import RotateRightTwoToneIcon from "@mui/icons-material/RotateRightTwoTone";
 import CheckCircleTwoToneIcon from "@mui/icons-material/CheckCircleTwoTone";
@@ -61,6 +64,7 @@ export default function Actionables({
     const [dataNew, setDataNew] = useState<Actionable[]>([]);
     const [dataInProgress, setDataInProgress] = useState<Actionable[]>([]);
     const [dataDone, setDataDone] = useState<Actionable[]>([]);
+    const [openCfmDialog, setOpenCfmDialog] = useState(false);
     const urlPrefix =
         process.env.NODE_ENV === "development"
             ? "http://localhost:3000"
@@ -102,7 +106,7 @@ export default function Actionables({
 
     useEffect(() => {
         fetchData();
-    }, [refresh]); // Empty dependency array ensures this runs once when the component mounts
+    }, [refresh]);
 
     const inference = () => {
         fetch(
@@ -160,10 +164,39 @@ export default function Actionables({
                     />
                 </Box>
                 <Box sx={{flexBasis: {xs: "100%", sm: "30%"}, flexGrow: 1}}>
-                    <Button variant="contained" onClick={inference}>
+                    <Button
+                        variant="contained"
+                        onClick={() => setOpenCfmDialog(true)}
+                    >
                         Generate Actions
                     </Button>
                 </Box>
+                <Dialog
+                    open={openCfmDialog}
+                    onClose={() => setOpenCfmDialog(false)}
+                >
+                    <DialogTitle>Confirmation</DialogTitle>
+                    <DialogContent>
+                        <Typography>
+                            Are you sure? This will replace all current{" "}
+                            <b>Generated</b> Actions.
+                        </Typography>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={() => setOpenCfmDialog(false)}>
+                            No
+                        </Button>
+                        <Button
+                            onClick={() => {
+                                inference();
+                                setOpenCfmDialog(false);
+                            }}
+                            color="primary"
+                        >
+                            Yes
+                        </Button>
+                    </DialogActions>
+                </Dialog>
             </Box>
             <Box sx={{flexGrow: 1}}>
                 <Grid container spacing={2}>

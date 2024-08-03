@@ -1,17 +1,54 @@
-import React, {useState, useEffect} from "react";
-import Button from "@mui/material/Button";
-import Dialog, {DialogProps} from "@mui/material/Dialog";
-import DialogActions from "@mui/material/DialogActions";
-import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
-import DialogTitle from "@mui/material/DialogTitle";
-import ListAnalytics from "./ListAnalytics";
+import React, {useState, useEffect, useRef} from "react";
+import {
+    Button,
+    Dialog,
+    DialogProps,
+    DialogContent,
+    DialogContentText,
+    DialogTitle,
+    Table,
+    TableBody,
+    TableCell,
+    tableCellClasses,
+    TableContainer,
+    TableHead,
+    TableRow,
+    styled,
+    Paper,
+} from "@mui/material";
+import {Theme, useTheme} from "@mui/material/styles";
+import CloseIcon from "@mui/icons-material/Close";
+import {ActionableWithRefresh} from "./Interfaces";
+import TodoCard from "./TodoCard";
 
-import {Actionable} from "./Interfaces";
+const StyledTableCell = styled(TableCell)(({theme}) => ({
+    [`&.${tableCellClasses.head}`]: {
+        backgroundColor: theme.palette.common.black,
+        color: theme.palette.common.white,
+        fontWeight: "bold",
+    },
+    [`&.${tableCellClasses.body}`]: {
+        fontSize: 14,
+    },
+}));
 
-export default function ScrollDialog(actionable: Actionable) {
-    const [open, setOpen] = React.useState(false);
-    const [scroll, setScroll] = React.useState<DialogProps["scroll"]>("paper");
+const StyledTableRow = styled(TableRow)(({theme}) => ({
+    "&:nth-of-type(odd)": {
+        backgroundColor: theme.palette.action.hover,
+    },
+    // hide last border
+    "&:last-child td, &:last-child th": {
+        border: 0,
+    },
+}));
+
+export default function ScrollDialog({
+    actionable,
+    setRefresh,
+    forWidget,
+}: ActionableWithRefresh) {
+    const [open, setOpen] = useState(false);
+    const [scroll, setScroll] = useState<DialogProps["scroll"]>("paper");
 
     const handleClickOpen = (scrollType: DialogProps["scroll"]) => () => {
         console.log("=> handleClickOpen START open: ", open);
@@ -25,9 +62,9 @@ export default function ScrollDialog(actionable: Actionable) {
         setOpen(false);
     };
 
-    const descriptionElementRef = React.useRef<HTMLElement>(null);
-    React.useEffect(() => {
-        console.log("=> useEffect");
+    const descriptionElementRef = useRef<HTMLElement>(null);
+    useEffect(() => {
+        console.log("useEffect open: ", open);
         if (open) {
             const {current: descriptionElement} = descriptionElementRef;
             if (descriptionElement !== null) {
@@ -36,9 +73,22 @@ export default function ScrollDialog(actionable: Actionable) {
         }
     }, [open]);
 
-    useEffect(() => {
-        console.log("useEffect open: ", open);
-    }, [open]);
+    let feedbackData: Array<{feedback: string}> | null = null;
+
+    try {
+        const parsedData = JSON.parse(actionable.feedback_json);
+        if (
+            Array.isArray(parsedData) &&
+            parsedData.length === 1 &&
+            parsedData[0] === null
+        ) {
+            feedbackData = null;
+        } else {
+            feedbackData = parsedData;
+        }
+    } catch {
+        feedbackData = null;
+    }
 
     return (
         <React.Fragment>
@@ -58,28 +108,93 @@ export default function ScrollDialog(actionable: Actionable) {
                 View Data
             </Button>
             <Dialog
+                PaperProps={{style: {borderRadius: 18}}}
                 open={open}
                 onClose={handleClose}
                 scroll={scroll}
-                maxWidth="md"
+                maxWidth="lg"
                 aria-labelledby="scroll-dialog-title"
                 aria-describedby="scroll-dialog-description"
             >
-                <DialogTitle id="scroll-dialog-title">
-                    Analytics Raw Data
+                <DialogTitle
+                    id="scroll-dialog-title"
+                    style={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                        fontWeight: "bold",
+                    }}
+                >
+                    Relevant data
+                    <Button onClick={handleClose} sx={{borderRadius: 4}}>
+                        <CloseIcon />
+                    </Button>
                 </DialogTitle>
                 <DialogContent dividers={scroll === "paper"}>
                     <DialogContentText
                         id="scroll-dialog-description"
                         ref={descriptionElementRef}
                         tabIndex={-1}
+                        sx={{
+                            flex: "1 1 auto",
+                            display: "flex",
+                            flexDirection: "column",
+                        }}
                     >
-                        <ListAnalytics {...actionable} />
+                        <div style={{flex: "0 1 auto"}}>
+                            <TodoCard
+                                key={actionable.id}
+                                actionable={actionable}
+                                setRefresh={setRefresh}
+                                forWidget={`${forWidget}-${actionable.actionable_category}-view_data`}
+                            />
+                        </div>
+                        <div
+                            style={{
+                                flex: "1 1 auto",
+                                overflow: "auto",
+                                marginTop: "1rem",
+                            }}
+                        >
+                            <TableContainer
+                                component={Paper}
+                                sx={{
+                                    borderRadius: 4,
+                                    boxShadow:
+                                        "0px 0px 20px rgba(0, 0, 0, 0.2)",
+                                }}
+                            >
+                                <Table
+                                    sx={{minWidth: 700}}
+                                    aria-label="customized table"
+                                >
+                                    <TableHead>
+                                        <TableRow>
+                                            <StyledTableCell>
+                                                Date
+                                            </StyledTableCell>
+                                            <StyledTableCell align="left">
+                                                Feedback
+                                            </StyledTableCell>
+                                        </TableRow>
+                                    </TableHead>
+                                    <TableBody>
+                                        {feedbackData &&
+                                            feedbackData.map(
+                                                ({feedback}, i) => (
+                                                    <StyledTableRow key={i}>
+                                                        <StyledTableCell align="left">
+                                                            {feedback}
+                                                        </StyledTableCell>
+                                                    </StyledTableRow>
+                                                )
+                                            )}
+                                    </TableBody>
+                                </Table>
+                            </TableContainer>
+                        </div>
                     </DialogContentText>
                 </DialogContent>
-                <DialogActions>
-                    <Button onClick={handleClose}>Close</Button>
-                </DialogActions>
             </Dialog>
         </React.Fragment>
     );
