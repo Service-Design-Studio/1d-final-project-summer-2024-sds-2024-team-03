@@ -170,8 +170,9 @@ export default function Actionables({
                     <CustomWidthTooltip
                         title={
                             <span>
-                                New actionables are <b>always regenerated</b>,
-                                move them to <b>IN PROGRESS</b> or <b>DONE</b>!
+                                New actionables are <b>always regenerated</b>{" "}
+                                here, move them to <b>IN PROGRESS</b> or{" "}
+                                <b>DONE</b>!
                             </span>
                         }
                         arrow
@@ -193,7 +194,11 @@ export default function Actionables({
                                     borderWidth: 2,
                                 }}
                             />
-                            <TodoList data={dataNew} setRefresh={setRefresh} />
+                            <TodoList
+                                data={dataNew}
+                                setRefresh={setRefresh}
+                                forWidget="GENERATED-ACTIONS"
+                            />
                         </Grid>
                     </CustomWidthTooltip>
                     <Grid item xs={4}>
@@ -219,6 +224,7 @@ export default function Actionables({
                         <TodoList
                             data={dataInProgress}
                             setRefresh={setRefresh}
+                            forWidget="IN-PROGRESS"
                         />
                     </Grid>
                     <Grid item xs={4}>
@@ -241,7 +247,11 @@ export default function Actionables({
                                 },
                             }}
                         />
-                        <TodoList data={dataDone} setRefresh={setRefresh} />
+                        <TodoList
+                            data={dataDone}
+                            setRefresh={setRefresh}
+                            forWidget="DONE"
+                        />
                     </Grid>
                 </Grid>
             </Box>
