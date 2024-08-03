@@ -14,7 +14,8 @@ class GoogleCloudStorageService
   end
 
   def upload_file(file, destination_path)
-    print("enter upload" + upload_file)
+    print("enter upload file.path:" + file.path)
+    print("enter upload destination_path:" + destination_path)
     file = @bucket.create_file(file.path, destination_path)
     print("file")
     file.public_url
