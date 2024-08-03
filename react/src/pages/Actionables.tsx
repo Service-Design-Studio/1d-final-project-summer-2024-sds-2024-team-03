@@ -1,23 +1,38 @@
 import React, { useState, useEffect } from "react";
-import Box from "@mui/material/Box";
 import FilterProduct from "../components/FilterProduct";
 import FilterSource from "../components/FilterSource";
-import Grid from "@mui/material/Grid";
 import Calendar from "../components/Calendar";
 import TodoList from "../components/Actionables/TodoList";
-import Chip from "@mui/material/Chip";
-import NewReleasesTwoToneIcon from "@mui/icons-material/NewReleasesTwoTone";
-import RotateRightTwoToneIcon from "@mui/icons-material/RotateRightTwoTone";
-import CheckCircleTwoToneIcon from "@mui/icons-material/CheckCircleTwoTone";
-import { useTheme } from "@mui/material/styles";
 import DialogAddAction from "../components/Actionables/DialogAddAction";
 import useDebounce from "../components/Actionables/useDebounce";
-
-//IMPORT INTERFACE
 import {
   ActionablesPageProps,
   Actionable,
 } from "../components/Actionables/Interfaces";
+import {
+  Chip,
+  Grid,
+  Box,
+  styled,
+  Tooltip,
+  IconButton,
+  TooltipProps,
+  tooltipClasses,
+} from "@mui/material";
+import InfoIcon from "@mui/icons-material/Info";
+import NewReleasesTwoToneIcon from "@mui/icons-material/NewReleasesTwoTone";
+import RotateRightTwoToneIcon from "@mui/icons-material/RotateRightTwoTone";
+import CheckCircleTwoToneIcon from "@mui/icons-material/CheckCircleTwoTone";
+import { useTheme } from "@mui/material/styles";
+import useDetectScroll, { Direction } from "@smakss/react-scroll-direction";
+
+const CustomWidthTooltip = styled(({ className, ...props }: TooltipProps) => (
+  <Tooltip {...props} classes={{ popper: className }} />
+))({
+  [`& .${tooltipClasses.tooltip}`]: {
+    maxWidth: 230,
+  },
+});
 
 export default function Actionables({
   setFromDate,
@@ -29,6 +44,7 @@ export default function Actionables({
   selectedSource,
   setSelectedSource,
 }: ActionablesPageProps) {
+  const { scrollDir, scrollPosition } = useDetectScroll();
   const theme = useTheme();
   const fromDate_string = fromDate.format("DD/MM/YYYY");
   const toDate_string = toDate.format("DD/MM/YYYY");
@@ -39,9 +55,7 @@ export default function Actionables({
     selectedProduct,
     selectedSource,
   };
-  console.log("=> combinedFilters", combinedFilters);
   const debouncedCombinedFilters = useDebounce(combinedFilters, 5000); // 10000ms debounce delay
-  console.log("=> debouncedCombinedFilters", debouncedCombinedFilters);
   const transitionDuration = {
     enter: theme.transitions.duration.enteringScreen,
     exit: theme.transitions.duration.leavingScreen,
@@ -93,7 +107,6 @@ export default function Actionables({
 
   useEffect(() => {
     if (debouncedCombinedFilters) {
-      console.log("=> useEffect debouncedCombinedFilters changed ");
       const urlPrefix =
         process.env.NODE_ENV === "development"
           ? "http://localhost:3000"
@@ -112,13 +125,22 @@ export default function Actionables({
   return (
     <Box sx={{ maxWidth: "lg", mx: "auto", px: 2 }}>
       <h1>Actionables</h1>
+      {/* Sticky, Freezes while scrolling */}
       <Box
         sx={{
+          position: "sticky",
+          top: 74,
           display: "flex",
           flexDirection: { xs: "column", sm: "row" },
           gap: 2,
-          justifyContent: "flex-start",
           mb: 7,
+          // pb: 1,
+          // justifyContent: "flex-start",
+          justifyContent: "center",
+          alignItems: scrollPosition.top > 0 ? "center" : null,
+          zIndex: 1000, // Ensure it's above other content
+          backgroundColor: scrollPosition.top > 0 ? "white" : null,
+          borderRadius: 4,
         }}
       >
         <Box sx={{ flexBasis: { xs: "100%", sm: "40%" }, flexGrow: 1 }}>
@@ -146,25 +168,35 @@ export default function Actionables({
       </Box>
       <Box sx={{ flexGrow: 1 }}>
         <Grid container spacing={2}>
-          <Grid item xs={4}>
-            <Chip
-              icon={<NewReleasesTwoToneIcon />}
-              label="NEW"
-              color="secondary"
-              variant="outlined"
-              sx={{
-                mb: 2,
-                borderRadius: 3,
-                backgroundColor: "rgba(232, 0, 0, 0.2)",
-                fontWeight: "bold",
-                py: 2,
-                px: 0.5,
-                borderWidth: 2,
-              }}
-            />
-
-            <TodoList data={dataNew} setRefresh={setRefresh} />
-          </Grid>
+          <CustomWidthTooltip
+            title={
+              <span>
+                <b>NEW</b> actionables are always regenerated, move them to{" "}
+                <b>IN PROGRESS</b> or <b>DONE</b>!
+              </span>
+            }
+            arrow
+            placement="left-start"
+          >
+            <Grid item xs={4}>
+              <Chip
+                icon={<NewReleasesTwoToneIcon />}
+                label="NEW"
+                color="secondary"
+                variant="outlined"
+                sx={{
+                  mb: 2,
+                  borderRadius: 3,
+                  backgroundColor: "rgba(232, 0, 0, 0.2)",
+                  fontWeight: "bold",
+                  py: 2,
+                  px: 0.5,
+                  borderWidth: 2,
+                }}
+              />
+              <TodoList data={dataNew} setRefresh={setRefresh} />
+            </Grid>
+          </CustomWidthTooltip>
           <Grid item xs={4}>
             <Chip
               icon={<RotateRightTwoToneIcon />}

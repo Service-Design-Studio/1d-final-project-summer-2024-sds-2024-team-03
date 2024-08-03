@@ -80,7 +80,7 @@ export default forwardRef(function SentimentDistribution(
         ref,
         () => ({
             img: internalRef.current!,
-            reportDesc: `The sentiment distribution is as shown.`,
+            reportDesc: ``,
         }),
         [sentimentDistribution]
     );
@@ -117,14 +117,15 @@ export default forwardRef(function SentimentDistribution(
                     Distribution of Sentiment
                 </Typography>
             </Box>
-            <Box sx={{ height: "100%" }} >
+            <Box sx={{height: "100%"}}>
                 {Object.entries(order)
                     .reverse()
                     .map(([sentiment, sentimentColor]) => {
                         const sentimentValue = parseFloat(
                             sentimentDistribution[sentiment] || "0"
                         );
-                        const barWidth = 1.5 * (sentimentValue / 100) * MAXBARWIDTH;
+                        const barWidth =
+                            1.5 * (sentimentValue / 100) * MAXBARWIDTH;
 
                         return (
                             <Box sx={{display: "flex", mb: 1}} key={sentiment}>
@@ -171,8 +172,7 @@ export default forwardRef(function SentimentDistribution(
                                 </Box>
                             </Box>
                         );
-                    })
-                }
+                    })}
             </Box>
         </ButtonBase>
     );

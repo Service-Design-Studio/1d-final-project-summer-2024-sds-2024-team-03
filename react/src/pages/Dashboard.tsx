@@ -6,7 +6,7 @@ import FilterProduct from "../components/FilterProduct";
 import FilterSource from "../components/FilterSource";
 import OverallSentimentScore from "../components/Dashboard/OverallSentimentScore";
 import SentimentDistribution from "../components/Dashboard/SentimentDistribution";
-import ActionsProgress from "../components/Dashboard/ActionsProgress";
+import ActionsCompleted from "../components/Dashboard/ActionsTracked";
 import SentimentScoreGraph from "../components/SentimentScoreGraph";
 import CategoriesSunburstChart from "../components/Dashboard/CategoriesSunburstChart";
 import SentimentCategoriesGraph from "../components/SentimentCategoriesGraph";
@@ -52,6 +52,10 @@ export default function Dashboard({
             img: document.createElement("div"),
             reportDesc: "",
         }),
+        ActionsTrackedRef: useRef<CustomRef<HTMLDivElement>>({
+            img: document.createElement("div"),
+            reportDesc: "",
+        }),
         SentimentScoreGraphRef: useRef<CustomRef<HTMLDivElement>>({
             img: document.createElement("div"),
             reportDesc: "",
@@ -64,7 +68,6 @@ export default function Dashboard({
             img: document.createElement("div"),
             reportDesc: "",
         }),
-        // ActionablesRef
     };
 
     const handleGenerateReport = async () => {
@@ -142,7 +145,8 @@ export default function Dashboard({
                 ref === reportRefs.OverallSentimentScoreRef ||
                 ref === reportRefs.SentimentDistributionRef
                     ? 0.35
-                    : ref === reportRefs.CategoriesSunburstChartRef
+                    : ref === reportRefs.CategoriesSunburstChartRef ||
+                      ref === reportRefs.SentimentCategoriesGraphRef
                     ? 0.5
                     : 0.85;
             return await addImageToPDF(ref, x, y, scale);
@@ -167,24 +171,32 @@ export default function Dashboard({
 
         pdf.setFontSize(16);
         prevY = addText(
-            `DBS VOCUS generated on ${dayjs().format("DD/MM/YYYY")}`,
+            `DBS VOCUS generated on ${dayjs().format("DD MMM 'YY")}`,
             MARGIN,
-            MARGIN
+            MARGIN,
+            20
         );
         pdf.setFontSize(12);
         prevY = addText(
-            `Report for ${dayjs(fromDate).format("DD/MM/YYYY")} - ${dayjs(
+            `Report for ${dayjs(fromDate).format("DD MMM 'YY")} - ${dayjs(
                 toDate
-            ).format("DD/MM/YYYY")}`,
+            ).format("DD MMM 'YY")}`,
             MARGIN,
-            prevY
+            prevY,
+            20
         );
         prevY = addText(
             `Products: ${selectedProduct.join(", ")}`,
             MARGIN,
-            prevY
+            prevY,
+            16
         );
-        prevY = addText(`Sources: ${selectedSource.join(", ")}`, MARGIN, prevY);
+        prevY = addText(
+            `Sources: ${selectedSource.join(", ")}`,
+            MARGIN,
+            prevY,
+            16
+        );
 
         [prevImageWidth, prevImageHeight] = await addScaledImageToPDF(
             reportRefs.OverallSentimentScoreRef,
@@ -256,24 +268,24 @@ export default function Dashboard({
         // prevY = MARGIN;
         // pdf.addPage();
         // [prevImageWidth, prevImageHeight] = await addScaledImageToPDF(
-        //     reportRefs.SentimentCategoriesGraphRef,
+        //     reportRefs.ActionsTrackedRef,
         //     0,
         //     prevY
         // );
 
         // prevY += prevImageHeight + PADDING;
         // prevY = addText(
-        //     reportRefs.SentimentCategoriesGraphRef.current?.reportDesc ?? "",
+        //     reportRefs.ActionsTrackedRef.current?.reportDesc ?? "",
         //     MARGIN,
         //     prevY + PADDING
         // );
 
         pdf.setProperties({
             title: `${dayjs().format(
-                "DD/MM/YYYY"
+                "DD-MM-YYYY"
             )}_report_generated_for_${dayjs(fromDate).format(
-                "DD/MM/YYYY"
-            )}-${dayjs(toDate).format("DD/MM/YYYY")}`,
+                "DD-MM-YYYY"
+            )}-${dayjs(toDate).format("DD-MM-YYYY")}`,
             subject: "DBS VOCUS",
             author: "SUTD JBAAAM!",
             keywords: "generated, javascript, web 2.0, ajax",
@@ -282,9 +294,9 @@ export default function Dashboard({
 
         // const pdfDataUrl = pdf.output("dataurlstring");
         pdf.save(
-            `${dayjs().format("DD/MM/YYYY")}_report_generated_for_${dayjs(
+            `${dayjs().format("DD-MM-YYYY")}_report_generated_for_${dayjs(
                 fromDate
-            ).format("DD/MM/YYYY")}-${dayjs(toDate).format("DD/MM/YYYY")}.pdf`
+            ).format("DD-MM-YYYY")}-${dayjs(toDate).format("DD-MM-YYYY")}.pdf`
         );
     };
 
@@ -333,7 +345,9 @@ export default function Dashboard({
                     gap: 2,
                     mb: 7,
                     // pb: 1,
-                    justifyContent: "flex-start",
+                    // justifyContent: "flex-start",
+                    justifyContent: "center",
+                    alignItems: scrollPosition.top > 0 ? "center" : null,
                     zIndex: 1000, // Ensure it's above other content
                     backgroundColor: scrollPosition.top > 0 ? "white" : null,
                     borderRadius: 4,
@@ -379,7 +393,6 @@ export default function Dashboard({
                     selectedSource={selectedSource}
                     setSelectedMenu={setSelectedMenu}
                 />
-
                 <SentimentDistribution
                     ref={reportRefs.SentimentDistributionRef}
                     fromDate={fromDate}
@@ -388,8 +401,8 @@ export default function Dashboard({
                     selectedSource={selectedSource}
                     setSelectedMenu={setSelectedMenu}
                 />
-                <ActionsProgress
-                    ref={reportRefs.OverallSentimentScoreRef}
+                <ActionsCompleted
+                    ref={reportRefs.ActionsTrackedRef}
                     setSelectedMenu={setSelectedMenu}
                 />
             </Box>

@@ -7,7 +7,16 @@ import React, {
     useImperativeHandle,
 } from "react";
 import {Theme, useTheme} from "@mui/material/styles";
-import {Paper, Box, Typography, ButtonBase, Rating} from "@mui/material";
+import {
+    Paper,
+    Box,
+    Typography,
+    ButtonBase,
+    Rating,
+    Tooltip,
+    IconButton,
+} from "@mui/material";
+import InfoIcon from "@mui/icons-material/Info";
 import {Dayjs} from "dayjs";
 import {ResponsiveSunburst} from "@nivo/sunburst";
 
@@ -251,21 +260,18 @@ export default forwardRef(function CategoriesSunburstChart(
             img: internalRef.current!,
             reportDesc:
                 topCategories.length > 0
-                    ? `For the top 3 most mentioned, ${topCategories
-                          .map((category) => {
-                              return `product <u>${
-                                  category.product
-                              }</u>, subcategory <u>${
-                                  category.subcategory
-                              }</u>, feedback category <u>${
-                                  category.feedback_category
-                              }</u> has ${
-                                  category.mentions
-                              } total mentions, with an average sentiment score of ${category.averageSentimentScore.toFixed(
-                                  1
-                              )} / 5.\n`;
-                          })
-                          .join(" ")}`
+                    ? `The top 3 most mentioned:\n${topCategories
+                          .map(
+                              (category) =>
+                                  `   • ${category.subcategory} | ${
+                                      category.feedback_category
+                                  } has ${
+                                      category.mentions
+                                  } total mentions, with an average sentiment score of ${category.averageSentimentScore.toFixed(
+                                      1
+                                  )} / 5.\n`
+                          )
+                          .join("")}`
                     : "No data.",
         }),
         [topCategories] // Adjust the dependency array if necessary
@@ -273,205 +279,309 @@ export default forwardRef(function CategoriesSunburstChart(
 
     /* Must have parent container with a defined size */
     return (
-        <Box
-            ref={internalRef}
-            sx={{
-                display: "flex",
-                gap: 2,
-                width: "100%",
-                flexDirection: "row",
-            }}
-        >
-            <ButtonBase
-                component={Paper}
-                sx={{
-                    justifyContent: "start",
-                    // minHeight: 800,
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                    p: 2,
-                    gap: 4,
-                    borderRadius: 4,
-                    flex: 1,
-                    cursor: "pointer",
-                    boxShadow: "0px 0px 20px rgba(0, 0, 0, 0.1)",
-                    backgroundColor:
-                        theme.palette.mode === "dark" ? "#151515" : "#fff",
-                    transition: "transform 0.3s ease-in-out",
-                    "&:hover": {
-                        backgroundColor:
-                            theme.palette.mode === "dark"
-                                ? "#1a1a1a"
-                                : "#f9f9f9",
-                        transform: "scaleX(1.01) scaleY(1.01)",
-                    },
-                }}
-                id="overall-categoriessunburstchart"
-                onClick={() => setSelectedMenu!("analytics")}
-            >
-                <Typography
-                    variant="h6"
-                    sx={{width: "100%", fontWeight: "bold"}}
+        <Tooltip
+            title={
+                <Box
+                    sx={{
+                        width: 300,
+                        height: 400,
+                    }}
                 >
-                    Distribution of Categories
-                </Typography>
-                {components.length === 0 ? (
-                    <Typography variant="body2" color="grey">
-                        No data
-                    </Typography>
-                ) : (
-                    <Box
-                        sx={{
-                            width: "95%",
-                            height: 300,
+                    <span>
+                        The chart represents the corresponding frequency of
+                        Products, Subcategories and Feedback Categories
+                        <br />
+                        <br />
+                        <b>Hover</b> for more information
+                    </span>
+                    <ResponsiveSunburst
+                        data={{
+                            children: [
+                                {
+                                    key: "Product",
+                                    color: "hsl(297, 70%, 50%)",
+                                    children: [
+                                        {
+                                            key: "Subcategory",
+                                            color: "hsl(201, 70%, 50%)",
+                                            children: [
+                                                {
+                                                    key: "Feedback Category",
+                                                    color: "hsl(81, 70%, 50%)",
+                                                    value: 100,
+                                                },
+                                            ],
+                                        },
+                                    ],
+                                },
+                            ],
                         }}
-                    >
-                        <ResponsiveSunburst
-                            data={{
-                                children: components,
-                            }}
-                            id="category"
-                            value="mentions"
-                            cornerRadius={2}
-                            borderWidth={4}
-                            // background / grid.line.stroke / labels.text.fill / "color" / "#..."
-                            borderColor={theme.palette.mode === 'dark' ? '#222222' : '#fff'}
-                            colors={(bar) => barColors[bar.id]}
-                            // To make use of hsl from each component
-                            inheritColorFromParent={false}
-                            // colors={{scheme: "paired"}}
-                            childColor={{
-                                from: "color",
-                                modifiers: [["brighter", 0.3]],
-                            }}
-                            enableArcLabels={false}
-                            // category or %
-                            // arcLabel="id/formattedValue"
-                            arcLabelsRadiusOffset={0.35}
-                            arcLabelsSkipAngle={60}
-                            arcLabelsTextColor={{theme: "labels.text.fill"}}
-                            animate={false}
-                            tooltip={({ id, value, color, percentage }) => (
-                                <Paper
-                                  sx={{
+                        margin={{
+                            bottom: 60,
+                            right: 15,
+                        }}
+                        id="key"
+                        value="value"
+                        cornerRadius={2}
+                        borderWidth={2}
+                        borderColor={
+                            theme.palette.mode === "dark" ? "#222222" : "#fff"
+                        }
+                        colors={{scheme: "pastel2"}}
+                        inheritColorFromParent={false}
+                        childColor={{
+                            from: "color",
+                            modifiers: [["brighter", 0.3]],
+                        }}
+                        enableArcLabels={true}
+                        arcLabel="id"
+                        arcLabelsRadiusOffset={0.35}
+                        arcLabelsTextColor="black"
+                        animate={false}
+                        tooltip={({id, value, color, percentage}) => (
+                            <Paper
+                                sx={{
                                     padding: "9px 12px",
                                     borderRadius: "10px",
                                     backgroundColor:
-                                      theme.palette.mode === "dark" ? "#111" : "#fff",
-                                    boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.2)",
-                                    color: theme.palette.mode === "dark" ? "#fff" : "#000",
-                                  }}
-                                >
-                                  <Typography variant="body2" style={{ color, fontWeight: "bold"}}>
-                                    {id ?? "Others"}
-                                  </Typography>
-                                  <Typography variant="body2">
-                                    {value} ({Math.round(percentage * 10) / 10}%)
-                                  </Typography>
-                                </Paper>
-                              )}
-                            // tooltip={(e) =>
-                            //     t.createElement(
-                            //         l,
-                            //         {style: {color: e.color}},
-                            //         t.createElement(u, null, "id"),
-                            //         t.createElement(c, null, e.id),
-                            //         t.createElement(u, null, "value"),
-                            //         t.createElement(c, null, e.value),
-                            //         t.createElement(u, null, "percentage"),
-                            //         t.createElement(
-                            //             c,
-                            //             null,
-                            //             Math.round(100 * e.percentage) / 100,
-                            //             "%"
-                            //         ),
-                            //         t.createElement(u, null, "color"),
-                            //         t.createElement(c, null, e.color)
-                            //     )
-                            // }
-                        />
-                        <Box
-                            sx={{
-                                display: "grid",
-                                gridTemplateColumns: "4fr 3fr 3fr",
-                                gap: 1,
-                                width: "100%",
-                                alignItems: "center",
-                                mt: 4,
-                            }}
-                        >
-                            <Box
-                                sx={{
-                                    gridColumn: "1 / span 3",
-                                    borderBottom: `2px solid ${theme.palette.mode === "dark" ? "#444" : "#ccc"}`,
-                                    mb: 1.5
-                                }}
-                            />
-                            <Typography
-                                variant="body1"
-                                color="textSecondary"
-                                component="div"
-                                sx={{
-                                    gridColumn: "1 / span 1",
-                                    textAlign: "left",
-                                    fontWeight: "bold",
-                                    pl: 2
+                                        theme.palette.mode === "dark"
+                                            ? "#111"
+                                            : "#fff",
+                                    boxShadow:
+                                        "0px 0px 10px rgba(0, 0, 0, 0.2)",
+                                    color:
+                                        theme.palette.mode === "dark"
+                                            ? "#fff"
+                                            : "#000",
                                 }}
                             >
-                                Categories
-                            </Typography>
-                            <Typography
-                                variant="body1"
-                                color="textSecondary"
-                                component="div"
-                                sx={{
-                                    textAlign: "center",
-                                    gridColumn: "2 / span 1",
-                                    fontWeight: "bold"
-                                }}
-                            >
-                                Total Mentions
-                            </Typography>
-                            <Typography
-                                variant="body1"
-                                color="textSecondary"
-                                component="div"
-                                sx={{
-                                    gridColumn: "3 / span 1",
-                                    textAlign: "center",
-                                    fontWeight: "bold",
-                                    pr: 2
-                                }}
-                            >
-                                Avg. Sentiment
-                            </Typography>
-                            {topCategories.map((category, index) => (
-                                <Box
-                                    key={index}
-                                    sx={{
-                                        display: "flex",
-                                        alignItems: "center",
-                                        gap: 1,
-                                        p: 1.5,
-                                        my: 0.5,
-                                        borderRadius: 3,
-                                        bgcolor: theme.palette.mode === "dark" ? "#151515" : "#eee",
-                                        gridColumn: "1 / span 3", // Ensure full width for each row
-                                        "&:hover": {
-                                            backgroundColor: theme.palette.mode === "dark" ? "#0d0d0d" : "#ddd",}
+                                <Typography
+                                    variant="body2"
+                                    style={{
+                                        color,
+                                        fontWeight: "bold",
                                     }}
                                 >
-                                    <Box
+                                    {id ?? "Others"}
+                                </Typography>
+                                <Typography variant="body2">
+                                    {value} ({Math.round(percentage * 10) / 10}
+                                    %)
+                                </Typography>
+                            </Paper>
+                        )}
+                    />
+                </Box>
+            }
+            placement="left-start"
+            arrow
+        >
+            <Box
+                ref={internalRef}
+                sx={{
+                    display: "flex",
+                    gap: 2,
+                    width: "100%",
+                    flexDirection: "row",
+                }}
+            >
+                <ButtonBase
+                    component={Paper}
+                    sx={{
+                        justifyContent: "start",
+                        // minHeight: 800,
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "center",
+                        p: 2,
+                        gap: 4,
+                        borderRadius: 4,
+                        flex: 1,
+                        cursor: "pointer",
+                        boxShadow: "0px 0px 20px rgba(0, 0, 0, 0.1)",
+                        backgroundColor:
+                            theme.palette.mode === "dark" ? "#151515" : "#fff",
+                        transition: "transform 0.3s ease-in-out",
+                        "&:hover": {
+                            backgroundColor:
+                                theme.palette.mode === "dark"
+                                    ? "#1a1a1a"
+                                    : "#f9f9f9",
+                            transform: "scaleX(1.01) scaleY(1.01)",
+                        },
+                    }}
+                    id="overall-categoriessunburstchart"
+                    onClick={() => setSelectedMenu!("analytics")}
+                >
+                    <Typography
+                        variant="h6"
+                        sx={{width: "100%", fontWeight: "bold"}}
+                    >
+                        Distribution of Categories
+                    </Typography>
+                    {components.length === 0 ? (
+                        <Typography variant="body2" color="grey">
+                            No data
+                        </Typography>
+                    ) : (
+                        <Box
+                            sx={{
+                                width: "95%",
+                                height: 300,
+                            }}
+                        >
+                            <ResponsiveSunburst
+                                data={{
+                                    children: components,
+                                }}
+                                id="category"
+                                value="mentions"
+                                cornerRadius={2}
+                                borderWidth={4}
+                                // background / grid.line.stroke / labels.text.fill / "color" / "#..."
+                                borderColor={
+                                    theme.palette.mode === "dark"
+                                        ? "#222222"
+                                        : "#fff"
+                                }
+                                colors={(bar) => barColors[bar.id]}
+                                // To make use of hsl from each component
+                                inheritColorFromParent={false}
+                                // colors={{scheme: "paired"}}
+                                childColor={{
+                                    from: "color",
+                                    modifiers: [["brighter", 0.3]],
+                                }}
+                                enableArcLabels={false}
+                                // category or %
+                                // arcLabel="id/formattedValue"
+                                arcLabelsRadiusOffset={0.35}
+                                arcLabelsSkipAngle={60}
+                                arcLabelsTextColor={{theme: "labels.text.fill"}}
+                                animate={false}
+                                tooltip={({id, value, color, percentage}) => (
+                                    <Paper
                                         sx={{
-                                        display: "flex",
-                                        alignItems: "center",
+                                            padding: "9px 12px",
+                                            borderRadius: "10px",
+                                            backgroundColor:
+                                                theme.palette.mode === "dark"
+                                                    ? "#111"
+                                                    : "#fff",
+                                            boxShadow:
+                                                "0px 0px 10px rgba(0, 0, 0, 0.2)",
+                                            color:
+                                                theme.palette.mode === "dark"
+                                                    ? "#fff"
+                                                    : "#000",
+                                        }}
+                                    >
+                                        <Typography
+                                            variant="body2"
+                                            style={{color, fontWeight: "bold"}}
+                                        >
+                                            {id ?? "Others"}
+                                        </Typography>
+                                        <Typography variant="body2">
+                                            {value} (
+                                            {Math.round(percentage * 10) / 10}%)
+                                        </Typography>
+                                    </Paper>
+                                )}
+                            />
+                            <Box
+                                sx={{
+                                    display: "grid",
+                                    gridTemplateColumns: "4fr 3fr 3fr",
+                                    gap: 1,
+                                    width: "100%",
+                                    alignItems: "center",
+                                    mt: 4,
+                                }}
+                            >
+                                <Box
+                                    sx={{
+                                        gridColumn: "1 / span 3",
+                                        borderBottom: `2px solid ${
+                                            theme.palette.mode === "dark"
+                                                ? "#444"
+                                                : "#ccc"
+                                        }`,
+                                        mb: 1.5,
+                                    }}
+                                />
+                                <Typography
+                                    variant="body1"
+                                    color="textSecondary"
+                                    component="div"
+                                    sx={{
                                         gridColumn: "1 / span 1",
-                                        width: "40%"
+                                        textAlign: "left",
+                                        fontWeight: "bold",
+                                        pl: 2,
+                                    }}
+                                >
+                                    Categories
+                                </Typography>
+                                <Typography
+                                    variant="body1"
+                                    color="textSecondary"
+                                    component="div"
+                                    sx={{
+                                        textAlign: "center",
+                                        gridColumn: "2 / span 1",
+                                        fontWeight: "bold",
+                                    }}
+                                >
+                                    Total Mentions
+                                </Typography>
+                                <Typography
+                                    variant="body1"
+                                    color="textSecondary"
+                                    component="div"
+                                    sx={{
+                                        gridColumn: "3 / span 1",
+                                        textAlign: "center",
+                                        fontWeight: "bold",
+                                        pr: 2,
+                                    }}
+                                >
+                                    Avg. Sentiment
+                                </Typography>
+                                {topCategories.map((category, index) => (
+                                    <Box
+                                        key={index}
+                                        sx={{
+                                            display: "flex",
+                                            alignItems: "center",
+                                            gap: 1,
+                                            p: 1.5,
+                                            my: 0.5,
+                                            borderRadius: 3,
+                                            bgcolor:
+                                                theme.palette.mode === "dark"
+                                                    ? "#151515"
+                                                    : "#eee",
+                                            gridColumn: "1 / span 3", // Ensure full width for each row
+                                            "&:hover": {
+                                                backgroundColor:
+                                                    theme.palette.mode ===
+                                                    "dark"
+                                                        ? "#0d0d0d"
+                                                        : "#ddd",
+                                            },
                                         }}
                                     >
                                         <Box
-                                        /*
+                                            sx={{
+                                                display: "flex",
+                                                alignItems: "center",
+                                                gridColumn: "1 / span 1",
+                                                width: "40%",
+                                            }}
+                                        >
+                                            <Box
+                                            /*
                                         sx={{
                                             width: 18,
                                             height: 18,
@@ -480,74 +590,113 @@ export default forwardRef(function CategoriesSunburstChart(
                                             flexShrink: 0,
                                         }}
                                         */
-                                        />
-                                        <Typography
-                                        variant="body2"
-                                        sx={{ ml: 1, textAlign: "left" }}
-                                        >
-                                            <span style={{ fontSize: '1.1rem', fontWeight: 'bold' }}>
-                                                {category.product ? category.product : "Others"}
-                                            </span>
-                                            <br />
-                                            <span style={{ color: "grey", fontSize: '1rem', fontWeight: 'bold' }}>
-                                                {category.subcategory ? category.subcategory : "Others"}
-                                            </span>
-                                            <br />
-                                            <span style={{ color: barColors[category.feedback_category], fontWeight: 'bold' }}>
-                                                {category.feedback_category ? category.feedback_category : "Others"}
-                                            </span>
-                                        </Typography>
-                                    </Box>
-                                    <Typography
-                                        variant="body2"
-                                        sx={{
-                                        gridColumn: "2 / span 1",
-                                        textAlign: "center",
-                                        fontWeight: "bold",
-                                        fontSize: "1.3rem",
-                                        width: "30%"
-                                        }}
-                                    >
-                                        {category.mentions}
-                                    </Typography>
-                                    <Box
-                                        sx={{
-                                        ml: 1.5,
-                                        display: 'flex',
-                                        flexDirection: 'column',
-                                        alignItems: 'center', // Center items horizontally
-                                        justifyContent: 'center', // Center items vertically if needed
-                                        textAlign: 'center', // Center text alignment
-                                        }}
-                                    >
+                                            />
+                                            <Typography
+                                                variant="body2"
+                                                sx={{ml: 1, textAlign: "left"}}
+                                            >
+                                                <span
+                                                    style={{
+                                                        fontSize: "1.1rem",
+                                                        fontWeight: "bold",
+                                                    }}
+                                                >
+                                                    {category.product
+                                                        ? category.product
+                                                        : "Others"}
+                                                </span>
+                                                <br />
+                                                <span
+                                                    style={{
+                                                        color: "grey",
+                                                        fontSize: "1rem",
+                                                        fontWeight: "bold",
+                                                    }}
+                                                >
+                                                    {category.subcategory
+                                                        ? category.subcategory
+                                                        : "Others"}
+                                                </span>
+                                                <br />
+                                                <span
+                                                    style={{
+                                                        color: barColors[
+                                                            category
+                                                                .feedback_category
+                                                        ],
+                                                        fontWeight: "bold",
+                                                    }}
+                                                >
+                                                    {category.feedback_category
+                                                        ? category.feedback_category
+                                                        : "Others"}
+                                                </span>
+                                            </Typography>
+                                        </Box>
                                         <Typography
                                             variant="body2"
                                             sx={{
-                                            gridColumn: "3 / span 1",
-                                            textAlign: "center",
-                                            color: getColorByOrder(category.averageSentimentScore,ORDER),
-                                            fontWeight: "bold",
-                                            fontSize: "1.3rem",
-                                            width: "30%"
+                                                gridColumn: "2 / span 1",
+                                                textAlign: "center",
+                                                fontWeight: "bold",
+                                                fontSize: "1.3rem",
+                                                width: "30%",
                                             }}
                                         >
-                                            {category.averageSentimentScore.toFixed(1)}
+                                            {category.mentions}
                                         </Typography>
-                                        <Rating
-                                            name="read-only"
-                                            value={category.averageSentimentScore} // Assuming averageSentimentScore is between 0 and 5
-                                            precision={0.1} // Adjust the precision if needed
-                                            readOnly
-                                            size="small" // Adjust the size as needed
-                                            sx={{ color: theme.palette.mode === "dark" ? "#666" : "#999", }}
-                                        />
+                                        <Box
+                                            sx={{
+                                                ml: 1.5,
+                                                display: "flex",
+                                                flexDirection: "column",
+                                                alignItems: "center", // Center items horizontally
+                                                justifyContent: "center", // Center items vertically if needed
+                                                textAlign: "center", // Center text alignment
+                                            }}
+                                        >
+                                            <Typography
+                                                variant="body2"
+                                                sx={{
+                                                    gridColumn: "3 / span 1",
+                                                    textAlign: "center",
+                                                    color: getColorByOrder(
+                                                        category.averageSentimentScore,
+                                                        ORDER
+                                                    ),
+                                                    fontWeight: "bold",
+                                                    fontSize: "1.3rem",
+                                                    width: "30%",
+                                                }}
+                                            >
+                                                {category.averageSentimentScore.toFixed(
+                                                    1
+                                                )}
+                                            </Typography>
+                                            <Rating
+                                                name="read-only"
+                                                value={
+                                                    category.averageSentimentScore
+                                                } // Assuming averageSentimentScore is between 0 and 5
+                                                precision={0.1} // Adjust the precision if needed
+                                                readOnly
+                                                size="small" // Adjust the size as needed
+                                                sx={{
+                                                    color:
+                                                        theme.palette.mode ===
+                                                        "dark"
+                                                            ? "#666"
+                                                            : "#999",
+                                                }}
+                                            />
+                                        </Box>
                                     </Box>
-                                </Box>
-                            ))}
+                                ))}
+                            </Box>
                         </Box>
-                    </Box>
-                )}
-            </ButtonBase>
-        </Box>
+                    )}
+                </ButtonBase>
+            </Box>
+        </Tooltip>
     );
 });

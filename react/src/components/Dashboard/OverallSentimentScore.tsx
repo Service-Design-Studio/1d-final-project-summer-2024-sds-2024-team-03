@@ -7,8 +7,27 @@ import React, {
     useImperativeHandle,
 } from "react";
 import {Theme, useTheme} from "@mui/material/styles";
-import {Paper, Box, Typography, ButtonBase} from "@mui/material";
+import {
+    Paper,
+    Box,
+    Typography,
+    ButtonBase,
+    Tooltip,
+    TooltipProps,
+    tooltipClasses,
+    styled,
+    IconButton,
+} from "@mui/material";
+import InfoIcon from "@mui/icons-material/Info";
 import dayjs, {Dayjs} from "dayjs";
+
+const CustomWidthTooltip = styled(({className, ...props}: TooltipProps) => (
+    <Tooltip {...props} classes={{popper: className}} />
+))({
+    [`& .${tooltipClasses.tooltip}`]: {
+        maxWidth: 170,
+    },
+});
 
 interface OverallSentimentScoreProps {
     fromDate: Dayjs;
@@ -106,89 +125,121 @@ export default forwardRef(function OverallSentimentScore(
         ref,
         () => ({
             img: internalRef.current!,
-            reportDesc: `There was an overall sentiment score of ${overallSentimentScore} / 5, which was a ${overallSentimentScoreChange}% ${
-                overallSentimentScoreChange > 0
-                    ? "increase"
-                    : overallSentimentScoreChange < 0
-                    ? "decrease"
-                    : "change"
-            } compared to the same interval from ${prevFromDate_string} - ${fromDate_string}, .`,
+            reportDesc: `There was an overall sentiment score of ${overallSentimentScore} / 5${
+                overallSentimentScore &&
+                `, which was a ${overallSentimentScoreChange}% ${
+                    overallSentimentScoreChange > 0
+                        ? "increase"
+                        : overallSentimentScoreChange < 0
+                        ? "decrease"
+                        : "change"
+                } compared to the same duration from ${dayjs(
+                    prevFromDate_string,
+                    "DD/MM/YYYY"
+                ).format("DD MMM 'YY")} - ${dayjs(
+                    fromDate_string,
+                    "DD/MM/YYYY"
+                ).format("DD MMM 'YY")}`
+            }.`,
         }),
         [overallSentimentScore, overallSentimentScoreChange, fromDate]
     );
 
     return (
-        <ButtonBase
-            ref={internalRef}
-            component={Paper}
-            sx={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                justifyContent: "space-between",
-                p: 2,
-                borderRadius: 4,
-                flex: 1,
-                cursor: "pointer",
-                height: "100%",
-                boxShadow: "0px 0px 20px rgba(0, 0, 0, 0.1)",
-                backgroundColor:
-                    theme.palette.mode === "dark" ? "#151515" : "#ffffff",
-                transition: "transform 0.3s ease-in-out",
-                "&:hover": {
-                    backgroundColor:
-                        theme.palette.mode === "dark" ? "#1a1a1a" : "#f9f9f9",
-                    transform: "scale(1.03)",
-                },
-            }}
-            id="overall-sentiment-score"
-            onClick={() => setSelectedMenu("analytics")}
+        <CustomWidthTooltip
+            title={
+                <span>
+                    Displays the averaged sentiment score of <b>all</b> VOCUS
+                    <br />
+                    <br />
+                    Compared to an equal duration prior:
+                    <br /> {prevFromDate_string} - {fromDate_string}
+                </span>
+            }
+            arrow
+            placement="left-start"
         >
-            <Box sx={{width: "100%", justifyContent: "flex-start"}}>
-                <Typography variant="h6" style={{fontWeight: "bold"}}>
-                    Overall Sentiment Score
-                </Typography>
-            </Box>
-            <Box sx={{display: "flex", justifyContent: "center"}}>
-                <Typography sx={{fontSize: "4rem", fontWeight: "bold"}}>
-                    {overallSentimentScore ? overallSentimentScore : 0}
-                </Typography>
-                <Typography
-                    sx={{ml: 1, mt: 3, fontSize: "2.5rem"}}
-                    color="grey"
-                >
-                    / 5
-                </Typography>
-            </Box>
-            <Box
+            <ButtonBase
+                ref={internalRef}
+                component={Paper}
                 sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    p: 2,
                     borderRadius: 4,
+                    flex: 1,
+                    cursor: "pointer",
+                    height: "100%",
+                    boxShadow: "0px 0px 20px rgba(0, 0, 0, 0.1)",
                     backgroundColor:
-                        overallSentimentScoreChange &&
+                        theme.palette.mode === "dark" ? "#151515" : "#ffffff",
+                    transition: "transform 0.3s ease-in-out",
+                    "&:hover": {
+                        backgroundColor:
+                            theme.palette.mode === "dark"
+                                ? "#1a1a1a"
+                                : "#f9f9f9",
+                        transform: "scale(1.03)",
+                    },
+                }}
+                id="overall-sentiment-score"
+                onClick={() => setSelectedMenu("analytics")}
+            >
+                <Box
+                    sx={{
+                        width: "100%",
+                        justifyContent: "flex-start",
+                        flexDirection: "row",
+                        display: "flex",
+                    }}
+                >
+                    <Typography variant="h6" style={{fontWeight: "bold"}}>
+                        Overall Sentiment Score
+                    </Typography>
+                </Box>
+                <Box sx={{display: "flex", justifyContent: "center"}}>
+                    <Typography sx={{fontSize: "4rem", fontWeight: "bold"}}>
+                        {overallSentimentScore ? overallSentimentScore : 0}
+                    </Typography>
+                    <Typography
+                        sx={{ml: 1, mt: 3, fontSize: "2.5rem"}}
+                        color="grey"
+                    >
+                        / 5
+                    </Typography>
+                </Box>
+                <Box
+                    sx={{
+                        borderRadius: 4,
+                        backgroundColor:
+                            overallSentimentScoreChange &&
+                            overallSentimentScoreChange > 0
+                                ? "darkgreen" // Light green background for increase
+                                : overallSentimentScoreChange &&
+                                  overallSentimentScoreChange < 0
+                                ? "red" // Light red background for decrease
+                                : "grey",
+                        mb: 2,
+                        width: 150,
+                    }}
+                >
+                    <Typography
+                        sx={{ml: 2, mr: 2, textAlign: "center"}}
+                        variant="subtitle1"
+                        color="white"
+                    >
+                        {overallSentimentScoreChange &&
                         overallSentimentScoreChange > 0
-                            ? "darkgreen" // Light green background for increase
+                            ? `▲ ${overallSentimentScoreChange}%`
                             : overallSentimentScoreChange &&
                               overallSentimentScoreChange < 0
-                            ? "red" // Light red background for decrease
-                            : "grey",
-                    mb: 2,
-                    width: 150,
-                }}
-            >
-                <Typography
-                    sx={{ml: 2, mr: 2, textAlign: "center"}}
-                    variant="subtitle1"
-                    color="white"
-                >
-                    {overallSentimentScoreChange &&
-                    overallSentimentScoreChange > 0
-                        ? `▲ ${overallSentimentScoreChange}%`
-                        : overallSentimentScoreChange &&
-                          overallSentimentScoreChange < 0
-                        ? `▼ ${-overallSentimentScoreChange}%`
-                        : `Not Applicable`}
-                </Typography>
-            </Box>
-        </ButtonBase>
+                            ? `▼ ${-overallSentimentScoreChange}%`
+                            : `Not Applicable`}
+                    </Typography>
+                </Box>
+            </ButtonBase>
+        </CustomWidthTooltip>
     );
 });
