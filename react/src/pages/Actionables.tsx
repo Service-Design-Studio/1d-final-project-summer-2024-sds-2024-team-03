@@ -55,7 +55,6 @@ export default function Actionables({
     };
 
     const [refresh, setRefresh] = useState(0);
-    const [refreshGeneratedActions, setRefreshGeneratedActions] = useState(0);
 
     const [data, setData] = useState<Actionable[]>([]);
 
@@ -82,55 +81,6 @@ export default function Actionables({
             });
     };
 
-    const fetchNewData = async () => {
-        try {
-            const response = await fetch(`${urlPrefix}/actionables.json`, {
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-            });
-
-            if (!response.ok) {
-                throw new Error("Network response was not ok");
-            }
-
-            const result: Actionable[] = await response.json();
-
-            const newData = result
-                .filter(
-                    (item: Actionable) =>
-                        item.status.toLowerCase() === "new".toLowerCase()
-                )
-                .map((item) => {
-                    return {
-                        ...item,
-                        feedback_category: transformCategory(
-                            item.feedback_category
-                        ),
-                    };
-                });
-            if (newData.length === 0) {
-                setModalContent([
-                    <Typography
-                        key="no-data-available"
-                        variant="h6"
-                        component="div"
-                        sx={{fontWeight: "bold"}}
-                    >
-                        No data available
-                    </Typography>,
-                    <Typography key="message" variant="body1" component="div">
-                        Actionables could not be processed
-                    </Typography>,
-                ]);
-                setOpenCfmModal(true);
-            } else {
-                setDataNew(newData);
-            }
-        } catch (error) {}
-    };
-
     const fetchData = async () => {
         try {
             const response = await fetch(`${urlPrefix}/actionables.json`, {
@@ -145,7 +95,21 @@ export default function Actionables({
             }
 
             const result: Actionable[] = await response.json();
+            const newData = result
+                .filter(
+                    (item: Actionable) =>
+                        item.status.toLowerCase() === "new".toLowerCase()
+                )
+                .map((item) => {
+                    return {
+                        ...item,
+                        feedback_category: transformCategory(
+                            item.feedback_category
+                        ),
+                    };
+                });
 
+            setDataNew(newData);
             const inProgressData = result.filter(
                 (item: Actionable) =>
                     item.status.toLowerCase() === "in progress".toLowerCase()
@@ -164,10 +128,6 @@ export default function Actionables({
     useEffect(() => {
         fetchData();
     }, [refresh]);
-
-    useEffect(() => {
-        fetchNewData();
-    }, [refreshGeneratedActions]);
 
     const handleGenerateActionsClick = () => {
         if (selectedProduct.length === 0 || selectedSource.length === 0) {
@@ -221,8 +181,6 @@ export default function Actionables({
                 setRefresh(Math.random());
                 return data;
             });
-
-        fetchNewData();
     };
 
     return (
@@ -341,7 +299,7 @@ export default function Actionables({
                             ) : (
                                 <TodoList
                                     data={dataNew}
-                                    setRefresh={setRefreshGeneratedActions}
+                                    setRefresh={setRefresh}
                                     forWidget="GENERATED-ACTIONS"
                                 />
                             )}
