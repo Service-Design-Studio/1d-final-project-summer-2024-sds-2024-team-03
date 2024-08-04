@@ -57,7 +57,7 @@ RSpec.describe AnalyticsController, type: :controller do
 
   describe "GET #get_sentiment_scores" do
     it "retrieves sentiment scores" do
-      get :get_sentiment_scores, params: { product: 'Others', source: 'Problem Solution Survey', fromDate: '13/08/2024', toDate: '15/08/2024' }
+      get :get_sentiment_scores, params: { product: 'Insurance', source: 'CSS', fromDate: '01/03/2024', toDate: '31/05/2024' }
       
       expect(response).to be_successful
       
@@ -66,7 +66,7 @@ RSpec.describe AnalyticsController, type: :controller do
       average_sentiment_score = (sentiment_scores.sum / sentiment_scores.size).round(1)
 
       
-      expect(average_sentiment_score).to eq(2.2)
+      expect(average_sentiment_score).to eq(3.1)
     end
   end
 
@@ -160,6 +160,15 @@ end
     it "calls private_filter for sources" do
       expect(controller).to receive(:private_filter).with(:source).and_call_original
       get :filter_sources
+    end
+  end
+
+  describe "GET #filter_subcategory" do
+    it "returns all subcategories" do
+      get :filter_subcategory
+      expect(response).to be_successful
+      expect(response.body).to include("Credit Card", "Personal Loan", "Mortgage/Home Loan")
+      expect(response).to have_http_status(:ok)
     end
   end
 end
