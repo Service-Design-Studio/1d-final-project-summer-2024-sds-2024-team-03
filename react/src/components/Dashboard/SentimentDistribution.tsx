@@ -41,7 +41,7 @@ export default forwardRef(function SentimentDistribution(
         Record<string, string>
     >({});
     const order: Record<string, string> = {
-        Excited: "darkgreen",
+        Promoter: "darkgreen",
         Satisfied: "green",
         Neutral: "darkgray",
         Unsatisfied: "orange",
