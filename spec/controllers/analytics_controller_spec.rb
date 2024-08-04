@@ -6,7 +6,7 @@ RSpec.describe AnalyticsController, type: :controller do
   }
 
   let(:valid_attributes) {
-    { date: '15/08/2024', feedback: 'Great product', product: 'Others', subcategory: 'asd', sentiment: 'Frustrated', sentiment_score: '0.9', source: 'Problem Solution Survey' }
+    { date: '15/08/2024', feedback: 'Great product', product: 'Others', subcategory: 'CSS', sentiment: 'Frustrated', sentiment_score: '0.9', source: 'Problem Solution Survey' }
   }
 
   let(:valid_session) { {} }
