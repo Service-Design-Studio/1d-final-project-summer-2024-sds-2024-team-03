@@ -108,24 +108,8 @@ export default function Actionables({
                         ),
                     };
                 });
-            if (newData.length === 0) {
-                setModalContent([
-                    <Typography
-                        key="no-data-available"
-                        variant="h6"
-                        component="div"
-                        sx={{fontWeight: "bold"}}
-                    >
-                        No data available
-                    </Typography>,
-                    <Typography key="message" variant="body1" component="div">
-                        Actionables could not be processed
-                    </Typography>,
-                ]);
-                setOpenCfmModal(true);
-            } else {
-                setDataNew(newData);
-            }
+
+            setDataNew(newData);
             const inProgressData = result.filter(
                 (item: Actionable) =>
                     item.status.toLowerCase() === "in progress".toLowerCase()

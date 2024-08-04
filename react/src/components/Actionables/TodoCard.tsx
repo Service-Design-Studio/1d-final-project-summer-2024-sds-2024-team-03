@@ -264,8 +264,8 @@ export default function OutlinedCard({
                                               (cat) =>
                                                   cat.status.toLowerCase() !==
                                                       actionable.status.toLowerCase() &&
-                                                  "new" !==
-                                                      actionable.status.toLowerCase()
+                                                  cat.status.toLowerCase() !==
+                                                      "new"
                                           )
                                           .map((cat) => (
                                               <MenuItem
