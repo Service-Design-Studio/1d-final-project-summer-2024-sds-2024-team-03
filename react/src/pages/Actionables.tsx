@@ -3,7 +3,6 @@ import FilterProduct from "../components/FilterProduct";
 import FilterSource from "../components/FilterSource";
 import Calendar from "../components/Calendar";
 import TodoList from "../components/Actionables/TodoList";
-import GeneratedActionsTodoList from "../components/Actionables/GeneratedActionsTodoList";
 import DialogAddAction from "../components/Actionables/DialogAddAction";
 import {
     ActionablesPageProps,
@@ -56,6 +55,7 @@ export default function Actionables({
     };
 
     const [refresh, setRefresh] = useState(0);
+    const [refreshGeneratedActions, setRefreshGeneratedActions] = useState(0);
 
     const [data, setData] = useState<Actionable[]>([]);
 
@@ -164,6 +164,10 @@ export default function Actionables({
     useEffect(() => {
         fetchData();
     }, [refresh]);
+
+    useEffect(() => {
+        fetchNewData();
+    }, [refreshGeneratedActions]);
 
     const handleGenerateActionsClick = () => {
         if (selectedProduct.length === 0 || selectedSource.length === 0) {
@@ -335,9 +339,9 @@ export default function Actionables({
                                     No data
                                 </Typography>
                             ) : (
-                                <GeneratedActionsTodoList
+                                <TodoList
                                     data={dataNew}
-                                    setRefresh={setRefresh}
+                                    setRefresh={setRefreshGeneratedActions}
                                     forWidget="GENERATED-ACTIONS"
                                 />
                             )}
