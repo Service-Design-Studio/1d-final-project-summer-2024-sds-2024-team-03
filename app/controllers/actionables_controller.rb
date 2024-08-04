@@ -8,13 +8,6 @@ class ActionablesController < ApplicationController
   # GET /actionables or /actionables.json
   def index
     @actionables = Actionable.all
-
-    # transform_string function in model > analytic.rb
-    @actionables = @actionables.map do |actionable|
-      actionable.attributes.merge(
-        'feedback_category' => Actionable.transform_string(actionable.feedback_category)
-      )
-    end
   end
 
   # GET /actionables/1 or /actionables/1.json

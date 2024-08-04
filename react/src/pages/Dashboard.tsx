@@ -38,6 +38,8 @@ export default function Dashboard({
     setSelectedMenu,
 }: DashboardProps) {
     const {scrollDir, scrollPosition} = useDetectScroll();
+    const [enableGenerateReport, setEnableGenerateReport] =
+        useState<boolean>(false);
 
     type CustomRef<T> = {
         img: T;
@@ -301,10 +303,18 @@ export default function Dashboard({
         );
     };
 
-    const disableGenerateReport =
-        selectedProduct.length === 0 ||
-        selectedSource.length === 0 ||
-        reportRefs.SentimentScoreGraphRef.current?.reportDesc === "No data";
+    useEffect(() => {
+        setEnableGenerateReport(
+            selectedProduct.length > 0 &&
+                selectedSource.length > 0 &&
+                reportRefs.SentimentScoreGraphRef.current?.reportDesc !==
+                    "No data"
+        );
+    }, [
+        selectedProduct,
+        selectedSource,
+        reportRefs.SentimentScoreGraphRef.current?.reportDesc,
+    ]);
 
     return (
         <Box
@@ -325,9 +335,9 @@ export default function Dashboard({
                 <Button
                     variant="outlined"
                     sx={{
-                        backgroundColor: disableGenerateReport
-                            ? "#d3d3d3"
-                            : "#e80000",
+                        backgroundColor: enableGenerateReport
+                            ? "#e80000"
+                            : "#d3d3d3",
                         color: "#fff",
                         border: 0,
                         fontWeight: "bold",
@@ -338,7 +348,7 @@ export default function Dashboard({
                         },
                     }}
                     onClick={handleGenerateReport}
-                    disabled={disableGenerateReport}
+                    disabled={!enableGenerateReport}
                 >
                     Generate Report
                 </Button>
