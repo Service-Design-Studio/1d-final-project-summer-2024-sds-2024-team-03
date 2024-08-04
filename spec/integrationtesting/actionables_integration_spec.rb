@@ -8,6 +8,7 @@ RSpec.describe AnalyticsController, type: :controller do
   after(:all) do
     WebMock.disable_net_connect!(allow_localhost: true)
   end
+  
   let(:invalid_attributes) {
     { date: nil, feedback: nil, product: nil, subcategory: nil, sentiment: nil, sentiment_score: nil, source: nil }
   }
@@ -44,12 +45,12 @@ RSpec.describe AnalyticsController, type: :controller do
   describe "Uploading a valid file on the upload page" do
     it "but it does not have the subcategory and sources" do
       # Ensure you have the correct setup for real uploads in test environment
-      file = fixture_file_upload('features\model_cucumber\valid\valid_Problem Solution Survey.csv', 'text/csv')
+      file = fixture_file_upload('features\model_cucumber\valid\Cashline__CSS__valid_Problem Solution Survey.csv', 'text/csv')
       post :uploads, params: { file: file }
       sleep(10) #waits for 10 seconds
       expect(response).to have_http_status(:ok)
       json_response = JSON.parse(response.body)
-      expect(json_response['url']).to include("http://storage.googleapis.com/")
+      expect(json_response['url']).to include("https://storage.googleapis.com/")
     end
 
     it "handles no file selected" do
