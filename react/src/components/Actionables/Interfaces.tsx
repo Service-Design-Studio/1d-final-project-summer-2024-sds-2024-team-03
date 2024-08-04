@@ -33,7 +33,7 @@ export interface TodoListProps {
 }
 export interface ActionableWithRefresh {
     actionable: Actionable;
-    setRefresh?: React.Dispatch<React.SetStateAction<number>>;
+    setRefresh: React.Dispatch<React.SetStateAction<number>>;
     forWidget: string;
     viewData?: boolean;
 }
