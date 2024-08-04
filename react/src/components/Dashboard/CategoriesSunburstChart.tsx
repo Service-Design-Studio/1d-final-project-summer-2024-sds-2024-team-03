@@ -362,7 +362,7 @@ export default forwardRef(function CategoriesSunburstChart(
                                         fontWeight: "bold",
                                     }}
                                 >
-                                    {id ?? "Others"}
+                                    {id ?? "Unspecified"}
                                 </Typography>
                                 <Typography variant="body2">
                                     {value} ({Math.round(percentage * 10) / 10}
@@ -480,7 +480,7 @@ export default forwardRef(function CategoriesSunburstChart(
                                             variant="body2"
                                             style={{color, fontWeight: "bold"}}
                                         >
-                                            {id ?? "Others"}
+                                            {id ?? "Unspecified"}
                                         </Typography>
                                         <Typography variant="body2">
                                             {value} (
@@ -603,7 +603,7 @@ export default forwardRef(function CategoriesSunburstChart(
                                                 >
                                                     {category.product
                                                         ? category.product
-                                                        : "Others"}
+                                                        : "Unspecified"}
                                                 </span>
                                                 <br />
                                                 <span
@@ -615,7 +615,7 @@ export default forwardRef(function CategoriesSunburstChart(
                                                 >
                                                     {category.subcategory
                                                         ? category.subcategory
-                                                        : "Others"}
+                                                        : "Unspecified"}
                                                 </span>
                                                 <br />
                                                 <span
@@ -629,7 +629,7 @@ export default forwardRef(function CategoriesSunburstChart(
                                                 >
                                                     {category.feedback_category
                                                         ? category.feedback_category
-                                                        : "Others"}
+                                                        : "Unspecified"}
                                                 </span>
                                             </Typography>
                                         </Box>
