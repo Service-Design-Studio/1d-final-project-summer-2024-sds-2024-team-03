@@ -200,7 +200,7 @@ export default function Actionables({
                     justifyContent: "center",
                     alignItems: scrollPosition.top > 0 ? "center" : null,
                     zIndex: 1000, // Ensure it's above other content
-                    backgroundColor: scrollPosition.top > 0 ? "white" : null,
+                    backgroundColor: scrollPosition.top > 0 ? theme.palette.mode === "dark" ? "#000" : "#E9E9EB" : null,
                     borderRadius: 4,
                 }}
             >
