@@ -141,7 +141,7 @@ export default function OutlinedCard({
             color: "#208306",
         },
     ];
-
+    console.log(actionable);
     return (
         <Paper elevation={2} sx={{minWidth: 275, mb: 2}} id={forWidget}>
             <Card variant="outlined">
