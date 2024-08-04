@@ -9,7 +9,7 @@ Scenario: Sentiment distribution bars are appropriately colored
   And Unsatisfied bar is colored orange
   And Neutral bar is colored grey
   And Satisfied bar is colored green
-  And Excited bar is colored darkgreen
+  And Promoter bar is colored darkgreen
 
 Scenario: No selection of products
   Given I am on the Dashboard page
