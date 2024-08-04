@@ -119,7 +119,7 @@ end
     it "retrieves sentiments distribution" do
       get :get_sentiments_distribution, params: { product: 'Insurance', source: 'CSS', fromDate: '30/05/2024', toDate: '31/05/2024' }
       json_response = JSON.parse(response.body)
-      sentiment_order = ["Frustrated", "Unsatisfied", "Neutral", "Satisfied", "Excited"]
+      sentiment_order = ["Frustrated", "Unsatisfied", "Neutral", "Satisfied", "Promoter"]
       total_count = json_response.map { |item| item["count"] }.sum.to_f
       sentiment_percentages = Hash.new(0.0)
       json_response.each do |item|
