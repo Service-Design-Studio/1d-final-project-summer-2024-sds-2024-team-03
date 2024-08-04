@@ -71,15 +71,14 @@ export default function Actionables({
     const transformCategory = (category: string) => {
         // Insert spaces around / and &
         // Convert to title case
-        category = category
-            .replace(/([\/&])/g, " $1 ")
-            .split(" ")
-            .map(
-                (word) =>
-                    word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
-            )
-            .join(" ");
-        return category;
+        return category
+            .replace(/([/&])/g, " $1 ") // Insert spaces around / and &
+            .replace(/\w\S*/g, function (txt) {
+                // Convert to title case
+                return (
+                    txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase()
+                );
+            });
     };
 
     const fetchData = async () => {

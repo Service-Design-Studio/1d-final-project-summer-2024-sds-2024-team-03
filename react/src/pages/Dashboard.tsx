@@ -49,27 +49,27 @@ export default function Dashboard({
     const reportRefs = {
         OverallSentimentScoreRef: useRef<CustomRef<HTMLDivElement>>({
             img: document.createElement("div"),
-            reportDesc: "",
+            reportDesc: "No data",
         }),
         SentimentDistributionRef: useRef<CustomRef<HTMLDivElement>>({
             img: document.createElement("div"),
-            reportDesc: "",
+            reportDesc: "No data",
         }),
         ActionsTrackedRef: useRef<CustomRef<HTMLDivElement>>({
             img: document.createElement("div"),
-            reportDesc: "",
+            reportDesc: "No data",
         }),
         SentimentScoreGraphRef: useRef<CustomRef<HTMLDivElement>>({
             img: document.createElement("div"),
-            reportDesc: "",
+            reportDesc: "No data",
         }),
         CategoriesSunburstChartRef: useRef<CustomRef<HTMLDivElement>>({
             img: document.createElement("div"),
-            reportDesc: "",
+            reportDesc: "No data",
         }),
         SentimentCategoriesGraphRef: useRef<CustomRef<HTMLDivElement>>({
             img: document.createElement("div"),
-            reportDesc: "",
+            reportDesc: "No data",
         }),
     };
 
@@ -304,6 +304,11 @@ export default function Dashboard({
     };
 
     useEffect(() => {
+        console.log(selectedProduct.length > 0);
+        console.log(selectedSource.length > 0);
+        console.log(
+            reportRefs.SentimentScoreGraphRef.current?.reportDesc !== "No data"
+        );
         setEnableGenerateReport(
             selectedProduct.length > 0 &&
                 selectedSource.length > 0 &&
