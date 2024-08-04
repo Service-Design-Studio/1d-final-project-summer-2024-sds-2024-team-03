@@ -3,6 +3,7 @@ import FilterProduct from "../components/FilterProduct";
 import FilterSource from "../components/FilterSource";
 import Calendar from "../components/Calendar";
 import TodoList from "../components/Actionables/TodoList";
+import GeneratedActionsTodoList from "../components/Actionables/GeneratedActionsTodoList";
 import DialogAddAction from "../components/Actionables/DialogAddAction";
 import {
     ActionablesPageProps,
@@ -81,7 +82,7 @@ export default function Actionables({
             });
     };
 
-    const fetchData = async () => {
+    const fetchNewData = async () => {
         try {
             const response = await fetch(`${urlPrefix}/actionables.json`, {
                 method: "GET",
@@ -95,6 +96,7 @@ export default function Actionables({
             }
 
             const result: Actionable[] = await response.json();
+
             const newData = result
                 .filter(
                     (item: Actionable) =>
@@ -126,6 +128,24 @@ export default function Actionables({
             } else {
                 setDataNew(newData);
             }
+        } catch (error) {}
+    };
+
+    const fetchData = async () => {
+        try {
+            const response = await fetch(`${urlPrefix}/actionables.json`, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            });
+
+            if (!response.ok) {
+                throw new Error("Network response was not ok");
+            }
+
+            const result: Actionable[] = await response.json();
+
             const inProgressData = result.filter(
                 (item: Actionable) =>
                     item.status.toLowerCase() === "in progress".toLowerCase()
@@ -197,6 +217,8 @@ export default function Actionables({
                 setRefresh(Math.random());
                 return data;
             });
+
+        fetchNewData();
     };
 
     return (
@@ -313,7 +335,7 @@ export default function Actionables({
                                     No data
                                 </Typography>
                             ) : (
-                                <TodoList
+                                <GeneratedActionsTodoList
                                     data={dataNew}
                                     setRefresh={setRefresh}
                                     forWidget="GENERATED-ACTIONS"

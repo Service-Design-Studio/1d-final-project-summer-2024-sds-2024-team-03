@@ -19,7 +19,7 @@ import RotateRightTwoToneIcon from "@mui/icons-material/RotateRightTwoTone";
 import CheckCircleTwoToneIcon from "@mui/icons-material/CheckCircleTwoTone";
 import DeleteTwoToneIcon from "@mui/icons-material/DeleteTwoTone";
 
-import DialogAnalytics from "./DialogAnalytics";
+import GeneratedActionsDialogAnalytics from "./GeneratedActionsDialogAnalytics";
 
 //IMPORT INTERFACE
 import {ActionableWithRefresh} from "./Interfaces";
@@ -40,7 +40,6 @@ const urlPrefix =
 
 export default function OutlinedCard({
     actionable,
-    setRefresh,
     forWidget,
     viewData = false,
 }: ActionableWithRefresh) {
@@ -70,7 +69,6 @@ export default function OutlinedCard({
             if (response.ok) {
                 console.log("Actionable was successfully destroyed.");
                 const random_val = Math.random();
-                setRefresh(random_val);
                 // Handle successful deletion, e.g., update the UI
             } else {
                 console.error("Failed to destroy actionable.");
@@ -109,7 +107,6 @@ export default function OutlinedCard({
                 const data = await response.json();
                 console.log("Status updated successfully:", data);
                 const random_val = Math.random();
-                setRefresh(random_val);
             } catch (error) {
                 console.error("Failed to update status:", error);
             }
@@ -216,9 +213,8 @@ export default function OutlinedCard({
                             >
                                 Change Status
                             </Button>
-                            <DialogAnalytics
+                            <GeneratedActionsDialogAnalytics
                                 actionable={actionable}
-                                setRefresh={setRefresh}
                                 forWidget={forWidget}
                             />
                             <Menu
