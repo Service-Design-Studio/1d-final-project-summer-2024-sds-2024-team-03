@@ -116,7 +116,7 @@ export default forwardRef(function ActionsTracked(
                 display: "flex",
                 flexDirection: "column",
                 alignItems: "center",
-                justifyContent: "center",
+                justifyContent: "space-between",
                 p: 2,
                 borderRadius: 4,
                 flex: 2,
@@ -149,18 +149,19 @@ export default forwardRef(function ActionsTracked(
                                         <StyledTableCell
                                             key={key}
                                             align="center"
+                                            sx={{ paddingTop: '10px' }}
                                         >
                                             <Typography
                                                 sx={{
-                                                    color: actionsTrackedPct[
-                                                        `${key} Color` as keyof Bar
-                                                    ],
+                                                    color: actionsTrackedPct[`${key} Color` as keyof Bar],
+                                                    fontWeight: 'bold',
                                                 }}
                                             >
                                                 {key}
                                             </Typography>
                                         </StyledTableCell>
-                                    ))}
+                                    ))
+                                }
                             </TableRow>
                             <TableRow>
                                 {Object.entries(actionsTrackedRaw)
@@ -169,12 +170,12 @@ export default forwardRef(function ActionsTracked(
                                         <StyledTableCell
                                             key={index}
                                             align="center"
+                                            sx={{ padding: '0px' }}
                                         >
                                             <Typography
                                                 sx={{
-                                                    color: actionsTrackedPct[
-                                                        `${key} Color` as keyof Bar
-                                                    ],
+                                                    color: actionsTrackedPct[`${key} Color` as keyof Bar],
+                                                    fontSize: "2rem",
                                                 }}
                                             >
                                                 {value}
@@ -188,8 +189,7 @@ export default forwardRef(function ActionsTracked(
             </Box>
             <Box
                 sx={{
-                    display: "flex",
-                    height: 100,
+                    height: 40,
                     width: "100%",
                     alignItems: "center",
                     justifyContent: "center",
@@ -202,6 +202,13 @@ export default forwardRef(function ActionsTracked(
                         No actions tracked
                     </Typography>
                 ) : (
+                    <Box
+                        sx={{
+                            height: '100%', 
+                            width: '100%', 
+                            borderRadius: "20px", 
+                        }}
+                    >
                     <ResponsiveBar
                         data={[actionsTrackedPct]}
                         keys={["Done", "In Progress"]}
@@ -210,12 +217,6 @@ export default forwardRef(function ActionsTracked(
                             actionsTrackedPct["In Progress Color"],
                         ]}
                         indexBy="category"
-                        margin={{
-                            right: 10,
-                            bottom: 10,
-                            left: 10,
-                        }}
-                        padding={0.3}
                         minValue={0}
                         maxValue={100}
                         layout="horizontal"
@@ -352,12 +353,13 @@ export default forwardRef(function ActionsTracked(
                                     ></div>
                                     <Typography variant="body2">
                                         {id}: <b>{actionsTrackedRaw[id]}</b>{" "}
-                                        actionables
+                                        {actionsTrackedRaw[id] === 1 ? "action" : "actions"}
                                     </Typography>
                                 </div>
                             </div>
                         )}
                     />
+                    </Box>
                 )}
             </Box>
         </ButtonBase>
