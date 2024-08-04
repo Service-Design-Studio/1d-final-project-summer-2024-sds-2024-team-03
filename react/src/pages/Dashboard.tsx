@@ -304,22 +304,10 @@ export default function Dashboard({
     };
 
     useEffect(() => {
-        console.log(selectedProduct.length > 0);
-        console.log(selectedSource.length > 0);
-        console.log(
-            reportRefs.SentimentScoreGraphRef.current?.reportDesc !== "No data"
-        );
         setEnableGenerateReport(
-            selectedProduct.length > 0 &&
-                selectedSource.length > 0 &&
-                reportRefs.SentimentScoreGraphRef.current?.reportDesc !==
-                    "No data"
+            selectedProduct.length > 0 && selectedSource.length > 0
         );
-    }, [
-        selectedProduct,
-        selectedSource,
-        reportRefs.SentimentScoreGraphRef.current?.reportDesc,
-    ]);
+    }, [selectedProduct, selectedSource]);
 
     return (
         <Box

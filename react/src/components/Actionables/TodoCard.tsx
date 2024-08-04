@@ -126,7 +126,7 @@ export default function OutlinedCard({
 
     const actionableCategories = [
         {
-            status: "Generated Actions",
+            status: "New",
             icon: <NewReleasesTwoToneIcon style={{color: "#8D1927"}} />,
             color: "#8D1927",
         },
@@ -141,7 +141,6 @@ export default function OutlinedCard({
             color: "#208306",
         },
     ];
-    console.log(actionable);
     return (
         <Paper elevation={2} sx={{minWidth: 275, mb: 2}} id={forWidget}>
             <Card variant="outlined">
@@ -237,16 +236,13 @@ export default function OutlinedCard({
                                     horizontal: "left",
                                 }}
                             >
-                                {actionable.status.toLowerCase() ===
-                                "generated actions"
+                                {actionable.status.toLowerCase() === "new"
                                     ? actionableCategories
-                                          .filter((cat) => {
-                                              console.log(cat);
-                                              return (
+                                          .filter(
+                                              (cat) =>
                                                   cat.status.toLowerCase() !==
                                                   actionable.status.toLowerCase()
-                                              );
-                                          })
+                                          )
                                           .map((cat) => (
                                               <MenuItem
                                                   key={cat.status}
@@ -268,7 +264,7 @@ export default function OutlinedCard({
                                               (cat) =>
                                                   cat.status.toLowerCase() !==
                                                       actionable.status.toLowerCase() &&
-                                                  "generated actions" !==
+                                                  "new" !==
                                                       actionable.status.toLowerCase()
                                           )
                                           .map((cat) => (
