@@ -68,6 +68,20 @@ export default function Actionables({
             ? "http://localhost:3000"
             : "https://jbaaam-yl5rojgcbq-et.a.run.app";
 
+    const transformCategory = (category: string) => {
+        // Insert spaces around / and &
+        // Convert to title case
+        category = category
+            .replace(/([\/&])/g, " $1 ")
+            .split(" ")
+            .map(
+                (word) =>
+                    word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+            )
+            .join(" ");
+        return category;
+    };
+
     const fetchData = async () => {
         try {
             const response = await fetch(`${urlPrefix}/actionables.json`, {
@@ -82,10 +96,19 @@ export default function Actionables({
             }
 
             const result: Actionable[] = await response.json();
-            const newData = result.filter(
-                (item: Actionable) =>
-                    item.status.toLowerCase() === "new".toLowerCase()
-            );
+            const newData = result
+                .filter(
+                    (item: Actionable) =>
+                        item.status.toLowerCase() === "new".toLowerCase()
+                )
+                .map((item) => {
+                    return {
+                        ...item,
+                        feedback_category: transformCategory(
+                            item.feedback_category
+                        ),
+                    };
+                });
             if (newData.length === 0) {
                 setModalContent([
                     <Typography
