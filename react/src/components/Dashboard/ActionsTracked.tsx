@@ -149,7 +149,7 @@ export default forwardRef(function ActionsTracked(
                                         <StyledTableCell
                                             key={key}
                                             align="center"
-                                            sx={{ paddingTop: '10px' }}
+                                            sx={{ paddingTop: '10px', paddingBottom: '0px', }}
                                         >
                                             <Typography
                                                 sx={{
@@ -175,7 +175,8 @@ export default forwardRef(function ActionsTracked(
                                             <Typography
                                                 sx={{
                                                     color: actionsTrackedPct[`${key} Color` as keyof Bar],
-                                                    fontSize: "2rem",
+                                                    fontSize: "2.5rem",
+                                                    fontWeight: "bold"
                                                 }}
                                             >
                                                 {value}
@@ -193,6 +194,7 @@ export default forwardRef(function ActionsTracked(
                     width: "100%",
                     alignItems: "center",
                     justifyContent: "center",
+                    textAlign: "center",
                 }}
             >
                 {Object.values(actionsTrackedRaw).every(
@@ -202,13 +204,6 @@ export default forwardRef(function ActionsTracked(
                         No actions tracked
                     </Typography>
                 ) : (
-                    <Box
-                        sx={{
-                            height: '100%', 
-                            width: '100%', 
-                            borderRadius: "20px", 
-                        }}
-                    >
                     <ResponsiveBar
                         data={[actionsTrackedPct]}
                         keys={["Done", "In Progress"]}
@@ -220,8 +215,11 @@ export default forwardRef(function ActionsTracked(
                         minValue={0}
                         maxValue={100}
                         layout="horizontal"
+                        margin={{ top: 0, right: 10, bottom: 5, left: 10 }}
                         valueScale={{type: "linear"}}
                         indexScale={{type: "band", round: true}}
+                        borderRadius={6}
+                        innerPadding={2}
                         defs={[
                             {
                                 id: "dots",
@@ -359,7 +357,6 @@ export default forwardRef(function ActionsTracked(
                             </div>
                         )}
                     />
-                    </Box>
                 )}
             </Box>
         </ButtonBase>
