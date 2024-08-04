@@ -306,6 +306,8 @@ export default function Dashboard({
         selectedSource.length === 0 ||
         reportRefs.SentimentScoreGraphRef.current?.reportDesc === "";
 
+    console.log(reportRefs.SentimentScoreGraphRef.current?.reportDesc);
+
     return (
         <Box
             sx={{

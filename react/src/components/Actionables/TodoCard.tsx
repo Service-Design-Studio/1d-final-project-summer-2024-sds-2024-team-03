@@ -240,11 +240,13 @@ export default function OutlinedCard({
                                 {actionable.status.toLowerCase() ===
                                 "generated actions"
                                     ? actionableCategories
-                                          .filter(
-                                              (cat) =>
+                                          .filter((cat) => {
+                                              console.log(cat);
+                                              return (
                                                   cat.status.toLowerCase() !==
                                                   actionable.status.toLowerCase()
-                                          )
+                                              );
+                                          })
                                           .map((cat) => (
                                               <MenuItem
                                                   key={cat.status}
