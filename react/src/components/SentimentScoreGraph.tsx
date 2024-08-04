@@ -392,7 +392,7 @@ export default forwardRef(function SentimentScoreGraph(
                           )}, and the lowest sentiment score was a ${
                               lowest.y
                           } on ${lowestDates.join(", ")}.`
-                        : "No data.",
+                        : "No data",
             };
         },
         [sentimentScores]

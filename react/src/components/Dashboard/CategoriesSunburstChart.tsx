@@ -272,7 +272,7 @@ export default forwardRef(function CategoriesSunburstChart(
                                   )} / 5.\n`
                           )
                           .join("")}`
-                    : "No data.",
+                    : "No data",
         }),
         [topCategories] // Adjust the dependency array if necessary
     );
