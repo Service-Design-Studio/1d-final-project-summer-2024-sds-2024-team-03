@@ -181,7 +181,7 @@ export default function ScrollDialog({
                                         </TableRow>
                                     </TableHead>
                                     <TableBody>
-                                        {feedbackData &&
+                                        {feedbackData ? (
                                             feedbackData.map((feedback, i) => (
                                                 <StyledTableRow key={i}>
                                                     <StyledTableCell align="left">
@@ -194,7 +194,15 @@ export default function ScrollDialog({
                                                             : feedback.trim()}
                                                     </StyledTableCell>
                                                 </StyledTableRow>
-                                            ))}
+                                            ))
+                                        ) : (
+                                            <StyledTableRow>
+                                                <StyledTableCell align="left">
+                                                    No data as this action was
+                                                    manually created
+                                                </StyledTableCell>
+                                            </StyledTableRow>
+                                        )}
                                     </TableBody>
                                 </Table>
                             </TableContainer>

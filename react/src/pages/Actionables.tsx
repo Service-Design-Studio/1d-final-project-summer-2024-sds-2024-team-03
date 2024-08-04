@@ -86,7 +86,24 @@ export default function Actionables({
                 (item: Actionable) =>
                     item.status.toLowerCase() === "new".toLowerCase()
             );
-            setDataNew(newData);
+            if (newData.length === 0) {
+                setModalContent([
+                    <Typography
+                        key="no-data-available"
+                        variant="h6"
+                        component="div"
+                        sx={{fontWeight: "bold"}}
+                    >
+                        No data available
+                    </Typography>,
+                    <Typography key="message" variant="body1" component="div">
+                        Actionables could not be processed
+                    </Typography>,
+                ]);
+                setOpenCfmModal(true);
+            } else {
+                setDataNew(newData);
+            }
             const inProgressData = result.filter(
                 (item: Actionable) =>
                     item.status.toLowerCase() === "in progress".toLowerCase()
@@ -269,11 +286,17 @@ export default function Actionables({
                                     borderWidth: 2,
                                 }}
                             />
-                            <TodoList
-                                data={dataNew}
-                                setRefresh={setRefresh}
-                                forWidget="GENERATED-ACTIONS"
-                            />
+                            {dataNew.length === 0 ? (
+                                <Typography variant="body2" color="grey">
+                                    No data
+                                </Typography>
+                            ) : (
+                                <TodoList
+                                    data={dataNew}
+                                    setRefresh={setRefresh}
+                                    forWidget="GENERATED-ACTIONS"
+                                />
+                            )}
                         </Grid>
                     </CustomWidthTooltip>
                     <Grid item xs={4}>

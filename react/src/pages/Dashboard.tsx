@@ -304,9 +304,7 @@ export default function Dashboard({
     const disableGenerateReport =
         selectedProduct.length === 0 ||
         selectedSource.length === 0 ||
-        reportRefs.SentimentScoreGraphRef.current?.reportDesc === "";
-
-    console.log(reportRefs.SentimentScoreGraphRef.current?.reportDesc);
+        reportRefs.SentimentScoreGraphRef.current?.reportDesc === "No data";
 
     return (
         <Box

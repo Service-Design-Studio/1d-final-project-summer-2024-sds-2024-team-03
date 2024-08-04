@@ -764,7 +764,7 @@ export default forwardRef(function SentimentCategoriesGraph(
                                   }"`
                           )
                           .join("\n\n")}`
-                    : "No data.",
+                    : "No data",
         }),
         [bars]
     );
