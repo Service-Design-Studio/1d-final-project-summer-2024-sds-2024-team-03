@@ -318,44 +318,7 @@ export default forwardRef(function ActionsTracked(
                                 },
                             },
                         }}
-                        tooltip={({id, color}) => (
-                            <div
-                                style={{
-                                    padding: "9px 12px",
-                                    borderRadius: "10px",
-                                    backgroundColor:
-                                        theme.palette.mode === "dark"
-                                            ? "#333"
-                                            : "#fff",
-                                    boxShadow:
-                                        "0px 0px 10px rgba(0, 0, 0, 0.2)",
-                                    color:
-                                        theme.palette.mode === "dark"
-                                            ? "#fff"
-                                            : "#000",
-                                }}
-                            >
-                                <div
-                                    style={{
-                                        display: "flex",
-                                        alignItems: "center",
-                                    }}
-                                >
-                                    <div
-                                        style={{
-                                            width: "12px",
-                                            height: "12px",
-                                            backgroundColor: color,
-                                            marginRight: "8px",
-                                        }}
-                                    ></div>
-                                    <Typography variant="body2">
-                                        {id}: <b>{actionsTrackedRaw[id]}</b>{" "}
-                                        {actionsTrackedRaw[id] === 1 ? "action" : "actions"}
-                                    </Typography>
-                                </div>
-                            </div>
-                        )}
+                        isInteractive={false}
                     />
                 )}
             </Box>
