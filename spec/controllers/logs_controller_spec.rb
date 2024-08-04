@@ -1,9 +1,13 @@
 require 'rails_helper'
 
 RSpec.describe LogsController, type: :controller do
+  let(:valid_attributes) { { log_message: 'Valid log message', status: :created } }
+  let(:invalid_attributes) { { log_message: '', status: :unprocessable_entity } }
+  let(:valid_session) { {} }
+
   describe "GET #index" do
     it "returns a success response" do
-      FactoryBot.create(:log)
+      FactoryBot.create(:log, log_message: "Test log message")
       get :index
       expect(response).to be_successful
       expect(response.body).to include("Test log message")
@@ -12,43 +16,42 @@ RSpec.describe LogsController, type: :controller do
 
   describe "POST #create" do
     context "with valid params" do
-      let(:valid_attributes) { { log_message: 'Valid log message', status: 'active' } }
-
       it "creates a new Log and redirects" do
         expect {
-          post :create, params: { log: valid_attributes }
+          post :create, params: { log: valid_attributes }, session: valid_session
         }.to change(Log, :count).by(1)
         expect(response).to redirect_to(log_url(Log.last))
       end
     end
 
     context "with invalid params" do
-      let(:invalid_attributes) { { log_message: '', status: 'inactive' } }
-
-      it "returns a failure response (unprocessable entity)" do
-        post :create, params: { log: invalid_attributes }
-        expect(response).to have_http_status(:unprocessable_entity)
+      it "does not create a new Log" do
+        expect {
+          post :create, params: { log: invalid_attributes }, session: valid_session
+        }.not_to change(Log, :count)
+        expect(response).to have_http_status(422)
       end
     end
   end
 
   describe "PUT #update" do
     let(:log) { FactoryBot.create(:log) }
-    let(:new_attributes) { { log_message: "Updated log message" } }
 
     context "with valid params" do
+      let(:new_attributes) { { log_message: 'Updated log message' } }
+
       it "updates the requested log" do
-        put :update, params: { id: log.id, log: new_attributes }
+        put :update, params: { id: log.to_param, log: new_attributes }, session: valid_session
         log.reload
-        expect(log.log_message).to eq("Updated log message")
+        expect(log.log_message).to eq('Updated log message')
         expect(response).to redirect_to(log_url(log))
       end
     end
 
     context "with invalid params" do
-      it "returns a failure response (unprocessable entity)" do
-        put :update, params: { id: log.id, log: { log_message: '' } }
-        expect(response).to have_http_status(:unprocessable_entity)
+      it "does not update the log" do
+        put :update, params: { id: log.to_param, log: invalid_attributes }, session: valid_session
+        expect(response).to have_http_status(422)
       end
     end
   end
@@ -58,7 +61,7 @@ RSpec.describe LogsController, type: :controller do
 
     it "destroys the requested log" do
       expect {
-        delete :destroy, params: { id: log.id }
+        delete :destroy, params: { id: log.to_param }, session: valid_session
       }.to change(Log, :count).by(-1)
       expect(response).to redirect_to(logs_url)
     end
