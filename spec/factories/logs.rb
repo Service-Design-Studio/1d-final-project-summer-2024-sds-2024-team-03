@@ -1,7 +1,6 @@
-# spec/factories/logs.rb
 FactoryBot.define do
   factory :log do
-    log_message { "Data classification completed and added to database." }
-    status { "ok" }
+    log_date { "2024-07-25" }
+    log_message { "MyText" }
   end
 end

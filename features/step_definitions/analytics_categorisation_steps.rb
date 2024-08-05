@@ -7,7 +7,7 @@ When(/I click on the 'Subcategory' dropdown button in the Sentiment Categorisati
   expect(page).to have_css('ul[role="listbox"]')
 end
 
-Then(/I should see all the subcategories '(.*)', '(.*)'/) do |item1, item2|
+Then(/I should see all the subcategories '(.*)' and '(.*)'/) do |item1, item2|
   within('ul[role="listbox"]') do
     expect(page).to have_content(item1)
     expect(page).to have_content(item2)
@@ -19,7 +19,7 @@ Then(/I should see '(.*)' in the text field of the Sentiment Categorisation drop
   expect(dropdown_button).to have_content(item)
 end
 
-Then(/I should see 5 subcategories with the 2 most positive sentiments '(.*)' and '(.*)' sorted in descending order/) do |text1, text2|
+Then(/I should see 2 subcategories with the most positive sentiments '(.*)' and '(.*)' sorted in descending order/) do |text1, text2|
   parent_element = find("g[transform='translate(250,10)']")
   # Check that the parent element contains both specified texts
   expect(parent_element).to have_content(text1)
@@ -58,7 +58,7 @@ And(/the Y-ticks show '(.*)'/) do |feedback_category|
 end
 
 And(/I should be able to hover over it to reveal the label '(.*)' and percentage '(.*)'/) do |label, percentage|
-  red_rect = find('rect[fill="green"]', visible: true)
+  red_rect = find('rect[fill="red"]', visible: true)
   red_rect.hover
   hoverlabel = find('[style*="pointer-events"][style*="position: absolute"]')
   expect(hoverlabel).to have_content(label)
@@ -92,7 +92,7 @@ When(/I click 'view all'/) do
   click_button('View All')
 end
 
-Then(/I should see the 8 subcategories sorted in these top 3 in descending order '(.*)', '(.*)', '(.*)'/) do |text1, text2, text3|
+Then(/I should see the top 3 subcategories sorted in this descending order '(.*)', '(.*)', '(.*)'/) do |text1, text2, text3|
   expect(find("g[transform='translate(0,28)']")).to have_content(text1)
   expect(find("g[transform='translate(0,70)']")).to have_content(text2)
   expect(find("g[transform='translate(0,112)']")).to have_content(text3)

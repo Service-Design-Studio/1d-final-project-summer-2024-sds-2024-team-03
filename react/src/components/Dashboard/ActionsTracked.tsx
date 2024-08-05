@@ -137,7 +137,7 @@ export default forwardRef(function ActionsTracked(
         >
             <Box sx={{width: "100%", justifyContent: "flex-start"}}>
                 <Typography variant="h6" sx={{fontWeight: "bold", mb: 1}}>
-                    Actions Tracked
+                    Actionables Tracked
                 </Typography>
                 <TableContainer>
                     <Table aria-label="actions-Tracked-table">

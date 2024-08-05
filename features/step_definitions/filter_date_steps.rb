@@ -7,7 +7,6 @@ require 'uri'
 # Scenario: View time period
 Given(/the earliest and latest dates are available/) do
   url = "#{Capybara.app_host}"
-  puts url
   @dates = get_earliest_and_latest_dates(url)
 end
 
@@ -278,16 +277,12 @@ end
 
 
 
+# Helper methods
 def get_earliest_and_latest_dates(base_url)
   url = URI("#{base_url}/analytics/get_earliest_latest_dates")
-  response = Net::HTTP.get_response(url)
-
-  if response.content_type == "application/json"
-    data = JSON.parse(response.body, symbolize_names: true)
-    { earliest_date: data[:earliest_date], latest_date: data[:latest_date] }
-  else
-    raise "Unexpected response type: #{response.body[0..500]}"  # Shows first 500 chars of response for debugging
-  end
+  response = Net::HTTP.get(url)
+  data = JSON.parse(response, symbolize_names: true)
+  { earliest_date: data[:earliest_date], latest_date: data[:latest_date] }
 rescue StandardError => e
   raise "Failed to fetch earliest and latest dates: #{e.message}"
 end

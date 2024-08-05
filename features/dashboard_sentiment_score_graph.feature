@@ -5,8 +5,8 @@ Feature: Sentiment Score Graph (Overview)
   
 Scenario: Normal View
   Given I am on the Dashboard page
-  When the date is set from '01/03/2024' to '31/05/2024'
-  And the sources selected are: 'CSS'
+  When the date is set from '01/01/2024' to '30/04/2024'
+  And the sources selected are: 'Product Survey'
   And the products selected are: 'Investments'
   Then I should see a widget titled 'Sentiment Trend for Selected Product(s)'
   And the X-ticks show 3 months in the format MMM 'YY
@@ -19,7 +19,7 @@ Scenario: Clicking widget redirects to Analytics page
   
 Scenario: Insufficient overall data
   Given I am on the Dashboard page
-  When the date is set from '09/03/2024' to '10/03/2024'
-  And the sources selected are: 'CSS'
+  When the date is set from '09/01/2024' to '10/01/2024'
+  And the sources selected are: 'Product Survey'
   And the products selected are: 'Investments'
   Then I should see an error message 'No data'

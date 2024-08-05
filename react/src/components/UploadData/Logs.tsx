@@ -37,7 +37,7 @@ export default function FolderList() {
     console.log(logs);
     return (
         <Box sx={{width: "100%", maxWidth: 360, minHeight: 600, bgcolor: theme.palette.mode === "dark" ? "#222" : "#fff", borderRadius: 4}}>
-            <Typography variant="h6" component="div" sx={{ fontWeight: 'bold', px: 2, pt: 2, pb: 0 }}>
+            <Typography variant="h6" component="div" sx={{ fontWeight: 'bold', px: 2, pt: 2, pb: 1 }}>
                 Recent Uploads
             </Typography>
             {logs.length === 0 ? (
@@ -54,16 +54,10 @@ export default function FolderList() {
                     {logs.map((log, index) => (
                         <ListItem key={index}>
                             <ListItemText
-                                primary={
-                                    <Typography sx={{ whiteSpace: 'normal', wordBreak: 'break-word' }}>
-                                        {log.log_message}
-                                    </Typography>
-                                }
-                                secondary={
-                                    <Typography variant="body2" sx={{ whiteSpace: 'normal', wordBreak: 'break-word', color: '#888' }}>
-                                        {dayjs(log.created_at).tz("Asia/Singapore").format("DD-MM-YYYY HH:mm:ss")}
-                                    </Typography>
-                                }
+                                primary={log.log_message}
+                                secondary={dayjs(log.created_at)
+                                    .tz("Asia/Singapore")
+                                    .format("DD-MM-YYYY HH:mm:ss")}
                             />
                         </ListItem>
                     ))}

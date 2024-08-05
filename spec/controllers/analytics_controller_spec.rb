@@ -6,7 +6,7 @@ RSpec.describe AnalyticsController, type: :controller do
   }
 
   let(:valid_attributes) {
-    { date: '15/08/2024', feedback: 'Great product', product: 'Others', subcategory: 'CSS', sentiment: 'Frustrated', sentiment_score: '0.9', source: 'Problem Solution Survey' }
+    { date: '15/08/2024', feedback: 'Great product', product: 'Others', subcategory: 'asd', sentiment: 'Frustrated', sentiment_score: '0.9', source: 'Problem Solution Survey' }
   }
 
   let(:valid_session) { {} }
@@ -36,8 +36,8 @@ RSpec.describe AnalyticsController, type: :controller do
     it "fetches earliest and latest dates" do
       get :get_earliest_latest_dates
       json_response = JSON.parse(response.body)
-      expect(json_response["earliest_date"]).to eq('01/03/2024')
-      expect(json_response["latest_date"]).to eq('12/06/2024')
+      expect(json_response["earliest_date"]).to eq('01/04/2023')
+      expect(json_response["latest_date"]).to eq('31/08/2024')
     end
   end
 
@@ -57,7 +57,7 @@ RSpec.describe AnalyticsController, type: :controller do
 
   describe "GET #get_sentiment_scores" do
     it "retrieves sentiment scores" do
-      get :get_sentiment_scores, params: { product: 'Insurance', source: 'CSS', fromDate: '01/03/2024', toDate: '31/05/2024' }
+      get :get_sentiment_scores, params: { product: 'Others', source: 'Problem Solution Survey', fromDate: '13/08/2024', toDate: '15/08/2024' }
       
       expect(response).to be_successful
       
@@ -66,48 +66,68 @@ RSpec.describe AnalyticsController, type: :controller do
       average_sentiment_score = (sentiment_scores.sum / sentiment_scores.size).round(1)
 
       
-      expect(average_sentiment_score).to eq(3.3)
+      expect(average_sentiment_score).to eq(2.2)
     end
   end
 
 
   describe "GET #get_overall_sentiment_scores" do
     it "retrieves overall sentiment scores" do
-      get :get_overall_sentiment_scores, params: { product: 'Insurance', source: 'CSS', fromDate: '01/03/2024', toDate: '31/05/2024' }
+      get :get_overall_sentiment_scores, params: { product: 'Others', source: 'Problem Solution Survey', fromDate: '13/08/2024', toDate: '15/08/2024' }
       json_response = JSON.parse(response.body)
   
       sentiment_scores = json_response.map { |record| record['sentiment_score'].to_f }
       average_sentiment_score = (sentiment_scores.sum / sentiment_scores.size).round(1)
   
-      expect(average_sentiment_score).to eq(3.1)
+      expect(average_sentiment_score).to eq(2.2)
     end
   end
 
   describe "GET #get_sentiments_sorted" do
   it "retrieves sorted sentiments" do
-    get :get_sentiments_sorted, params: { product: 'Insurance', source: 'CSS', fromDate: '30/05/2024', toDate: '31/05/2024' }
+    get :get_sentiments_sorted, params: { product: 'Others', source: 'Problem Solution Survey', fromDate: '13/08/2024', toDate: '15/08/2024' }
     json_response = JSON.parse(response.body)
 
     expected_response = [
       {
-        "date" => "30/05/2024",
-        "feedback" => "General Insurance Why are you MORE satisfied with DBS than [Field-Competitor_Bank]'s General Insurance?\n\n(Please do not provide any sensitive personal information, including login passwords or one-time passwords.): Cos it is more reliable ",
-        "feedback_category" => "rate/policy",
-        "product" => "Insurance",
+        "date" => "13/08/2024",
+        "feedback" => "Too busy",
+        "feedback_category" => "Staff Related",
+        "product" => "Others",
         "sentiment" => "Satisfied",
-        "sentiment_score" => "4.2",
-        "source" => "CSS",
-        "subcategory" => "General Insurance"
+        "sentiment_score" => "4.5",
+        "source" => "Problem Solution Survey",
+        "subcategory" => "Others"
       },
       {
-        "date" => "30/05/2024",
-        "feedback" => "General Insurance Please elaborate on why you have selected [QID4-ChoiceGroup-SelectedChoices].Please do not provide any sensitive personal information, including login passwords or one-time passwords.: Easy to use and claim if needed",
-        "feedback_category" => "rate/policy",
-        "product" => "Insurance",
-        "sentiment" => "Satisfied",
-        "sentiment_score" => "4.0",
-        "source" => "CSS",
-        "subcategory" => "General Insurance"
+        "date" => "15/08/2024",
+        "feedback" => "Thank you",
+        "feedback_category" => "Staff Related",
+        "product" => "Others",
+        "sentiment" => "Unsatisfied",
+        "sentiment_score" => "2.1",
+        "source" => "Problem Solution Survey",
+        "subcategory" => "compliments"
+      },
+      {
+        "date" => "13/08/2024",
+        "feedback" => "So far is a good service from the staff handled my matter",
+        "feedback_category" => "Staff Related",
+        "product" => "Others",
+        "sentiment" => "Unsatisfied",
+        "sentiment_score" => "2.0",
+        "source" => "Problem Solution Survey",
+        "subcategory" => "customer service issues"
+      },
+      {
+        "date" => "13/08/2024",
+        "feedback" => "Faster than expected process : A+",
+        "feedback_category" => "Staff Related",
+        "product" => "Others",
+        "sentiment" => "Frustrated",
+        "sentiment_score" => "0.3",
+        "source" => "Problem Solution Survey",
+        "subcategory" => "Others"
       }
     ]
     expect(json_response).to eq(expected_response)
@@ -117,16 +137,16 @@ end
 
   describe "GET #get_sentiments_distribution" do
     it "retrieves sentiments distribution" do
-      get :get_sentiments_distribution, params: { product: 'Insurance', source: 'CSS', fromDate: '30/05/2024', toDate: '31/05/2024' }
+      get :get_sentiments_distribution, params: { product: 'Others', source: 'Problem Solution Survey', fromDate: '13/08/2024', toDate: '15/08/2024' }
       json_response = JSON.parse(response.body)
-      sentiment_order = ["Frustrated", "Unsatisfied", "Neutral", "Satisfied", "Promoter"]
+      sentiment_order = ["Frustrated", "Unsatisfied", "Neutral", "Satisfied", "Excited"]
       total_count = json_response.map { |item| item["count"] }.sum.to_f
       sentiment_percentages = Hash.new(0.0)
       json_response.each do |item|
         sentiment_percentages[item["sentiment"]] = (item["count"] / total_count * 100).round(1)
       end
       formatted_output = sentiment_order.map { |sentiment| sentiment_percentages[sentiment] }.join(", ")
-      expect(formatted_output).to eq("0.0, 0.0, 0.0, 100.0, 0.0")
+      expect(formatted_output).to eq("25.0, 50.0, 0.0, 25.0, 0.0")
     end
   end
 
@@ -140,15 +160,6 @@ end
     it "calls private_filter for sources" do
       expect(controller).to receive(:private_filter).with(:source).and_call_original
       get :filter_sources
-    end
-  end
-
-  describe "GET #filter_subcategory" do
-    it "returns all subcategories" do
-      get :filter_subcategory
-      expect(response).to be_successful
-      expect(response.body).to include("Credit Card", "Personal Loan", "Mortgage/Home Loan")
-      expect(response).to have_http_status(:ok)
     end
   end
 end

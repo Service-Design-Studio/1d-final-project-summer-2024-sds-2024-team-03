@@ -7,6 +7,19 @@ class LogsController < ApplicationController
     render json: @logs
   end
 
+  # GET /logs/1 or /logs/1.json
+  def show
+  end
+
+  # GET /logs/new
+  def new
+    @log = Log.new
+  end
+
+  # GET /logs/1/edit
+  def edit
+  end
+
   # POST /logs or /logs.json
   def create
     @log = Log.new(log_params)
