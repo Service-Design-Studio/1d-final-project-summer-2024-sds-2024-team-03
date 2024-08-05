@@ -328,7 +328,7 @@ export default forwardRef(function CategoriesSunburstChart(
                             theme.palette.mode === "dark" ? "#222222" : "#fff"
                         }
                         colors={{scheme: "pastel2"}}
-                        inheritColorFromParent={false}
+                        inheritColorFromParent={true}
                         childColor={{
                             from: "color",
                             modifiers: [["brighter", 0.3]],
@@ -445,12 +445,19 @@ export default forwardRef(function CategoriesSunburstChart(
                                         : "#fff"
                                 }
                                 colors={(bar) => barColors[bar.id]}
-                                // To make use of hsl from each component
-                                inheritColorFromParent={false}
+                                // false: To make use of hsl from each component
+                                inheritColorFromParent={true}
                                 // colors={{scheme: "paired"}}
                                 childColor={{
                                     from: "color",
-                                    modifiers: [["brighter", 0.3]],
+                                    modifiers: [
+                                        [
+                                            theme.palette.mode === "dark"
+                                                ? "darker"
+                                                : "brighter",
+                                            0.3,
+                                        ],
+                                    ],
                                 }}
                                 enableArcLabels={false}
                                 // category or %
@@ -633,18 +640,18 @@ export default forwardRef(function CategoriesSunburstChart(
                                                 </span>
                                             </Typography>
                                         </Box>
-                                            <Typography
-                                                variant="body2"
-                                                sx={{
-                                                    gridColumn: "2 / span 1",
-                                                    textAlign: "center",
-                                                    fontWeight: "bold",
-                                                    fontSize: "1.3rem",
-                                                    width: "29%",
-                                                }}
-                                            >
-                                                {category.mentions}
-                                            </Typography>
+                                        <Typography
+                                            variant="body2"
+                                            sx={{
+                                                gridColumn: "2 / span 1",
+                                                textAlign: "center",
+                                                fontWeight: "bold",
+                                                fontSize: "1.3rem",
+                                                width: "29%",
+                                            }}
+                                        >
+                                            {category.mentions}
+                                        </Typography>
                                         <Box
                                             sx={{
                                                 ml: 1.5,

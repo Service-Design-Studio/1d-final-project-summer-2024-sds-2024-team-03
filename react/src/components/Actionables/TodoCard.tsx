@@ -145,7 +145,13 @@ export default function OutlinedCard({
         <Paper elevation={2} sx={{minWidth: 275, mb: 2}} id={forWidget}>
             <Card variant="outlined">
                 <CardContent>
-                    <Box sx={{display: "flex", alignItems: "center"}}>
+                    <Box
+                        sx={{
+                            display: "flex",
+                            justifyContent: "space-between",
+                            alignItems: "flex-start",
+                        }}
+                    >
                         <Typography
                             sx={{fontSize: 14, mr: 1}}
                             color="text.secondary"
@@ -162,7 +168,13 @@ export default function OutlinedCard({
                             {actionable.subproduct}
                         </Typography>
                     </Box>
-                    <Box sx={{display: "flex", alignItems: "center"}}>
+                    <Box
+                        sx={{
+                            display: "flex",
+                            justifyContent: "space-between",
+                            alignItems: "flex-start",
+                        }}
+                    >
                         <Typography
                             sx={{fontSize: 14, mr: 1}}
                             color="text.secondary"

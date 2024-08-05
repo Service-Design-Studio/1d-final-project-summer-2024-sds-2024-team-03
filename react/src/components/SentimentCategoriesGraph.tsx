@@ -477,9 +477,15 @@ export default forwardRef(function SentimentCategoriesGraph(
                             .filter((item) => {
                                 if (item.sentiment_score)
                                     return (
-                                        parseFloat(item.sentiment_score) > 4.5
+                                        parseFloat(item.sentiment_score) > 3.5
                                     );
                             })
+                            // High to low
+                            .sort(
+                                (a, b) =>
+                                    parseFloat(b.sentiment_score) -
+                                    parseFloat(a.sentiment_score)
+                            )
                             .reduce(
                                 (
                                     acc,
@@ -512,9 +518,15 @@ export default forwardRef(function SentimentCategoriesGraph(
                             .filter((item) => {
                                 if (item.sentiment_score)
                                     return (
-                                        parseFloat(item.sentiment_score) <= 1
+                                        parseFloat(item.sentiment_score) <= 2.5
                                     );
                             })
+                            // Low to high
+                            .sort(
+                                (a, b) =>
+                                    parseFloat(a.sentiment_score) -
+                                    parseFloat(b.sentiment_score)
+                            )
                             .reduce(
                                 (
                                     acc,
@@ -688,23 +700,25 @@ export default forwardRef(function SentimentCategoriesGraph(
                           .slice(bars.length - 5, bars.length)
                           .reverse()
                           .map((bar) => {
-                              let description = "   • ";
+                              if (bar.Promoter > 0 && bar.Satisfied > 0) {
+                                  let description = "   • ";
 
-                              if (bar.Promoter > 0) {
-                                  description += `${bar.Promoter}% promoted`;
-                              }
-                              if (bar.Satisfied > 0) {
                                   if (bar.Promoter > 0) {
-                                      description += " and ";
+                                      description += `${bar.Promoter}% promoted`;
                                   }
-                                  description += `${bar.Satisfied}% satisfied`;
+                                  if (bar.Satisfied > 0) {
+                                      if (bar.Promoter > 0) {
+                                          description += " and ";
+                                      }
+                                      description += `${bar.Satisfied}% satisfied`;
+                                  }
+
+                                  description += ` about ${
+                                      bar.category.split(" > ")[0]
+                                  } | ${bar.category.split(" > ")[1]}`;
+
+                                  return description;
                               }
-
-                              description += ` about ${
-                                  bar.category.split(" > ")[0]
-                              } | ${bar.category.split(" > ")[1]}`;
-
-                              return description;
                           })
                           .join("\n")}\n\nSome examples\n${Object.values(
                           eg.highSentiment
@@ -961,13 +975,13 @@ export default forwardRef(function SentimentCategoriesGraph(
                                             ? sortBySentiment(bars)
                                             : sortPositive
                                             ? sortBySentiment(bars).slice(
-                                                  bars.length - 5,
+                                                  Math.max(0, bars.length - 5),
                                                   bars.length
                                               )
                                             : viewAll
                                             ? sortBySentiment(bars, true)
                                             : sortBySentiment(bars, true).slice(
-                                                  bars.length - 5,
+                                                  Math.max(0, bars.length - 5),
                                                   bars.length
                                               )
                                     }
@@ -1034,8 +1048,7 @@ export default forwardRef(function SentimentCategoriesGraph(
                                                     }}
                                                 ></div>
                                                 <Typography variant="body2">
-                                                    {id} — {indexValue}:{" "}
-                                                    <b>{value}%</b>
+                                                    {id}: <b>{value}%</b>
                                                 </Typography>
                                             </div>
                                             <div
@@ -1544,6 +1557,7 @@ export default forwardRef(function SentimentCategoriesGraph(
                                         }}
                                         tooltip={({
                                             id,
+                                            indexValue,
                                             value,
                                             color,
                                         }) => (
@@ -1575,13 +1589,13 @@ export default forwardRef(function SentimentCategoriesGraph(
                                                         style={{
                                                             width: "12px",
                                                             height: "12px",
-                                                            backgroundColor: color,
+                                                            backgroundColor:
+                                                                color,
                                                             marginRight: "8px",
                                                         }}
                                                     ></div>
                                                     <Typography variant="body2">
-                                                        {id}:{" "}
-                                                        <b>{value}%</b>
+                                                        {id}: <b>{value}%</b>
                                                     </Typography>
                                                 </div>
                                             </div>
@@ -1768,6 +1782,7 @@ export default forwardRef(function SentimentCategoriesGraph(
                                         }}
                                         tooltip={({
                                             id,
+                                            indexValue,
                                             value,
                                             color,
                                         }) => (
@@ -1805,8 +1820,7 @@ export default forwardRef(function SentimentCategoriesGraph(
                                                         }}
                                                     ></div>
                                                     <Typography variant="body2">
-                                                        {id}:{" "}
-                                                        <b>{value}%</b>
+                                                        {id}: <b>{value}%</b>
                                                     </Typography>
                                                 </div>
                                             </div>

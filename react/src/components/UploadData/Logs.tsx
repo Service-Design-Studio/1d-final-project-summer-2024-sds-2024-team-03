@@ -1,9 +1,15 @@
 import React, {useEffect, useState} from "react";
-import { Box, Typography, List, ListItem, ListItemText } from "@mui/material";
+import {
+    Box,
+    Typography,
+    List,
+    ListItem,
+    ListItemText,
+    useTheme,
+} from "@mui/material";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
-import { useTheme } from "@mui/material/styles";
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -36,9 +42,21 @@ export default function FolderList() {
     }, []);
     console.log(logs);
     return (
-        <Box sx={{width: "100%", maxWidth: 360, minHeight: 600, bgcolor: theme.palette.mode === "dark" ? "#222" : "#fff", borderRadius: 4}}>
-            <Typography variant="h6" component="div" sx={{ fontWeight: 'bold', px: 2, pt: 2, pb: 0 }}>
-                Recent Uploads
+        <Box
+            sx={{
+                width: "100%",
+                maxWidth: 360,
+                minHeight: 600,
+                bgcolor: theme.palette.mode === "dark" ? "#222" : "#fff",
+                borderRadius: 4,
+            }}
+        >
+            <Typography
+                variant="h6"
+                component="div"
+                sx={{fontWeight: "bold", px: 2, pt: 2, pb: 0}}
+            >
+                Upload Logs
             </Typography>
             {logs.length === 0 ? (
                 <Box sx={{p: 2}}>
@@ -55,13 +73,27 @@ export default function FolderList() {
                         <ListItem key={index}>
                             <ListItemText
                                 primary={
-                                    <Typography sx={{ whiteSpace: 'normal', wordBreak: 'break-word' }}>
+                                    <Typography
+                                        sx={{
+                                            whiteSpace: "normal",
+                                            wordBreak: "break-word",
+                                        }}
+                                    >
                                         {log.log_message}
                                     </Typography>
                                 }
                                 secondary={
-                                    <Typography variant="body2" sx={{ whiteSpace: 'normal', wordBreak: 'break-word', color: '#888' }}>
-                                        {dayjs(log.created_at).tz("Asia/Singapore").format("DD-MM-YYYY HH:mm:ss")}
+                                    <Typography
+                                        variant="body2"
+                                        sx={{
+                                            whiteSpace: "normal",
+                                            wordBreak: "break-word",
+                                            color: "#888",
+                                        }}
+                                    >
+                                        {dayjs(log.created_at)
+                                            .tz("Asia/Singapore")
+                                            .format("DD-MM-YYYY HH:mm:ss")}
                                     </Typography>
                                 }
                             />

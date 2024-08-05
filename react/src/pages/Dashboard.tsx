@@ -1,13 +1,12 @@
 import React, {useRef, useEffect, useState} from "react";
-import {useTheme} from "@mui/material/styles";
-import {Box, Paper, Typography, Divider, Button} from "@mui/material";
+import {Box, Button, useTheme} from "@mui/material";
 import dayjs, {Dayjs} from "dayjs";
 import Calendar from "../components/Calendar";
 import FilterProduct from "../components/FilterProduct";
 import FilterSource from "../components/FilterSource";
 import OverallSentimentScore from "../components/Dashboard/OverallSentimentScore";
 import SentimentDistribution from "../components/Dashboard/SentimentDistribution";
-import ActionsCompleted from "../components/Dashboard/ActionsTracked";
+import ActionsTracked from "../components/Dashboard/ActionsTracked";
 import SentimentScoreGraph from "../components/SentimentScoreGraph";
 import CategoriesSunburstChart from "../components/Dashboard/CategoriesSunburstChart";
 import SentimentCategoriesGraph from "../components/SentimentCategoriesGraph";
@@ -38,6 +37,7 @@ export default function Dashboard({
     setSelectedSource,
     setSelectedMenu,
 }: DashboardProps) {
+    const theme = useTheme();
     const {scrollDir, scrollPosition} = useDetectScroll();
     const [enableGenerateReport, setEnableGenerateReport] =
         useState<boolean>(false);
@@ -73,8 +73,6 @@ export default function Dashboard({
             reportDesc: "No data",
         }),
     };
-
-    const theme = useTheme();
 
     const handleGenerateReport = async () => {
         // Each page only until 210, 297
@@ -364,7 +362,12 @@ export default function Dashboard({
                     justifyContent: "center",
                     alignItems: scrollPosition.top > 0 ? "center" : null,
                     zIndex: 1000, // Ensure it's above other content
-                    backgroundColor: scrollPosition.top > 0 ? theme.palette.mode === "dark" ? "#000" : "#E9E9EB" : null,
+                    backgroundColor:
+                        scrollPosition.top > 0
+                            ? theme.palette.mode === "dark"
+                                ? "#000"
+                                : "#E9E9EB"
+                            : null,
                     borderRadius: 4,
                 }}
             >
@@ -416,7 +419,7 @@ export default function Dashboard({
                     selectedSource={selectedSource}
                     setSelectedMenu={setSelectedMenu}
                 />
-                <ActionsCompleted
+                <ActionsTracked
                     ref={reportRefs.ActionsTrackedRef}
                     setSelectedMenu={setSelectedMenu}
                 />
