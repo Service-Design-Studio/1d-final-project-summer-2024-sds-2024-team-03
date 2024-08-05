@@ -256,7 +256,7 @@ export default function Actionables({
                     onClick={handleGenerateActionsClick}
                     disabled={!enableGenerateActions}
                 >
-                    Generate Actions
+                    Generate Actionables
                 </Button>
                 <Backdrop
                     sx={{

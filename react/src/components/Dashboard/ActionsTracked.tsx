@@ -209,7 +209,7 @@ export default forwardRef(function ActionsTracked(
                     (actionItem) => actionItem === 0
                 ) ? (
                     <Typography variant="body2" color="grey">
-                        No actions tracked
+                        No actionables tracked
                     </Typography>
                 ) : (
                     <ResponsiveBar
@@ -402,7 +402,7 @@ export default forwardRef(function ActionsTracked(
                     (actionItem) => actionItem === 0
                 ) ? (
                     <Typography variant="body2" color="grey">
-                        No actions tracked
+                        No actionables tracked
                     </Typography>
                 ) : (
                     <ResponsiveBar
