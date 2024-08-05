@@ -29,13 +29,13 @@ Scenario: Page title reflects selected page
 Scenario: Selections of filter carry over when going to Analytics page
   Given I am on the Dashboard page
   When I select "Contact Center" and "Remittance" for the Products
-  And I select "Product Survey" and "Call Centre" for the Sources
+  And I select "CSS" and "Social Media" for the Sources
   And I click on "Analytics" in the navigation bar
   Then I should be redirected to the selected page with the same selected products and sources.
 
 Scenario: Selections of filter carry over when going to Actionables page
   Given I am on the Dashboard page
-  When I select "General Insurance" and "Payments" for the Products
-  And I select "5 Star Review" and "Social Media" for the Sources
+  When I select "Insurance" and "Digital Channels" for the Products
+  And I select "5 Star Logout" and "Social Media" for the Sources
   And I click on "Actionables" in the navigation bar
   Then I should be redirected to the selected page with the same selected products and sources.

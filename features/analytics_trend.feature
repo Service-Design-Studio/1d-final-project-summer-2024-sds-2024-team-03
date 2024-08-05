@@ -6,16 +6,16 @@ Scenario: Normal View
   
 Scenario: Available Subcategory dropdown options
   Given I am on the Analytics page
-  When the date is set from '01/01/2024' to '10/01/2024'
-  And the sources selected are: 'Product Survey'
+  When the date is set from '21/05/2024' to '31/05/2024'
+  And the sources selected are: 'CSS'
   And the products selected are: 'Investments'
   And I click on the 'Subcategory' dropdown button in the Sentiment Trend widget
   Then I should see all the subcategories 'United Trust (UT) products' and 'NonUT products'
   
 Scenario: Available Feedback Category dropdown options
   Given I am on the Analytics page
-  When the date is set from '01/01/2024' to '10/01/2024'
-  And the sources selected are: 'Product Survey'
+  When the date is set from '21/05/2024' to '31/05/2024'
+  And the sources selected are: 'CSS'
   And the products selected are: 'Investments'
   And I click on the 'Subcategory' dropdown button in the Sentiment Trend widget
   And I click on 'United Trust (UT) products'
@@ -24,8 +24,8 @@ Scenario: Available Feedback Category dropdown options
   
 Scenario: Hovering on a dropdown option updates
   Given I am on the Analytics page
-  When the date is set from '01/01/2024' to '10/01/2024'
-  And the sources selected are: 'Product Survey'
+  When the date is set from '21/05/2024' to '31/05/2024'
+  And the sources selected are: 'CSS'
   And the products selected are: 'Investments'
   And I click on the 'Subcategory' dropdown button in the Sentiment Trend widget
   And I hover on 'United Trust (UT) products'
@@ -33,8 +33,8 @@ Scenario: Hovering on a dropdown option updates
   
 Scenario: Selecting a subcategory highlights it and adds it to the listbox
   Given I am on the Analytics page
-  When the date is set from '01/01/2024' to '10/01/2024'
-  And the sources selected are: 'Product Survey'
+  When the date is set from '21/05/2024' to '31/05/2024'
+  And the sources selected are: 'CSS'
   And the products selected are: 'Investments'
   And I click on the 'Subcategory' dropdown button in the Sentiment Trend widget
   And I click on 'United Trust (UT) products'
@@ -42,8 +42,8 @@ Scenario: Selecting a subcategory highlights it and adds it to the listbox
   
 Scenario: Selecting a feedback category highlights it and adds it to the listbox
   Given I am on the Analytics page
-  When the date is set from '01/01/2024' to '10/01/2024'
-  And the sources selected are: 'Product Survey'
+  When the date is set from '21/05/2024' to '31/05/2024'
+  And the sources selected are: 'CSS'
   And the products selected are: 'Investments'
   And I click on the 'Subcategory' dropdown button in the Sentiment Trend widget
   And I click on 'United Trust (UT) products'
@@ -53,8 +53,8 @@ Scenario: Selecting a feedback category highlights it and adds it to the listbox
   
 Scenario: Selection from 1 dropdown option updates the visualizations
   Given I am on the Analytics page
-  When the date is set from '01/01/2024' to '31/05/2024'
-  And the sources selected are: 'Product Survey'
+  When the date is set from '01/03/2024' to '31/05/2024'
+  And the sources selected are: 'CSS'
   And the products selected are: 'Investments'
   And I click on the 'Subcategory' dropdown button in the Sentiment Trend widget
   And I click on 'United Trust (UT) products'
@@ -67,7 +67,7 @@ Scenario: Selection from 1 dropdown option updates the visualizations
 Scenario: Label appears when hovering over data plot
   Given I am on the Analytics page
   When the date is set from '20/04/2024' to '20/04/2024'
-  And the sources selected are: 'Product Survey'
+  And the sources selected are: 'CSS'
   And the products selected are: 'Investments'
   And I click on the 'Subcategory' dropdown button in the Sentiment Trend widget
   And I click on 'United Trust (UT) products'
