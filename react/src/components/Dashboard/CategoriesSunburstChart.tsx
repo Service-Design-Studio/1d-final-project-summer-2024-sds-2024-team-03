@@ -110,7 +110,8 @@ export default forwardRef(function CategoriesSunburstChart(
             for (let i = 0; i < feedbackcategory.length; i++) {
                 hash = feedbackcategory.charCodeAt(i) + ((hash << 5) - hash);
             }
-            return Math.abs(hash) % 360;
+            // Use a prime number to spread out the hues more evenly
+            return (Math.abs(hash) % 359) * (137.5 / 360); // 137.5 is the golden angle in degrees
         }
         return 0;
     };
@@ -328,7 +329,7 @@ export default forwardRef(function CategoriesSunburstChart(
                             theme.palette.mode === "dark" ? "#222222" : "#fff"
                         }
                         colors={{scheme: "set2"}}
-                        inheritColorFromParent={true}
+                        inheritColorFromParent={false}
                         childColor={{
                             from: "color",
                             modifiers: [
@@ -453,7 +454,7 @@ export default forwardRef(function CategoriesSunburstChart(
                                 }
                                 colors={(bar) => barColors[bar.id]}
                                 // false: To make use of hsl from each component
-                                inheritColorFromParent={true}
+                                inheritColorFromParent={false}
                                 // colors={{scheme: "paired"}}
                                 childColor={{
                                     from: "color",
