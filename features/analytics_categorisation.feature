@@ -6,68 +6,68 @@ Scenario: Normal View
   
 Scenario: Available dropdown options
   Given I am on the Analytics page
-  When the date is set from '01/01/2024' to '10/01/2024'
-  And the sources selected are: 'Product Survey'
+  When the date is set from '21/05/2024' to '31/05/2024'
+  And the sources selected are: 'CSS'
   And the products selected are: 'Investments'
   And I click on the 'Subcategory' dropdown button in the Sentiment Categorisation widget
-  Then I should see all the subcategories 'United Trust (UT) products' and 'NonUT products'
+  Then I should see all the subcategories 'Vickers', 'digiPortfolio'
   
 Scenario: Hovering on a subcategory
   Given I am on the Analytics page
-  When the date is set from '01/01/2024' to '10/01/2024'
-  And the sources selected are: 'Product Survey'
+  When the date is set from '21/05/2024' to '31/05/2024'
+  And the sources selected are: 'CSS'
   And the products selected are: 'Investments'
   And I click on the 'Subcategory' dropdown button in the Sentiment Categorisation widget
-  And I hover on 'NonUT products'
-  Then the dropdown option 'NonUT products' should be highlighted
+  And I hover on 'digiPortfolio'
+  Then the dropdown option 'digiPortfolio' should be highlighted
   
 Scenario: Selecting a subcategory adds it to the listbox
   Given I am on the Analytics page
-  When the date is set from '01/01/2024' to '10/01/2024'
-  And the sources selected are: 'Product Survey'
+  When the date is set from '21/05/2024' to '31/05/2024'
+  And the sources selected are: 'CSS'
   And the products selected are: 'Investments'
   And I click on the 'Subcategory' dropdown button in the Sentiment Categorisation widget
-  And I click on 'United Trust (UT) products'
-  Then I should see 'United Trust (UT) products' in the text field of the Sentiment Categorisation dropdown button
-  And I should see 2 subcategories with the most positive sentiments 'Application Related' and 'Staff Related' sorted in descending order
+  And I click on 'digiPortfolio'
+  Then I should see 'digiPortfolio' in the text field of the Sentiment Categorisation dropdown button
+  And I should see 5 subcategories with the 2 most positive sentiments 'Others' and 'Rewards' sorted in descending order
   
 Scenario: Selection from 1 dropdown option updates the visualizations
   Given I am on the Analytics page
-  When the date is set from '01/01/2024' to '10/01/2024'
-  And the sources selected are: 'Product Survey'
+  When the date is set from '21/05/2024' to '31/05/2024'
+  And the sources selected are: 'CSS'
   And the products selected are: 'Investments'
   And I click on the 'Subcategory' dropdown button in the Sentiment Categorisation widget
-  And I click on 'United Trust (UT) products'
+  And I click on 'digiPortfolio'
   Then the X-ticks are integers from 0 to 100 with step 10
-  And the Y-ticks show 'Staff Related'
-  And I should be able to hover over it to reveal the label 'Frustrated' and percentage '50'
+  And the Y-ticks show 'Saving / Investment Plans'
+  And I should be able to hover over it to reveal the label 'Promoter' and percentage '33.3'
   And a 'sort' button and 'view all' button dropdown
   
 Scenario: Sort positive to negative sentiment in descending order and vice versa
   Given I am on the Analytics page
-  When the date is set from '01/01/2024' to '01/06/2024'
-  And the sources selected are: 'Product Survey'
+  When the date is set from '01/03/2024' to '01/06/2024'
+  And the sources selected are: 'CSS'
   And the products selected are: 'Investments'
   And I click on the 'Subcategory' dropdown button in the Sentiment Categorisation widget
-  And I click on 'United Trust (UT) products'
-  And the subcategories are currently sorted in descending order of positive sentiment 'Staff Related' and 'Fee Related'
+  And I click on 'digiPortfolio'
+  And the subcategories are currently sorted in descending order of positive sentiment 'Rewards' and 'Investments / Saving Plans'
   And I click on the 'sort' button
-  Then I should see the subcategories sorted in descending order of negative sentiment 'Application Related' and 'Staff Related'
+  Then I should see the subcategories sorted in descending order of negative sentiment 'Technical / System Related' and 'Process Related'
   
 Scenario: View all
   Given I am on the Analytics page
-  When the date is set from '01/01/2024' to '01/02/2024'
-  And the sources selected are: 'Product Survey'
+  When the date is set from '21/05/2024' to '31/05/2024'
+  And the sources selected are: 'CSS'
   And the products selected are: 'Investments'
   And I click on the 'Subcategory' dropdown button in the Sentiment Categorisation widget
-  And I click on 'United Trust (UT) products'
+  And I click on 'digiPortfolio'
   And I click 'view all'
-  Then I should see the top 3 subcategories sorted in this descending order 'Staff Related', 'Application Related', 'Fee Related'
+  Then I should see the 8 subcategories sorted in these top 3 in descending order 'Staff Related', 'Application Related', 'Fee Related'
   
 Scenario: View less
   Given I am on the Analytics page
-  When the date is set from '01/01/2024' to '01/02/2024'
-  And the sources selected are: 'Product Survey'
+  When the date is set from '01/03/2024' to '01/05/2024'
+  And the sources selected are: 'CSS'
   And the products selected are: 'Investments'
   And I click on the 'Subcategory' dropdown button in the Sentiment Categorisation widget
   And I click on 'United Trust (UT) products'
@@ -77,8 +77,8 @@ Scenario: View less
   
 Scenario: Look into a specific subcategory
   Given I am on the Analytics page
-  When the date is set from '01/01/2024' to '10/01/2024'
-  And the sources selected are: 'Product Survey'
+  When the date is set from '21/05/2024' to '31/05/2024'
+  And the sources selected are: 'CSS'
   And the products selected are: 'Investments'
   And I click on the 'Subcategory' dropdown button in the Sentiment Categorisation widget
   And I click on 'United Trust (UT) products'
@@ -87,8 +87,8 @@ Scenario: Look into a specific subcategory
   
 Scenario: Filter resets on page refresh
   Given I am on the Analytics page
-  When the date is set from '01/01/2024' to '10/01/2024'
-  And the sources selected are: 'Product Survey'
+  When the date is set from '21/05/2024' to '31/05/2024'
+  And the sources selected are: 'CSS'
   And the products selected are: 'Investments'
   And I refresh the page
   Then I should see "Products" in the text field of the dropdown button
@@ -96,8 +96,8 @@ Scenario: Filter resets on page refresh
   
 Scenario: Insufficient overall data
   Given I am on the Analytics page
-  When the date is set from '01/02/2024' to '08/02/2024'
-  And the sources selected are: 'Product Survey'
+  When the date is set from '01/03/2024' to '01/05/2024'
+  And the sources selected are: 'CSS'
   And the products selected are: 'Investments'
   And I click on the 'Subcategory' dropdown button in the Sentiment Categorisation widget
   And I click on 'United Trust (UT) products'

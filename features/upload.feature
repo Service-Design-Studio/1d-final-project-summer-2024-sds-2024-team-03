@@ -14,7 +14,7 @@ Scenario: Available dropdown options
 
 Scenario: No selection of dropdown option 
   Given I am on the Upload Data page
-  And the sources selected are: 'Product Survey'
+  And the sources selected are: 'CSS'
   When no Subcategories dropdown options are selected
   Then I should see "Subcategories" in the text field of the dropdown button
 
@@ -51,10 +51,10 @@ Scenario: Reset selection by refreshing
 
 Scenario: Upload 1 file
   Given I am on the Upload Data page
-  And the sources selected are: 'Call Centre'
+  And the sources selected are: 'CSS'
   And the subcategories selected are: 'Cheque'
   When I upload a valid file using the file input
-  Then a Modal should open, informing a successful upload of the 'Cheque' and 'Call Centre' and filename
+  Then a Modal should open, informing a successful upload of the 'Cheque' and 'CSS' and filename
 
 Scenario: Unable to upload due to unselected subcategory and source
   Given I am on the Upload page

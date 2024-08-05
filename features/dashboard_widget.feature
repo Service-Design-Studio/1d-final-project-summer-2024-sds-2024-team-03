@@ -2,8 +2,8 @@ Feature: Filter data for visualization widgets on Dashboard
 
 Scenario: Sentiment distribution bars are appropriately colored
   Given I am on the Dashboard page
-  When the date is set from '01/01/2024' to '01/03/2024'
-  And the sources selected are: 'Product Survey'
+  When the date is set from '01/03/2024' to '01/05/2024'
+  And the sources selected are: 'CSS'
   And the products selected are: 'Investments'
   Then Frustrated bar is colored red
   And Unsatisfied bar is colored orange
@@ -19,9 +19,9 @@ Scenario: No selection of products
   And I should see the distribution of sentiment as '0, 0, 0, 0, 0'
   And I should see the distribution of sentiment add up to '0'
 
-Scenario: All Products and Sources Selected for 01/01/2024
+Scenario: All Products and Sources Selected for 01/03/2024
   Given I am on the Dashboard page
-  When the date is set from '01/01/2024' to '01/01/2024'
+  When the date is set from '01/03/2024' to '01/03/2024'
   And All Sources are selected
   And All Products are selected
   Then I should see the overall sentiment score as '2.3'
@@ -31,7 +31,7 @@ Scenario: All Products and Sources Selected for 01/01/2024
 
 Scenario: Only selecting Investments as the product for all sources
   Given I am on the Dashboard page
-  When the date is set from '01/01/2024' to '10/01/2024'
+  When the date is set from '21/05/2024' to '31/05/2024'
   And All Sources are selected
   And the products selected are: 'Investments'
   Then I should see the overall sentiment score as '2.3'
@@ -39,10 +39,10 @@ Scenario: Only selecting Investments as the product for all sources
   And I should see the distribution of sentiment as '11.1, 55.6, 22.2, 0, 11.1'
   And I should see the distribution of sentiment add up to '100'
 
-Scenario: Only selecting Call Centre as the source for all products
+Scenario: Only selecting CSS as the source for all products
   Given I am on the Dashboard page
   When the date is set from '10/04/2024' to '10/06/2024'
-  And the sources selected are: 'Product Survey'
+  And the sources selected are: 'CSS'
   And All Products are selected
   Then I should see the overall sentiment score as '2.5'
   And I should see the percentage change as '▼ 3.5%'

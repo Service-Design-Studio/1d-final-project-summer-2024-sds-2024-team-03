@@ -1,4 +1,5 @@
 import React, {useRef, useEffect, useState} from "react";
+import {useTheme} from "@mui/material/styles";
 import {Box, Paper, Typography, Divider, Button} from "@mui/material";
 import dayjs, {Dayjs} from "dayjs";
 import Calendar from "../components/Calendar";
@@ -72,6 +73,8 @@ export default function Dashboard({
             reportDesc: "No data",
         }),
     };
+
+    const theme = useTheme();
 
     const handleGenerateReport = async () => {
         // Each page only until 210, 297
@@ -361,7 +364,7 @@ export default function Dashboard({
                     justifyContent: "center",
                     alignItems: scrollPosition.top > 0 ? "center" : null,
                     zIndex: 1000, // Ensure it's above other content
-                    backgroundColor: scrollPosition.top > 0 ? "white" : null,
+                    backgroundColor: scrollPosition.top > 0 ? theme.palette.mode === "dark" ? "#000" : "#E9E9EB" : null,
                     borderRadius: 4,
                 }}
             >

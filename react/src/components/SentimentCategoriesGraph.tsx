@@ -88,8 +88,8 @@ const StyledTableRow = styled(TableRow)(({theme}) => ({
 
 const ORDER: Record<string, string> = {
     Promoter: "green",
-    Satisfied: "lightgreen",
-    Neutral: "grey",
+    Satisfied: "#71b814",
+    Neutral: "#7a7a7a",
     Unsatisfied: "orange",
     Frustrated: "red",
 };
@@ -989,6 +989,7 @@ export default forwardRef(function SentimentCategoriesGraph(
                                         left: 250,
                                     }}
                                     padding={0.3}
+                                    innerPadding={0.5}
                                     minValue={0}
                                     maxValue={100}
                                     layout="horizontal"
@@ -1419,6 +1420,7 @@ export default forwardRef(function SentimentCategoriesGraph(
                                             left: 250,
                                         }}
                                         padding={0.3}
+                                        innerPadding={0.5}
                                         minValue={0}
                                         maxValue={100}
                                         layout="horizontal"
@@ -1542,7 +1544,6 @@ export default forwardRef(function SentimentCategoriesGraph(
                                         }}
                                         tooltip={({
                                             id,
-                                            indexValue,
                                             value,
                                             color,
                                         }) => (
@@ -1574,13 +1575,12 @@ export default forwardRef(function SentimentCategoriesGraph(
                                                         style={{
                                                             width: "12px",
                                                             height: "12px",
-                                                            backgroundColor:
-                                                                color,
+                                                            backgroundColor: color,
                                                             marginRight: "8px",
                                                         }}
                                                     ></div>
                                                     <Typography variant="body2">
-                                                        {id} — {indexValue}:{" "}
+                                                        {id}:{" "}
                                                         <b>{value}%</b>
                                                     </Typography>
                                                 </div>
@@ -1644,6 +1644,7 @@ export default forwardRef(function SentimentCategoriesGraph(
                                             left: 250,
                                         }}
                                         padding={0.3}
+                                        innerPadding={0.5}
                                         minValue={0}
                                         maxValue={100}
                                         layout="horizontal"
@@ -1767,7 +1768,6 @@ export default forwardRef(function SentimentCategoriesGraph(
                                         }}
                                         tooltip={({
                                             id,
-                                            indexValue,
                                             value,
                                             color,
                                         }) => (
@@ -1805,7 +1805,7 @@ export default forwardRef(function SentimentCategoriesGraph(
                                                         }}
                                                     ></div>
                                                     <Typography variant="body2">
-                                                        {id} — {indexValue}:{" "}
+                                                        {id}:{" "}
                                                         <b>{value}%</b>
                                                     </Typography>
                                                 </div>
