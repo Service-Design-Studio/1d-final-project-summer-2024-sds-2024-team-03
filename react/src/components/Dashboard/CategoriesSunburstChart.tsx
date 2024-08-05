@@ -270,7 +270,7 @@ export default forwardRef(function CategoriesSunburstChart(
                                       category.mentions
                                   } total mentions, with an average sentiment score of ${category.averageSentimentScore.toFixed(
                                       1
-                                  )} / 5.\n`
+                                  )}.\n`
                           )
                           .join("")}`
                     : "No data",
@@ -329,7 +329,7 @@ export default forwardRef(function CategoriesSunburstChart(
                             theme.palette.mode === "dark" ? "#222222" : "#fff"
                         }
                         colors={{scheme: "set2"}}
-                        inheritColorFromParent={false}
+                        inheritColorFromParent={true}
                         childColor={{
                             from: "color",
                             modifiers: [
@@ -454,7 +454,7 @@ export default forwardRef(function CategoriesSunburstChart(
                                 }
                                 colors={(bar) => barColors[bar.id]}
                                 // false: To make use of hsl from each component
-                                inheritColorFromParent={false}
+                                inheritColorFromParent={true}
                                 // colors={{scheme: "paired"}}
                                 childColor={{
                                     from: "color",

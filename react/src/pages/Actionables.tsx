@@ -266,7 +266,9 @@ export default function Actionables({
                     open={loading}
                 >
                     <CircularProgress color="inherit" />
-                    Processing...
+                    <Typography sx={{mt: 2}} color="inherit">
+                        Processing...
+                    </Typography>
                 </Backdrop>
             </Box>
             {/* Sticky, Freezes while scrolling */}
@@ -342,7 +344,7 @@ export default function Actionables({
                     </Box>
                 </Modal>
             </Box>
-            <ActionsTracked isDashboard={false} />
+            <ActionsTracked isDashboard={false} setRefresh={setRefresh} />
             <Box sx={{flexGrow: 1}}>
                 <Tooltip
                     title={

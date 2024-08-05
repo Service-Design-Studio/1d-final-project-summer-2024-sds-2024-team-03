@@ -29,6 +29,7 @@ const StyledTableCell = styled(TableCell)({
 interface ActionsTrackedProps {
     setSelectedMenu?: React.Dispatch<React.SetStateAction<string>>;
     isDashboard?: boolean;
+    setRefresh?: React.Dispatch<React.SetStateAction<number>>;
 }
 
 type Bar = {
@@ -45,7 +46,7 @@ type CustomRef<T> = {
 };
 
 export default forwardRef(function ActionsTracked(
-    {setSelectedMenu, isDashboard = true}: ActionsTrackedProps,
+    {setSelectedMenu, isDashboard = true, setRefresh}: ActionsTrackedProps,
     ref: ForwardedRef<CustomRef<HTMLDivElement>>
 ) {
     const [actionsTrackedPct, setActionsTrackedPct] = useState<Bar>({
@@ -97,7 +98,7 @@ export default forwardRef(function ActionsTracked(
                     Done: doneData.length,
                 });
             });
-    }, []);
+    }, [setRefresh]);
 
     const internalRef = useRef<HTMLDivElement>(null);
     useImperativeHandle(
