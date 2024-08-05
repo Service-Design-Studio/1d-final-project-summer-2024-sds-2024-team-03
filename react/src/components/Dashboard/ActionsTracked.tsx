@@ -27,8 +27,7 @@ const StyledTableCell = styled(TableCell)({
 });
 
 interface ActionsTrackedProps {
-    setSelectedMenu?: React.Dispatch<React.SetStateAction<string>>;
-    isDashboard?: boolean;
+    setSelectedMenu: React.Dispatch<React.SetStateAction<string>>;
 }
 
 type Bar = {
@@ -45,7 +44,7 @@ type CustomRef<T> = {
 };
 
 export default forwardRef(function ActionsTracked(
-    {setSelectedMenu, isDashboard = true}: ActionsTrackedProps,
+    {setSelectedMenu}: ActionsTrackedProps,
     ref: ForwardedRef<CustomRef<HTMLDivElement>>
 ) {
     const [actionsTrackedPct, setActionsTrackedPct] = useState<Bar>({
@@ -109,7 +108,7 @@ export default forwardRef(function ActionsTracked(
         [actionsTrackedPct]
     );
 
-    return isDashboard && setSelectedMenu ? (
+    return (
         <ButtonBase
             ref={internalRef}
             component={Paper}
@@ -150,23 +149,19 @@ export default forwardRef(function ActionsTracked(
                                         <StyledTableCell
                                             key={key}
                                             align="center"
-                                            sx={{
-                                                paddingTop: "10px",
-                                                paddingBottom: "0px",
-                                            }}
+                                            sx={{ paddingTop: '10px', paddingBottom: '0px', }}
                                         >
                                             <Typography
                                                 sx={{
-                                                    color: actionsTrackedPct[
-                                                        `${key} Color` as keyof Bar
-                                                    ],
-                                                    fontWeight: "bold",
+                                                    color: actionsTrackedPct[`${key} Color` as keyof Bar],
+                                                    fontWeight: 'bold',
                                                 }}
                                             >
                                                 {key}
                                             </Typography>
                                         </StyledTableCell>
-                                    ))}
+                                    ))
+                                }
                             </TableRow>
                             <TableRow>
                                 {Object.entries(actionsTrackedRaw)
@@ -175,15 +170,13 @@ export default forwardRef(function ActionsTracked(
                                         <StyledTableCell
                                             key={index}
                                             align="center"
-                                            sx={{padding: "0px"}}
+                                            sx={{ padding: '0px' }}
                                         >
                                             <Typography
                                                 sx={{
-                                                    color: actionsTrackedPct[
-                                                        `${key} Color` as keyof Bar
-                                                    ],
+                                                    color: actionsTrackedPct[`${key} Color` as keyof Bar],
                                                     fontSize: "2.5rem",
-                                                    fontWeight: "bold",
+                                                    fontWeight: "bold"
                                                 }}
                                             >
                                                 {value}
@@ -222,7 +215,7 @@ export default forwardRef(function ActionsTracked(
                         minValue={0}
                         maxValue={100}
                         layout="horizontal"
-                        margin={{top: 0, right: 10, bottom: 5, left: 10}}
+                        margin={{ top: 0, right: 10, bottom: 5, left: 10 }}
                         valueScale={{type: "linear"}}
                         indexScale={{type: "band", round: true}}
                         borderRadius={6}
@@ -330,198 +323,5 @@ export default forwardRef(function ActionsTracked(
                 )}
             </Box>
         </ButtonBase>
-    ) : (
-        <div>
-            <Box sx={{width: "100%", justifyContent: "flex-start"}}>
-                <TableContainer>
-                    <Table aria-label="actions-Tracked-table">
-                        <TableBody>
-                            <TableRow>
-                                {Object.keys(actionsTrackedRaw)
-                                    .reverse()
-                                    .map((key) => (
-                                        <StyledTableCell
-                                            key={key}
-                                            align="center"
-                                            sx={{
-                                                paddingTop: "10px",
-                                                paddingBottom: "0px",
-                                            }}
-                                        >
-                                            <Typography
-                                                sx={{
-                                                    color: actionsTrackedPct[
-                                                        `${key} Color` as keyof Bar
-                                                    ],
-                                                    fontWeight: "bold",
-                                                }}
-                                            >
-                                                {key}
-                                            </Typography>
-                                        </StyledTableCell>
-                                    ))}
-                            </TableRow>
-                            <TableRow>
-                                {Object.entries(actionsTrackedRaw)
-                                    .reverse()
-                                    .map(([key, value], index) => (
-                                        <StyledTableCell
-                                            key={index}
-                                            align="center"
-                                            sx={{padding: "0px"}}
-                                        >
-                                            <Typography
-                                                sx={{
-                                                    color: actionsTrackedPct[
-                                                        `${key} Color` as keyof Bar
-                                                    ],
-                                                    fontSize: "2.5rem",
-                                                    fontWeight: "bold",
-                                                }}
-                                            >
-                                                {value}
-                                            </Typography>
-                                        </StyledTableCell>
-                                    ))}
-                            </TableRow>
-                        </TableBody>
-                    </Table>
-                </TableContainer>
-            </Box>
-            <Box
-                sx={{
-                    height: 40,
-                    width: "100%",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    textAlign: "center",
-                }}
-            >
-                {Object.values(actionsTrackedRaw).every(
-                    (actionItem) => actionItem === 0
-                ) ? (
-                    <Typography variant="body2" color="grey">
-                        No actions tracked
-                    </Typography>
-                ) : (
-                    <ResponsiveBar
-                        data={[actionsTrackedPct]}
-                        keys={["Done", "In Progress"]}
-                        colors={[
-                            actionsTrackedPct["Done Color"],
-                            actionsTrackedPct["In Progress Color"],
-                        ]}
-                        indexBy="category"
-                        minValue={0}
-                        maxValue={100}
-                        layout="horizontal"
-                        margin={{top: 0, right: 10, bottom: 5, left: 10}}
-                        valueScale={{type: "linear"}}
-                        indexScale={{type: "band", round: true}}
-                        borderRadius={6}
-                        innerPadding={2}
-                        defs={[
-                            {
-                                id: "dots",
-                                type: "patternDots",
-                                background: "inherit",
-                                color: "#38bcb2",
-                                size: 4,
-                                padding: 1,
-                                stagger: true,
-                            },
-                            {
-                                id: "lines",
-                                type: "patternLines",
-                                background: "inherit",
-                                color: "#eed312",
-                                rotation: -45,
-                                lineWidth: 6,
-                                spacing: 10,
-                            },
-                        ]}
-                        // fill={[
-                        //     {
-                        //         match: {
-                        //             id: "Frustrated",
-                        //         },
-                        //         id: "dots",
-                        //     },
-                        //     {
-                        //         match: {
-                        //             id: "Neutral",
-                        //         },
-                        //         id: "lines",
-                        //     },
-                        // ]}
-                        borderColor={{
-                            from: "color",
-                            modifiers: [["darker", 1.6]],
-                        }}
-                        axisTop={null}
-                        axisRight={null}
-                        axisBottom={null}
-                        axisLeft={null}
-                        enableGridX={false}
-                        enableLabel={false}
-                        label={(d) => `${d.value}%`}
-                        labelSkipWidth={12}
-                        labelSkipHeight={12}
-                        labelTextColor="rgba(255, 255, 255, 0.9)"
-                        legends={[]}
-                        role="application"
-                        ariaLabel="Actions Tracked"
-                        barAriaLabel={(e) =>
-                            e.id +
-                            ": " +
-                            e.formattedValue +
-                            " for Action: " +
-                            e.indexValue
-                        }
-                        theme={{
-                            labels: {
-                                text: {
-                                    fontWeight: "bold",
-                                },
-                            },
-                            axis: {
-                                legend: {
-                                    text: {
-                                        fontWeight: "bold",
-                                        fill:
-                                            theme.palette.mode === "dark"
-                                                ? "#CCC"
-                                                : "#222",
-                                    },
-                                },
-                                ticks: {
-                                    line: {
-                                        stroke:
-                                            theme.palette.mode === "dark"
-                                                ? "#999"
-                                                : "#222",
-                                    },
-                                    text: {
-                                        fill:
-                                            theme.palette.mode === "dark"
-                                                ? "#999"
-                                                : "#222",
-                                    },
-                                },
-                            },
-                            grid: {
-                                line: {
-                                    stroke:
-                                        theme.palette.mode === "dark"
-                                            ? "#555"
-                                            : "#CCC",
-                                },
-                            },
-                        }}
-                        isInteractive={false}
-                    />
-                )}
-            </Box>
-        </div>
     );
 });

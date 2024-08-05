@@ -1,19 +1,17 @@
 import React, {useEffect, useState} from "react";
+import {Box, Grid} from "@mui/material";
 import FilterSource from "../components/FilterSource";
 import {FileDrop} from "../components/UploadData/Uploader";
 import Logs from "../components/UploadData/Logs";
-import {
-    Box,
-    Grid,
-    FormControl,
-    Tooltip,
-    InputLabel,
-    Select,
-    SelectChangeEvent,
-    Chip,
-    OutlinedInput,
-    MenuItem,
-} from "@mui/material";
+
+import FormControl from "@mui/material/FormControl";
+import Container from "@mui/material/Container";
+
+import InputLabel from "@mui/material/InputLabel";
+import Select, {SelectChangeEvent} from "@mui/material/Select";
+import Chip from "@mui/material/Chip";
+import OutlinedInput from "@mui/material/OutlinedInput";
+import MenuItem from "@mui/material/MenuItem";
 
 interface UploadDataProps {}
 const ITEM_HEIGHT = 48;
@@ -125,54 +123,17 @@ export default function UploadData({}: UploadDataProps) {
                         />
                     </Grid>
                 </Grid>
-                <Tooltip
-                    title={
-                        <span>
-                            Upload Instructions:
-                            <br />
-                            <br />
-                            1. Select the relevant subcategory and source. For
-                            files with multiple subcategories (Eg. Social
-                            Media), select "Others"
-                            <br />
-                            <br />
-                            2. Upload your file and monitor the Upload Logs.
-                            <br />
-                            <br />
-                            3.{" "}
-                            <b>
-                                Refresh or navigate back to the upload page
-                            </b>{" "}
-                            for updates (You may have to refresh multiple
-                            times).
-                            <br />
-                            Upload is complete when the log states, "Data
-                            classification completed and added to database."
-                            <br />
-                            <br />
-                            4. Wait until the current upload finishes before
-                            uploading another file.
-                            <br />
-                            If Upload is in progress, the log will state:
-                            "Cannot proceed, the last process status was: IN
-                            PROGRESS. Please wait until its status is SUCCESS."
-                        </span>
-                    }
-                    placement="right-start"
-                    arrow
-                >
-                    <Grid container columnSpacing={4}>
-                        <Grid item xs={9}>
-                            <FileDrop
-                                selectedSubcategory={selectedSubcategory}
-                                selectedSource={selectedSource}
-                            />
-                        </Grid>
-                        <Grid item xs={3}>
-                            <Logs />
-                        </Grid>
+                <Grid container spacing={4}>
+                    <Grid item xs={9}>
+                        <FileDrop
+                            selectedSubcategory={selectedSubcategory}
+                            selectedSource={selectedSource}
+                        />
                     </Grid>
-                </Tooltip>
+                    <Grid item xs={3}>
+                        <Logs />
+                    </Grid>
+                </Grid>
             </Grid>
         </Box>
     );

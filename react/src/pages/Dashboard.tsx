@@ -6,7 +6,7 @@ import FilterProduct from "../components/FilterProduct";
 import FilterSource from "../components/FilterSource";
 import OverallSentimentScore from "../components/Dashboard/OverallSentimentScore";
 import SentimentDistribution from "../components/Dashboard/SentimentDistribution";
-import ActionsTracked from "../components/Dashboard/ActionsTracked";
+import ActionsCompleted from "../components/Dashboard/ActionsTracked";
 import SentimentScoreGraph from "../components/SentimentScoreGraph";
 import CategoriesSunburstChart from "../components/Dashboard/CategoriesSunburstChart";
 import SentimentCategoriesGraph from "../components/SentimentCategoriesGraph";
@@ -413,7 +413,7 @@ export default function Dashboard({
                     selectedSource={selectedSource}
                     setSelectedMenu={setSelectedMenu}
                 />
-                <ActionsTracked
+                <ActionsCompleted
                     ref={reportRefs.ActionsTrackedRef}
                     setSelectedMenu={setSelectedMenu}
                 />

@@ -157,15 +157,15 @@ export default function TodoList({data, setRefresh, forWidget}: TodoListProps) {
                     expandIcon={<ExpandMoreIcon />}
                 >
                     <Box display="flex" alignItems="center" width="100%">
-                        <Typography>To Amplify</Typography>
+                        <Typography>To Promote</Typography>
                         <Box flexGrow={1} />
-                        <CampaignTwoToneIcon
-                            style={{color: "#0f4c5c", marginLeft: 8}}
+                        <MovingIcon
+                            style={{color: "#e36414", marginLeft: 8}}
                         />{" "}
                     </Box>
                 </AccordionSummary>
                 <AccordionDetails>
-                    {toAmplifyData.map((item, i) => (
+                    {toPromoteData.map((item, i) => (
                         <TodoCard
                             key={item.id}
                             actionable={item}
@@ -185,15 +185,15 @@ export default function TodoList({data, setRefresh, forWidget}: TodoListProps) {
                     expandIcon={<ExpandMoreIcon />}
                 >
                     <Box display="flex" alignItems="center" width="100%">
-                        <Typography>To Promote</Typography>
+                        <Typography>To Amplify</Typography>
                         <Box flexGrow={1} />
-                        <MovingIcon
-                            style={{color: "#e36414", marginLeft: 8}}
+                        <CampaignTwoToneIcon
+                            style={{color: "#0f4c5c", marginLeft: 8}}
                         />{" "}
                     </Box>
                 </AccordionSummary>
                 <AccordionDetails>
-                    {toPromoteData.map((item, i) => (
+                    {toAmplifyData.map((item, i) => (
                         <TodoCard
                             key={item.id}
                             actionable={item}
