@@ -12,7 +12,6 @@ import {
     Box,
     Typography,
     ButtonBase,
-    Divider,
     Button,
     Dialog,
     DialogProps,
@@ -37,11 +36,9 @@ import {
     Tooltip,
     TooltipProps,
     tooltipClasses,
-    IconButton,
 } from "@mui/material";
-import InfoIcon from "@mui/icons-material/Info";
 import CloseIcon from "@mui/icons-material/Close";
-import {Dayjs} from "dayjs";
+import dayjs, {Dayjs} from "dayjs";
 import {ResponsiveBar} from "@nivo/bar";
 
 const ITEM_HEIGHT = 48;
@@ -730,7 +727,9 @@ export default forwardRef(function SentimentCategoriesGraph(
                               (data) =>
                                   `   • ${data.subcategory} | ${
                                       data.feedback_category
-                                  } on ${data.date}:\n"${
+                                  } on ${dayjs(data.date).format(
+                                      "DD MMM 'YY"
+                                  )}:\n"${
                                       data.feedback.includes(": ")
                                           ? data.feedback.split(": ")[1].trim()
                                           : data.feedback.trim()
@@ -775,7 +774,9 @@ export default forwardRef(function SentimentCategoriesGraph(
                               (data) =>
                                   `   • ${data.subcategory} | ${
                                       data.feedback_category
-                                  } on ${data.date}:\n"${
+                                  } on ${dayjs(data.date).format(
+                                      "DD MMM 'YY"
+                                  )}:\n"${
                                       data.feedback.includes(": ")
                                           ? data.feedback.split(": ")[1].trim()
                                           : data.feedback.trim()
