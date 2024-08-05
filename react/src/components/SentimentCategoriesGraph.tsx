@@ -700,7 +700,7 @@ export default forwardRef(function SentimentCategoriesGraph(
                           .slice(bars.length - 5, bars.length)
                           .reverse()
                           .map((bar) => {
-                              if (bar.Promoter > 0 && bar.Satisfied > 0) {
+                              if (bar.Promoter > 0 || bar.Satisfied > 0) {
                                   let description = "   • ";
 
                                   if (bar.Promoter > 0) {
