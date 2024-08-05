@@ -328,7 +328,7 @@ export default forwardRef(function CategoriesSunburstChart(
                             theme.palette.mode === "dark" ? "#222222" : "#fff"
                         }
                         colors={{scheme: "pastel2"}}
-                        inheritColorFromParent={false}
+                        inheritColorFromParent={true}
                         childColor={{
                             from: "color",
                             modifiers: [["brighter", 0.3]],
@@ -445,12 +445,19 @@ export default forwardRef(function CategoriesSunburstChart(
                                         : "#fff"
                                 }
                                 colors={(bar) => barColors[bar.id]}
-                                // To make use of hsl from each component
-                                inheritColorFromParent={false}
+                                // false: To make use of hsl from each component
+                                inheritColorFromParent={true}
                                 // colors={{scheme: "paired"}}
                                 childColor={{
                                     from: "color",
-                                    modifiers: [["brighter", 0.3]],
+                                    modifiers: [
+                                        [
+                                            theme.palette.mode === "dark"
+                                                ? "darker"
+                                                : "brighter",
+                                            0.3,
+                                        ],
+                                    ],
                                 }}
                                 enableArcLabels={false}
                                 // category or %

@@ -1,9 +1,9 @@
 import React, {useEffect, useState} from "react";
-import { Box, Typography, List, ListItem, ListItemText } from "@mui/material";
+import {Box, Typography, List, ListItem, ListItemText} from "@mui/material";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
-import { useTheme } from "@mui/material/styles";
+import {useTheme} from "@mui/material/styles";
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -36,9 +36,21 @@ export default function FolderList() {
     }, []);
     console.log(logs);
     return (
-        <Box sx={{width: "100%", maxWidth: 360, minHeight: 600, bgcolor: theme.palette.mode === "dark" ? "#222" : "#fff", borderRadius: 4}}>
-            <Typography variant="h6" component="div" sx={{ fontWeight: 'bold', px: 2, pt: 2, pb: 1 }}>
-                Recent Uploads
+        <Box
+            sx={{
+                width: "100%",
+                maxWidth: 360,
+                minHeight: 600,
+                bgcolor: theme.palette.mode === "dark" ? "#222" : "#fff",
+                borderRadius: 4,
+            }}
+        >
+            <Typography
+                variant="h6"
+                component="div"
+                sx={{fontWeight: "bold", px: 2, pt: 2, pb: 1}}
+            >
+                Upload Logs
             </Typography>
             {logs.length === 0 ? (
                 <Box sx={{p: 2}}>

@@ -25,12 +25,13 @@ import RotateRightTwoToneIcon from "@mui/icons-material/RotateRightTwoTone";
 import CheckCircleTwoToneIcon from "@mui/icons-material/CheckCircleTwoTone";
 import {useTheme} from "@mui/material/styles";
 import useDetectScroll, {Direction} from "@smakss/react-scroll-direction";
+import ActionsTracked from "../components/Dashboard/ActionsTracked";
 
 const CustomWidthTooltip = styled(({className, ...props}: TooltipProps) => (
     <Tooltip {...props} classes={{popper: className}} />
 ))({
     [`& .${tooltipClasses.tooltip}`]: {
-        maxWidth: 230,
+        maxWidth: 180,
     },
 });
 
@@ -263,19 +264,36 @@ export default function Actionables({
                     </Box>
                 </Modal>
             </Box>
+            <ActionsTracked isDashboard={false} />
             <Box sx={{flexGrow: 1}}>
-                <Grid container spacing={2}>
-                    <CustomWidthTooltip
-                        title={
-                            <span>
-                                New actionables are <b>always regenerated</b>{" "}
-                                here, move them to <b>IN PROGRESS</b> or{" "}
-                                <b>DONE</b>!
-                            </span>
-                        }
-                        arrow
-                        placement="left-start"
-                    >
+                <Tooltip
+                    title={
+                        <span>
+                            <b>To Fix</b>: Feedback highlighting{" "}
+                            <u>frequent complaints or persistent issues</u> that
+                            require maintenance or repair.
+                            <br />
+                            <br />
+                            <b>To Keep in Mind</b>: Feedback with{" "}
+                            <u>mixed reviews</u>, containing both positive and
+                            negative comments, suggesting areas that require
+                            ongoing attention.
+                            <br />
+                            <br />
+                            <b>To Amplify</b>: Feedback that is generally
+                            neutral to positive but highlights areas with{" "}
+                            <u>potential for improvement</u>.
+                            <br />
+                            <br />
+                            <b>To Promote</b>: Feedback with a high majority of
+                            positive comments, indicating services or aspects
+                            DBS <u>should continue promoting</u>.
+                        </span>
+                    }
+                    placement="right-end"
+                    arrow
+                >
+                    <Grid container spacing={2}>
                         <Grid item xs={4}>
                             <Chip
                                 icon={<NewReleasesTwoToneIcon />}
@@ -292,72 +310,90 @@ export default function Actionables({
                                     borderWidth: 2,
                                 }}
                             />
-                            {dataNew.length === 0 ? (
-                                <Typography variant="body2" color="grey">
-                                    No data
-                                </Typography>
-                            ) : (
-                                <TodoList
-                                    data={dataNew}
-                                    setRefresh={setRefresh}
-                                    forWidget="GENERATED-ACTIONS"
-                                />
-                            )}
+                            <CustomWidthTooltip
+                                title={
+                                    <span>
+                                        New actionables are{" "}
+                                        <b>always regenerated</b> here, move
+                                        them to <b>IN PROGRESS</b> or{" "}
+                                        <b>DONE</b>!
+                                    </span>
+                                }
+                                arrow
+                                placement="left-start"
+                            >
+                                {dataNew.length === 0 ? (
+                                    <Box sx={{width: "100%", height: "100%"}}>
+                                        <Typography
+                                            variant="body2"
+                                            color="grey"
+                                        >
+                                            No data
+                                        </Typography>
+                                    </Box>
+                                ) : (
+                                    <TodoList
+                                        data={dataNew}
+                                        setRefresh={setRefresh}
+                                        forWidget="GENERATED-ACTIONS"
+                                    />
+                                )}
+                            </CustomWidthTooltip>
                         </Grid>
-                    </CustomWidthTooltip>
-                    <Grid item xs={4}>
-                        <Chip
-                            icon={<RotateRightTwoToneIcon />}
-                            label="IN PROGRESS"
-                            variant="outlined"
-                            sx={{
-                                mb: 2,
-                                color: "#DA5707",
-                                borderColor: "#DA5707",
-                                borderRadius: 3,
-                                backgroundColor: "rgba(218, 87, 7, 0.2)",
-                                fontWeight: "bold",
-                                py: 2,
-                                px: 0.5,
-                                borderWidth: 2,
-                                "& .MuiChip-icon": {
+                        <Grid item xs={4}>
+                            <Chip
+                                icon={<RotateRightTwoToneIcon />}
+                                label="IN PROGRESS"
+                                variant="outlined"
+                                sx={{
+                                    mb: 2,
                                     color: "#DA5707",
-                                },
-                            }}
-                        />
-                        <TodoList
-                            data={dataInProgress}
-                            setRefresh={setRefresh}
-                            forWidget="IN-PROGRESS"
-                        />
-                    </Grid>
-                    <Grid item xs={4}>
-                        <Chip
-                            icon={<CheckCircleTwoToneIcon />}
-                            label="DONE"
-                            variant="outlined"
-                            sx={{
-                                mb: 2,
-                                color: "#208306",
-                                borderColor: "#208306",
-                                borderRadius: 3,
-                                backgroundColor: "rgba(32, 131, 6, 0.2)",
-                                fontWeight: "bold",
-                                py: 2,
-                                px: 0.5,
-                                borderWidth: 2,
-                                "& .MuiChip-icon": {
+                                    borderColor: "#DA5707",
+                                    borderRadius: 3,
+                                    backgroundColor: "rgba(218, 87, 7, 0.2)",
+                                    fontWeight: "bold",
+                                    py: 2,
+                                    px: 0.5,
+                                    borderWidth: 2,
+                                    "& .MuiChip-icon": {
+                                        color: "#DA5707",
+                                    },
+                                }}
+                            />
+                            <TodoList
+                                data={dataInProgress}
+                                setRefresh={setRefresh}
+                                forWidget="IN-PROGRESS"
+                            />
+                        </Grid>
+                        <Grid item xs={4}>
+                            <Chip
+                                icon={<CheckCircleTwoToneIcon />}
+                                label="DONE"
+                                variant="outlined"
+                                sx={{
+                                    mb: 2,
                                     color: "#208306",
-                                },
-                            }}
-                        />
-                        <TodoList
-                            data={dataDone}
-                            setRefresh={setRefresh}
-                            forWidget="DONE"
-                        />
+                                    borderColor: "#208306",
+                                    borderRadius: 3,
+                                    backgroundColor: "rgba(32, 131, 6, 0.2)",
+                                    fontWeight: "bold",
+                                    py: 2,
+                                    px: 0.5,
+                                    borderWidth: 2,
+                                    "& .MuiChip-icon": {
+                                        color: "#208306",
+                                    },
+                                }}
+                            />
+                            <TodoList
+                                data={dataDone}
+                                setRefresh={setRefresh}
+                                forWidget="DONE"
+                            />
+                        </Grid>
                     </Grid>
-                </Grid>
+                </Tooltip>
             </Box>
 
             <DialogAddAction
