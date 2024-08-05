@@ -394,7 +394,7 @@ export default forwardRef(function CategoriesSunburstChart(
                         flexDirection: "column",
                         alignItems: "center",
                         p: 2,
-                        gap: 4,
+                        gap: 2,
                         borderRadius: 4,
                         flex: 1,
                         cursor: "pointer",
@@ -427,7 +427,7 @@ export default forwardRef(function CategoriesSunburstChart(
                         <Box
                             sx={{
                                 width: "95%",
-                                height: 300,
+                                height: 295,
                             }}
                         >
                             <ResponsiveSunburst
@@ -491,25 +491,25 @@ export default forwardRef(function CategoriesSunburstChart(
                             />
                             <Box
                                 sx={{
+                                    gridColumn: "1 / span 3",
+                                    borderBottom: `2px solid ${
+                                        theme.palette.mode === "dark"
+                                            ? "#444"
+                                            : "#ccc"
+                                    }`,
+                                    mt: 3,
+                                }}
+                            />
+                            <Box
+                                sx={{
                                     display: "grid",
-                                    gridTemplateColumns: "4fr 3fr 3fr",
+                                    gridTemplateColumns: "4.5fr 3fr 3fr",
                                     gap: 1,
                                     width: "100%",
                                     alignItems: "center",
-                                    mt: 4,
+                                    mt: 3,
                                 }}
                             >
-                                <Box
-                                    sx={{
-                                        gridColumn: "1 / span 3",
-                                        borderBottom: `2px solid ${
-                                            theme.palette.mode === "dark"
-                                                ? "#444"
-                                                : "#ccc"
-                                        }`,
-                                        mb: 1.5,
-                                    }}
-                                />
                                 <Typography
                                     variant="body1"
                                     color="textSecondary"
@@ -577,7 +577,7 @@ export default forwardRef(function CategoriesSunburstChart(
                                                 display: "flex",
                                                 alignItems: "center",
                                                 gridColumn: "1 / span 1",
-                                                width: "40%",
+                                                width: "42%",
                                             }}
                                         >
                                             <Box
@@ -633,18 +633,18 @@ export default forwardRef(function CategoriesSunburstChart(
                                                 </span>
                                             </Typography>
                                         </Box>
-                                        <Typography
-                                            variant="body2"
-                                            sx={{
-                                                gridColumn: "2 / span 1",
-                                                textAlign: "center",
-                                                fontWeight: "bold",
-                                                fontSize: "1.3rem",
-                                                width: "30%",
-                                            }}
-                                        >
-                                            {category.mentions}
-                                        </Typography>
+                                            <Typography
+                                                variant="body2"
+                                                sx={{
+                                                    gridColumn: "2 / span 1",
+                                                    textAlign: "center",
+                                                    fontWeight: "bold",
+                                                    fontSize: "1.3rem",
+                                                    width: "29%",
+                                                }}
+                                            >
+                                                {category.mentions}
+                                            </Typography>
                                         <Box
                                             sx={{
                                                 ml: 1.5,
@@ -666,7 +666,7 @@ export default forwardRef(function CategoriesSunburstChart(
                                                     ),
                                                     fontWeight: "bold",
                                                     fontSize: "1.3rem",
-                                                    width: "30%",
+                                                    width: "29%",
                                                 }}
                                             >
                                                 {category.averageSentimentScore.toFixed(
