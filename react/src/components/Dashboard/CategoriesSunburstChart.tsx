@@ -323,15 +323,22 @@ export default forwardRef(function CategoriesSunburstChart(
                         id="key"
                         value="value"
                         cornerRadius={2}
-                        borderWidth={2}
+                        borderWidth={4}
                         borderColor={
                             theme.palette.mode === "dark" ? "#222222" : "#fff"
                         }
-                        colors={{scheme: "pastel2"}}
+                        colors={{scheme: "set2"}}
                         inheritColorFromParent={true}
                         childColor={{
                             from: "color",
-                            modifiers: [["brighter", 0.3]],
+                            modifiers: [
+                                [
+                                    theme.palette.mode === "dark"
+                                        ? "darker"
+                                        : "brighter",
+                                    0.3,
+                                ],
+                            ],
                         }}
                         enableArcLabels={true}
                         arcLabel="id"

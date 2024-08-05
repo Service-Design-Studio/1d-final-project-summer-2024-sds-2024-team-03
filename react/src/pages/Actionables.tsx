@@ -19,6 +19,8 @@ import {
     Typography,
     TooltipProps,
     tooltipClasses,
+    Backdrop,
+    CircularProgress,
 } from "@mui/material";
 import NewReleasesTwoToneIcon from "@mui/icons-material/NewReleasesTwoTone";
 import RotateRightTwoToneIcon from "@mui/icons-material/RotateRightTwoTone";
@@ -66,6 +68,8 @@ export default function Actionables({
     const [dataDone, setDataDone] = useState<Actionable[]>([]);
     const [openCfmModal, setOpenCfmModal] = useState(false);
     const [modalContent, setModalContent] = useState<React.ReactNode[]>([]);
+    const [loading, setLoading] = useState(false);
+
     const urlPrefix =
         process.env.NODE_ENV === "development"
             ? "http://localhost:3000"
@@ -179,6 +183,7 @@ export default function Actionables({
     };
 
     const inference = () => {
+        setLoading(true);
         fetch(
             //ENDPOINT
             // urlPrefix/controller_name/function(only if custom)?parameters&parameters
@@ -188,7 +193,35 @@ export default function Actionables({
             .then((data) => {
                 console.log("response inference", data);
                 setRefresh(Math.random());
+                setLoading(false);
+                if (
+                    data.message === "No data available to process actionables"
+                ) {
+                    setModalContent([
+                        <Typography
+                            key="error"
+                            variant="h6"
+                            component="div"
+                            sx={{fontWeight: "bold"}}
+                        >
+                            No data
+                        </Typography>,
+                        <Typography
+                            key="message"
+                            variant="body1"
+                            component="div"
+                        >
+                            There are no actionables to be generated from this
+                            data.
+                        </Typography>,
+                    ]);
+                    setOpenCfmModal(true);
+                }
                 return data;
+            })
+            .catch((error) => {
+                console.error("Error:", error);
+                setLoading(false);
             });
     };
 
@@ -225,6 +258,15 @@ export default function Actionables({
                 >
                     Generate Actions
                 </Button>
+                <Backdrop
+                    sx={{
+                        color: "#fff",
+                        zIndex: (theme) => theme.zIndex.drawer + 1,
+                    }}
+                    open={loading}
+                >
+                    <CircularProgress color="inherit" />
+                </Backdrop>
             </Box>
             {/* Sticky, Freezes while scrolling */}
             <Box
