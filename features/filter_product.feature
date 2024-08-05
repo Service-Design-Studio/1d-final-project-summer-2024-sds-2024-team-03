@@ -31,7 +31,7 @@ Scenario: Available product dropdown options
   Given I am on the Dashboard page
   And there are products in the dataset
   When I click on the "Products" dropdown button
-  Then I should see all 18 products arranged alphabetically as dropdown options
+  Then I should see all 13 products arranged alphabetically as dropdown options
 
 Scenario: No selection of product dropdown option 
   Given I am on the Dashboard page

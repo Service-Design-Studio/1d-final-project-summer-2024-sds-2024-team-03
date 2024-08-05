@@ -9,7 +9,7 @@ Scenario: Normal View
   And the sources selected are: 'CSS'
   And the products selected are: 'Investments'
   Then I should see a widget titled 'Sentiment Trend for Selected Product(s)'
-  And the X-ticks show 3 months in the format MMM 'YY
+  And the X-ticks show 2 months in the format MMM 'YY
   And the Y-ticks are 0 to 5 in step 1
   
 Scenario: Clicking widget redirects to Analytics page
