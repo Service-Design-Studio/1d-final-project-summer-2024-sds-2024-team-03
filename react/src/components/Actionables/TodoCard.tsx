@@ -146,7 +146,7 @@ export default function OutlinedCard({
             <Card variant="outlined">
                 <CardContent>
                     <Grid container spacing={2}>
-                        <Grid item xs={4} container alignItems="flex-start">
+                        <Grid item xs={3} container alignItems="flex-start">
                             <Typography
                                 sx={{fontSize: 14, mr: 1}}
                                 color="text.secondary"
@@ -155,7 +155,7 @@ export default function OutlinedCard({
                                 Subcategory:
                             </Typography>
                         </Grid>
-                        <Grid item xs={8} container alignItems="flex-end">
+                        <Grid item xs={9} container alignItems="flex-end">
                             <Typography
                                 sx={{fontSize: 14, fontWeight: "bold"}}
                                 color="text.secondary"
@@ -164,7 +164,7 @@ export default function OutlinedCard({
                                 {actionable.subproduct}
                             </Typography>
                         </Grid>
-                        <Grid item xs={4} container alignItems="flex-start">
+                        <Grid item xs={3} container alignItems="flex-start">
                             <Typography
                                 sx={{fontSize: 14, mr: 1}}
                                 color="text.secondary"
@@ -173,7 +173,7 @@ export default function OutlinedCard({
                                 Feedback Category:
                             </Typography>
                         </Grid>
-                        <Grid item xs={8} container alignItems="flex-end">
+                        <Grid item xs={9} container alignItems="flex-end">
                             <Typography
                                 sx={{fontSize: 14, fontWeight: "bold"}}
                                 color="text.secondary"

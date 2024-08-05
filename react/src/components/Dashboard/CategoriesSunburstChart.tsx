@@ -344,7 +344,9 @@ export default forwardRef(function CategoriesSunburstChart(
                         enableArcLabels={true}
                         arcLabel="id"
                         arcLabelsRadiusOffset={0.35}
-                        arcLabelsTextColor="black"
+                        arcLabelsTextColor={
+                            theme.palette.mode === "dark" ? "white" : "black"
+                        }
                         animate={false}
                         tooltip={({id, value, color, percentage}) => (
                             <Paper

@@ -265,10 +265,20 @@ export default function Actionables({
                     }}
                     open={loading}
                 >
-                    <CircularProgress color="inherit" />
-                    <Typography sx={{mt: 2}} color="inherit">
-                        Processing...
-                    </Typography>
+                    <Box
+                        sx={{
+                            display: "flex",
+                            flexDirection: "column",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            minHeight: "100vh",
+                        }}
+                    >
+                        <CircularProgress color="inherit" />
+                        <Typography sx={{mt: 2}} color="inherit">
+                            Processing...
+                        </Typography>
+                    </Box>
                 </Backdrop>
             </Box>
             {/* Sticky, Freezes while scrolling */}
@@ -344,7 +354,7 @@ export default function Actionables({
                     </Box>
                 </Modal>
             </Box>
-            <ActionsTracked isDashboard={false} setRefresh={setRefresh} />
+            <ActionsTracked isDashboard={false} refresh={refresh} />
             <Box sx={{flexGrow: 1}}>
                 <Tooltip
                     title={
@@ -374,50 +384,52 @@ export default function Actionables({
                     arrow
                 >
                     <Grid container spacing={2}>
-                        <Grid item xs={4}>
-                            <Chip
-                                icon={<NewReleasesTwoToneIcon />}
-                                label="GENERATED ACTIONS"
-                                color="secondary"
-                                variant="outlined"
-                                sx={{
-                                    mb: 2,
-                                    borderRadius: 3,
-                                    backgroundColor: "rgba(232, 0, 0, 0.2)",
-                                    fontWeight: "bold",
-                                    py: 2,
-                                    px: 0.5,
-                                    borderWidth: 2,
-                                }}
-                            />
+                        <CustomWidthTooltip
+                            title={
+                                <span>
+                                    New actionables are{" "}
+                                    <b>always regenerated</b> here, move them to{" "}
+                                    <b>IN PROGRESS</b> or <b>DONE</b>!
+                                </span>
+                            }
+                            arrow
+                            placement="left"
+                        >
+                            <Grid item xs={4}>
+                                <Chip
+                                    icon={<NewReleasesTwoToneIcon />}
+                                    label="GENERATED ACTIONS"
+                                    color="secondary"
+                                    variant="outlined"
+                                    sx={{
+                                        mb: 2,
+                                        borderRadius: 3,
+                                        backgroundColor: "rgba(232, 0, 0, 0.2)",
+                                        fontWeight: "bold",
+                                        py: 2,
+                                        px: 0.5,
+                                        borderWidth: 2,
+                                    }}
+                                />
 
-                            {dataNew.length === 0 ? (
-                                <Box sx={{width: "100%", height: "100%"}}>
-                                    <Typography variant="body2" color="grey">
-                                        No data
-                                    </Typography>
-                                </Box>
-                            ) : (
-                                <CustomWidthTooltip
-                                    title={
-                                        <span>
-                                            New actionables are{" "}
-                                            <b>always regenerated</b> here, move
-                                            them to <b>IN PROGRESS</b> or{" "}
-                                            <b>DONE</b>!
-                                        </span>
-                                    }
-                                    arrow
-                                    placement="left-start"
-                                >
+                                {dataNew.length === 0 ? (
+                                    <Box sx={{width: "100%", height: "100%"}}>
+                                        <Typography
+                                            variant="body2"
+                                            color="grey"
+                                        >
+                                            No data
+                                        </Typography>
+                                    </Box>
+                                ) : (
                                     <TodoList
                                         data={dataNew}
                                         setRefresh={setRefresh}
                                         forWidget="GENERATED-ACTIONS"
                                     />
-                                </CustomWidthTooltip>
-                            )}
-                        </Grid>
+                                )}
+                            </Grid>
+                        </CustomWidthTooltip>
                         <Grid item xs={4}>
                             <Chip
                                 icon={<RotateRightTwoToneIcon />}
