@@ -48,6 +48,7 @@ export default function Actionables({
     const theme = useTheme();
     const fromDate_string = fromDate.format("DD/MM/YYYY");
     const toDate_string = toDate.format("DD/MM/YYYY");
+    const [enableGenerateActions, setEnableGenerateActions] = useState<boolean>(false);
 
     const transitionDuration = {
         enter: theme.transitions.duration.enteringScreen,
@@ -183,9 +184,40 @@ export default function Actionables({
             });
     };
 
+    useEffect(() => {
+        setEnableGenerateActions(
+            selectedProduct.length > 0 && selectedSource.length > 0
+        );
+    }, [selectedProduct, selectedSource]);
+
     return (
         <Box sx={{maxWidth: "lg", mx: "auto", px: 2}}>
-            <h1>Actionables</h1>
+            <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center",}}>
+                <h1>Actionables</h1>
+                <Button
+                    variant="contained"
+                    sx={{
+                        backgroundColor: enableGenerateActions
+                            ? "#e80000"
+                            : "#d3d3d3",
+                        boxShadow: 0,
+                        color: "#fff",
+                        fontWeight: "bold",
+                        borderRadius: 2,
+                        border: enableGenerateActions
+                            ? 0
+                            : "1px solid rgba(0, 0, 0, 0.12)",
+                        "&:hover": {
+                            backgroundColor: "#b80000",
+                            boxShadow: 0,
+                        },
+                    }}
+                    onClick={handleGenerateActionsClick}
+                    disabled={!enableGenerateActions}
+                >
+                    Generate Actions
+                </Button>
+            </Box>
             {/* Sticky, Freezes while scrolling */}
             <Box
                 sx={{
@@ -204,7 +236,7 @@ export default function Actionables({
                     borderRadius: 4,
                 }}
             >
-                <Box sx={{flexBasis: {xs: "100%", sm: "75%"}, flexGrow: 1}}>
+                <Box sx={{flexBasis: {xs: "100%", sm: "40%"}, flexGrow: 1}}>
                     <Calendar
                         fromDate={fromDate}
                         setFromDate={setFromDate}
@@ -212,27 +244,19 @@ export default function Actionables({
                         setToDate={setToDate}
                     />
                 </Box>
-                <Box sx={{flexBasis: {xs: "100%", sm: "40%"}, flexGrow: 1}}>
+                <Box sx={{flexBasis: {xs: "100%", sm: "30%"}, flexGrow: 1}}>
                     <FilterProduct
                         selectedProduct={selectedProduct}
                         setSelectedProduct={setSelectedProduct}
                         multiple={true}
                     />
                 </Box>
-                <Box sx={{flexBasis: {xs: "100%", sm: "40%"}, flexGrow: 1}}>
+                <Box sx={{flexBasis: {xs: "100%", sm: "30%"}, flexGrow: 1}}>
                     <FilterSource
                         selectedSource={selectedSource}
                         setSelectedSource={setSelectedSource}
                         multiple={true}
                     />
-                </Box>
-                <Box sx={{flexBasis: {xs: "100%", sm: "30%"}, flexGrow: 1}}>
-                    <Button
-                        variant="contained"
-                        onClick={handleGenerateActionsClick}
-                    >
-                        Generate Actions
-                    </Button>
                 </Box>
 
                 <Modal
