@@ -1542,7 +1542,6 @@ export default forwardRef(function SentimentCategoriesGraph(
                                         }}
                                         tooltip={({
                                             id,
-                                            indexValue,
                                             value,
                                             color,
                                         }) => (
@@ -1574,13 +1573,12 @@ export default forwardRef(function SentimentCategoriesGraph(
                                                         style={{
                                                             width: "12px",
                                                             height: "12px",
-                                                            backgroundColor:
-                                                                color,
+                                                            backgroundColor: color,
                                                             marginRight: "8px",
                                                         }}
                                                     ></div>
                                                     <Typography variant="body2">
-                                                        {id} — {indexValue}:{" "}
+                                                        {id}:{" "}
                                                         <b>{value}%</b>
                                                     </Typography>
                                                 </div>
@@ -1767,7 +1765,6 @@ export default forwardRef(function SentimentCategoriesGraph(
                                         }}
                                         tooltip={({
                                             id,
-                                            indexValue,
                                             value,
                                             color,
                                         }) => (
@@ -1805,7 +1802,7 @@ export default forwardRef(function SentimentCategoriesGraph(
                                                         }}
                                                     ></div>
                                                     <Typography variant="body2">
-                                                        {id} — {indexValue}:{" "}
+                                                        {id}:{" "}
                                                         <b>{value}%</b>
                                                     </Typography>
                                                 </div>
