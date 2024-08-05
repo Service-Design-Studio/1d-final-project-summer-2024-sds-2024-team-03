@@ -110,7 +110,8 @@ export default forwardRef(function CategoriesSunburstChart(
             for (let i = 0; i < feedbackcategory.length; i++) {
                 hash = feedbackcategory.charCodeAt(i) + ((hash << 5) - hash);
             }
-            return Math.abs(hash) % 360;
+            // Use a prime number to spread out the hues more evenly
+            return (Math.abs(hash) % 359) * (137.5 / 360); // 137.5 is the golden angle in degrees
         }
         return 0;
     };
@@ -323,15 +324,22 @@ export default forwardRef(function CategoriesSunburstChart(
                         id="key"
                         value="value"
                         cornerRadius={2}
-                        borderWidth={2}
+                        borderWidth={4}
                         borderColor={
                             theme.palette.mode === "dark" ? "#222222" : "#fff"
                         }
-                        colors={{scheme: "pastel2"}}
+                        colors={{scheme: "set2"}}
                         inheritColorFromParent={false}
                         childColor={{
                             from: "color",
-                            modifiers: [["brighter", 0.3]],
+                            modifiers: [
+                                [
+                                    theme.palette.mode === "dark"
+                                        ? "darker"
+                                        : "brighter",
+                                    0.3,
+                                ],
+                            ],
                         }}
                         enableArcLabels={true}
                         arcLabel="id"
@@ -394,7 +402,7 @@ export default forwardRef(function CategoriesSunburstChart(
                         flexDirection: "column",
                         alignItems: "center",
                         p: 2,
-                        gap: 4,
+                        gap: 2,
                         borderRadius: 4,
                         flex: 1,
                         cursor: "pointer",
@@ -427,7 +435,7 @@ export default forwardRef(function CategoriesSunburstChart(
                         <Box
                             sx={{
                                 width: "95%",
-                                height: 300,
+                                height: 295,
                             }}
                         >
                             <ResponsiveSunburst
@@ -445,12 +453,19 @@ export default forwardRef(function CategoriesSunburstChart(
                                         : "#fff"
                                 }
                                 colors={(bar) => barColors[bar.id]}
-                                // To make use of hsl from each component
+                                // false: To make use of hsl from each component
                                 inheritColorFromParent={false}
                                 // colors={{scheme: "paired"}}
                                 childColor={{
                                     from: "color",
-                                    modifiers: [["brighter", 0.3]],
+                                    modifiers: [
+                                        [
+                                            theme.palette.mode === "dark"
+                                                ? "darker"
+                                                : "brighter",
+                                            0.3,
+                                        ],
+                                    ],
                                 }}
                                 enableArcLabels={false}
                                 // category or %
@@ -491,25 +506,25 @@ export default forwardRef(function CategoriesSunburstChart(
                             />
                             <Box
                                 sx={{
+                                    gridColumn: "1 / span 3",
+                                    borderBottom: `2px solid ${
+                                        theme.palette.mode === "dark"
+                                            ? "#444"
+                                            : "#ccc"
+                                    }`,
+                                    mt: 3,
+                                }}
+                            />
+                            <Box
+                                sx={{
                                     display: "grid",
-                                    gridTemplateColumns: "4fr 3fr 3fr",
+                                    gridTemplateColumns: "4.5fr 3fr 3fr",
                                     gap: 1,
                                     width: "100%",
                                     alignItems: "center",
-                                    mt: 4,
+                                    mt: 3,
                                 }}
                             >
-                                <Box
-                                    sx={{
-                                        gridColumn: "1 / span 3",
-                                        borderBottom: `2px solid ${
-                                            theme.palette.mode === "dark"
-                                                ? "#444"
-                                                : "#ccc"
-                                        }`,
-                                        mb: 1.5,
-                                    }}
-                                />
                                 <Typography
                                     variant="body1"
                                     color="textSecondary"
@@ -577,7 +592,7 @@ export default forwardRef(function CategoriesSunburstChart(
                                                 display: "flex",
                                                 alignItems: "center",
                                                 gridColumn: "1 / span 1",
-                                                width: "40%",
+                                                width: "42%",
                                             }}
                                         >
                                             <Box
@@ -640,7 +655,7 @@ export default forwardRef(function CategoriesSunburstChart(
                                                 textAlign: "center",
                                                 fontWeight: "bold",
                                                 fontSize: "1.3rem",
-                                                width: "30%",
+                                                width: "29%",
                                             }}
                                         >
                                             {category.mentions}
@@ -666,7 +681,7 @@ export default forwardRef(function CategoriesSunburstChart(
                                                     ),
                                                     fontWeight: "bold",
                                                     fontSize: "1.3rem",
-                                                    width: "30%",
+                                                    width: "29%",
                                                 }}
                                             >
                                                 {category.averageSentimentScore.toFixed(

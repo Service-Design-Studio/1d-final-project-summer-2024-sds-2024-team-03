@@ -19,18 +19,21 @@ import {
     Typography,
     TooltipProps,
     tooltipClasses,
+    Backdrop,
+    CircularProgress,
 } from "@mui/material";
 import NewReleasesTwoToneIcon from "@mui/icons-material/NewReleasesTwoTone";
 import RotateRightTwoToneIcon from "@mui/icons-material/RotateRightTwoTone";
 import CheckCircleTwoToneIcon from "@mui/icons-material/CheckCircleTwoTone";
 import {useTheme} from "@mui/material/styles";
 import useDetectScroll, {Direction} from "@smakss/react-scroll-direction";
+import ActionsTracked from "../components/Dashboard/ActionsTracked";
 
 const CustomWidthTooltip = styled(({className, ...props}: TooltipProps) => (
     <Tooltip {...props} classes={{popper: className}} />
 ))({
     [`& .${tooltipClasses.tooltip}`]: {
-        maxWidth: 230,
+        maxWidth: 180,
     },
 });
 
@@ -48,6 +51,8 @@ export default function Actionables({
     const theme = useTheme();
     const fromDate_string = fromDate.format("DD/MM/YYYY");
     const toDate_string = toDate.format("DD/MM/YYYY");
+    const [enableGenerateActions, setEnableGenerateActions] =
+        useState<boolean>(false);
 
     const transitionDuration = {
         enter: theme.transitions.duration.enteringScreen,
@@ -63,10 +68,18 @@ export default function Actionables({
     const [dataDone, setDataDone] = useState<Actionable[]>([]);
     const [openCfmModal, setOpenCfmModal] = useState(false);
     const [modalContent, setModalContent] = useState<React.ReactNode[]>([]);
+    const [loading, setLoading] = useState(false);
+
     const urlPrefix =
         process.env.NODE_ENV === "development"
             ? "http://localhost:3000"
             : "https://jbaaam-yl5rojgcbq-et.a.run.app";
+
+    useEffect(() => {
+        setEnableGenerateActions(
+            selectedProduct.length > 0 && selectedSource.length > 0
+        );
+    }, [selectedProduct, selectedSource]);
 
     const transformCategory = (category: string) => {
         // Insert spaces around / and &
@@ -170,6 +183,7 @@ export default function Actionables({
     };
 
     const inference = () => {
+        setLoading(true);
         fetch(
             //ENDPOINT
             // urlPrefix/controller_name/function(only if custom)?parameters&parameters
@@ -179,13 +193,82 @@ export default function Actionables({
             .then((data) => {
                 console.log("response inference", data);
                 setRefresh(Math.random());
+                setLoading(false);
+                if (
+                    data.message === "No data available to process actionables"
+                ) {
+                    setModalContent([
+                        <Typography
+                            key="error"
+                            variant="h6"
+                            component="div"
+                            sx={{fontWeight: "bold"}}
+                        >
+                            No data
+                        </Typography>,
+                        <Typography
+                            key="message"
+                            variant="body1"
+                            component="div"
+                        >
+                            There are no actionables to be generated from this
+                            data.
+                        </Typography>,
+                    ]);
+                    setOpenCfmModal(true);
+                }
                 return data;
+            })
+            .catch((error) => {
+                console.error("Error:", error);
+                setLoading(false);
             });
     };
 
     return (
         <Box sx={{maxWidth: "lg", mx: "auto", px: 2}}>
-            <h1>Actionables</h1>
+            <Box
+                sx={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                }}
+            >
+                <h1>Actionables</h1>
+                <Button
+                    variant="contained"
+                    sx={{
+                        backgroundColor: enableGenerateActions
+                            ? "#e80000"
+                            : "#d3d3d3",
+                        boxShadow: 0,
+                        color: "#fff",
+                        fontWeight: "bold",
+                        borderRadius: 2,
+                        border: enableGenerateActions
+                            ? 0
+                            : "1px solid rgba(0, 0, 0, 0.12)",
+                        "&:hover": {
+                            backgroundColor: "#b80000",
+                            boxShadow: 0,
+                        },
+                    }}
+                    onClick={handleGenerateActionsClick}
+                    disabled={!enableGenerateActions}
+                >
+                    Generate Actions
+                </Button>
+                <Backdrop
+                    sx={{
+                        color: "#fff",
+                        zIndex: (theme) => theme.zIndex.drawer + 1,
+                    }}
+                    open={loading}
+                >
+                    <CircularProgress color="inherit" />
+                    Processing...
+                </Backdrop>
+            </Box>
             {/* Sticky, Freezes while scrolling */}
             <Box
                 sx={{
@@ -200,11 +283,16 @@ export default function Actionables({
                     justifyContent: "center",
                     alignItems: scrollPosition.top > 0 ? "center" : null,
                     zIndex: 1000, // Ensure it's above other content
-                    backgroundColor: scrollPosition.top > 0 ? theme.palette.mode === "dark" ? "#000" : "#E9E9EB" : null,
+                    backgroundColor:
+                        scrollPosition.top > 0
+                            ? theme.palette.mode === "dark"
+                                ? "#000"
+                                : "#E9E9EB"
+                            : null,
                     borderRadius: 4,
                 }}
             >
-                <Box sx={{flexBasis: {xs: "100%", sm: "75%"}, flexGrow: 1}}>
+                <Box sx={{flexBasis: {xs: "100%", sm: "40%"}, flexGrow: 1}}>
                     <Calendar
                         fromDate={fromDate}
                         setFromDate={setFromDate}
@@ -212,29 +300,20 @@ export default function Actionables({
                         setToDate={setToDate}
                     />
                 </Box>
-                <Box sx={{flexBasis: {xs: "100%", sm: "40%"}, flexGrow: 1}}>
+                <Box sx={{flexBasis: {xs: "100%", sm: "30%"}, flexGrow: 1}}>
                     <FilterProduct
                         selectedProduct={selectedProduct}
                         setSelectedProduct={setSelectedProduct}
                         multiple={true}
                     />
                 </Box>
-                <Box sx={{flexBasis: {xs: "100%", sm: "40%"}, flexGrow: 1}}>
+                <Box sx={{flexBasis: {xs: "100%", sm: "30%"}, flexGrow: 1}}>
                     <FilterSource
                         selectedSource={selectedSource}
                         setSelectedSource={setSelectedSource}
                         multiple={true}
                     />
                 </Box>
-                <Box sx={{flexBasis: {xs: "100%", sm: "30%"}, flexGrow: 1}}>
-                    <Button
-                        variant="contained"
-                        onClick={handleGenerateActionsClick}
-                    >
-                        Generate Actions
-                    </Button>
-                </Box>
-
                 <Modal
                     open={openCfmModal}
                     onClose={() => setOpenCfmModal(false)}
@@ -263,19 +342,36 @@ export default function Actionables({
                     </Box>
                 </Modal>
             </Box>
+            <ActionsTracked isDashboard={false} />
             <Box sx={{flexGrow: 1}}>
-                <Grid container spacing={2}>
-                    <CustomWidthTooltip
-                        title={
-                            <span>
-                                New actionables are <b>always regenerated</b>{" "}
-                                here, move them to <b>IN PROGRESS</b> or{" "}
-                                <b>DONE</b>!
-                            </span>
-                        }
-                        arrow
-                        placement="left-start"
-                    >
+                <Tooltip
+                    title={
+                        <span>
+                            <b>To Fix</b>: Feedback highlighting{" "}
+                            <u>frequent complaints or persistent issues</u> that
+                            require maintenance or repair.
+                            <br />
+                            <br />
+                            <b>To Keep in Mind</b>: Feedback with{" "}
+                            <u>mixed reviews</u>, containing both positive and
+                            negative comments, suggesting areas that require
+                            ongoing attention.
+                            <br />
+                            <br />
+                            <b>To Amplify</b>: Feedback that is generally
+                            neutral to positive but highlights areas with{" "}
+                            <u>potential for improvement</u>.
+                            <br />
+                            <br />
+                            <b>To Promote</b>: Feedback with a high majority of
+                            positive comments, indicating services or aspects
+                            DBS <u>should continue promoting</u>.
+                        </span>
+                    }
+                    placement="right-end"
+                    arrow
+                >
+                    <Grid container spacing={2}>
                         <Grid item xs={4}>
                             <Chip
                                 icon={<NewReleasesTwoToneIcon />}
@@ -292,72 +388,88 @@ export default function Actionables({
                                     borderWidth: 2,
                                 }}
                             />
+
                             {dataNew.length === 0 ? (
-                                <Typography variant="body2" color="grey">
-                                    No data
-                                </Typography>
+                                <Box sx={{width: "100%", height: "100%"}}>
+                                    <Typography variant="body2" color="grey">
+                                        No data
+                                    </Typography>
+                                </Box>
                             ) : (
-                                <TodoList
-                                    data={dataNew}
-                                    setRefresh={setRefresh}
-                                    forWidget="GENERATED-ACTIONS"
-                                />
+                                <CustomWidthTooltip
+                                    title={
+                                        <span>
+                                            New actionables are{" "}
+                                            <b>always regenerated</b> here, move
+                                            them to <b>IN PROGRESS</b> or{" "}
+                                            <b>DONE</b>!
+                                        </span>
+                                    }
+                                    arrow
+                                    placement="left-start"
+                                >
+                                    <TodoList
+                                        data={dataNew}
+                                        setRefresh={setRefresh}
+                                        forWidget="GENERATED-ACTIONS"
+                                    />
+                                </CustomWidthTooltip>
                             )}
                         </Grid>
-                    </CustomWidthTooltip>
-                    <Grid item xs={4}>
-                        <Chip
-                            icon={<RotateRightTwoToneIcon />}
-                            label="IN PROGRESS"
-                            variant="outlined"
-                            sx={{
-                                mb: 2,
-                                color: "#DA5707",
-                                borderColor: "#DA5707",
-                                borderRadius: 3,
-                                backgroundColor: "rgba(218, 87, 7, 0.2)",
-                                fontWeight: "bold",
-                                py: 2,
-                                px: 0.5,
-                                borderWidth: 2,
-                                "& .MuiChip-icon": {
+                        <Grid item xs={4}>
+                            <Chip
+                                icon={<RotateRightTwoToneIcon />}
+                                label="IN PROGRESS"
+                                variant="outlined"
+                                sx={{
+                                    mb: 2,
                                     color: "#DA5707",
-                                },
-                            }}
-                        />
-                        <TodoList
-                            data={dataInProgress}
-                            setRefresh={setRefresh}
-                            forWidget="IN-PROGRESS"
-                        />
-                    </Grid>
-                    <Grid item xs={4}>
-                        <Chip
-                            icon={<CheckCircleTwoToneIcon />}
-                            label="DONE"
-                            variant="outlined"
-                            sx={{
-                                mb: 2,
-                                color: "#208306",
-                                borderColor: "#208306",
-                                borderRadius: 3,
-                                backgroundColor: "rgba(32, 131, 6, 0.2)",
-                                fontWeight: "bold",
-                                py: 2,
-                                px: 0.5,
-                                borderWidth: 2,
-                                "& .MuiChip-icon": {
+                                    borderColor: "#DA5707",
+                                    borderRadius: 3,
+                                    backgroundColor: "rgba(218, 87, 7, 0.2)",
+                                    fontWeight: "bold",
+                                    py: 2,
+                                    px: 0.5,
+                                    borderWidth: 2,
+                                    "& .MuiChip-icon": {
+                                        color: "#DA5707",
+                                    },
+                                }}
+                            />
+                            <TodoList
+                                data={dataInProgress}
+                                setRefresh={setRefresh}
+                                forWidget="IN-PROGRESS"
+                            />
+                        </Grid>
+                        <Grid item xs={4}>
+                            <Chip
+                                icon={<CheckCircleTwoToneIcon />}
+                                label="DONE"
+                                variant="outlined"
+                                sx={{
+                                    mb: 2,
                                     color: "#208306",
-                                },
-                            }}
-                        />
-                        <TodoList
-                            data={dataDone}
-                            setRefresh={setRefresh}
-                            forWidget="DONE"
-                        />
+                                    borderColor: "#208306",
+                                    borderRadius: 3,
+                                    backgroundColor: "rgba(32, 131, 6, 0.2)",
+                                    fontWeight: "bold",
+                                    py: 2,
+                                    px: 0.5,
+                                    borderWidth: 2,
+                                    "& .MuiChip-icon": {
+                                        color: "#208306",
+                                    },
+                                }}
+                            />
+                            <TodoList
+                                data={dataDone}
+                                setRefresh={setRefresh}
+                                forWidget="DONE"
+                            />
+                        </Grid>
                     </Grid>
-                </Grid>
+                </Tooltip>
             </Box>
 
             <DialogAddAction

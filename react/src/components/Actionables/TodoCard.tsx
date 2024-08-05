@@ -8,7 +8,7 @@ import CardContent from "@mui/material/CardContent";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Paper from "@mui/material/Paper";
-
+import Grid from "@mui/material/Grid";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import ListItemIcon from "@mui/material/ListItemIcon";
@@ -145,40 +145,44 @@ export default function OutlinedCard({
         <Paper elevation={2} sx={{minWidth: 275, mb: 2}} id={forWidget}>
             <Card variant="outlined">
                 <CardContent>
-                    <Box sx={{display: "flex", alignItems: "center"}}>
-                        <Typography
-                            sx={{fontSize: 14, mr: 1}}
-                            color="text.secondary"
-                            gutterBottom
-                        >
-                            Subcategory:
-                        </Typography>
-                        <Box flexGrow={1} />
-                        <Typography
-                            sx={{fontSize: 14, fontWeight: "bold"}}
-                            color="text.secondary"
-                            gutterBottom
-                        >
-                            {actionable.subproduct}
-                        </Typography>
-                    </Box>
-                    <Box sx={{display: "flex", alignItems: "center"}}>
-                        <Typography
-                            sx={{fontSize: 14, mr: 1}}
-                            color="text.secondary"
-                            gutterBottom
-                        >
-                            Feedback Category:
-                        </Typography>
-                        <Box flexGrow={1} />
-                        <Typography
-                            sx={{fontSize: 14, fontWeight: "bold"}}
-                            color="text.secondary"
-                            gutterBottom
-                        >
-                            {uniqueData}
-                        </Typography>
-                    </Box>
+                    <Grid container spacing={2}>
+                        <Grid item xs={6} container alignItems="flex-start">
+                            <Typography
+                                sx={{fontSize: 14, mr: 1}}
+                                color="text.secondary"
+                                gutterBottom
+                            >
+                                Subcategory:
+                            </Typography>
+                        </Grid>
+                        <Grid item xs={6} container alignItems="flex-end">
+                            <Typography
+                                sx={{fontSize: 14, fontWeight: "bold"}}
+                                color="text.secondary"
+                                gutterBottom
+                            >
+                                {actionable.subproduct}
+                            </Typography>
+                        </Grid>
+                        <Grid item xs={6} container alignItems="flex-start">
+                            <Typography
+                                sx={{fontSize: 14, mr: 1}}
+                                color="text.secondary"
+                                gutterBottom
+                            >
+                                Feedback Category:
+                            </Typography>
+                        </Grid>
+                        <Grid item xs={6} container alignItems="flex-end">
+                            <Typography
+                                sx={{fontSize: 14, fontWeight: "bold"}}
+                                color="text.secondary"
+                                gutterBottom
+                            >
+                                {uniqueData}
+                            </Typography>
+                        </Grid>
+                    </Grid>
                     <Typography variant="h6" component="div">
                         {actionable.action}
                     </Typography>
