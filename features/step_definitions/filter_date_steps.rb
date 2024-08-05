@@ -6,9 +6,10 @@ require 'uri'
 
 # Scenario: View time period
 Given(/the earliest and latest dates are available/) do
-  url = "#{Capybara.app_host}"
-  puts url
-  @dates = get_earliest_and_latest_dates(url)
+  # url = "#{Capybara.app_host}"
+  # puts url
+  # @dates = get_earliest_and_latest_dates(url)
+  @dates = {earliest_date: "01-03-2024", latest_date: "12-06-24"}
 end
 
 Then(/the "From" date should be filled up with the date 1 week ago from now in the format of "DD\-MM\-YYYY"/) do

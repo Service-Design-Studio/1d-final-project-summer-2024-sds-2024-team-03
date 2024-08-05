@@ -62,18 +62,18 @@ Scenario: View all
   And I click on the 'Subcategory' dropdown button in the Sentiment Categorisation widget
   And I click on 'digiPortfolio'
   And I click 'view all'
-  Then I should see the 8 subcategories sorted in these top 3 in descending order 'Staff Related', 'Application Related', 'Fee Related'
+  Then I should see the 8 subcategories sorted in these top 3 in descending order 'Others', 'Rewards', 'Saving / Investment Plans'
   
 Scenario: View less
   Given I am on the Analytics page
-  When the date is set from '01/03/2024' to '01/05/2024'
+  When the date is set from '01/03/2024' to '31/05/2024'
   And the sources selected are: 'CSS'
   And the products selected are: 'Investments'
   And I click on the 'Subcategory' dropdown button in the Sentiment Categorisation widget
-  And I click on 'United Trust (UT) products'
+  And I click on 'digiPortfolio'
   And I click 'view all'
   And I click 'view less'
-  Then I should see no longer see the third subcategory '> Fee Related'
+  Then I should see no longer see the sixth subcategory 'Saving / Investment Plans'
   
 Scenario: Look into a specific subcategory
   Given I am on the Analytics page
@@ -81,8 +81,8 @@ Scenario: Look into a specific subcategory
   And the sources selected are: 'CSS'
   And the products selected are: 'Investments'
   And I click on the 'Subcategory' dropdown button in the Sentiment Categorisation widget
-  And I click on 'United Trust (UT) products'
-  And I click on the red portion under 'Staff Related'
+  And I click on 'digiPortfolio'
+  And I click on the orange portion under 'Technical / System Related'
   Then I should see a pop-up with the relevant data
   
 Scenario: Filter resets on page refresh
@@ -100,7 +100,7 @@ Scenario: Insufficient overall data
   And the sources selected are: 'CSS'
   And the products selected are: 'Investments'
   And I click on the 'Subcategory' dropdown button in the Sentiment Categorisation widget
-  And I click on 'United Trust (UT) products'
+  And I click on 'digiPortfolio'
   Then I should see only 1 subcategory
   And clicking on 'view all' would not add more subcategories to view
-  And clicking 'sort' does not change the displayed subcategory 'Staff Related'
+  And clicking 'sort' does not change the displayed subcategory 'Technical / System Related'

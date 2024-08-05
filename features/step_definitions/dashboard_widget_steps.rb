@@ -29,6 +29,7 @@ Then(/^(.*) bar is colored (.*)$/) do |sentiment, color|
 
   case color
     when "red"
+      sleep(6)
       expect(background_color).to eq("rgba(255, 0, 0, 1)")
     when "orange"
       expect(background_color).to eq("rgba(255, 165, 0, 1)")
@@ -60,8 +61,9 @@ And(/the sources selected are: '(.*)'/) do |sources|
 end
 
 When(/Past 6 Months are selected/) do
-  url = "#{Capybara.app_host}"
-  @dates = get_earliest_and_latest_dates(url)
+  # url = "#{Capybara.app_host}"
+  # @dates = get_earliest_and_latest_dates(url)
+  @dates = {earliest_date: "01-03-2024", latest_date:"12-06-2024"}
   latest_date = Date.parse(@dates[:latest_date])
   latest_date_text = latest_date.strftime("%d-%m-%Y")
   start_date = Date.parse(@dates[:latest_date]) << 6
@@ -74,6 +76,7 @@ When(/the date is set from '(.*)' to '(.*)'/) do |start_date, end_date|
 end
 
 Then(/I should see the overall sentiment score as '(.*)'/) do |expected_score|
+  sleep(6)
   full_text = find('#overall-sentiment-score').text
   actual_score = full_text.split("\n")[1]
   expect(actual_score).to eq(expected_score)

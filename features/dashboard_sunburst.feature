@@ -6,9 +6,9 @@ Scenario: Normal View
   And the sources selected are: 'CSS'
   And the products selected are: 'Investments'
   Then I should see a widget titled 'Distribution of Categories'
-  And columns "Categories", "Total Mentions" and "Avg Sentiment"
+  And columns "Categories", "Total Mentions" and "Avg. Sentiment"
   And top 3 rows with the highest 'Total Mentions', sorted in descending order
-  And the percentages as float numbers
+  And the Avg. Sentiment as float numbers
   
 Scenario: Clicking widget redirects to Analytics page
   Given I am on the Dashboard page

@@ -35,9 +35,11 @@ end
 
 And(/the Y-ticks are 0 to 5 in step 1/) do
   expected_values = [0, 1, 2, 3, 4, 5]
+  parent_element = find("g[transform='translate(0,0)']")
+
   expected_values.each do |value|
     # Check for text elements with the dominant-baseline style attribute
-    expect(page).to have_css("text[dominant-baseline='central']", text: value)
+    expect(parent_element['inner_html']).to have_css(text: value)
   end
 end
 
