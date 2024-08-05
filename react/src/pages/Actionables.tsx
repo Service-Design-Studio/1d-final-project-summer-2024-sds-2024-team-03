@@ -266,6 +266,7 @@ export default function Actionables({
                     open={loading}
                 >
                     <CircularProgress color="inherit" />
+                    Processing...
                 </Backdrop>
             </Box>
             {/* Sticky, Freezes while scrolling */}
@@ -387,35 +388,33 @@ export default function Actionables({
                                     borderWidth: 2,
                                 }}
                             />
-                            <CustomWidthTooltip
-                                title={
-                                    <span>
-                                        New actionables are{" "}
-                                        <b>always regenerated</b> here, move
-                                        them to <b>IN PROGRESS</b> or{" "}
-                                        <b>DONE</b>!
-                                    </span>
-                                }
-                                arrow
-                                placement="left-start"
-                            >
-                                {dataNew.length === 0 ? (
-                                    <Box sx={{width: "100%", height: "100%"}}>
-                                        <Typography
-                                            variant="body2"
-                                            color="grey"
-                                        >
-                                            No data
-                                        </Typography>
-                                    </Box>
-                                ) : (
+
+                            {dataNew.length === 0 ? (
+                                <Box sx={{width: "100%", height: "100%"}}>
+                                    <Typography variant="body2" color="grey">
+                                        No data
+                                    </Typography>
+                                </Box>
+                            ) : (
+                                <CustomWidthTooltip
+                                    title={
+                                        <span>
+                                            New actionables are{" "}
+                                            <b>always regenerated</b> here, move
+                                            them to <b>IN PROGRESS</b> or{" "}
+                                            <b>DONE</b>!
+                                        </span>
+                                    }
+                                    arrow
+                                    placement="left-start"
+                                >
                                     <TodoList
                                         data={dataNew}
                                         setRefresh={setRefresh}
                                         forWidget="GENERATED-ACTIONS"
                                     />
-                                )}
-                            </CustomWidthTooltip>
+                                </CustomWidthTooltip>
+                            )}
                         </Grid>
                         <Grid item xs={4}>
                             <Chip

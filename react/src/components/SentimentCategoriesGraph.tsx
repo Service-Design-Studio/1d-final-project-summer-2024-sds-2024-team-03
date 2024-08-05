@@ -710,17 +710,18 @@ export default forwardRef(function SentimentCategoriesGraph(
                                       if (bar.Promoter > 0) {
                                           description += " and ";
                                       }
-                                      description += `${bar.Satisfied}% satisfied`;
+                                      description += `${bar.Satisfied}% were satisfied`;
                                   }
 
                                   description += ` about ${
                                       bar.category.split(" > ")[0]
                                   } | ${bar.category.split(" > ")[1]}`;
 
+                                  description += "\n";
                                   return description;
                               }
                           })
-                          .join("\n")}\n\nSome examples\n${Object.values(
+                          .join("")}\nSome examples\n${Object.values(
                           eg.highSentiment
                       )
                           .flat()
@@ -744,25 +745,28 @@ export default forwardRef(function SentimentCategoriesGraph(
                           .slice(bars.length - 5, bars.length)
                           .reverse()
                           .map((bar) => {
-                              let description = "   • ";
+                              if (bar.Frustrated > 0 || bar.Unsatisfied > 0) {
+                                  let description = "   • ";
 
-                              if (bar.Frustrated > 0) {
-                                  description += `${bar.Frustrated}% frustrated`;
-                              }
-                              if (bar.Unsatisfied > 0) {
                                   if (bar.Frustrated > 0) {
-                                      description += " and ";
+                                      description += `${bar.Frustrated}% were frustrated`;
                                   }
-                                  description += `${bar.Unsatisfied}% unsatisfied`;
+                                  if (bar.Unsatisfied > 0) {
+                                      if (bar.Frustrated > 0) {
+                                          description += " and ";
+                                      }
+                                      description += `${bar.Unsatisfied}% were unsatisfied`;
+                                  }
+
+                                  description += ` about ${
+                                      bar.category.split(" > ")[0]
+                                  } | ${bar.category.split(" > ")[1]}`;
+
+                                  description += "\n";
+                                  return description;
                               }
-
-                              description += ` about ${
-                                  bar.category.split(" > ")[0]
-                              } | ${bar.category.split(" > ")[1]}`;
-
-                              return description;
                           })
-                          .join("\n")}\n\nSome examples\n${Object.values(
+                          .join("")}\nSome examples\n${Object.values(
                           eg.lowSentiment
                       )
                           .flat()
