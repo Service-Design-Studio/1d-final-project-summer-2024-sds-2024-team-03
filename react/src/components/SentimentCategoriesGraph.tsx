@@ -88,8 +88,8 @@ const StyledTableRow = styled(TableRow)(({theme}) => ({
 
 const ORDER: Record<string, string> = {
     Promoter: "green",
-    Satisfied: "lightgreen",
-    Neutral: "grey",
+    Satisfied: "#71b814",
+    Neutral: "#7a7a7a",
     Unsatisfied: "orange",
     Frustrated: "red",
 };
@@ -989,6 +989,7 @@ export default forwardRef(function SentimentCategoriesGraph(
                                         left: 250,
                                     }}
                                     padding={0.3}
+                                    innerPadding={0.5}
                                     minValue={0}
                                     maxValue={100}
                                     layout="horizontal"
@@ -1419,6 +1420,7 @@ export default forwardRef(function SentimentCategoriesGraph(
                                             left: 250,
                                         }}
                                         padding={0.3}
+                                        innerPadding={0.5}
                                         minValue={0}
                                         maxValue={100}
                                         layout="horizontal"
@@ -1642,6 +1644,7 @@ export default forwardRef(function SentimentCategoriesGraph(
                                             left: 250,
                                         }}
                                         padding={0.3}
+                                        innerPadding={0.5}
                                         minValue={0}
                                         maxValue={100}
                                         layout="horizontal"
