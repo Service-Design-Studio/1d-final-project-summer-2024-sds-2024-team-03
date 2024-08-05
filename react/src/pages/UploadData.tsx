@@ -69,7 +69,7 @@ export default function UploadData({}: UploadDataProps) {
                                 id="uploaddata-filter-subcategory-label"
                                 sx={{fontWeight: "bold"}}
                             >
-                                Subcategories
+                                Subcategory
                             </InputLabel>
                             <Select
                                 labelId="uploaddata-filter-subcategory-label"
