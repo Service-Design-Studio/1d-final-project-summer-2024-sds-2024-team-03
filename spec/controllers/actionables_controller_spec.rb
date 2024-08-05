@@ -129,4 +129,58 @@ RSpec.describe ActionablesController, type: :controller do
       expect(response).to redirect_to(actionables_url)
     end
   end
+
+  describe "POST #inference" do
+    before do
+      allow(Net::HTTP).to receive(:get_response).and_return(instance_double('Net::HTTPResponse', body: '{"result": "success"}', code: '200'))
+    end
+
+    let!(:actionable) { FactoryBot.create(:actionable, status: "new", created_at: 1.hour.ago) }
+
+    context "with valid parameters" do
+      it "returns a success response and deletes old 'new' actionables" do
+        post :inference, params: {
+          product: "Cards,Loans",
+          source: "Web,Email",
+          fromDate: "2021-01-01",
+          toDate: "2021-01-31"
+        }
+
+        expect(response).to have_http_status(:ok)
+        expect(response.body).to include('success')
+        expect(Actionable.exists?(actionable.id)).to be_falsey
+      end
+    end
+
+    context "with invalid date parameters" do
+      it "handles invalid dates gracefully" do
+        expect {
+          post :inference, params: {
+            product: "Cards",
+            source: "Web",
+            fromDate: "not-a-date",
+            toDate: "still-not-a-date"
+          }
+        }.not_to raise_error
+      end
+    end
+
+    context "when the external service fails" do
+      before do
+        allow(Net::HTTP).to receive(:get_response).and_return(instance_double('Net::HTTPResponse', body: '{"error": "failure"}', code: '500'))
+      end
+
+      it "returns an error response" do
+        post :inference, params: {
+          product: "Cards",
+          source: "Web",
+          fromDate: "2021-01-01",
+          toDate: "2021-01-31"
+        }
+
+        expect(response).to have_http_status(:ok)
+        expect(response.body).to include('failure')
+      end
+    end
+  end
 end

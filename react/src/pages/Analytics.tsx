@@ -7,6 +7,7 @@ import Calendar from "../components/Calendar";
 import SentimentScoreGraph from "../components/SentimentScoreGraph";
 import SentimentCategoriesGraph from "../components/SentimentCategoriesGraph";
 import useDetectScroll, {Direction} from "@smakss/react-scroll-direction";
+import {useTheme} from "@mui/material/styles";
 
 interface AnalyticsProps {
     setFromDate: React.Dispatch<React.SetStateAction<Dayjs>>;
@@ -29,6 +30,7 @@ export default function Analytics({
     selectedSource,
     setSelectedSource,
 }: AnalyticsProps) {
+    const theme = useTheme();
     const {scrollDir, scrollPosition} = useDetectScroll();
     return (
         <Box sx={{maxWidth: "lg", mx: "auto", px: 2}}>
@@ -47,7 +49,7 @@ export default function Analytics({
                     justifyContent: "center",
                     alignItems: scrollPosition.top > 0 ? "center" : null,
                     zIndex: 1000, // Ensure it's above other content
-                    backgroundColor: scrollPosition.top > 0 ? "white" : null,
+                    backgroundColor: scrollPosition.top > 0 ? theme.palette.mode === "dark" ? "#000" : "#E9E9EB" : null,
                     borderRadius: 4,
                 }}
             >

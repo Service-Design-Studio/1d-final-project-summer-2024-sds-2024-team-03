@@ -23,7 +23,7 @@ Capybara.register_driver :chrome do |app|
 end
 
 Capybara.default_driver = :chrome
-Capybara.app_host = 'http://localhost:3000'
+Capybara.app_host = 'http://localhost:3001'
 
 
 # By default, any exception happening in your Rails application will bubble up

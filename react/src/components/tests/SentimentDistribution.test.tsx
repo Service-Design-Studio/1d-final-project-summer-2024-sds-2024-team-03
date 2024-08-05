@@ -61,7 +61,7 @@ describe("SentimentDistribution Component", () => {
             expect(screen.getByText(/28.6%/i)).toBeInTheDocument();
             expect(screen.getByText("Satisfied")).toBeInTheDocument();
             expect(screen.getByText(/33.3%/i)).toBeInTheDocument();
-            expect(screen.getByText(/Excited/i)).toBeInTheDocument();
+            expect(screen.getByText(/Promoter/i)).toBeInTheDocument();
             expect(screen.getByText("0%")).toBeInTheDocument();
         });
     });
@@ -74,7 +74,7 @@ describe("SentimentDistribution Component", () => {
             expect(screen.getByText("Unsatisfied")).toBeInTheDocument();
             expect(screen.getByText(/Neutral/i)).toBeInTheDocument();
             expect(screen.getByText("Satisfied")).toBeInTheDocument();
-            expect(screen.getByText(/Excited/i)).toBeInTheDocument();
+            expect(screen.getByText(/Promoter/i)).toBeInTheDocument();
             expect(screen.getByText("0%")).toBeInTheDocument();
         });
     });
