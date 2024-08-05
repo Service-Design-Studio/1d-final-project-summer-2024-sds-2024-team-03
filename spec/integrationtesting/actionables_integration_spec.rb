@@ -47,7 +47,7 @@ RSpec.describe AnalyticsController, type: :controller do
       # Ensure you have the correct setup for real uploads in test environment
       file = fixture_file_upload('features\model_cucumber\valid\Cashline__CSS__valid_Problem Solution Survey.csv', 'text/csv')
       post :uploads, params: { file: file }
-      sleep(10) #waits for 10 seconds
+      sleep(90) #waits for 10 seconds
       expect(response).to have_http_status(:ok)
       json_response = JSON.parse(response.body)
       expect(json_response['url']).to include("https://storage.googleapis.com/")
@@ -68,7 +68,7 @@ RSpec.describe AnalyticsController, type: :controller do
       json_response = JSON.parse(response.body)
       sentiment_scores = json_response.map { |record| record['sentiment_score'].to_f }
       new_average_sentiment_score = (sentiment_scores.sum / sentiment_scores.size).round(1)
-      expect(new_average_sentiment_score).not_to eq(new_average_sentiment_score)
+      expect(average_sentiment_score).not_to eq(new_average_sentiment_score)
       puts "The new average sentiment score is: #{new_average_sentiment_score}"
     end
   end
