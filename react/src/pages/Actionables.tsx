@@ -355,7 +355,7 @@ export default function Actionables({
                 </Modal>
             </Box>
             <ActionsTracked isDashboard={false} refresh={refresh} />
-            <Box sx={{flexGrow: 1}}>
+            <Box sx={{flexGrow: 1, mt: 2}}>
                 <Tooltip
                     title={
                         <span>
@@ -393,7 +393,7 @@ export default function Actionables({
                                 </span>
                             }
                             arrow
-                            placement="left"
+                            placement="left-start"
                         >
                             <Grid item xs={4}>
                                 <Chip
