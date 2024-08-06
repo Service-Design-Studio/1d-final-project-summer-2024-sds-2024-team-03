@@ -199,7 +199,9 @@ describe("Dashboard Components", () => {
         expect(
             await screen.findByText(/Distribution of Sentiment/i)
         ).toBeInTheDocument();
-        expect(await screen.findByText(/Actions Tracked/i)).toBeInTheDocument();
+        expect(
+            await screen.findByText(/Actionables Tracked/i)
+        ).toBeInTheDocument();
         expect(await screen.findByText(/Done/i)).toBeInTheDocument();
         expect(await screen.findByText(/In Progress/i)).toBeInTheDocument();
         expect(

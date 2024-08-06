@@ -50,7 +50,7 @@ describe("ActionsTracked Component", () => {
 
     it("should render correctly", () => {
         renderActionsTracked();
-        expect(screen.getByText("Actions Tracked")).toBeInTheDocument();
+        expect(screen.getByText("Actionables Tracked")).toBeInTheDocument();
         expect(screen.getByText("Done")).toBeInTheDocument();
         expect(screen.getByText("In Progress")).toBeInTheDocument();
         expect(screen.getAllByText("0").length).toBe(2);
@@ -68,7 +68,7 @@ describe("ActionsTracked Component", () => {
         fetchMock.mockResponseOnce(JSON.stringify([]), {status: 200});
         renderActionsTracked();
 
-        expect(screen.getByText("No actions tracked")).toBeInTheDocument();
+        expect(screen.getByText("No actionables tracked")).toBeInTheDocument();
     });
 
     it("should call setSelectedMenu on button click", async () => {
