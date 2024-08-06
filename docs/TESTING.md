@@ -1,5 +1,9 @@
 ## CURL Test Actionable Page
 
+### Dashboard Page
+
+### Actionable Page
+
 ```bash
 # INFERENCE ACTIONABLE
 curl -X GET http://localhost:3000/actionables/inference
@@ -36,7 +40,9 @@ curl -X DELETE "http://localhost:3000/actionables/592.json" \
      -H "Content-Type: application/json"
 ```
 
-## Test Upload File with CURL
+### Upload page
+
+### Analytics page
 
 Based on the routes.rb:
 
