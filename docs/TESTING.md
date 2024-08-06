@@ -1,100 +1,3 @@
-## CURL Test Actionable Page
-
-### Dashboard Page
-
-### Actionable Page
-
-```bash
-# INFERENCE ACTIONABLE
-curl -X GET http://localhost:3000/actionables/inference
-
-# CREATE RESTful
-curl -X POST http://localhost:3000/actionables.json \
-     -H "Content-Type: application/json" \
-     -d '{
-           "actionable": {
-             "action": "New Actionable 3",
-             "status": "New",
-             "subproduct": "currency card",
-             "actionable_category": "To Promote",
-             "feedback_category": "application",
-             "feedback_json": "sucks"
-           }
-         }'
-
-# READ RESTful
-curl -X GET http://localhost:3000/actionables.json \
-     -H "Content-Type: application/json"
-
-# UPDATE RESTful
-curl -X PATCH "http://localhost:3000/actionables/592.json" \
-     -H "Content-Type: application/json" \
-     -d '{
-           "actionable": {
-             "status": "done"
-           }
-         }'
-
-# DELETE RESTful
-curl -X DELETE "http://localhost:3000/actionables/592.json" \
-     -H "Content-Type: application/json"
-```
-
-### Upload page
-
-### Analytics page
-
-Based on the routes.rb:
-
-```rb
-resources :analytics do
-    get 'get_earliest_latest_dates', on: :collection
-    get 'filter_products', on: :collection
-    get 'filter_sources', on: :collection
-    get 'get_sentiment_scores', on: :collection
-    get 'get_overall_sentiment_scores', on: :collection
-    get 'get_sentiments_sorted', on: :collection
-    get 'get_sentiments_distribution', on: :collection
-    post 'uploads', on: :collection # Added upload action as a collection route
-
-  end
-```
-
-Test the above RESTFUL(identify api end point by a URL pattern) api calls by:
-
-```bash
-curl -X GET http://127.0.0.1:3000/analytics/get_earliest_latest_dates
-curl -X GET http://127.0.0.1:3000/analytics/filter_products
-curl -X GET http://127.0.0.1:3000/analytics/filter_sources
-curl -X GET "http://127.0.0.1:3000/analytics/get_overall_sentiment_scores?fromDate=25/06/2024&toDate=02/07/2024&product=DBS%20Treasure&source=Product%20Survey"
-curl -X GET "http://127.0.0.1:3000/analytics/get_sentiments_distribution?fromDate=02/07/2024&toDate=09/07/2024&product=DBS%20Treasure&source=Product%20Survey"
-
-curl -X POST \
-     -H "Content-Type: multipart/form-data" \
-     -F "file=@README.md" \
-     http://127.0.0.1:3000/analytics/uploads
-```
-
-not used yet:
-
-```bash
-curl -X GET http://127.0.0.1:3000/analytics/get_sentiments_sorted
-curl -X GET http://127.0.0.1:3000/analytics/get_sentiment_scores
-```
-
-CRUD: currently no C, U or D for sprint2 (analytics)
-
-## Backend Unit Testing with Rspec
-
-1. To generate the rspeccode
-
-```bash
-bundle exec rspec
-```
-
-2. To generate code coverage
-   coverage/index.html
-
 ## Frontend Unit Testing with JestJS
 
 1. **Navigate to 'react' directory and Install Necessary Libraries:**
@@ -191,10 +94,129 @@ npm test
 
 ## Integration Testing with Cucumber
 
-To setup the testing with cucumber, run the following command.
++ All features/user stories along with happy and sad path scenarios are under [./features](https://github.com/Service-Design-Studio/1d-final-project-summer-2024-sds-2024-team-03/tree/main/features)
++ All other steps definitions are under [./features/step_definitions](https://github.com/Service-Design-Studio/1d-final-project-summer-2024-sds-2024-team-03/tree/main/features/step_definitions)
 
+1. To prepare database for testing
+
+```
 bundle exec rake db:migrate RAILS_ENV=test
-
-bundle exec cucumber
-
 rails db:migrate RAILS_ENV=test
+```
+
+2. Run all acceptance tests
+
+```
+bundle exec cucumber
+```
+
+## Backend Unit Testing with Rspec
+
++ Testing are defined under [./spec](https://github.com/Service-Design-Studio/1d-final-project-summer-2024-sds-2024-team-03/tree/main/spec)
++ Model Unit Testing [./spec/models](https://github.com/Service-Design-Studio/1d-final-project-summer-2024-sds-2024-team-03/tree/main/spec/models)
++ Controllers Unit Testing [./spec/requests](https://github.com/Service-Design-Studio/1d-final-project-summer-2024-sds-2024-team-03/tree/main/spec/requests)
+
+1. Run unit testing using Rspec
+
+```bash
+bundle exec rspec
+```
+
+2. To generate code coverage
+```
+   coverage/index.html
+```
+
++ Using Minitest
+Testing are defined under [./test](https://github.com/Service-Design-Studio/1d-final-project-summer-2024-sds-2024-team-03/tree/main/test)
+
+Run unit testing using Minitest
+```
+rails test
+```
+
+## Microservice CURL Test Actionable Page
+
+### Dashboard Page
+
+### Actionable Page
+
+```bash
+# INFERENCE ACTIONABLE
+curl -X GET http://localhost:3000/actionables/inference
+
+# CREATE RESTful
+curl -X POST http://localhost:3000/actionables.json \
+     -H "Content-Type: application/json" \
+     -d '{
+           "actionable": {
+             "action": "New Actionable 3",
+             "status": "New",
+             "subproduct": "currency card",
+             "actionable_category": "To Promote",
+             "feedback_category": "application",
+             "feedback_json": "sucks"
+           }
+         }'
+
+# READ RESTful
+curl -X GET http://localhost:3000/actionables.json \
+     -H "Content-Type: application/json"
+
+# UPDATE RESTful
+curl -X PATCH "http://localhost:3000/actionables/592.json" \
+     -H "Content-Type: application/json" \
+     -d '{
+           "actionable": {
+             "status": "done"
+           }
+         }'
+
+# DELETE RESTful
+curl -X DELETE "http://localhost:3000/actionables/592.json" \
+     -H "Content-Type: application/json"
+```
+
+### Upload page
+
+### Analytics page
+
+Based on the routes.rb:
+
+```rb
+resources :analytics do
+    get 'get_earliest_latest_dates', on: :collection
+    get 'filter_products', on: :collection
+    get 'filter_sources', on: :collection
+    get 'get_sentiment_scores', on: :collection
+    get 'get_overall_sentiment_scores', on: :collection
+    get 'get_sentiments_sorted', on: :collection
+    get 'get_sentiments_distribution', on: :collection
+    post 'uploads', on: :collection # Added upload action as a collection route
+
+  end
+```
+
+Test the above RESTFUL(identify api end point by a URL pattern) api calls by:
+
+```bash
+curl -X GET http://127.0.0.1:3000/analytics/get_earliest_latest_dates
+curl -X GET http://127.0.0.1:3000/analytics/filter_products
+curl -X GET http://127.0.0.1:3000/analytics/filter_sources
+curl -X GET "http://127.0.0.1:3000/analytics/get_overall_sentiment_scores?fromDate=25/06/2024&toDate=02/07/2024&product=DBS%20Treasure&source=Product%20Survey"
+curl -X GET "http://127.0.0.1:3000/analytics/get_sentiments_distribution?fromDate=02/07/2024&toDate=09/07/2024&product=DBS%20Treasure&source=Product%20Survey"
+
+curl -X POST \
+     -H "Content-Type: multipart/form-data" \
+     -F "file=@README.md" \
+     http://127.0.0.1:3000/analytics/uploads
+```
+
+not used yet:
+
+```bash
+curl -X GET http://127.0.0.1:3000/analytics/get_sentiments_sorted
+curl -X GET http://127.0.0.1:3000/analytics/get_sentiment_scores
+```
+
+CRUD: currently no C, U or D for sprint2 (analytics)
