@@ -6,7 +6,7 @@ RSpec.describe GoogleCloudStorageService do
       # Mocking the Google Cloud Storage client and bucket retrieval
       storage = double('Storage')
       bucket = double('Bucket')
-      expect(Google::Cloud::Storage).to receive(:new).with(project: 'jbaaam').and_return(storage)
+      expect(Google::Cloud::Storage).to receive(:new).with(project_id: 'jbaaam', credentials: 'jbaaam-upload-key.json').and_return(storage)
       expect(storage).to receive(:bucket).with('my-bucket').and_return(bucket)
 
       service = GoogleCloudStorageService.new('my-bucket')
