@@ -110,7 +110,7 @@ export default function TodoList({data, setRefresh, forWidget}: TodoListProps) {
                         />{" "}
                     </Box>
                 </AccordionSummary>
-                <AccordionDetails>
+                <AccordionDetails sx={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
                     {toFixData.map((item, i) => (
                         <TodoCard
                             key={item.id}
@@ -138,7 +138,7 @@ export default function TodoList({data, setRefresh, forWidget}: TodoListProps) {
                         />{" "}
                     </Box>
                 </AccordionSummary>
-                <AccordionDetails>
+                <AccordionDetails sx={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
                     {toKeepInMindData.map((item, i) => (
                         <TodoCard
                             key={item.id}
@@ -166,7 +166,7 @@ export default function TodoList({data, setRefresh, forWidget}: TodoListProps) {
                         />{" "}
                     </Box>
                 </AccordionSummary>
-                <AccordionDetails>
+                <AccordionDetails sx={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
                     {toAmplifyData.map((item, i) => (
                         <TodoCard
                             key={item.id}
@@ -196,7 +196,7 @@ export default function TodoList({data, setRefresh, forWidget}: TodoListProps) {
                         />{" "}
                     </Box>
                 </AccordionSummary>
-                <AccordionDetails>
+                <AccordionDetails sx={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
                     {toPromoteData.map((item, i) => (
                         <TodoCard
                             key={item.id}
