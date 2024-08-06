@@ -59,6 +59,25 @@ describe("Actionables Components", () => {
             ]),
             {status: 200},
         ],
+        // Specific Actionables
+        [
+            JSON.stringify([
+                {
+                    message:
+                        "Actionable items processed and stored successfully",
+                },
+            ]),
+            {status: 200},
+        ],
+        [
+            JSON.stringify([
+                {
+                    message:
+                        "Actionable items processed and stored successfully",
+                },
+            ]),
+            {status: 200},
+        ],
         // Actionables count
         [
             JSON.stringify([
@@ -85,17 +104,10 @@ describe("Actionables Components", () => {
                 },
             ]),
             {status: 200},
-        ],
-        // Specific Actionables
-        [
-            JSON.stringify([
-                // ??????????????????????????
-            ]),
-            {status: 200},
         ]
     );
 
-    it("renders overview Analytics", async () => {
+    it("renders overview Actionables", async () => {
         render(
             <Actionables
                 setFromDate={mockSetFromDate}
@@ -108,16 +120,19 @@ describe("Actionables Components", () => {
                 setSelectedSource={mockSetSelectedSource}
             />
         );
-        expect(await screen.findByText(/Actionables/i)).toBeInTheDocument();
+        expect(screen.getAllByText(/Actionables/i).length).toBe(2);
         expect(await screen.findByLabelText(/From/i)).toBeInTheDocument();
         expect(await screen.findByLabelText(/Products/i)).toBeInTheDocument();
         expect(await screen.findByLabelText(/Sources/i)).toBeInTheDocument();
-        expect(await screen.findByText(/New/i)).toBeInTheDocument();
+        expect(
+            await screen.findByText(/Generated Actions/i)
+        ).toBeInTheDocument();
         expect(await screen.findByText(/In Progress/i)).toBeInTheDocument();
         expect(await screen.findByText(/Done/i)).toBeInTheDocument();
-        expect(screen.getAllByText(/To Fix/i).length).toBe(3);
-        expect(screen.getAllByText(/To Keep In Mind/i).length).toBe(3);
-        expect(screen.getAllByText(/To Promote/i).length).toBe(3);
-        expect(screen.getAllByText(/To Amplify/i).length).toBe(3);
+        expect(await screen.findByText(/No data/i)).toBeInTheDocument();
+        expect(screen.getAllByText(/To Fix/i).length).toBe(2);
+        expect(screen.getAllByText(/To Keep In Mind/i).length).toBe(2);
+        expect(screen.getAllByText(/To Amplify/i).length).toBe(2);
+        expect(screen.getAllByText(/To Promote/i).length).toBe(2);
     });
 });

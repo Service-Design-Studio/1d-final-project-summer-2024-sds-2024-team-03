@@ -97,7 +97,7 @@ describe("UploadData Components", () => {
     it("renders Upload Data page", async () => {
         expect(await screen.findByText(/Upload Data/i)).toBeInTheDocument();
         expect(
-            await screen.findByLabelText(/Subcategories/i)
+            await screen.findByLabelText(/Subcategory/i)
         ).toBeInTheDocument();
         expect(await screen.findByLabelText(/Sources/i)).toBeInTheDocument();
         expect(
