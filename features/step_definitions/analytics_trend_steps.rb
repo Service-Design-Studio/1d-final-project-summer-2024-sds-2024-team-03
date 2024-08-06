@@ -43,7 +43,7 @@ And(/the Y-ticks are 0 to 5 in step 1/) do
   end
 end
 
-And(/I should be able to hover over it to reveal the date '(.*)' and score '(.*)'/) do |date, score|
+And(/I should be able to hover over it to reveal the date "(.*)" and score '(.*)'/) do |date, score|
   find('body').click
   circle = find('circle[r="4"][fill="#1f77b4"][stroke="#1f77b4"][stroke-width="2"]', visible: true)
   circle.hover

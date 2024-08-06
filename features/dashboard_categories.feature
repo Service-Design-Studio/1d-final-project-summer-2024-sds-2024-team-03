@@ -29,7 +29,7 @@ Scenario: Insufficient overall data
   
 Scenario: Less than 5 categories
   Given I am on the Dashboard page
-  When the date is set from '08/03/2024' to '10/03/2024'
+  When the date is set from '21/03/2024' to '21/03/2024'
   And the sources selected are: 'CSS'
   And the products selected are: 'Investments'
   And there are less than 5 categories in the category graph

@@ -1,9 +1,9 @@
 And (/I should see 5 subcategories with the most negative sentiments/) do
-    expect(page).to have_content("United Trust (UT) products > Application Related") 
-    expect(page).to have_content("NonUT products > Fee Related")
-    expect(page).to have_content("NonUT products > Application Related")
-    expect(page).to have_content("United Trust (UT) products > Staff Related")
-    expect(page).to have_content("null > Staff Related")
+    expect(page).to have_content("digiPortfolio > Technical / System Related") 
+    expect(page).to have_content("digiPortfolio > Charges / Fees & Interest")
+    expect(page).to have_content("digiPortfolio > Ui / Ux")
+    expect(page).to have_content("Vickers > Staff Related")
+    expect(page).to have_content("digiPortfolio > Process Related")
 end
 
 And(/with the 5 most negative sentiments sorted in descending order/) do
@@ -13,11 +13,11 @@ And(/with the 5 most negative sentiments sorted in descending order/) do
     content = parent_element.text.gsub(/\s+/, ' ').strip  # Replace multiple spaces and newlines with a single space
     
     expected_text = [
-      'United Trust (UT) products > Application Related',
-      'NonUT products > Fee Related',
-      'NonUT products > Application Related',
-      'United Trust (UT) products > Staff Related',
-      'null > Staff Related'
+    "digiPortfolio > Technical / System Related",
+    "digiPortfolio > Charges / Fees & Interest",
+    "digiPortfolio > Ui / Ux",
+    "Vickers > Staff Related",
+    "digiPortfolio > Process Related"
     ].join(' ')
     
     expect(content).to include(expected_text)
@@ -28,5 +28,6 @@ When (/there are less than 5 categories in the category graph/) do
 end
 
 Then (/I should see only those categories/) do
-    expect(page).to have_content("null > Staff Related")
+    expect(page).to have_content("Vickers > Others")
+    expect(page).to have_content("Vickers > Process Related")
 end
