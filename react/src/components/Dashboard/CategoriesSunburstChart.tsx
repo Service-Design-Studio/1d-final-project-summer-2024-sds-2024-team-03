@@ -102,16 +102,25 @@ export default forwardRef(function CategoriesSunburstChart(
         if (score <= 4.5) return order["Satisfied"];
         return order["Promoter"];
     };
+    const colorScheme = [
+        "#00b0be",
+        "#8fd7d7",
+        "#ffb255",
+        "#ffcd8e",
+        "#98c127",
+        "#bdd373",
+        "#f45f74",
+        "#ff8ca1",
+    ];
     const theme = useTheme();
 
-    const feedbackcategoryHashToHue = (feedbackcategory: string) => {
+    const feedbackcategoryHash = (feedbackcategory: string) => {
         let hash = 0;
         if (feedbackcategory) {
             for (let i = 0; i < feedbackcategory.length; i++) {
                 hash = feedbackcategory.charCodeAt(i) + ((hash << 5) - hash);
             }
-            // Use a prime number to spread out the hues more evenly
-            return (Math.abs(hash) % 359) * (137.5 / 360); // 137.5 is the golden angle in degrees
+            return Math.abs(hash) % colorScheme.length;
         }
         return 0;
     };
@@ -186,9 +195,9 @@ export default forwardRef(function CategoriesSunburstChart(
                             if (!productMap.has(product)) {
                                 productMap.set(product, {
                                     category: product,
-                                    color: `hsl(${feedbackcategoryHashToHue(
-                                        product
-                                    )}, 80%, 40%)`,
+                                    color: colorScheme[
+                                        feedbackcategoryHash(product)
+                                    ],
                                     children: [],
                                 });
                             }
@@ -202,9 +211,9 @@ export default forwardRef(function CategoriesSunburstChart(
                             if (!subcategoryNode) {
                                 subcategoryNode = {
                                     category: subcategory,
-                                    color: `hsl(${feedbackcategoryHashToHue(
-                                        subcategory
-                                    )}, 80%, 40%)`,
+                                    color: colorScheme[
+                                        feedbackcategoryHash(subcategory)
+                                    ],
                                     children: [],
                                 };
                                 subcategoryMap.push(subcategoryNode);
@@ -217,9 +226,9 @@ export default forwardRef(function CategoriesSunburstChart(
                             if (!feedbackNode) {
                                 feedbackNode = {
                                     category: feedback_category,
-                                    color: `hsl(${feedbackcategoryHashToHue(
-                                        feedback_category
-                                    )}, 80%, 40%)`,
+                                    color: colorScheme[
+                                        feedbackcategoryHash(feedback_category)
+                                    ],
                                     mentions: 0,
                                 };
                                 feedbackMap.push(feedbackNode);
@@ -300,15 +309,15 @@ export default forwardRef(function CategoriesSunburstChart(
                             children: [
                                 {
                                     key: "Product",
-                                    color: "hsl(297, 70%, 50%)",
+                                    color: "#00b0be",
                                     children: [
                                         {
                                             key: "Subcategory",
-                                            color: "hsl(201, 70%, 50%)",
+                                            color: "#f45f74",
                                             children: [
                                                 {
                                                     key: "Feedback Category",
-                                                    color: "hsl(81, 70%, 50%)",
+                                                    color: "#ffb255",
                                                     value: 100,
                                                 },
                                             ],
@@ -329,7 +338,7 @@ export default forwardRef(function CategoriesSunburstChart(
                             theme.palette.mode === "dark" ? "#222222" : "#fff"
                         }
                         colors={{scheme: "set2"}}
-                        inheritColorFromParent={true}
+                        inheritColorFromParent={false}
                         childColor={{
                             from: "color",
                             modifiers: [
@@ -456,7 +465,7 @@ export default forwardRef(function CategoriesSunburstChart(
                                 }
                                 colors={(bar) => barColors[bar.id]}
                                 // false: To make use of hsl from each component
-                                inheritColorFromParent={true}
+                                inheritColorFromParent={false}
                                 // colors={{scheme: "paired"}}
                                 childColor={{
                                     from: "color",
