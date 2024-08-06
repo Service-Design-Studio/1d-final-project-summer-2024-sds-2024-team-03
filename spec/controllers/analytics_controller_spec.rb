@@ -41,19 +41,6 @@ RSpec.describe AnalyticsController, type: :controller do
     end
   end
 
-  describe "GET #filter_products" do
-    it "returns filtered products" do
-      get :filter_products
-      expect(response).to be_successful
-    end
-  end
-
-  describe "GET #filter_sources" do
-    it "returns filtered sources" do
-      get :filter_sources
-      expect(response).to be_successful
-    end
-  end
 
   describe "GET #get_sentiment_scores" do
     it "retrieves sentiment scores" do
@@ -149,6 +136,20 @@ end
       expect(response).to be_successful
       expect(response.body).to include("Credit Card", "Personal Loan", "Mortgage/Home Loan")
       expect(response).to have_http_status(:ok)
+    end
+  end
+  
+  describe "GET #filter_products" do
+    it "returns filtered products" do
+      get :filter_products
+      expect(response).to be_successful
+    end
+  end
+
+  describe "GET #filter_sources" do
+    it "returns filtered sources" do
+      get :filter_sources
+      expect(response).to be_successful
     end
   end
 end
