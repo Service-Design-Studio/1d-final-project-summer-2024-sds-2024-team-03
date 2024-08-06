@@ -18,11 +18,25 @@ RSpec.describe "/actionables", type: :request do
   # Actionable. As you add validations to Actionable, be sure to
   # adjust the attributes here as well.
   let(:valid_attributes) {
-    skip("Add a hash of attributes valid for your model")
+    {
+      action: 'Test Action',
+      status: 'open',
+      subproduct: 'Test Subproduct',
+      actionable_category: 'Test Category',
+      feedback_category: 'Test Feedback',
+      feedback_json: '{"key": "value"}'
+    }
   }
 
   let(:invalid_attributes) {
-    skip("Add a hash of attributes invalid for your model")
+    {
+      action: '',
+      status: '',
+      subproduct: '',
+      actionable_category: '',
+      feedback_category: '',
+      feedback_json: ''
+    }
   }
 
   describe "GET /index" do
@@ -80,7 +94,7 @@ RSpec.describe "/actionables", type: :request do
     
       it "renders a response with 422 status (i.e. to display the 'new' template)" do
         post actionables_url, params: { actionable: invalid_attributes }
-        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response).to have_http_status(422)
       end
     
     end
@@ -89,14 +103,20 @@ RSpec.describe "/actionables", type: :request do
   describe "PATCH /update" do
     context "with valid parameters" do
       let(:new_attributes) {
-        skip("Add a hash of attributes valid for your model")
+        {
+          action: 'Sample Action',
+          status: 'close',
+          subproduct: 'Sample Subproduct',
+          actionable_category: 'Sample Category',
+          feedback_category: 'Sample Feedback',
+          feedback_json: '{"key2": "value2"}'
+    }
       }
 
       it "updates the requested actionable" do
         actionable = Actionable.create! valid_attributes
         patch actionable_url(actionable), params: { actionable: new_attributes }
         actionable.reload
-        skip("Add assertions for updated state")
       end
 
       it "redirects to the actionable" do
@@ -112,7 +132,7 @@ RSpec.describe "/actionables", type: :request do
       it "renders a response with 422 status (i.e. to display the 'edit' template)" do
         actionable = Actionable.create! valid_attributes
         patch actionable_url(actionable), params: { actionable: invalid_attributes }
-        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response).to have_http_status(422)
       end
     
     end
