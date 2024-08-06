@@ -59,34 +59,26 @@ describe("Actionables Components", () => {
             ]),
             {status: 200},
         ],
-        // Actionables count
+        // Specific Actionables
         [
             JSON.stringify([
                 {
-                    id: 727,
-                    action: "Improve communication and escalation processes within the DBS Hotline to ensure timely and effective resolution of customer issues, particularly those involving digital token setup.",
-                    status: "In Progress",
-                    subproduct: "DBS Hotline",
-                    actionable_category: "To Fix",
-                    feedback_category: '["Staff Related"]',
-                    feedback_json:
-                        '["Customer posted in X claiming that she has emailed CEO to complain about digital token. Acknowledged customer\\u2019s post and assured CM that it was shared with the relevant team for necessary action. Upon further checking, CM first called on 28 Feb and CSO guided CM to set up digital token. CM wrote in to customerservice@dbs.com and not to CEO\\u2019s email address and case was escalated on 1 March. Tech investigation shows that there was no attempt of digital token set up based on logs. Customer Relations Manager (CRM) contacted customer; however, CM was abusive over the phone and requested for a senior CRM. SCRM has tried contacting CM but she was unreachable since 1 March."]',
-                },
-                {
-                    id: 728,
-                    action: "Review and potentially adjust prepayment fees and interest rebate policies to ensure fairness and transparency for customers.",
-                    status: "Done",
-                    subproduct: "Car Loan",
-                    actionable_category: "To Promote",
-                    feedback_category:
-                        '["Process Related", "Technical Issue/System", "Charges/Fees & Interest"]',
-                    feedback_json:
-                        '["Car Loan Please elaborate on why you have selected [QID4-ChoiceGroup-SelectedChoices].\\nPlease do not provide any sensitive personal information, including login passwords or one-time passwords.: Get the info on the spot", "Car Loan Please elaborate on why you have selected [QID4-ChoiceGroup-SelectedChoices].\\nPlease do not provide any sensitive personal information, including login passwords or one-time passwords.: Staff was professional and courteous over the phone. She is sharp and has high attention to details. ", "Car Loan (Optional) We have now come to the end of the survey. Before you go, please share your feedback (if any) for us to improve your DBS Car Loan experience with us.(Please do not provide any sensitive personal information, including login passwords or one-time passwords.): Prepayment fees and interest rebate is not fair."]',
+                    message:
+                        "Actionable items processed and stored successfully",
                 },
             ]),
             {status: 200},
         ],
-        // Specific Actionables
+        [
+            JSON.stringify([
+                {
+                    message:
+                        "Actionable items processed and stored successfully",
+                },
+            ]),
+            {status: 200},
+        ],
+        // Actionables count
         [
             JSON.stringify([
                 {
@@ -115,7 +107,7 @@ describe("Actionables Components", () => {
         ]
     );
 
-    it("renders overview Analytics", async () => {
+    it("renders overview Actionables", async () => {
         render(
             <Actionables
                 setFromDate={mockSetFromDate}
@@ -132,12 +124,15 @@ describe("Actionables Components", () => {
         expect(await screen.findByLabelText(/From/i)).toBeInTheDocument();
         expect(await screen.findByLabelText(/Products/i)).toBeInTheDocument();
         expect(await screen.findByLabelText(/Sources/i)).toBeInTheDocument();
-        expect(await screen.findByText(/New/i)).toBeInTheDocument();
+        expect(
+            await screen.findByText(/Generated Actions/i)
+        ).toBeInTheDocument();
         expect(await screen.findByText(/In Progress/i)).toBeInTheDocument();
         expect(await screen.findByText(/Done/i)).toBeInTheDocument();
-        expect(screen.getAllByText(/To Fix/i).length).toBe(3);
-        expect(screen.getAllByText(/To Keep In Mind/i).length).toBe(3);
-        expect(screen.getAllByText(/To Promote/i).length).toBe(3);
-        expect(screen.getAllByText(/To Amplify/i).length).toBe(3);
+        expect(await screen.findByText(/No data/i)).toBeInTheDocument();
+        expect(screen.getAllByText(/To Fix/i).length).toBe(2);
+        expect(screen.getAllByText(/To Keep In Mind/i).length).toBe(2);
+        expect(screen.getAllByText(/To Amplify/i).length).toBe(2);
+        expect(screen.getAllByText(/To Promote/i).length).toBe(2);
     });
 });
