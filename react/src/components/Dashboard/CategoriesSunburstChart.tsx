@@ -114,7 +114,6 @@ export default forwardRef(function CategoriesSunburstChart(
         "#008dff",
         "#003a7d",
         "#d83034",
-        "#f9e858",
         "#ff9d3a",
         "#4ecb8d",
         "#c701ff",
