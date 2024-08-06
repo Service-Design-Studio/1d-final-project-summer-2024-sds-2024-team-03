@@ -154,6 +154,7 @@ export default forwardRef(function ActionsTracked(
                                             sx={{
                                                 paddingTop: "10px",
                                                 paddingBottom: "0px",
+                                                width: '100px'
                                             }}
                                         >
                                             <Typography
@@ -176,7 +177,10 @@ export default forwardRef(function ActionsTracked(
                                         <StyledTableCell
                                             key={index}
                                             align="center"
-                                            sx={{padding: "0px"}}
+                                            sx={{
+                                                padding: "0px",
+                                                width: '100px'
+                                            }}
                                         >
                                             <Typography
                                                 sx={{
