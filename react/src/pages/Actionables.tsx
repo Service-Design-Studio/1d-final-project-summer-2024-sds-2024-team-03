@@ -27,7 +27,6 @@ import RotateRightTwoToneIcon from "@mui/icons-material/RotateRightTwoTone";
 import CheckCircleTwoToneIcon from "@mui/icons-material/CheckCircleTwoTone";
 import {useTheme} from "@mui/material/styles";
 import useDetectScroll, {Direction} from "@smakss/react-scroll-direction";
-import ActionsTracked from "../components/Dashboard/ActionsTracked";
 
 const CustomWidthTooltip = styled(({className, ...props}: TooltipProps) => (
     <Tooltip {...props} classes={{popper: className}} />
@@ -225,6 +224,44 @@ export default function Actionables({
             });
     };
 
+    const [actionsTrackedRaw, setActionsTrackedRaw] = useState<
+        Record<string, number>
+    >({
+        "Generated Actions": 0,
+        "In Progress": 0,
+        "Done": 0,
+    });
+
+    useEffect(() => {
+        const urlPrefix =
+            process.env.NODE_ENV === "development"
+                ? "http://localhost:3000"
+                : "https://jbaaam-yl5rojgcbq-et.a.run.app";
+        fetch(`${urlPrefix}/actionables.json`)
+            .then((response) => response.json())
+            .then((data: Actionable[]) => {
+                const generatedActionsData = data.filter(
+                    (item: Actionable) =>
+                        item.status.toLowerCase() ===
+                        "new".toLowerCase()
+                );
+                const inProgressData = data.filter(
+                    (item: Actionable) =>
+                        item.status.toLowerCase() ===
+                        "in progress".toLowerCase()
+                );
+                const doneData = data.filter(
+                    (item: Actionable) =>
+                        item.status.toLowerCase() === "done".toLowerCase()
+                );
+                setActionsTrackedRaw({
+                    "Generated Actions": generatedActionsData.length,
+                    "In Progress": inProgressData.length,
+                    "Done": doneData.length,
+                });
+            });
+    }, [refresh]);
+
     return (
         <Box sx={{maxWidth: "lg", mx: "auto", px: 2}}>
             <Box
@@ -354,7 +391,6 @@ export default function Actionables({
                     </Box>
                 </Modal>
             </Box>
-            <ActionsTracked isDashboard={false} refresh={refresh} />
             <Box sx={{flexGrow: 1, mt: 2}}>
                 <Tooltip
                     title={
@@ -398,7 +434,7 @@ export default function Actionables({
                             <Grid item xs={4}>
                                 <Chip
                                     icon={<NewReleasesTwoToneIcon />}
-                                    label="GENERATED ACTIONS"
+                                    label={`GENERATED ACTIONS: ${actionsTrackedRaw['Generated Actions']}`}
                                     color="secondary"
                                     variant="outlined"
                                     sx={{
@@ -411,7 +447,6 @@ export default function Actionables({
                                         borderWidth: 2,
                                     }}
                                 />
-
                                 {dataNew.length === 0 ? (
                                     <Box sx={{width: "100%", height: "100%"}}>
                                         <Typography
@@ -433,7 +468,7 @@ export default function Actionables({
                         <Grid item xs={4}>
                             <Chip
                                 icon={<RotateRightTwoToneIcon />}
-                                label="IN PROGRESS"
+                                label={`IN PROGRESS: ${actionsTrackedRaw['In Progress']}`}
                                 variant="outlined"
                                 sx={{
                                     mb: 2,
@@ -459,7 +494,7 @@ export default function Actionables({
                         <Grid item xs={4}>
                             <Chip
                                 icon={<CheckCircleTwoToneIcon />}
-                                label="DONE"
+                                label={`DONE: ${actionsTrackedRaw['Done']}`}
                                 variant="outlined"
                                 sx={{
                                     mb: 2,
