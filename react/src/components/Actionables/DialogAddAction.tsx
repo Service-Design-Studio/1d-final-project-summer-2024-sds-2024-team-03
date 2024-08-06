@@ -32,7 +32,7 @@ import Select, {SelectChangeEvent} from "@mui/material/Select";
 import Chip from "@mui/material/Chip";
 
 const ITEM_HEIGHT = 48;
-const ITEM_PADDING_TOP = 8;
+const ITEM_PADDING_TOP = 0;
 const MenuProps = {
     PaperProps: {
         style: {
@@ -282,10 +282,11 @@ useEffect(() => {
                         console.log(email);
                         handleClose();
                     },
+                    sx: { padding: '25px', borderRadius: '18px'},
                 }}
             >
-                <DialogTitle>Add an Action</DialogTitle>
-                <DialogContent>
+                <DialogTitle sx={{padding: '0px', fontWeight: 'bold', fontSize: '1.5rem'}}>Add an Action</DialogTitle>
+                <DialogContent sx={{padding: '0px'}}>
                     <DialogContentText>
                         Please enter an action and choose its category. The
                         action will automatically be assigned the status 'In
@@ -305,7 +306,7 @@ useEffect(() => {
                         onChange={handleInputChange}
                     />
 
-                    <Box sx={{display: "flex", gap: 2, mt: 1, width: "80%"}}>
+                    <Box sx={{display: "flex", gap: 2, mt: 1, width: "100%"}}>
                         <FormControl sx={{m: 0, width: "50%"}}>
                             <InputLabel id="detailed-sentimentscoregraph-filter-subcategory-label">
                                 Subcategories
@@ -480,13 +481,33 @@ useEffect(() => {
                         </RadioGroup>
                     </FormControl>
                 </DialogContent>
-                <DialogActions>
-                    <Button onClick={handleClose}>Cancel</Button>
+                <DialogActions sx={{padding: '0px'}}>
+                    <Button 
+                        sx={{
+                            fontSize: '1rem',
+                            fontWeight: 'bold',
+                            opacity: '0.7',
+                            marginRight: '10px',
+                            borderRadius: '8px',
+                            paddingX: '15px'
+                        }}
+                        onClick={handleClose}>Cancel
+                    </Button>
                     <Button
                         type="submit"
                         size="small"
                         variant="contained"
                         color="secondary"
+                        sx={{
+                            fontWeight: 'bold',
+                            fontSize: '1rem',
+                            boxShadow: 'none', 
+                            borderRadius: '8px',
+                            paddingX: '15px',
+                            "&:hover": {
+                                boxShadow: 0,
+                            }
+                        }}
                         onClick={handleAddClick}
                     >
                         Add
