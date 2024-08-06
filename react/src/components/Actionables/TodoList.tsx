@@ -94,11 +94,13 @@ export default function TodoList({data, setRefresh, forWidget}: TodoListProps) {
             <Accordion
                 expanded={expanded === "panel1"}
                 onChange={handleChange("panel1")}
+                style={{ borderTopLeftRadius: 18, borderTopRightRadius: 18 }}
             >
                 <AccordionSummary
                     aria-controls={`${forWidget}-panel1d-content`}
                     id={`${forWidget}-panel1d-header`}
                     expandIcon={<ExpandMoreIcon />}
+                    style={{ borderTopLeftRadius: 18, borderTopRightRadius: 18 }}
                 >
                     <Box display="flex" alignItems="center" width="100%">
                         <Typography>To Fix</Typography>
@@ -178,11 +180,13 @@ export default function TodoList({data, setRefresh, forWidget}: TodoListProps) {
             <Accordion
                 expanded={expanded === "panel4"}
                 onChange={handleChange("panel4")}
+                style={{ borderBottomLeftRadius: 18, borderBottomRightRadius: 18 }}
             >
                 <AccordionSummary
                     aria-controls={`${forWidget}-panel4d-content`}
                     id={`${forWidget}-panel4d-header`}
                     expandIcon={<ExpandMoreIcon />}
+                    style={{ borderBottomLeftRadius: expanded === "panel4" ? 0 : 18, borderBottomRightRadius: expanded === "panel4" ? 0 : 18, transition: "border-radius 0.3s ease" }}
                 >
                     <Box display="flex" alignItems="center" width="100%">
                         <Typography>To Promote</Typography>

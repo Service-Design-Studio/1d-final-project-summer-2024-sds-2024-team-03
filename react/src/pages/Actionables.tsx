@@ -437,16 +437,16 @@ export default function Actionables({
                                 variant="outlined"
                                 sx={{
                                     mb: 2,
-                                    color: "#DA5707",
-                                    borderColor: "#DA5707",
+                                    color: "#DC6E00",
+                                    borderColor: "#DC6E00",
                                     borderRadius: 3,
-                                    backgroundColor: "rgba(218, 87, 7, 0.2)",
+                                    backgroundColor: "rgba(235, 135, 7, 0.2)",
                                     fontWeight: "bold",
                                     py: 2,
                                     px: 0.5,
                                     borderWidth: 2,
                                     "& .MuiChip-icon": {
-                                        color: "#DA5707",
+                                        color: "#DC6E00",
                                     },
                                 }}
                             />

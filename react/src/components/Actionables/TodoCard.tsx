@@ -142,9 +142,9 @@ export default function OutlinedCard({
         },
     ];
     return (
-        <Paper elevation={2} sx={{minWidth: 275, mb: 2}} id={forWidget}>
-            <Card variant="outlined">
-                <CardContent>
+        <Paper elevation={2} sx={{minWidth: 275, mb: 2, borderRadius: 3}} id={forWidget}>
+            <Card variant="outlined" sx={{borderRadius: 3, padding: "16px"}}>
+                <CardContent sx={{padding: "0px"}}>
                     <Grid container spacing={2}>
                         <Grid item xs={4} container alignItems="flex-start">
                             <Typography
@@ -183,12 +183,12 @@ export default function OutlinedCard({
                             </Typography>
                         </Grid>
                     </Grid>
-                    <Typography variant="h6" component="div">
+                    <Typography variant="h6" component="div" sx={{paddingY: "10px", fontSize: "1.15rem"}}>
                         {actionable.action}
                     </Typography>
                 </CardContent>
                 {!viewData && (
-                    <CardActions>
+                    <CardActions sx={{padding: "0px"}}>
                         <Box
                             sx={{
                                 display: "flex",
@@ -202,6 +202,7 @@ export default function OutlinedCard({
                                     background: "none",
                                     border: "none",
                                     cursor: "pointer",
+                                    padding: "0px"
                                 }}
                             >
                                 <DeleteTwoToneIcon style={{color: "#808080"}} />
