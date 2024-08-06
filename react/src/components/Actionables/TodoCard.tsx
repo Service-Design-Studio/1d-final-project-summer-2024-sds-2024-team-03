@@ -142,7 +142,7 @@ export default function OutlinedCard({
         },
     ];
     return (
-        <Paper elevation={2} sx={{minWidth: 275, mb: 2, borderRadius: 3}} id={forWidget}>
+        <Paper elevation={2} sx={{minWidth: 275, borderRadius: 3}} id={forWidget}>
             <Card variant="outlined" sx={{borderRadius: 3, padding: "16px"}}>
                 <CardContent sx={{padding: "0px"}}>
                     <Grid container spacing={2}>
