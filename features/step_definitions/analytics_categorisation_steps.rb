@@ -45,7 +45,8 @@ And(/I click on '(.*)'/) do |text|
 end
 
 And(/the X-ticks are integers from 0 to 100 with step 10/) do
-  parent_element = find("g[transform='translate(0,340)']", wait:10)
+  parent_elements = all("g[transform='translate(0,340)']",wait:10)
+  parent_element = parent_elements.second
   expected_values = [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100]
   expected_values.each do |value|
     expect(parent_element).to have_css("text", text: value.to_s)
@@ -76,7 +77,8 @@ When(/I click on the 'sort' button/) do
 end
 
 Then(/the subcategories are currently sorted in descending order of positive sentiment '(.*)' and '(.*)'/) do |text1, text2|
-  parent_element = find("g[transform='translate(0,0)']", wait:10)
+  parent_elements = all("g[transform='translate(0,0)']", wait:10)
+  parent_element = parent_elements.first
   # Check that the parent element contains both specified texts
   expect(parent_element).to have_content(text1)
   expect(parent_element).to have_content(text2)

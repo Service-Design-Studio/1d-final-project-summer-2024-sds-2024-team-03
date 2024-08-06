@@ -10,7 +10,7 @@ Scenario: Available Subcategory dropdown options
   And the sources selected are: 'CSS'
   And the products selected are: 'Investments'
   And I click on the 'Subcategory' dropdown button in the Sentiment Trend widget
-  Then I should see all the subcategories 'United Trust (UT) products' and 'NonUT products'
+  Then I should see all the subcategories 'digiPortfolio', 'Vickers'
   
 Scenario: Available Feedback Category dropdown options
   Given I am on the Analytics page
@@ -18,9 +18,9 @@ Scenario: Available Feedback Category dropdown options
   And the sources selected are: 'CSS'
   And the products selected are: 'Investments'
   And I click on the 'Subcategory' dropdown button in the Sentiment Trend widget
-  And I click on 'United Trust (UT) products'
+  And I click on 'Vickers'
   And I click on the 'Feedback Category' dropdown button
-  Then I should see all the feedback categories 'Staff Related' and 'Application Related'
+  Then I should see all the feedback categories 'Staff Related' and 'Technical / System Related'
   
 Scenario: Hovering on a dropdown option updates
   Given I am on the Analytics page
@@ -28,8 +28,8 @@ Scenario: Hovering on a dropdown option updates
   And the sources selected are: 'CSS'
   And the products selected are: 'Investments'
   And I click on the 'Subcategory' dropdown button in the Sentiment Trend widget
-  And I hover on 'United Trust (UT) products'
-  Then the dropdown option 'United Trust (UT) products' should be highlighted
+  And I hover on 'digiPortfolio'
+  Then the dropdown option 'digiPortfolio' should be highlighted
   
 Scenario: Selecting a subcategory highlights it and adds it to the listbox
   Given I am on the Analytics page
@@ -37,8 +37,8 @@ Scenario: Selecting a subcategory highlights it and adds it to the listbox
   And the sources selected are: 'CSS'
   And the products selected are: 'Investments'
   And I click on the 'Subcategory' dropdown button in the Sentiment Trend widget
-  And I click on 'United Trust (UT) products'
-  Then I should see 'United Trust (UT) products' in the text field of the Sentiment Trend Subcategory dropdown button
+  And I click on 'digiPortfolio'
+  Then I should see 'digiPortfolio' in the text field of the Sentiment Trend Subcategory dropdown button
   
 Scenario: Selecting a feedback category highlights it and adds it to the listbox
   Given I am on the Analytics page
@@ -46,10 +46,10 @@ Scenario: Selecting a feedback category highlights it and adds it to the listbox
   And the sources selected are: 'CSS'
   And the products selected are: 'Investments'
   And I click on the 'Subcategory' dropdown button in the Sentiment Trend widget
-  And I click on 'United Trust (UT) products'
+  And I click on 'Vickers'
   And I click on the 'Feedback Category' dropdown button
-  And I click on 'Application Related'
-  Then I should see 'Application Related' in the text field of the Sentiment Trend Feedback Category dropdown button
+  And I click on 'Staff Related'
+  Then I should see 'Staff Related' in the text field of the Sentiment Trend Feedback Category dropdown button
   
 Scenario: Selection from 1 dropdown option updates the visualizations
   Given I am on the Analytics page
@@ -57,20 +57,20 @@ Scenario: Selection from 1 dropdown option updates the visualizations
   And the sources selected are: 'CSS'
   And the products selected are: 'Investments'
   And I click on the 'Subcategory' dropdown button in the Sentiment Trend widget
-  And I click on 'United Trust (UT) products'
+  And I click on 'digiPortfolio'
   And I click on the 'Feedback Category' dropdown button
-  And I click on 'Application Related'
-  Then I should see a widget titled 'Sentiment Trend for United Trust (UT) products'
-  And the X-ticks show 4 months in the format MMM 'YY
+  And I click on 'Technical / System Related'
+  Then I should see a widget titled 'Sentiment Trend for digiPortfolio'
+  And the X-ticks show 2 months in the format MMM 'YY
   And the Y-ticks are 0 to 5 in step 1
 
 Scenario: Label appears when hovering over data plot
   Given I am on the Analytics page
-  When the date is set from '20/04/2024' to '20/04/2024'
+  When the date is set from '02/05/2024' to '02/05/2024'
   And the sources selected are: 'CSS'
   And the products selected are: 'Investments'
   And I click on the 'Subcategory' dropdown button in the Sentiment Trend widget
-  And I click on 'United Trust (UT) products'
+  And I click on 'digiPortfolio'
   And I click on the 'Feedback Category' dropdown button
-  And I click on 'Application Related'
-  Then I should be able to hover over it to reveal the date '20 Apr 24' and score '+0.9'
+  And I click on 'Technical / System Related'
+  Then I should be able to hover over it to reveal the date "02 May '24" and score '+4.1'
