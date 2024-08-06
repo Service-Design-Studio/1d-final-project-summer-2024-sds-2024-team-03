@@ -154,7 +154,7 @@ export default forwardRef(function ActionsTracked(
                                             sx={{
                                                 paddingTop: "10px",
                                                 paddingBottom: "0px",
-                                                width: '100px'
+                                                width: "100px",
                                             }}
                                         >
                                             <Typography
@@ -179,7 +179,7 @@ export default forwardRef(function ActionsTracked(
                                             align="center"
                                             sx={{
                                                 padding: "0px",
-                                                width: '100px'
+                                                width: "100px",
                                             }}
                                         >
                                             <Typography
@@ -282,7 +282,7 @@ export default forwardRef(function ActionsTracked(
                         labelTextColor="rgba(255, 255, 255, 0.9)"
                         legends={[]}
                         role="application"
-                        ariaLabel="Actions Tracked"
+                        ariaLabel="Actionables Tracked"
                         barAriaLabel={(e) =>
                             e.id +
                             ": " +
@@ -475,7 +475,7 @@ export default forwardRef(function ActionsTracked(
                         labelTextColor="rgba(255, 255, 255, 0.9)"
                         legends={[]}
                         role="application"
-                        ariaLabel="Actions Tracked"
+                        ariaLabel="Actionables Tracked"
                         barAriaLabel={(e) =>
                             e.id +
                             ": " +

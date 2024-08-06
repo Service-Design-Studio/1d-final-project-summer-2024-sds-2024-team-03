@@ -211,9 +211,21 @@ export default forwardRef(function CategoriesSunburstChart(
                             if (!subcategoryNode) {
                                 subcategoryNode = {
                                     category: subcategory,
-                                    color: colorScheme[
+                                    color:
+                                        feedbackcategoryHash(product) !==
                                         feedbackcategoryHash(subcategory)
-                                    ],
+                                            ? colorScheme[
+                                                  feedbackcategoryHash(
+                                                      subcategory
+                                                  )
+                                              ]
+                                            : colorScheme[
+                                                  (feedbackcategoryHash(
+                                                      subcategory
+                                                  ) +
+                                                      1) %
+                                                      colorScheme.length
+                                              ],
                                     children: [],
                                 };
                                 subcategoryMap.push(subcategoryNode);
@@ -226,9 +238,21 @@ export default forwardRef(function CategoriesSunburstChart(
                             if (!feedbackNode) {
                                 feedbackNode = {
                                     category: feedback_category,
-                                    color: colorScheme[
+                                    color:
+                                        feedbackcategoryHash(subcategory) !==
                                         feedbackcategoryHash(feedback_category)
-                                    ],
+                                            ? colorScheme[
+                                                  feedbackcategoryHash(
+                                                      feedback_category
+                                                  )
+                                              ]
+                                            : colorScheme[
+                                                  (feedbackcategoryHash(
+                                                      feedback_category
+                                                  ) +
+                                                      1) %
+                                                      colorScheme.length
+                                              ],
                                     mentions: 0,
                                 };
                                 feedbackMap.push(feedbackNode);
@@ -337,7 +361,8 @@ export default forwardRef(function CategoriesSunburstChart(
                         borderColor={
                             theme.palette.mode === "dark" ? "#222222" : "#fff"
                         }
-                        colors={{scheme: "set2"}}
+                        // colors={{scheme: "set2"}}
+                        colors={["#00b0be", "#f45f74", "#ffb255"]}
                         inheritColorFromParent={false}
                         childColor={{
                             from: "color",
