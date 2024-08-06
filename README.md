@@ -35,10 +35,6 @@ Comprehensive features
 
 - AI-Driven Recommendations Generating data-driven, actionable recommendations based on aggregated feedback from multiple sources. 
 
-# Problem Statement
-
-How might we automate the interpretation and classification of all feedbacks and translate it into effective actionable insights that empower the CX team to enhance the customer experience?”
-
 # Acknowledgments
 - Adelaine Suhendro [@LinkedIn](https://linkedin.com/in/adelaine-suhendro) [@Github](https://github.com/ilenhanako)
 - Avitra Phon [@LinkedIn](https://www.linkedin.com/in/avitraphon/) [@Github](https://github.com/Avitra2002)
@@ -46,6 +42,46 @@ How might we automate the interpretation and classification of all feedbacks and
 - Bryan Tan Wei An [@LinkedIn](https://www.linkedin.com/in/bryantanwa/) [@Github](https://github.com/bryantanwa)
 - Gay Kai Feng Matthew [@LinkedIn](https://www.linkedin.com/in/matthew-gay-a16754296/) [@Github](https://github.com/mattmellow)
 - Joel Lim [@LinkedIn](https://www.linkedin.com/in/joel-lim-2a0096271/) [@Github](https://github.com/j0ellim)
+
+
+# Problem Statement
+
+How might we automate the interpretation and classification of all feedbacks and translate it into effective actionable insights that empower the CX team to enhance the customer experience?”
+
+# Architecture
+
+Our architecture might seem typical for web applications, but we use a variety of technologies, all learned from scratch. 
+
+### Programming Languages and Frameworks:
+- Frontend: TypeScript with React.
+- Backend API: Ruby with Rails.
+- Microservices: Developed in Python and deployed as serverless solutions.
+- CICD: Developed as GitHub action, and trigger on Pull Request merge.
+  
+### Overview:
+- Frontend: Built with TypeScript and React.
+- Backend API: Uses Ruby on Rails, employing RESTful APIs.
+- Microservices: Two Python-based microservices, deployed as serverless functions.
+
+This diverse setup has been quite a journey for us! 
+
+## Front End
+Our frontend layer is developed in TypeScript using React. WWe opted for TypeScript because its strong typing enhances robustness against typing errors, though it added some complexity to the development process. Our frontend is hosted on Google Cloud Storage, which is unconventional since it's typically used for file storage, but it works well for our web application. The frontend communicates with the backend via API calls.
+
+## Backend API
+We designed the backend API to be a pure API layer without business logic, using RESTful APIs as supported by Rails. We developed around 20 APIs, mainly focused on actionable and analytic data models. The upload API is the most complex, as it handles multipart data and integrates with Google Cloud Storage. This API is independently deployable and functions as a microservice, deployed serverlessly via Docker on Google Cloud Run. The build process, including Docker image creation, takes about 10 minutes.
+
+We also have two other serverless microservices.
+
+## 2 other microservices
+Both additional microservices are simpler and also developed as serverless solutions. Instead of using Docker, we chose Google Cloud Functions to avoid unnecessary complexity. This decision simplifies deployment and reduces the wait time, as building a Docker image is not required. These microservices, written in Python
+
+The first microservice is an event-driven service triggered by file uploads to a bucket. It performs data cleanup and validation, enriches the data by calling the Gemini API, and finally stores the clean and curated information in an Analytics table.
+
+The second microservice is an HTTP service called by the backend API. It takes input parameters, reads a subset of analytic records based on those parameters, processes them with an ML model, integrates results from the Gemini API, and stores the final information in an Actionable table. 
+
+## DB layer
+Last but not least, our application uses a database to store the final curated data, while raw data is kept in Google Storage. This setup ensures that all API calls read data from the database. In our demo, you'll see sleek data statistical presentations. Despite the complex statistics, we maintain a simple and clean data model. Basic computations like sums and aggregations are handled in the API layer. For more detailed computations, we use the frontend, displaying results with our React-based graph library, Nivo built on top of D3.js.
 
 # Getting Started
 
