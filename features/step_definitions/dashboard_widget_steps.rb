@@ -29,7 +29,6 @@ Then(/^(.*) bar is colored (.*)$/) do |sentiment, color|
 
   case color
     when "red"
-      sleep(6)
       expect(background_color).to eq("rgba(255, 0, 0, 1)")
     when "orange"
       expect(background_color).to eq("rgba(255, 165, 0, 1)")
@@ -76,7 +75,6 @@ When(/the date is set from '(.*)' to '(.*)'/) do |start_date, end_date|
 end
 
 Then(/I should see the overall sentiment score as '(.*)'/) do |expected_score|
-  sleep(6)
   full_text = find('#overall-sentiment-score').text
   actual_score = full_text.split("\n")[1]
   expect(actual_score).to eq(expected_score)

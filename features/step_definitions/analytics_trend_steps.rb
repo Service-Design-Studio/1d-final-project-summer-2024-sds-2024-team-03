@@ -25,21 +25,19 @@ Then(/I should see all the feedback categories '(.*)' and '(.*)'/) do |item1, it
   end
 end
 
-And(/the X-ticks show 4 months in the format MMM 'YY/) do
+And(/the X-ticks show two months in the format MMM 'YY: '(.*)', '(.*)'/) do |month1, month2|
   find('body').click # close dropdown
-  expected_values = ["Feb '24", "Mar '24", "Apr '24", "May '24"]
+  expected_values = [month1, month2]
   expected_values.each do |value|
     expect(page).to have_css("text[dominant-baseline='text-before-edge']", text: value)
   end
 end
 
-And(/the Y-ticks are 0 to 5 in step 1/) do
+And(/the Y-ticks are 0 to 5 in steps of 1/) do
   expected_values = [0, 1, 2, 3, 4, 5]
-  parent_element = find("g[transform='translate(0,0)']")
-
   expected_values.each do |value|
     # Check for text elements with the dominant-baseline style attribute
-    expect(parent_element['inner_html']).to have_css(text: value)
+    expect(page).to have_css("text[dominant-baseline='central']", text: value)
   end
 end
 
