@@ -111,6 +111,14 @@ export default forwardRef(function CategoriesSunburstChart(
         "#bdd373",
         "#f45f74",
         "#ff8ca1",
+        "#008dff",
+        "#003a7d",
+        "#d83034",
+        "#f9e858",
+        "#ff9d3a",
+        "#4ecb8d",
+        "#c701ff",
+        "#ff73b6",
     ];
     const theme = useTheme();
 
