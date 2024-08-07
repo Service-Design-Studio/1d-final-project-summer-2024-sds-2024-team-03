@@ -90,8 +90,6 @@ npm test
 5. **Disable Tests**
    To disable, simply rename the file to not match [.test.tsx] Eg. Dashboard.test.disabled.tsx
 
-## Backend Unit Testing with Rspec
-
 ## Integration Testing with Cucumber
 
 + All features/user stories along with happy and sad path scenarios are under [./features](https://github.com/Service-Design-Studio/1d-final-project-summer-2024-sds-2024-team-03/tree/main/features)
@@ -122,11 +120,8 @@ bundle exec cucumber
 bundle exec rspec
 ```
 
-2. To generate code coverage
-```
-   coverage/index.html
-```
-
+2. Automatically generates code coverage report in [coverage/index.html](https://github.com/Service-Design-Studio/1d-final-project-summer-2024-sds-2024-team-03/blob/main/coverage/index.html)
+   
 + Using Minitest
 Testing are defined under [./test](https://github.com/Service-Design-Studio/1d-final-project-summer-2024-sds-2024-team-03/tree/main/test)
 
@@ -135,9 +130,7 @@ Run unit testing using Minitest
 rails test
 ```
 
-## Microservice CURL Test Actionable Page
-
-### Dashboard Page
+## Microservice CURL Tests 
 
 ### Actionable Page
 
@@ -176,8 +169,6 @@ curl -X PATCH "http://localhost:3000/actionables/592.json" \
 curl -X DELETE "http://localhost:3000/actionables/592.json" \
      -H "Content-Type: application/json"
 ```
-
-### Upload page
 
 ### Analytics page
 
@@ -218,5 +209,3 @@ not used yet:
 curl -X GET http://127.0.0.1:3000/analytics/get_sentiments_sorted
 curl -X GET http://127.0.0.1:3000/analytics/get_sentiment_scores
 ```
-
-CRUD: currently no C, U or D for sprint2 (analytics)
