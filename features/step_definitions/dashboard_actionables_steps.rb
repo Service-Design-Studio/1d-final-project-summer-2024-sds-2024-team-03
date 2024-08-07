@@ -25,10 +25,6 @@ Then(/I should be redirected to the '(.*)' page/) do |page_name|
   expect(current_path).to eq("/#{page_name.downcase}")
 end
 
-When(/I refresh the page/) do
-  visit current_path
-end
-
 Then(/the '(.*)' widget should display the same progress bar/) do |widget_name|
   within("##{widget_name.tr(' ', '-').downcase}") do
     expect(page).to have_css('svg[aria-label="Actionables Tracked"]')

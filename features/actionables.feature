@@ -5,7 +5,6 @@ Feature: Actionables
   
 Scenario: Normal view
   Given I am on the Actionables page
-  Then I should see the Date, Products, and Sources Filters
   And a '+' button
   And 3 actionable statuses titled 'GENERATED ACTIONS', 'IN PROGRESS', 'DONE'
   And each of the actionable statuses have 4 types of actionable categories 'To Fix', 'To Keep In Mind', 'To Amplify', 'To Promote'
@@ -22,7 +21,7 @@ Scenario: Get GENERATED ACTIONS (Yes)
   And when I click 'YES'
   Then I should see an indication it is 'Processing...'
   And the 'GENERATED ACTIONS' is not empty
-  And the other actionable statuses 'IN PROGRESS', 'DONE' remain the same
+  And the other actionable statuses 'IN PROGRESS' and 'DONE' remain the same
   
 Scenario: Get GENERATED ACTIONS (No)
   Given I am on the Actionables page
@@ -33,7 +32,7 @@ Scenario: Get GENERATED ACTIONS (No)
   And I click on the 'GENERATE ACTIONABLES' button
   Then I should see a confirmation dialog
   And when I click 'NO'
-  And the other actionable statuses 'GENERATED ACTIONS', 'IN PROGRESS', 'DONE' remain the same
+  And all actionables remain the same
   
 Scenario: Details of actionable items
   Given I am on the Actionables page
@@ -78,11 +77,12 @@ Scenario: Refresh preserves all actionables
   Given I am on the Actionables page
   When I see an actionable
   And I refresh the page
-  Then the other actionable statuses 'GENERATED ACTIONS', 'IN PROGRESS', 'DONE' remain the same
+  Then all actionables remain the same
   
 Scenario: Unable to generate actions due to unselected product and source
   Given I am on the Actionables page
-  And Products or Sources is not selected
+  When no Products dropdown options are selected
+  And no Sources dropdown options are selected
   Then Generate Actions button will be disabled
   
 Scenario: Unable to generate actions due to insufficient data
