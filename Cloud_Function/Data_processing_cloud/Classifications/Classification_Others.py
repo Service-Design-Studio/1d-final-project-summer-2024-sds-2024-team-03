@@ -103,40 +103,6 @@ product_dict = {
     "Others": ["Others"]
 }
 
-def classify_subcategory_batch(texts, batch_size=60, delay_per_batch=8):
-    subcategories = []
-    for i in range(0, len(texts), batch_size):
-        batch = texts[i:i+batch_size]
-        batch_subcategories = [classify_subcategory(text) for text in batch]
-        subcategories.extend(batch_subcategories)
-        if i + batch_size < len(texts):  # To avoid sleeping after the last batch
-            time.sleep(delay_per_batch)  # Wait before processing the next batch
-    return subcategories
-
-logging.basicConfig(level=logging.INFO)
-
-def classify_sentiment_batch(texts, batch_size=60, delay_per_batch=8):
-    sentiments = []
-    for i in range(0, len(texts), batch_size):
-        batch = texts[i:i+batch_size]
-        batch_sentiments = [classify_sentiment(text) for text in batch]
-        sentiments.extend(batch_sentiments)
-        if i + batch_size < len(texts):  
-            logging.info(f"Processed batch {i // batch_size + 1}, sleeping for {delay_per_batch} seconds.")
-            time.sleep(delay_per_batch)
-    return sentiments
-
-def classify_feedback_batch(feedbacks, products, batch_size=60, delay_per_batch=8):
-    categories = []
-    for i in range(0, len(feedbacks), batch_size):
-        batch_feedbacks = feedbacks[i:i+batch_size]
-        batch_products = products[i:i+batch_size]
-        batch_categories = [feedback_categorisation(feedback, product) for feedback, product in zip(batch_feedbacks, batch_products)]
-        categories.extend(batch_categories)
-        if i + batch_size < len(feedbacks):  # To avoid sleeping after the last batch
-            time.sleep(delay_per_batch)  # Wait before processing the next batch
-    return categories
-
 def classification_undefined_products(df):
 
     # Link subproducts to products
@@ -148,24 +114,25 @@ def classification_undefined_products(df):
     
     try: 
         ###### Classify feedback into subproducts#########
-        publish_message('Subproduct Categorisation in progress','IN PROGRESS')
-        df['Subcategory'] = classify_subcategory_batch(df['Feedback'].tolist())
-        publish_message('Completed Subproduct Categorisation',"IN PROGRESS")
-        print("Completed; Subproduct")
-        
+        publish_message('Subproduct Categorisation in progress', 'IN PROGRESS')
+        df['Subcategory'] = df['Feedback'].apply(classify_subcategory)
+        publish_message('Completed Subproduct Categorisation', "IN PROGRESS")
+        print("Completed: Subproduct")
+
         df['Product'] = df['Subcategory'].apply(match_product)
 
-        ####categorise into feedback category#############
-        publish_message('Feedback Categorisation in progress','IN PROGRESS')
-        df['Feedback Category'] = classify_feedback_batch(df['Feedback'].tolist(), df['Subcategory'].tolist())
-        publish_message('Completed Feedback Categorisation',"IN PROGRESS")
-        print("completed:Feedback")
+        # Categorise feedback
+        publish_message('Feedback Categorisation in progress', 'IN PROGRESS')
+        df['Feedback Category'] = df.apply(lambda row: feedback_categorisation(row['Feedback'], row['Subcategory']), axis=1)
+        publish_message('Completed Feedback Categorisation', "IN PROGRESS")
+        print("Completed: Feedback")
 
-        ## categorise sentiment and score
-        publish_message('Sentiment Analysis in progress','IN PROGRESS')
-        sentiment_results = classify_sentiment_batch(df['Feedback'].tolist())
+        # Categorise sentiment and score
+        publish_message('Sentiment Analysis in progress', 'IN PROGRESS')
+        sentiment_results = df['Feedback'].apply(classify_sentiment)
         df['Sentiment Score'], df['Sentiment'] = zip(*sentiment_results)
-        publish_message('Completed Sentiment Analysis',"IN PROGRESS")
+        publish_message('Completed Sentiment Analysis', "IN PROGRESS")
+        print("Completed: Sentiment")
 
         return df
 

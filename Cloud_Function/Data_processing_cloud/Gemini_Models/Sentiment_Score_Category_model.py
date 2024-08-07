@@ -10,7 +10,9 @@ from google.api_core.exceptions import ResourceExhausted
 import time
 
 def classify_sentiment(text):
-    # vertexai.init(project="jbaaam", location="us-central1")
+    vertexai.init(project="jbaaam", location="us-central1")
+    if not text.strip():  # Check if the text is empty or contains only whitespace
+        return 2.6, "Neutral"
 
     # Define the system instruction text for sentiment analysis
     system_instruction= """
