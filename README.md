@@ -190,7 +190,7 @@ User.where(“EXTRACT(MONTH FROM created_at)=?”,7)
 
 ## Time to Deploy!
 
-### Deployment is a 3-step process
+### Deployment is a 4-step process
 
 1. [Link React to Rails](https://github.com/Service-Design-Studio/1d-final-project-summer-2024-sds-2024-team-03/blob/main/docs/deployment/REACT_TO_RAILS.md)
 2. [Cloud Run for Frontend](https://github.com/Service-Design-Studio/1d-final-project-summer-2024-sds-2024-team-03/blob/main/docs/deployment/CLOUDRUN.md)
