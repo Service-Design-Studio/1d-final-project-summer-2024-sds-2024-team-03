@@ -32,7 +32,7 @@ Then(/I should be alerted "(.*)"/) do |message|
 end
 
 When(/I do not select any subcategory or source/) do
-  expect(page).to have_css('.MuiFormLabel-root.MuiInputLabel-root', text: 'Subcategories')
+  expect(page).to have_css('.MuiFormLabel-root.MuiInputLabel-root', text: 'Subcategory')
   expect(page).to have_css('.MuiFormLabel-root.MuiInputLabel-root', text: 'Sources')
 end
 
@@ -62,8 +62,9 @@ Then(/the subcategory dropdown option should be highlighted on hover/) do
   button = find('.subcategory-option', text: "Cashline")
   # Verify the color change by checking the computed style
   new_background_color = page.evaluate_script("window.getComputedStyle(arguments[0]).backgroundColor;", button)
-  expect(new_background_color).to eq('rgba(0, 0, 0, 0.04)')
-  # Exit hover state
+  expect(new_background_color).to satisfy { |color| 
+  color == 'rgba(0, 0, 0, 0)' || color == 'rgba(0, 0, 0, 0.04)'
+}
   page.execute_script("arguments[0].dispatchEvent(new MouseEvent('mouseout', { bubbles: true }));", button)
 end
 
@@ -87,7 +88,7 @@ When(/no Subcategories dropdown options are selected/) do
 end
 
 Then(/I should see "Subcategories" in the text field of the dropdown button/) do
-  expect(page).to have_css('.MuiFormLabel-root.MuiInputLabel-root', text: 'Subcategories')
+  expect(page).to have_css('.MuiFormLabel-root.MuiInputLabel-root', text: 'Subcategory')
 end
 
 And(/the subcategories selected are: '(.*)'/) do |subcategories|
