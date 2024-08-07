@@ -51,15 +51,14 @@ How might we automate the interpretation and classification of all feedbacks and
 Our architecture might seem typical for web applications, but we use a variety of technologies, all learned from scratch. 
 
 ### Programming Languages and Frameworks:
-- Frontend: TypeScript with React.
-- Backend API: Ruby with Rails.
-- Microservices: Developed in Python and deployed as serverless solutions.
+- Frontend: TypeScript with React. Deployed as a microservice on Google Cloud Storage
+- Backend API: Ruby with Rails. Deployed as a microservice on Google Cloud Run
 - CICD: Developed as GitHub action, and trigger on Pull Request merge.
   
 ### Overview:
 - Frontend: Built with TypeScript and React.
 - Backend API: Uses Ruby on Rails, employing RESTful APIs.
-- Microservices: Two Python-based microservices, deployed as serverless functions.
+- Data processing: Python-based, deployed as serverless functions. Gemini Flask 1.5
 
 This diverse setup has been quite a journey for us! 
 
@@ -69,11 +68,8 @@ Our frontend layer is developed in TypeScript using React. WWe opted for TypeScr
 ## Backend API
 We designed the backend API to be a pure API layer without business logic, using RESTful APIs as supported by Rails. We developed around 20 APIs, mainly focused on actionable and analytic data models. The upload API is the most complex, as it handles multipart data and integrates with Google Cloud Storage. This API is independently deployable and functions as a microservice, deployed serverlessly via Docker on Google Cloud Run. The build process, including Docker image creation, takes about 10 minutes.
 
-We also have two other serverless microservices.
 
-## 2 other microservices
-Both additional microservices are simpler and also developed as serverless solutions. Instead of using Docker, we chose Google Cloud Functions to avoid unnecessary complexity. This decision simplifies deployment and reduces the wait time, as building a Docker image is not required. These microservices, written in Python
-
+## 2 microservices
 The first microservice is an event-driven service triggered by file uploads to a bucket. It performs data cleanup and validation, enriches the data by calling the Gemini API, and finally stores the clean and curated information in an Analytics table.
 
 The second microservice is an HTTP service called by the backend API. It takes input parameters, reads a subset of analytic records based on those parameters, processes them with an ML model, integrates results from the Gemini API, and stores the final information in an Actionable table. 
