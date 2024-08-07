@@ -1,11 +1,8 @@
-<!-- Logo of website -->
 <div align="center">
 
 ![SUTD Logo](https://silvaco.com/wp-content/uploads/2020/02/stud_logo_large1-300x159.jpg)
 
 </div>
-
-<!-- Introduction of project -->
 
 <div align="center">
   
@@ -17,38 +14,39 @@
 
 <div align="center">
 
-[WebApp](https://jbaaam_frontend.storage.googleapis.com/index.html). [Google Site](https://sites.google.com/view/jbaaam/home). [Hi-Fi Figma Prototype](https://www.figma.com/proto/kTLbEtR91dCn9nWa8NLiuC/Hifi-Prototype?node-id=0-1&t=BTGPwEbyxkxrfKef-0&scaling=min-zoom&content-scaling=fixed&page-id=0%3A1&starting-point-node-id=1%3A2). [Miro for all Design Iterations](https://miro.com/app/board/uXjVKFI343k=/).
+⭐[WebApp](https://jbaaam_frontend.storage.googleapis.com/index.html). ⭐[Google Site](https://sites.google.com/view/jbaaam/home). [Hi-Fi Figma Prototype](https://www.figma.com/proto/kTLbEtR91dCn9nWa8NLiuC/Hifi-Prototype?node-id=0-1&t=BTGPwEbyxkxrfKef-0&scaling=min-zoom&content-scaling=fixed&page-id=0%3A1&starting-point-node-id=1%3A2). [Miro for all Design Iterations](https://miro.com/app/board/uXjVKFI343k=/).
 
 </div>
 
-JBAAAM, is An AI-Powered Single Page Web-App for Customer Feedback Analysis 
+VOCUS, is An AI-Powered Single Page Web-App for Customer Feedback Analysis, made by JBAAAM! 
 
 Our ultimate goal is to increase efficiency and accuracy in feedback analysis by reducing manual work empowers and enhances the customer experience team in a way that seamlessly integrates into their pre-existing workflow. We aim to improve decision-making and provide a centralized platform that consolidates and analyzes feedback from diverse sources. 
 
-Comprehensive features
+⭐Comprehensive features
 
-- 📚 Three-Layer AI Automated Feedback Categorization Using fine-tuned and distilled Gemini language models for the deepest level of categorization. 
+- 🤖 Three-Layer AI Automated Feedback Categorization: Using fine-tuned and distilled Gemini language models for the deepest level of categorization. 
 
-- 🗣️Automated Sentiment Analysis To gauge customer emotions and sentiments accurately. 
+- 🗣️ Automated Sentiment Analysis: To gauge customer emotions and sentiments accurately. 
 
-- In-Depth and Tailored Visualization Offering insights into categorization to reveal trends and customer reception at a glance. 
+- 📊 In-Depth and Tailored Visualization: Offering insights into categorization to reveal trends and customer reception at a glance. 
 
-- AI-Driven Recommendations Generating data-driven, actionable recommendations based on aggregated feedback from multiple sources. 
+- 💡 AI-Driven Recommendations: Generating data-driven, actionable recommendations based on aggregated feedback from diverse sources. 
 
 # Acknowledgments
-- Adelaine Suhendro [@LinkedIn](https://linkedin.com/in/adelaine-suhendro) [@Github](https://github.com/ilenhanako)
-- Avitra Phon [@LinkedIn](https://www.linkedin.com/in/avitraphon/) [@Github](https://github.com/Avitra2002)
-- Andrew Yu Ming Xin [@LinkedIn](www.linkedin.com/in/andrewyumx) [@Github](https://github.com/Gnoot01/)
-- Bryan Tan Wei An [@LinkedIn](https://www.linkedin.com/in/bryantanwa/) [@Github](https://github.com/bryantanwa)
-- Gay Kai Feng Matthew [@LinkedIn](https://www.linkedin.com/in/matthew-gay-a16754296/) [@Github](https://github.com/mattmellow)
-- Joel Lim [@LinkedIn](https://www.linkedin.com/in/joel-lim-2a0096271/) [@Github](https://github.com/j0ellim)
-
+- Adelaine Suhendro <a href="https://linkedin.com/in/adelaine-suhendro" target="blank"><img align="center" src="https://raw.githubusercontent.com/rahuldkjain/github-profile-readme-generator/master/src/images/icons/Social/linked-in-alt.svg" alt="adelaine-suhendro" height="11" width="15" /></a>
+- Avitra Phon <a href="https://linkedin.com/in/avitraphon" target="blank"><img align="center" src="https://raw.githubusercontent.com/rahuldkjain/github-profile-readme-generator/master/src/images/icons/Social/linked-in-alt.svg" alt="avitraphon" height="11" width="15" /></a>
+- Andrew Yu Ming Xin <a href="https://linkedin.com/in/andrewyumx" target="blank"><img align="center" src="https://raw.githubusercontent.com/rahuldkjain/github-profile-readme-generator/master/src/images/icons/Social/linked-in-alt.svg" alt="andrewyumx" height="11" width="15" /></a>
+- Bryan Tan Wei An <a href="https://linkedin.com/in/bryantanwa" target="blank"><img align="center" src="https://raw.githubusercontent.com/rahuldkjain/github-profile-readme-generator/master/src/images/icons/Social/linked-in-alt.svg" alt="bryantanwa" height="11" width="15" /></a>
+- Gay Kai Feng Matthew <a href="https://linkedin.com/in/matthew-gay-a16754296" target="blank"><img align="center" src="https://raw.githubusercontent.com/rahuldkjain/github-profile-readme-generator/master/src/images/icons/Social/linked-in-alt.svg" alt="matthew-gay-a16754296" height="11" width="15" /></a>
+- Joel Lim <a href="https://linkedin.com/in/joel-lim-2a0096271" target="blank"><img align="center" src="https://raw.githubusercontent.com/rahuldkjain/github-profile-readme-generator/master/src/images/icons/Social/linked-in-alt.svg" alt="joel-lim-2a0096271" height="11" width="15" /></a>
 
 # Problem Statement
 
 How might we automate the interpretation and classification of all feedbacks and translate it into effective actionable insights that empower the CX team to enhance the customer experience?”
 
 # Architecture
+
+![media](https://github.com/user-attachments/assets/eb0e8f87-4f08-4c2a-9d58-c31048d7dc36)
 
 Our architecture might seem typical for web applications, but we use a variety of technologies, all learned from scratch. 
 
@@ -83,9 +81,7 @@ The second microservice is an HTTP service called by the backend API. It takes i
 ## DB layer
 Last but not least, our application uses a database to store the final curated data, while raw data is kept in Google Storage. This setup ensures that all API calls read data from the database. In our demo, you'll see sleek data statistical presentations. Despite the complex statistics, we maintain a simple and clean data model. Basic computations like sums and aggregations are handled in the API layer. For more detailed computations, we use the frontend, displaying results with our React-based graph library, Nivo built on top of D3.js.
 
-# Getting Started
-
-## Prerequisites 
+## Getting Started
 
 ### 1. Install Ruby
 
@@ -128,74 +124,11 @@ If command line prompt returns result of "Rails 7.x.x" for the above command, co
 
 Otherwise, if command line prompts fail to return output as expected, then the best workaround is properly starting from the first step again. And this time, make sure you follow every steps diligently. 
 
-## Installation
+## [Run Development](https://github.com/Service-Design-Studio/1d-final-project-summer-2024-sds-2024-team-03/blob/main/docs/INIT.md)
 
-### 1. Clone the remote repo
+## [Yes to Tests](https://github.com/Service-Design-Studio/1d-final-project-summer-2024-sds-2024-team-03/blob/main/docs/TESTING.md)
 
-Clone the project remote repo to your local machine using the following command in your terminal or command line prompt.
-
-```
-git clone https://github.com/Service-Design-Studio/1d-final-project-2023-sds-2023-team-12.git
-```
-
-### 2. Ruby Gem libraries
-
-After cloning the project to local machine, the following step is to ensure your local machine already acquire libraries and dependences required to run the application. Hence, to fulfill that requirement, use the following command.
-
-> This command is used to install all the required gems specified in the application's Gemfile.
-
-
-```
-bundle install
-```
-
-If any modification is made to the Gemfile, whether it involves removing or adding a new gem, please use either the previous command or the following command accordingly.
-
-```
-bundle update
-```
-
-### 3. Setup Database
-
-- Push migrations to database
-```
-rails db:migrate
-```
-
-* Seed data to development and testing environment database
-```
-rails db:seed
-```
-  
-+ Create database
-
-```
-rails db:create
-```
-
-### 4. Set up Google ML/AI API keys
-
-1. Create google cloud account and enable following API services, Cloud Translation API, Cloud Natuaral API
-
-2. Create a new project and in your project console, navigate to "API & Services"  -> "Credentials" to create API key
-
-Use the following command in your command line promptv (Unix-based)
-
-``` ruby
-export API_KEY=<your API key>
-```
-
-if you use Windows, please use the alternative command:
-
-``` ruby
-set API_KEY=<your API key>
-```
-
-[Run Development](https://github.com/Service-Design-Studio/1d-final-project-summer-2024-sds-2024-team-03/blob/main/docs/INIT.md)
-
-## Troubleshooting
-
-### 1. Inspect development database
+### Troubleshooting
 
 - Using Active Record
 
@@ -255,12 +188,11 @@ User.where(“created_at > ?”,Date.new(2023,1,1))
 User.where(“EXTRACT(MONTH FROM created_at)=?”,7)
 ```
 
-[Testing](https://github.com/Service-Design-Studio/1d-final-project-summer-2024-sds-2024-team-03/blob/main/docs/TESTING.md)
+## Time to Deploy!
 
-Deployment is a 3-step process
+### Deployment is a 4-step process
+
 1. [Link React to Rails](https://github.com/Service-Design-Studio/1d-final-project-summer-2024-sds-2024-team-03/blob/main/docs/deployment/REACT_TO_RAILS.md)
 2. [Cloud Run for Frontend](https://github.com/Service-Design-Studio/1d-final-project-summer-2024-sds-2024-team-03/blob/main/docs/deployment/CLOUDRUN.md)
 3. [Cloud Storage for Backend](https://github.com/Service-Design-Studio/1d-final-project-summer-2024-sds-2024-team-03/blob/main/docs/deployment/CLOUDSTORAGE.md)
-
-[![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-24ddc0f5d75046c5622901739e7c5dd533143b0c8e959d652212380cedb1ea36.svg)](https://classroom.github.com/a/QpCtzJAE)
-[![Open in Visual Studio Code](https://classroom.github.com/assets/open-in-vscode-718a45dd9cf7e7f842a935f5ebbe5719a5e09af4491e668f4dbf3b35d5cca122.svg)](https://classroom.github.com/online_ide?assignment_repo_id=15059043&assignment_repo_type=AssignmentRepo)
+3. [Data Processor Microservice](https://github.com/Service-Design-Studio/1d-final-project-summer-2024-sds-2024-team-03/blob/main/docs/ml/DATA_PROCESSOR.md)
