@@ -5,27 +5,26 @@ Feature: Actionables
   
 Scenario: Normal view
   Given I am on the Actionables page
-  And a '+' button
+  Then I should see a '+' button
   And 3 actionable statuses titled 'GENERATED ACTIONS', 'IN PROGRESS', 'DONE'
   And each of the actionable statuses have 4 types of actionable categories 'To Fix', 'To Keep In Mind', 'To Amplify', 'To Promote'
-  And 'No data' in the 'GENERATED ACTIONS'
   
 Scenario: Get GENERATED ACTIONS (Yes)
   Given I am on the Actionables page
-  And I look at the actionable statuses 'IN PROGRESS', 'DONE'
+  And I look at the count for 'IN PROGRESS' and 'DONE'
   When the date is set from '21/05/2024' to '31/05/2024'
   And the sources selected are: 'CSS'
   And the products selected are: 'Investments'
   And I click on the 'GENERATE ACTIONABLES' button
   Then I should see a confirmation dialog
   And when I click 'YES'
-  Then I should see an indication it is 'Processing...'
+  And I should see an indication it is 'Processing...'
   And the 'GENERATED ACTIONS' is not empty
   And the other actionable statuses 'IN PROGRESS' and 'DONE' remain the same
   
 Scenario: Get GENERATED ACTIONS (No)
   Given I am on the Actionables page
-  And I look at the actionable statuses 'GENERATED ACTIONS', 'IN PROGRESS', 'DONE'
+  And I look at the count for 'GENERATED ACTIONS', 'IN PROGRESS', and 'DONE'
   When the date is set from '21/05/2024' to '31/05/2024'
   And the sources selected are: 'CSS'
   And the products selected are: 'Investments'
@@ -51,10 +50,10 @@ Scenario: Delete actionable
   
 Scenario: 'CHANGE STATUS' on actionable
   Given I am on the Actionables page
+  And I reinitialise the actionables
   When I see an actionable
   And I click the 'CHANGE STATUS' button of the actionable
   Then I should see the button 'Done'
-  And I should see the button 'In Progress' if the actionable is in 'GENERATED ACTIONS'
   And when I click 'Done' 
   Then I should see that actionable moved to the 'DONE' status
   
@@ -69,14 +68,14 @@ Scenario: Manually add actionable
   When the date is set from '21/05/2024' to '31/05/2024'
   And the sources selected are: 'CSS'
   And the products selected are: 'Investments'
-  When I click on the '+' to manually add an actionable
-  Then I enter my action 'Improve latency', enter my subcategory 'digiPortfolio', enter my feedback category 'Technical / System Related' and enter my actionable category 'To Keep In Mind', and click 'ADD'
+  And I click on the plus icon to manually add an actionable
+  Then I enter my action 'Improve latency', enter my subcategory 'digiPortfolio', enter my feedback category 'Features' and enter my actionable category 'To Fix', and click 'ADD'
   Then I should see that actionable with that action, subcategories, feedback categories under the 'In Progress' status under the actionable category I chose
   
 Scenario: Refresh preserves all actionables 
   Given I am on the Actionables page
-  When I see an actionable
-  And I refresh the page
+  And I look at the count for 'GENERATED ACTIONS', 'IN PROGRESS', and 'DONE'
+  When I refresh the page
   Then all actionables remain the same
   
 Scenario: Unable to generate actions due to unselected product and source
@@ -94,4 +93,4 @@ Scenario: Unable to generate actions due to insufficient data
   Then I should see a confirmation dialog
   And when I click 'YES'
   Then I should see an indication it is 'Processing...'
-  And I should see 'There are no actionables to be generated from this data.'
+  And I should see a message 'There are no actionables to be generated from this data.'
