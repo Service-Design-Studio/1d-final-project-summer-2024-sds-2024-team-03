@@ -42,7 +42,7 @@ Then(/the navigation bar should show "(.*?)", "(.*?)", "(.*?)", "(.*?)"/) do |da
 end
 
 Then(/the page I am currently on should be highlighted/) do
-  highlighted_element = find('.css-1bnq5nt-MuiButtonBase-root-MuiButton-root') # highlight automatically applies to .css-1ld4d8p
+  highlighted_element = find('button[class*="css-1hj79hs"]') # highlight automatically applies to .css-1ld4d8p
   expect(highlighted_element).to have_content(@current_page.upcase)
 end
 

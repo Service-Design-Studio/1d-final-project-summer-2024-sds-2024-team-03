@@ -6,19 +6,8 @@ require 'uri'
 
 # Scenario: Hovering on a product dropdown option updates its color
 Given(/there are products in the dataset/) do
-  # url = "#{Capybara.app_host}"
-  # @products = get_products_from_dataset(url)
-  find('#filter-product').click
-  ul = find('ul.MuiList-root') # Replace 'MuiList-root' with the actual class or ID if different
-  
-  # Get all list items within the unordered list
-  list_items = ul.all('li')
-  
-  # Check that the length of the list is not zero
-  expect(list_items.length).not_to eq(0)
-  # url = "#{Capybara.app_host}"
-  # @sources = get_sources_from_dataset(url)
-  find('body').click(x: 0, y: 200)
+  url = "#{Capybara.app_host}"
+  @products = get_products_from_dataset(url)
 end
 
 When(/I click on the "Products" dropdown button/) do
