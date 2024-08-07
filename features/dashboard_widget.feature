@@ -2,14 +2,14 @@ Feature: Filter data for visualization widgets on Dashboard
 
 Scenario: Sentiment distribution bars are appropriately colored
   Given I am on the Dashboard page
-  When the date is set from '01/03/2024' to '01/05/2024'
+  When the date is set from '01/03/2024' to '31/05/2024'
   And the sources selected are: 'CSS'
   And the products selected are: 'Investments'
   Then Frustrated bar is colored red
   And Unsatisfied bar is colored orange
   And Neutral bar is colored grey
   And Satisfied bar is colored green
-  And Excited bar is colored darkgreen
+  And Promoter bar is colored darkgreen
 
 Scenario: No selection of products
   Given I am on the Dashboard page
@@ -35,7 +35,7 @@ Scenario: Only selecting Investments as the product for all sources
   And All Sources are selected
   And the products selected are: 'Investments'
   Then I should see the overall sentiment score as '3.8'
-  And I should see the percentage change as '▲ 67.9%'
+  And I should see the percentage change as '▲ 23.3%'
   And I should see the distribution of sentiment as '5.0, 10.0, 20.0, 55.0, 10.0'
   And I should see the distribution of sentiment add up to '100'
 
@@ -45,18 +45,18 @@ Scenario: Only selecting CSS as the source for all products
   And All Products are selected
   And the sources selected are: 'CSS'
   Then I should see the overall sentiment score as '3.3'
-  And I should see the percentage change as '▼ 3.5%'
-  And I should see the distribution of sentiment as '22.6, 28.4, 19.8, 20.0, 9.2'
+  And I should see the percentage change as '▼ 6.5%'
+  And I should see the distribution of sentiment as '4.3, 15.5, 23.5, 47.2, 9.5'
   And I should see the distribution of sentiment add up to '100'
 
-Scenario: All Products Sources Selected for Past 6 Months
+Scenario: All Products Sources Selected for Latest 3 Months
   Given I am on the Dashboard page
-  When Past 6 Months are selected
+  When latest 3 months are selected
   And All Products are selected
   And All Sources are selected
-  Then I should see the overall sentiment score as '3'
-  And I should see the percentage change as '▲ 0.1%'
-  And I should see the distribution of sentiment as '8.8, 18.4, 24.5, 37.4, 10.9'
+  Then I should see the overall sentiment score as '3.1'
+  And I should see the percentage change as '▲ 73.2%'
+  And I should see the distribution of sentiment as '7.4, 17.6, 24.0, 39.6, 11.4'
   And I should see the distribution of sentiment add up to '100'
 
 Scenario: Clicking on sentiment score widget redirects to Analytics page
