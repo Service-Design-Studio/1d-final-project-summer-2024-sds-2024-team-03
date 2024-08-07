@@ -65,6 +65,9 @@ def publish_message(message,status):
         print("Log message successfully recorded.")
     except psycopg2.DatabaseError as e:
         print(f"Failed to log message to database: {e}")
+
+    except Exception as e:
+        print(f"An unexpected error occurred: {e}")
         if conn:
             conn.rollback()
     finally:
