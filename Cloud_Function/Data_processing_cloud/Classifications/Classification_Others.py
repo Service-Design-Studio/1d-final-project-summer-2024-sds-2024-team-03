@@ -82,7 +82,7 @@
 import time
 from Data_processing_cloud.Gemini_Models.Subcategory_Classification_Gemini_model import classify_subcategory
 from Data_processing_cloud.Gemini_Models.Sentiment_Score_Category_model import classify_sentiment
-from Data_processing_cloud.Gemini_Models.Feedback_Categorisation import feedback_categorisation
+from Data_processing_cloud.Gemini_Models.Feedbacks_Categorisation import feedback_categorisation
 import logging
 from Data_processing_cloud.pubsub_helper import publish_message
 

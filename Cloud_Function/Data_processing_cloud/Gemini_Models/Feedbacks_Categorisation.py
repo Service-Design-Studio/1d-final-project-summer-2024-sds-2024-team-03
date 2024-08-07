@@ -113,19 +113,27 @@ def feedback_categorisation(text,product):
     max_output_tokens=1024,  # Set a higher limit for more detailed responses
   )
   try:
-        response = model.generate_content(f'{product}:{text}', generation_config=generation_config, safety_settings=safety_settings)
+        # Assuming the function call to the model and parameters stays the same:
+        response = model.generate_content(f'{product}:{text}',generation_config=generation_config, safety_settings=safety_settings)
         json_result = response.text
+        # print(f"Raw model response: {json_result}")
 
-        # Extract feedback category directly from the response text
-        feedback_category = json_result.split(':')[-1].strip()
-
-        # Clean the result
+        cleaned_result = json_result.split(':')[-1].strip()  # -1 ensures we take the last part if there's more than one colon
         pattern = r"[\*\'\"]"
-        cleaned_result = re.sub(pattern, "", feedback_category)
+        
+        cleaned_result = re.sub(pattern, "", cleaned_result)
         return cleaned_result
 
+        # clean_json_string = json_result.strip('```json \n').strip()
+
+        # data = json.loads(clean_json_string)
+        # return data.get("feedback_category", "Unknown Category")
+  
+  # except json.JSONDecodeError as e:
+  #       print(f"JSON decode error for feedback: {text}, product: {product}, response: {json_result}")
+  #       return "Others"
   except Exception as e:
-      print(f"Unexpected error for feedback: {text}, product: {product}, error: {e}")
-      return "Others"
+        print(f"Unexpected error for feedback: {text}, product: {product}, error: {e}")
+        return "Others"
 
 
