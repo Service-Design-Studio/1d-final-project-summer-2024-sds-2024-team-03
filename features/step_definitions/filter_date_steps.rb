@@ -86,10 +86,11 @@ end
 
 # Scenario: Clickable and unclickable dates based on today or latest date
 When(/^I select the latest date$/) do
+  fill_in 'from-date', with: "01-01-2024"
   latest_date = Date.parse(@dates[:latest_date])
   latest_date_text = latest_date.strftime("%d-%m-%Y")
   # Fill in the 'from-date' input field with the earliest date text
-  fill_in 'from-date', with: latest_date_text
+  fill_in 'to-date', with: latest_date_text
 end
 
 Then(/any unclickable dates are later than the latest date or today among all sources/) do
@@ -175,6 +176,11 @@ When(/^I select a date$/) do
     end
   end
   @clicked_date = clicked_date
+  
+  clicked_monthyear = find('.MuiPickersCalendarHeader-label.css-1v994a0').text
+  monthyear = Date.strptime(clicked_monthyear, "%B %Y")
+  formatted_monthyear = monthyear.strftime("%m-%Y")
+  @clicked_monthyear = formatted_monthyear
 end
 
 Then(/the calendar dropdown should close/) do
@@ -183,7 +189,8 @@ end
 
 Then(/the "From" date should be filled up in the format of "DD\-MM\-YYYY"/) do
   # Parse the stored clicked date to format it correctly
-  selected_date = Date.parse("#{@clicked_date}/#{Time.now.month}/#{Time.now.year}").strftime("%d-%m-%Y")
+  date_string = "#{@clicked_date}-#{@clicked_monthyear}"
+  selected_date = Date.parse(date_string).strftime("%d-%m-%Y")
   expect(find("#from-date").value).to eq selected_date
 end
 
@@ -206,10 +213,6 @@ Then(/selected date is circled/) do
 end
 
 # Scenario: Reset selection by refreshing
-Given(/I have selected a time period/) do
-  step 'I select a date'
-end
-
 When(/I refresh the page/) do
   visit current_path
 end
@@ -276,6 +279,20 @@ Then(/any clickable to-dates are later than or equal to from-date/) do
   end
 end
 
+And(/I select a date in the "(.*)" calendar input/) do |fromto|
+  case fromto
+  when "From"
+    fill_in 'from-date', with: "10-05-2024"
+    fill_in 'to-date', with: "15-05-2024"
+  when "To"
+    fill_in 'from-date', with: "10-05-2024"
+    fill_in 'to-date', with: "15-05-2024"
+  end
+end
+
+
+
+# Helper methods
 def get_earliest_and_latest_dates(base_url)
   url = URI("#{base_url}/analytics/get_earliest_latest_dates")
   response = Net::HTTP.get_response(url)

@@ -26,7 +26,7 @@ Scenario: Clickable and unclickable dates based on today or latest date
   Given I am on the Dashboard page
   And the earliest and latest dates are available
   When I select the latest date
-  And I have the "From" calendar dropdown opened
+  And I have the "To" calendar dropdown opened
   Then any unclickable dates are later than the latest date or today among all sources
   And any clickable dates are earlier than or equal to the latest date or today among all sources
 
@@ -58,23 +58,24 @@ Scenario: Selected date is circled on calendar dropdown
 
 Scenario: Reset selection by refreshing
   Given I am on the Dashboard page
-  And I have selected a time period
+  And I click on the "From" dropdown button
+  And I select a date
+  And I click on the "To" dropdown button
+  And I select a date
   When I refresh the page
   Then the "From" date should be filled up with the date 1 week ago from now in the format of "DD-MM-YYYY"
   And the "To" date filled up with date now in the format of "DD-MM-YYYY"
 
 Scenario: Disable invalid date range (From later than To)
   Given I am on the Dashboard page
-  And I have the "To" calendar dropdown opened
-  And I select a date
+  And I select a date in the "To" calendar input
   When I click on the "From" dropdown button
   Then any unclickable from-dates are later than to-date
   And any clickable from-dates are earlier than or equal to to-date
 
 Scenario: Disable invalid date range (To earlier than From)
   Given I am on the Dashboard page
-  And I have the "From" calendar dropdown opened
-  And I select a date
+  And I select a date in the "From" calendar input 
   When I click on the "To" dropdown button
   Then any unclickable to-dates are earlier than from-date
   And any clickable to-dates are later than or equal to from-date
