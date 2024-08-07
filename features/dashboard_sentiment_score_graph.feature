@@ -10,7 +10,7 @@ Scenario: Normal View
   And the products selected are: 'Investments'
   Then I should see a widget titled 'Sentiment Trend for Selected Product(s)'
   And the X-ticks show 2 months in the format MMM 'YY
-  And the Y-ticks are 0 to 5 in step 1
+  And the Y-ticks are 0 to 5 in steps of 1
   
 Scenario: Clicking widget redirects to Analytics page
   Given I am on the Dashboard page

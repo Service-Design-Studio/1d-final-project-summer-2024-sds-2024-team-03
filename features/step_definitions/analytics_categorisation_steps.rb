@@ -20,7 +20,7 @@ Then(/I should see '(.*)' in the text field of the Sentiment Categorisation drop
 end
 
 Then(/I should see 5 subcategories with the 2 most positive sentiments '(.*)' and '(.*)' sorted in descending order/) do |text1, text2|
-  parent_element = find("g[transform='translate(250,10)']", wait:10)
+  parent_element = find("g[transform='translate(250,10)']")
   # Check that the parent element contains both specified texts
   expect(parent_element).to have_content(text1)
   expect(parent_element).to have_content(text2)
@@ -45,8 +45,8 @@ And(/I click on '(.*)'/) do |text|
 end
 
 And(/the X-ticks are integers from 0 to 100 with step 10/) do
-  parent_elements = all("g[transform='translate(0,340)']",wait:10)
-  parent_element = parent_elements.second
+  parent_elements = all('g[transform="translate(0,340)"]')
+  parent_element = parent_elements.first
   expected_values = [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100]
   expected_values.each do |value|
     expect(parent_element).to have_css("text", text: value.to_s)
@@ -54,13 +54,13 @@ And(/the X-ticks are integers from 0 to 100 with step 10/) do
 end
 
 And(/the Y-ticks show '(.*)'/) do |feedback_category|
-  parent_element = find("g[transform='translate(250,10)']", wait:10)
+  parent_element = find("g[transform='translate(250,10)']")
   # Check that the parent element contains both specified texts
   expect(parent_element).to have_content(feedback_category)
 end
 
-And(/I should be able to hover over it to reveal the label '(.*)' and percentage '(.*)'/) do |label, percentage|
-  red_rect = find('rect[fill="green"]', visible: true)
+And(/I should be able to hover over the yellow bar to reveal the label '(.*)' and percentage '(.*)'/) do |label, percentage|
+  red_rect = find('rect[fill="orange"]', visible: true)
   red_rect.hover
   hoverlabel = find('[style*="pointer-events"][style*="position: absolute"]')
   expect(hoverlabel).to have_content(label)
@@ -76,29 +76,31 @@ When(/I click on the 'sort' button/) do
   click_button('Sort')
 end
 
-Then(/the subcategories are currently sorted in descending order of positive sentiment '(.*)' and '(.*)'/) do |text1, text2|
-  parent_elements = all("g[transform='translate(0,0)']", wait:10)
-  parent_element = parent_elements.first
-  # Check that the parent element contains both specified texts
-  expect(parent_element).to have_content(text1)
-  expect(parent_element).to have_content(text2)
+Then(/the subcategories are currently sorted in this descending order of positive sentiment '(.*)', '(.*)', '(.*)', '(.*)', '(.*)'/) do |text1, text2, text3, text4, text5|
+  expect(find('g[transform="translate(0,43)"]')).to have_content(text1)
+  expect(find('g[transform="translate(0,107)"]')).to have_content(text2)
+  expect(find('g[transform="translate(0,171)"]')).to have_content(text3)
+  expect(find('g[transform="translate(0,235)"]')).to have_content(text4)
+  expect(find('g[transform="translate(0,299)"]')).to have_content(text5)
 end
 
-Then(/I should see the subcategories sorted in descending order of negative sentiment '(.*)' and '(.*)'/) do |text1, text2|
-  parent_element = find("g[transform='translate(0,0)']", wait:10)
-  # Check that the parent element contains both specified texts
-  expect(parent_element).to have_content(text1)
-  expect(parent_element).to have_content(text2)
+Then(/I should see the subcategories sorted in this descending order of negative sentiment '(.*)', '(.*)', '(.*)', '(.*)', '(.*)'/) do |text1, text2, text3, text4, text5|
+  expect(find('g[transform="translate(0,43)"]')).to have_content(text1)
+  expect(find('g[transform="translate(0,107)"]')).to have_content(text2)
+  expect(find('g[transform="translate(0,171)"]')).to have_content(text3)
+  expect(find('g[transform="translate(0,235)"]')).to have_content(text4)
+  expect(find('g[transform="translate(0,299)"]')).to have_content(text5)
 end
 
 When(/I click 'view all'/) do
   click_button('View All')
 end
 
-Then(/I should see the 8 subcategories sorted in these top 3 in descending order '(.*)', '(.*)', '(.*)'/) do |text1, text2, text3|
-  expect(find("g[transform='translate(0,0)']", wait:10)).to have_content(text1)
-  expect(find("g[transform='translate(0,0)']", wait:10)).to have_content(text2)
-  expect(find("g[transform='translate(0,0)']", wait:10)).to have_content(text3)
+Then(/I should see 4 more subcategories sorted in this order '(.*)', '(.*)', '(.*)', '(.*)'/) do |text1, text2, text3, text4|
+  expect(find("g[transform='translate(0,206)']")).to have_content(text1)
+  expect(find("g[transform='translate(0,242)']")).to have_content(text2)
+  expect(find("g[transform='translate(0,278)']")).to have_content(text3)
+  expect(find("g[transform='translate(0,314)']")).to have_content(text4)
 end
 
 And(/I click 'view less'/) do
@@ -106,7 +108,7 @@ And(/I click 'view less'/) do
 end
 
 Then(/I should see no longer see the sixth subcategory '(.*)'/) do |third_subcategory|
-  parent_element = find("g[transform='translate(250,10)']", wait:10)
+  parent_element = find("g[transform='translate(250,10)']")
   expect(parent_element).to have_no_content(third_subcategory)
 end
 
@@ -121,18 +123,18 @@ Then(/I should see a pop-up with the relevant data/) do
 end
 
 Then(/I should see only 1 subcategory/) do
-  parent_element = find("g[transform='translate(250,10)']", wait:10)
-  expect(parent_element).to have_no_css("g[transform='translate(0,100)']", wait:10)
+  parent_element = find("g[transform='translate(250,10)']")
+  expect(parent_element).to have_no_css("g[transform='translate(0,100)']")
 end
 
 And(/clicking on 'view all' would not add more subcategories to view/) do
   click_button('View All')
-  parent_element = find("g[transform='translate(250,10)']", wait:10)
-  expect(parent_element).to have_no_css("g[transform='translate(0,100)']", wait:10)
+  parent_element = find("g[transform='translate(250,10)']")
+  expect(parent_element).to have_no_css("g[transform='translate(0,100)']")
 end
 
 And(/clicking 'sort' does not change the displayed subcategory '(.*)'/) do |only_subcategory|
-  label = find("g[transform='translate(0,0)']", wait:10)
+  label = find("g[transform='translate(0,171)']")
   expect(label).to have_content(only_subcategory)
   click_button('Sort')
   expect(label).to have_content(only_subcategory)

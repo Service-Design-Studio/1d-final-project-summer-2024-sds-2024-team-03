@@ -8,9 +8,9 @@ Scenario: Display at most top 5 positive categories
   When the date is set from '21/05/2024' to '31/05/2024'
   And the sources selected are: 'CSS'
   And the products selected are: 'Investments'
-  Then I should see a widget titled 'Top 5 Negative Categories'
-  And I should see 5 subcategories with the most negative sentiments
-  And with the 5 most negative sentiments sorted in descending order
+  Then I should see a widget titled 'Top 5 Positive Categories'
+  And I should see 5 subcategories with the most positive sentiments
+  And with the 5 most positive sentiments sorted in descending order
   
 Scenario: Clicking widget redirects to Analytics page
   Given I am on the Dashboard page

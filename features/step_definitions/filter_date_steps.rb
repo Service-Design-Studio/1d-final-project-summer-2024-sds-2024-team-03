@@ -6,10 +6,9 @@ require 'uri'
 
 # Scenario: View time period
 Given(/the earliest and latest dates are available/) do
-  # url = "#{Capybara.app_host}"
-  # puts url
-  # @dates = get_earliest_and_latest_dates(url)
-  @dates = {earliest_date: "01-03-2024", latest_date: "12-06-24"}
+  url = "#{Capybara.app_host}"
+  puts url
+  @dates = get_earliest_and_latest_dates(url)
 end
 
 Then(/the "From" date should be filled up with the date 1 week ago from now in the format of "DD\-MM\-YYYY"/) do
@@ -276,8 +275,6 @@ Then(/any clickable to-dates are later than or equal to from-date/) do
     expect(date).to be >= from_date
   end
 end
-
-
 
 def get_earliest_and_latest_dates(base_url)
   url = URI("#{base_url}/analytics/get_earliest_latest_dates")

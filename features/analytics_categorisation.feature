@@ -39,8 +39,8 @@ Scenario: Selection from 1 dropdown option updates the visualizations
   And I click on the 'Subcategory' dropdown button in the Sentiment Categorisation widget
   And I click on 'digiPortfolio'
   Then the X-ticks are integers from 0 to 100 with step 10
-  And the Y-ticks show 'Saving / Investment Plans'
-  And I should be able to hover over it to reveal the label 'Promoter' and percentage '33.3'
+  And the Y-ticks show 'Technical / System Related'
+  And I should be able to hover over the yellow bar to reveal the label 'Unsatisfied' and percentage '40'
   And a 'sort' button and 'view all' button dropdown
   
 Scenario: Sort positive to negative sentiment in descending order and vice versa
@@ -50,19 +50,19 @@ Scenario: Sort positive to negative sentiment in descending order and vice versa
   And the products selected are: 'Investments'
   And I click on the 'Subcategory' dropdown button in the Sentiment Categorisation widget
   And I click on 'digiPortfolio'
-  And the subcategories are currently sorted in descending order of positive sentiment 'Rewards' and 'Investments / Saving Plans'
+  And the subcategories are currently sorted in this descending order of positive sentiment 'Rewards', 'Investment / Saving Plans', 'Technical / System Related', 'Others', 'Features'
   And I click on the 'sort' button
-  Then I should see the subcategories sorted in descending order of negative sentiment 'Technical / System Related' and 'Process Related'
+  Then I should see the subcategories sorted in this descending order of negative sentiment 'Technical / System Related', 'Process Related', 'Charges / Fees & Interest', 'Ui / Ux', 'Other'
   
 Scenario: View all
   Given I am on the Analytics page
-  When the date is set from '21/05/2024' to '31/05/2024'
+  When the date is set from '01/03/2024' to '01/06/2024'
   And the sources selected are: 'CSS'
   And the products selected are: 'Investments'
   And I click on the 'Subcategory' dropdown button in the Sentiment Categorisation widget
-  And I click on 'digiPortfolio'
+  And I click on 'Non-Unit Trust/Equities'
   And I click 'view all'
-  Then I should see the 8 subcategories sorted in these top 3 in descending order 'Others', 'Rewards', 'Saving / Investment Plans'
+  Then I should see 4 more subcategories sorted in this order 'Technical / System Related', 'Ui / Ux', 'Staff Related', 'Charges / Fees & Interest'
   
 Scenario: View less
   Given I am on the Analytics page

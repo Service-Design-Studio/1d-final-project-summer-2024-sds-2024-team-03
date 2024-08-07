@@ -29,16 +29,15 @@ Then(/^(.*) bar is colored (.*)$/) do |sentiment, color|
 
   case color
     when "red"
-      sleep(6)
       expect(background_color).to eq("rgba(255, 0, 0, 1)")
     when "orange"
       expect(background_color).to eq("rgba(255, 165, 0, 1)")
     when "grey"
       expect(background_color).to eq("rgba(169, 169, 169, 1)")
     when "green"
-      expect(background_color).to eq("rgba(0, 128, 0, 1)")
+      expect(background_color).to eq("rgba(113, 184, 20, 1)")
     when "darkgreen"
-      expect(background_color).to eq("rgba(0, 100, 0, 1)")
+      expect(background_color).to eq("rgba(0, 128, 0, 1)")
     else
       raise "Unknown color: #{color}"
   end
@@ -60,13 +59,12 @@ And(/the sources selected are: '(.*)'/) do |sources|
   select_sources(sources.split(', '))
 end
 
-When(/Past 6 Months are selected/) do
-  # url = "#{Capybara.app_host}"
-  # @dates = get_earliest_and_latest_dates(url)
-  @dates = {earliest_date: "01-03-2024", latest_date:"12-06-2024"}
+When(/latest 3 months are selected/) do
+  url = "#{Capybara.app_host}"
+  @dates = get_earliest_and_latest_dates(url)
   latest_date = Date.parse(@dates[:latest_date])
   latest_date_text = latest_date.strftime("%d-%m-%Y")
-  start_date = Date.parse(@dates[:latest_date]) << 6
+  start_date = Date.parse(@dates[:latest_date]) << 3
   start_date_text = start_date.strftime("%d-%m-%Y")
   set_date_range(start_date_text, latest_date_text)
 end
@@ -76,7 +74,6 @@ When(/the date is set from '(.*)' to '(.*)'/) do |start_date, end_date|
 end
 
 Then(/I should see the overall sentiment score as '(.*)'/) do |expected_score|
-  sleep(6)
   full_text = find('#overall-sentiment-score').text
   actual_score = full_text.split("\n")[1]
   expect(actual_score).to eq(expected_score)

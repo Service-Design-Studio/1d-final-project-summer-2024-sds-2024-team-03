@@ -1,24 +1,27 @@
-And (/I should see 5 subcategories with the most negative sentiments/) do
-    expect(page).to have_content("digiPortfolio > Technical / System Related") 
-    expect(page).to have_content("digiPortfolio > Charges / Fees & Interest")
-    expect(page).to have_content("digiPortfolio > Ui / Ux")
-    expect(page).to have_content("Vickers > Staff Related")
-    expect(page).to have_content("digiPortfolio > Process Related")
+And (/I should see 5 subcategories with the most positive sentiments/) do
+    expect(page).to have_content("digiPortfolio > Others") 
+    expect(page).to have_content("digiPortfolio > Rewards")
+    expect(page).to have_content("Vickers > Technical / System Related")
+    expect(page).to have_content("digiPortfolio > Saving / Investment Plans")
+    expect(page).to have_content("digiPortfolio > Technical / System Related")
 end
 
-And(/with the 5 most negative sentiments sorted in descending order/) do
+And(/with the 5 most positive sentiments sorted in descending order/) do
     parent_elements = all("g[transform='translate(250,10)']")
     parent_element = parent_elements.first
+    all_children = parent_element.all('g[transform="translate(0,0)"]')
+    correct_child = all_children[1]
     
-    content = parent_element.text.gsub(/\s+/, ' ').strip  # Replace multiple spaces and newlines with a single space
-    
+    content = correct_child.text.gsub(/\s+/, ' ').strip
+
     expected_text = [
-    "digiPortfolio > Technical / System Related",
-    "digiPortfolio > Charges / Fees & Interest",
-    "digiPortfolio > Ui / Ux",
-    "Vickers > Staff Related",
-    "digiPortfolio > Process Related"
-    ].join(' ')
+        "digiPortfolio > Others",
+        "digiPortfolio > Rewards",
+        "Vickers > Technical / System Related",
+        "digiPortfolio > Saving / Investment Plans",
+        "digiPortfolio > Technical / System Related",
+    ].reverse
+    expected_text = expected_text.join(' ')
     
     expect(content).to include(expected_text)
 end  

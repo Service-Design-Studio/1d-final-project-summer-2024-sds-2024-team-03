@@ -7,8 +7,8 @@ Scenario: Normal View
   And the products selected are: 'Investments'
   Then I should see a widget titled 'Distribution of Categories'
   And columns "Categories", "Total Mentions" and "Avg. Sentiment"
-  And top 3 rows with the highest 'Total Mentions', sorted in descending order
-  And the Avg. Sentiment as float numbers
+  And top 3 rows with the highest 'Total Mentions'
+  And average sentiment of the top 3 rows sorted in ascending order
   
 Scenario: Clicking widget redirects to Analytics page
   Given I am on the Dashboard page
