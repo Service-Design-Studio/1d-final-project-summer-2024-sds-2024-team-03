@@ -1,0 +1,29 @@
+{
+    "bindings": [
+      {
+        "role": "roles/aiplatform.user",
+        "members": [
+          "serviceAccount:jbaaam@appspot.gserviceaccount.com"
+        ]
+      },
+      {
+        "role": "roles/aiplatform.serviceAgent",
+        "members": [
+          "serviceAccount:jbaaam@appspot.gserviceaccount.com"
+        ]
+      },
+      {
+        "role": "roles/storage.objectViewer",
+        "members": [
+          "serviceAccount:jbaaam@appspot.gserviceaccount.com"
+        ]
+      },
+      {
+        "role": "roles/storage.admin",
+        "members": [
+          "serviceAccount:jbaaam@appspot.gserviceaccount.com"
+        ]
+      }
+    ]
+  }
+  

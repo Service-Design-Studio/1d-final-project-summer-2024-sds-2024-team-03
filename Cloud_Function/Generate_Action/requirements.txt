@@ -1,0 +1,11 @@
+functions-framework==3.*
+google-cloud-storage
+pandas
+gcloud
+openpyxl
+psycopg2
+google-cloud-secret-manager
+google-cloud-storage
+psycopg2-binary
+google-cloud-aiplatform
+google-cloud-firestore
