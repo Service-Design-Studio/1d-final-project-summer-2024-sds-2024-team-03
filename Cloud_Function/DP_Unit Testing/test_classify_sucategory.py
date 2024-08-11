@@ -16,10 +16,10 @@ def test_classify_subcategory_success(mock_publish_message, mock_find_best_match
     # Mock the find_best_match function
     mock_find_best_match.return_value = 'DBS Deposit Account'
 
-    # Call function
+    
     result = classify_subcategory('My account has low interest rates.')
 
-    # Assert result
+    
     assert result == 'DBS Deposit Account'
 
 @patch('Data_processing_cloud.Gemini_Models.Subcategory_Classification_Gemini_model.GenerativeModel')
@@ -29,10 +29,10 @@ def test_classify_subcategory_timeout(mock_publish_message, mock_find_best_match
     # Setup mock response to raise an exception
     MockGenerativeModel.side_effect = Exception("Model response timed out")
 
-    # Call function
+   
     result = classify_subcategory('Some text')
 
-    # Assert result
+    
     assert result == 'Timeout - Operation could not be completed'
 
 @patch('Data_processing_cloud.Gemini_Models.Subcategory_Classification_Gemini_model.GenerativeModel')
@@ -44,10 +44,10 @@ def test_classify_subcategory_invalid_response(mock_publish_message, mock_find_b
     mock_chat_instance = mock_model_instance.start_chat.return_value
     mock_chat_instance.send_message.return_value.text = 'Coint Deposit Machine'
 
-    # Call function
+    
     result = classify_subcategory('Coin deposit issue')
 
-    # Assert result
+    
     assert result == 'Coin Deposit Machine'
 
 @patch('Data_processing_cloud.Gemini_Models.Subcategory_Classification_Gemini_model.GenerativeModel')
@@ -59,10 +59,10 @@ def test_classify_subcategory_invalid_format(mock_publish_message, mock_find_bes
     mock_chat_instance = mock_model_instance.start_chat.return_value
     mock_chat_instance.send_message.side_effect = Exception("Format Error")
 
-    # Call function
+   
     result = classify_subcategory('Invalid input')
 
-    # Assert result
+    
     assert result == "Timeout - Operation could not be completed"
     mock_publish_message.assert_called_once_with("Model response timed out: Format Error", "ERROR")
 
@@ -77,8 +77,8 @@ def test_classify_subcategory_empty_input(mock_publish_message, mock_find_best_m
 
     mock_find_best_match.return_value = "Others"
 
-    # Call function
+   
     result = classify_subcategory('')
 
-    # Assert result
+    
     assert result == 'Others'

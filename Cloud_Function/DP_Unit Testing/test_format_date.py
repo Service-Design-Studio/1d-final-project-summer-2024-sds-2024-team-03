@@ -1,7 +1,7 @@
 import pytest
 import pandas as pd
 from datetime import datetime
-from Data_processing_cloud.Functions.format_date import format_date  # Replace 'your_module' with the actual module name where the function is defined
+from Data_processing_cloud.Functions.format_date import format_date  
 
 def test_format_date_valid():
     assert format_date('22/04/2024 15:45') == '22/04/24'

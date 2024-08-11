@@ -11,8 +11,10 @@ import time
 
 def classify_sentiment(text):
     vertexai.init(project="jbaaam", location="us-central1")
-    if not text.strip():  # Check if the text is empty or contains only whitespace
-        return 2.6, "Neutral"
+    if not text or not isinstance(text, str) or not text.strip():
+        raise ValueError("Text parameter must be a non-empty string")
+
+    
 
     # Define the system instruction text for sentiment analysis
     system_instruction= """

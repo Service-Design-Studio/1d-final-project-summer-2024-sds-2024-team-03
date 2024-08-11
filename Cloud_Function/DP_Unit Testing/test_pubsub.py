@@ -50,9 +50,9 @@ def test_publish_message_unexpected_error(mock_execute_values, mock_connect, moc
     mock_cursor = Mock()
     mock_connect.return_value = mock_conn
     mock_conn.cursor.return_value = mock_cursor
-    mock_access_secret_version.side_effect = ['mock_user', 'mock_password']
+    mock_access_secret_version.side_effect = ['mock_user', 'mock_password'] # first call to methods return ['mock_user', 'mock_password']
 
-    # Call the function
+    
     publish_message("Test message", "INFO")
 
     # Verify the calls

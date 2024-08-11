@@ -3,7 +3,7 @@ from unittest.mock import patch, Mock
 from google.cloud import secretmanager
 from Data_processing_cloud.authentification import access_secret_version
 
-# Helper function to create a mock response
+
 def create_mock_response(secret_value):
     mock_response = Mock()
     mock_response.payload.data.decode.return_value = secret_value
@@ -11,7 +11,7 @@ def create_mock_response(secret_value):
 
 @patch('google.cloud.secretmanager.SecretManagerServiceClient')
 def test_access_secret_version_success(mock_secret_manager_client):
-    # Setup the mock client
+    # Setup mock client
     mock_client_instance = Mock()
     mock_secret_manager_client.return_value = mock_client_instance
 
