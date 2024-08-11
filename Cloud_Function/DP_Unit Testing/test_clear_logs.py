@@ -5,16 +5,16 @@ from Data_processing_cloud.clear_logs import clear_logs
 import os
 
 
-# TC9
+
 @patch('Data_processing_cloud.clear_logs.execute_postgres_query')
 def test_clear_logs_success(mock_execute_postgres_query):
-    # Call the clear_logs function
+    
     clear_logs('user', 'password', 'host', 'dbname')
     
-    # Ensure that execute_postgres_query was called with the correct arguments
+    # Ensure execute_postgres_query was called with the correct arguments
     mock_execute_postgres_query.assert_called_once_with('user', 'password', 'dbname', 'host', 'DELETE FROM logs')
 
-# TC10
+
 @patch('Data_processing_cloud.clear_logs.execute_postgres_query', side_effect=Exception("Query execution error"))
 @patch('Data_processing_cloud.clear_logs.publish_message')
 def test_clear_logs_failure(mock_publish_message, mock_execute_postgres_query):
@@ -26,7 +26,7 @@ def test_clear_logs_failure(mock_publish_message, mock_execute_postgres_query):
     mock_publish_message.assert_called_once_with("Failed to clear logs: Query execution error", 'ERROR')
     mock_execute_postgres_query.assert_called_once_with('user', 'password', 'dbname', 'host', 'DELETE FROM logs')
 
-# TC11: Test clear_logs with empty database parameters
+# Test clear_logs with empty database parameters
 @patch('Data_processing_cloud.clear_logs.execute_postgres_query', side_effect=Exception("Query execution error"))
 @patch('Data_processing_cloud.clear_logs.publish_message')
 def test_clear_logs_empty_params(mock_publish_message, mock_execute_postgres_query):

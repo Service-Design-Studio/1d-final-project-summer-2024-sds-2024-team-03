@@ -34,7 +34,7 @@ def mock_generate_content():
     ("Just a general feedback.", "General Product", "Others"),
 ])
 def test_feedback_categorisation(mock_generate_content, text, product, expected):
-    # Mock the model response dynamically based on the expected output
+    # Mock model response based on the expected output
     mock_generate_content.generate_content.return_value.text = f"{product}: {expected}"
     
     result = feedback_categorisation(text, product)

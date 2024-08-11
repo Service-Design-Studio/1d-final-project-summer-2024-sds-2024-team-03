@@ -61,17 +61,12 @@ def test_classify_sentiment_retry_logic():
 
 
 def test_classify_sentiment_empty_text():
-    mock_response = Mock()
-    mock_response.text = '{"sentiment_score": 2.6, "sentiment_category": "Neutral", "sentiment_description": "The customer has no comments and hence is neutral."}'
-
     with patch('vertexai.generative_models.GenerativeModel') as mock_model:
         mock_model_instance = Mock()
         mock_model.return_value = mock_model_instance
-        mock_model_instance.generate_content.return_value = mock_response
 
-        score, category = classify_sentiment("")
-        assert score == 2.6
-        assert category == "Neutral"
+        with pytest.raises(ValueError, match="Text parameter must be a non-empty string"):
+            classify_sentiment("")
 
 
 def test_classify_sentiment_very_long_text():

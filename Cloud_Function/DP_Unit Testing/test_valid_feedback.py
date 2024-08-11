@@ -1,6 +1,6 @@
 import pytest
 import pandas as pd
-from Data_processing_cloud.Functions.valid_feedback import is_valid_feedback  # Replace 'your_module' with the actual module name where the function is defined
+from Data_processing_cloud.Functions.valid_feedback import is_valid_feedback 
 
 def test_is_valid_feedback():
     assert not is_valid_feedback(None)
