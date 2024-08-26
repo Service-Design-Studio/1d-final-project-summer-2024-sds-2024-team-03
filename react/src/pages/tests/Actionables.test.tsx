@@ -1,536 +1,138 @@
-import React, {useState, useEffect} from "react";
-import FilterProduct from "../components/FilterProduct";
-import FilterSource from "../components/FilterSource";
-import Calendar from "../components/Calendar";
-import TodoList from "../components/Actionables/TodoList";
-import DialogAddAction from "../components/Actionables/DialogAddAction";
-import {
-    ActionablesPageProps,
-    Actionable,
-} from "../components/Actionables/Interfaces";
-import {
-    Chip,
-    Grid,
-    Box,
-    styled,
-    Tooltip,
-    Button,
-    Modal,
-    Typography,
-    TooltipProps,
-    tooltipClasses,
-    Backdrop,
-    CircularProgress,
-} from "@mui/material";
-import NewReleasesTwoToneIcon from "@mui/icons-material/NewReleasesTwoTone";
-import RotateRightTwoToneIcon from "@mui/icons-material/RotateRightTwoTone";
-import CheckCircleTwoToneIcon from "@mui/icons-material/CheckCircleTwoTone";
-import {useTheme} from "@mui/material/styles";
-import useDetectScroll, {Direction} from "@smakss/react-scroll-direction";
+import React from "react";
+import {render, screen} from "@testing-library/react";
+import Actionables from "../Actionables";
+import dayjs from "dayjs";
+import fetchMock from "jest-fetch-mock";
 
-const CustomWidthTooltip = styled(({className, ...props}: TooltipProps) => (
-    <Tooltip {...props} classes={{popper: className}} />
-))({
-    [`& .${tooltipClasses.tooltip}`]: {
-        maxWidth: 180,
-    },
-});
+fetchMock.enableMocks();
 
-export default function Actionables({
-    setFromDate,
-    fromDate,
-    setToDate,
-    toDate,
-    selectedProduct,
-    setSelectedProduct,
-    selectedSource,
-    setSelectedSource,
-}: ActionablesPageProps) {
-    const {scrollDir, scrollPosition} = useDetectScroll();
-    const theme = useTheme();
-    const fromDate_string = fromDate.format("DD/MM/YYYY");
-    const toDate_string = toDate.format("DD/MM/YYYY");
-    const [enableGenerateActions, setEnableGenerateActions] =
-        useState<boolean>(false);
+const mockSetFromDate = jest.fn();
+const mockSetToDate = jest.fn();
+const mockSetSelectedProduct = jest.fn();
+const mockSetSelectedSource = jest.fn();
 
-    const transitionDuration = {
-        enter: theme.transitions.duration.enteringScreen,
-        exit: theme.transitions.duration.leavingScreen,
-    };
-
-    const [refresh, setRefresh] = useState(0);
-
-    const [data, setData] = useState<Actionable[]>([]);
-
-    const [dataNew, setDataNew] = useState<Actionable[]>([]);
-    const [dataInProgress, setDataInProgress] = useState<Actionable[]>([]);
-    const [dataDone, setDataDone] = useState<Actionable[]>([]);
-    const [openCfmModal, setOpenCfmModal] = useState(false);
-    const [modalContent, setModalContent] = useState<React.ReactNode[]>([]);
-    const [loading, setLoading] = useState(false);
-
-    const urlPrefix =
-        process.env.NODE_ENV === "development"
-            ? "http://localhost:3000"
-            : "https://jbaaam-yl5rojgcbq-et.a.run.app";
-
-    useEffect(() => {
-        setEnableGenerateActions(
-            selectedProduct.length > 0 && selectedSource.length > 0
-        );
-    }, [selectedProduct, selectedSource]);
-
-    const transformCategory = (category: string) => {
-        // Insert spaces around / and &
-        // Convert to title case
-        return category
-            .replace(/([/&])/g, " $1 ") // Insert spaces around / and &
-            .replace(/\w\S*/g, function (txt) {
-                // Convert to title case
-                return (
-                    txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase()
-                );
-            });
-    };
-
-    const fetchData = async () => {
-        try {
-            const response = await fetch(`${urlPrefix}/actionables.json`, {
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/json",
+describe("Actionables Components", () => {
+    // Suppress errors, logs
+    jest.spyOn(global.console, "error").mockImplementation(() => jest.fn());
+    jest.spyOn(global.console, "log").mockImplementation(() => jest.fn());
+    fetchMock.mockResponses(
+        // Calendar
+        [
+            JSON.stringify({
+                earliest_date: "31/08/2023",
+                latest_date: "01/09/2024",
+            }),
+            {status: 200},
+        ],
+        // FilterProduct
+        [
+            JSON.stringify([
+                "Cards",
+                "Contact Center",
+                "DBS Treasure",
+                "Deposits",
+                "Digital Banking App",
+                "Financial GPS",
+                "General Insurance",
+                "Internet banking",
+                "Investments",
+                "Others",
+                "PayLah!",
+                "Payments",
+                "Remittance",
+                "Secured Loans",
+                "Self-Service Banking",
+                "Trading",
+                "Unsecured Loans",
+                "Webpage",
+            ]),
+            {status: 200},
+        ],
+        // FilterSource
+        [
+            JSON.stringify([
+                "5 Star Review",
+                "Call Centre",
+                "Problem Solution Survey",
+                "Product Survey",
+                "Social Media",
+            ]),
+            {status: 200},
+        ],
+        // Specific Actionables
+        [
+            JSON.stringify([
+                {
+                    message:
+                        "Actionable items processed and stored successfully",
                 },
-            });
-
-            if (!response.ok) {
-                throw new Error("Network response was not ok");
-            }
-
-            const result: Actionable[] = await response.json();
-            const newData = result
-                .filter(
-                    (item: Actionable) =>
-                        item.status.toLowerCase() === "new".toLowerCase()
-                )
-                .map((item) => {
-                    return {
-                        ...item,
-                        feedback_category: transformCategory(
-                            item.feedback_category
-                        ),
-                    };
-                });
-
-            setDataNew(newData);
-            const inProgressData = result.filter(
-                (item: Actionable) =>
-                    item.status.toLowerCase() === "in progress".toLowerCase()
-            );
-            setDataInProgress(inProgressData);
-            const doneData = result.filter(
-                (item: Actionable) =>
-                    item.status.toLowerCase() === "done".toLowerCase()
-            );
-            setDataDone(doneData);
-
-            setData(result);
-        } catch (error) {}
-    };
-
-    useEffect(() => {
-        fetchData();
-    }, [refresh]);
-
-    const handleGenerateActionsClick = () => {
-        if (selectedProduct.length === 0 || selectedSource.length === 0) {
-            setModalContent([
-                <Typography
-                    key="error"
-                    variant="h6"
-                    component="div"
-                    sx={{fontWeight: "bold"}}
-                >
-                    Error
-                </Typography>,
-                <Typography key="message" variant="body1" component="div">
-                    Please select product(s) and source(s).
-                </Typography>,
-            ]);
-            setOpenCfmModal(true);
-        } else {
-            setModalContent([
-                <Typography key="Modal-content">
-                    Are you sure? This will replace all current <b>Generated</b>{" "}
-                    Actions.
-                </Typography>,
-                <Box sx={{display: "flex", justifyContent: "flex-end", mt: 2}}>
-                    <Button onClick={() => setOpenCfmModal(false)}>No</Button>
-                    <Button
-                        onClick={() => {
-                            inference();
-                            setOpenCfmModal(false);
-                        }}
-                        color="primary"
-                        sx={{ml: 2}}
-                    >
-                        Yes
-                    </Button>
-                </Box>,
-            ]);
-            setOpenCfmModal(true);
-        }
-    };
-
-    const inference = () => {
-        setLoading(true);
-        fetch(
-            //ENDPOINT
-            // urlPrefix/controller_name/function(only if custom)?parameters&parameters
-            `${urlPrefix}/actionables/inference?fromDate=${fromDate_string}&toDate=${toDate_string}&product=${selectedProduct}&source=${selectedSource}`
-        )
-            .then((response) => response.json())
-            .then((data) => {
-                console.log("response inference", data);
-                setRefresh(Math.random());
-                setLoading(false);
-                if (
-                    data.message === "No data available to process actionables"
-                ) {
-                    setModalContent([
-                        <Typography
-                            key="error"
-                            variant="h6"
-                            component="div"
-                            sx={{fontWeight: "bold"}}
-                        >
-                            No data
-                        </Typography>,
-                        <Typography
-                            key="message"
-                            variant="body1"
-                            component="div"
-                        >
-                            There are no actionables to be generated from this
-                            data.
-                        </Typography>,
-                    ]);
-                    setOpenCfmModal(true);
-                }
-                return data;
-            })
-            .catch((error) => {
-                console.error("Error:", error);
-                setLoading(false);
-            });
-    };
-
-    const [actionsTrackedRaw, setActionsTrackedRaw] = useState<
-        Record<string, number>
-    >({
-        "Generated Actions": 0,
-        "In Progress": 0,
-        "Done": 0,
-    });
-
-    useEffect(() => {
-        const urlPrefix =
-            process.env.NODE_ENV === "development"
-                ? "http://localhost:3000"
-                : "https://jbaaam-yl5rojgcbq-et.a.run.app";
-        fetch(`${urlPrefix}/actionables.json`)
-            .then((response) => response.json())
-            .then((data: Actionable[]) => {
-                const generatedActionsData = data.filter(
-                    (item: Actionable) =>
-                        item.status.toLowerCase() ===
-                        "new".toLowerCase()
-                );
-                const inProgressData = data.filter(
-                    (item: Actionable) =>
-                        item.status.toLowerCase() ===
-                        "in progress".toLowerCase()
-                );
-                const doneData = data.filter(
-                    (item: Actionable) =>
-                        item.status.toLowerCase() === "done".toLowerCase()
-                );
-                setActionsTrackedRaw({
-                    "Generated Actions": generatedActionsData.length,
-                    "In Progress": inProgressData.length,
-                    "Done": doneData.length,
-                });
-            });
-    }, [refresh]);
-
-    return (
-        <Box sx={{maxWidth: "lg", mx: "auto", px: 2}}>
-            <Box
-                sx={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                }}
-            >
-                <h1>Actionables</h1>
-                <Button
-                    variant="contained"
-                    sx={{
-                        backgroundColor: enableGenerateActions
-                            ? "#e80000"
-                            : "#d3d3d3",
-                        boxShadow: 0,
-                        color: "#fff",
-                        fontWeight: "bold",
-                        borderRadius: 2,
-                        border: enableGenerateActions
-                            ? 0
-                            : "1px solid rgba(0, 0, 0, 0.12)",
-                        "&:hover": {
-                            backgroundColor: "#b80000",
-                            boxShadow: 0,
-                        },
-                    }}
-                    onClick={handleGenerateActionsClick}
-                    disabled={!enableGenerateActions}
-                >
-                    Generate Actionables
-                </Button>
-                <Backdrop
-                    sx={{
-                        color: "#fff",
-                        zIndex: (theme) => theme.zIndex.drawer + 1,
-                    }}
-                    open={loading}
-                >
-                    <Box
-                        sx={{
-                            display: "flex",
-                            flexDirection: "column",
-                            alignItems: "center",
-                            justifyContent: "center",
-                            minHeight: "100vh",
-                        }}
-                    >
-                        <CircularProgress color="inherit" />
-                        <Typography sx={{mt: 2}} color="inherit">
-                            Processing...
-                        </Typography>
-                    </Box>
-                </Backdrop>
-            </Box>
-            {/* Sticky, Freezes while scrolling */}
-            <Box
-                sx={{
-                    position: "sticky",
-                    top: 74,
-                    display: "flex",
-                    flexDirection: {xs: "column", sm: "row"},
-                    gap: 2,
-                    mb: 7,
-                    // pb: 1,
-                    // justifyContent: "flex-start",
-                    justifyContent: "center",
-                    alignItems: scrollPosition.top > 0 ? "center" : null,
-                    zIndex: 1000, // Ensure it's above other content
-                    backgroundColor:
-                        scrollPosition.top > 0
-                            ? theme.palette.mode === "dark"
-                                ? "#000"
-                                : "#E9E9EB"
-                            : null,
-                    borderRadius: 4,
-                }}
-            >
-                <Box sx={{flexBasis: {xs: "100%", sm: "40%"}, flexGrow: 1}}>
-                    <Calendar
-                        fromDate={fromDate}
-                        setFromDate={setFromDate}
-                        toDate={toDate}
-                        setToDate={setToDate}
-                    />
-                </Box>
-                <Box sx={{flexBasis: {xs: "100%", sm: "30%"}, flexGrow: 1}}>
-                    <FilterProduct
-                        selectedProduct={selectedProduct}
-                        setSelectedProduct={setSelectedProduct}
-                        multiple={true}
-                    />
-                </Box>
-                <Box sx={{flexBasis: {xs: "100%", sm: "30%"}, flexGrow: 1}}>
-                    <FilterSource
-                        selectedSource={selectedSource}
-                        setSelectedSource={setSelectedSource}
-                        multiple={true}
-                    />
-                </Box>
-                <Modal
-                    open={openCfmModal}
-                    onClose={() => setOpenCfmModal(false)}
-                    aria-labelledby="modal-content"
-                    aria-describedby="modal-description"
-                >
-                    <Box
-                        sx={{
-                            p: 2.5,
-                            bgcolor: "background.paper",
-                            top: "50%",
-                            left: "50%",
-                            transform: "translate(-50%, -50%)",
-                            position: "absolute",
-                            borderRadius: 3,
-                            boxShadow: "0px 0px 20px rgba(0, 0, 0, 0.1)",
-                        }}
-                    >
-                        <Typography
-                            id="modal-title"
-                            variant="h6"
-                            component="h2"
-                        >
-                            {modalContent}
-                        </Typography>
-                    </Box>
-                </Modal>
-            </Box>
-            <Box sx={{flexGrow: 1, mt: 2}}>
-                <Tooltip
-                    title={
-                        <span>
-                            <b>To Fix</b>: Feedback highlighting{" "}
-                            <u>frequent complaints or persistent issues</u> that
-                            require maintenance or repair.
-                            <br />
-                            <br />
-                            <b>To Keep in Mind</b>: Feedback with{" "}
-                            <u>mixed reviews</u>, containing both positive and
-                            negative comments, suggesting areas that require
-                            ongoing attention.
-                            <br />
-                            <br />
-                            <b>To Amplify</b>: Feedback that is generally
-                            neutral to positive but highlights areas with{" "}
-                            <u>potential for improvement</u>.
-                            <br />
-                            <br />
-                            <b>To Promote</b>: Feedback with a high majority of
-                            positive comments, indicating services or aspects
-                            DBS <u>should continue promoting</u>.
-                        </span>
-                    }
-                    placement="right-end"
-                    arrow
-                >
-                    <Grid container spacing={2}>
-                        <CustomWidthTooltip
-                            title={
-                                <span>
-                                    New actionables are{" "}
-                                    <b>always regenerated</b> here, move them to{" "}
-                                    <b>IN PROGRESS</b> or <b>DONE</b>!
-                                </span>
-                            }
-                            arrow
-                            placement="left-start"
-                        >
-                            <Grid item xs={4}>
-                                <Chip
-                                    icon={<NewReleasesTwoToneIcon />}
-                                    label={`GENERATED ACTIONS: ${actionsTrackedRaw['Generated Actions']}`}
-                                    color="secondary"
-                                    variant="outlined"
-                                    sx={{
-                                        mb: 2,
-                                        borderRadius: 3,
-                                        backgroundColor: "rgba(232, 0, 0, 0.2)",
-                                        fontWeight: "bold",
-                                        py: 2,
-                                        px: 0.5,
-                                        borderWidth: 2,
-                                    }}
-                                />
-                                {dataNew.length === 0 ? (
-                                    <Box sx={{width: "100%", height: "100%"}}>
-                                        <Typography
-                                            variant="body2"
-                                            color="grey"
-                                        >
-                                            No data
-                                        </Typography>
-                                    </Box>
-                                ) : (
-                                    <TodoList
-                                        data={dataNew}
-                                        setRefresh={setRefresh}
-                                        forWidget="GENERATED-ACTIONS"
-                                    />
-                                )}
-                            </Grid>
-                        </CustomWidthTooltip>
-                        <Grid item xs={4}>
-                            <Chip
-                                icon={<RotateRightTwoToneIcon />}
-                                label={`IN PROGRESS: ${actionsTrackedRaw['In Progress']}`}
-                                variant="outlined"
-                                sx={{
-                                    mb: 2,
-                                    color: "#DC6E00",
-                                    borderColor: "#DC6E00",
-                                    borderRadius: 3,
-                                    backgroundColor: "rgba(235, 135, 7, 0.2)",
-                                    fontWeight: "bold",
-                                    py: 2,
-                                    px: 0.5,
-                                    borderWidth: 2,
-                                    "& .MuiChip-icon": {
-                                        color: "#DC6E00",
-                                    },
-                                }}
-                            />
-                            <TodoList
-                                data={dataInProgress}
-                                setRefresh={setRefresh}
-                                forWidget="IN-PROGRESS"
-                            />
-                        </Grid>
-                        <Grid item xs={4}>
-                            <Chip
-                                icon={<CheckCircleTwoToneIcon />}
-                                label={`DONE: ${actionsTrackedRaw['Done']}`}
-                                variant="outlined"
-                                sx={{
-                                    mb: 2,
-                                    color: "#208306",
-                                    borderColor: "#208306",
-                                    borderRadius: 3,
-                                    backgroundColor: "rgba(32, 131, 6, 0.2)",
-                                    fontWeight: "bold",
-                                    py: 2,
-                                    px: 0.5,
-                                    borderWidth: 2,
-                                    "& .MuiChip-icon": {
-                                        color: "#208306",
-                                    },
-                                }}
-                            />
-                            <TodoList
-                                data={dataDone}
-                                setRefresh={setRefresh}
-                                forWidget="DONE"
-                            />
-                        </Grid>
-                    </Grid>
-                </Tooltip>
-            </Box>
-
-            <DialogAddAction
-                fromDate={fromDate}
-                toDate={toDate}
-                selectedProduct={selectedProduct}
-                selectedSource={selectedSource}
-                isDetailed={true}
-                setRefresh={setRefresh}
-            />
-        </Box>
+            ]),
+            {status: 200},
+        ],
+        [
+            JSON.stringify([
+                {
+                    message:
+                        "Actionable items processed and stored successfully",
+                },
+            ]),
+            {status: 200},
+        ],
+        // Actionables count
+        [
+            JSON.stringify([
+                {
+                    id: 727,
+                    action: "Improve communication and escalation processes within the DBS Hotline to ensure timely and effective resolution of customer issues, particularly those involving digital token setup.",
+                    status: "In Progress",
+                    subproduct: "DBS Hotline",
+                    actionable_category: "To Fix",
+                    feedback_category: '["Staff Related"]',
+                    feedback_json:
+                        '["redacted"]',
+                },
+                {
+                    id: 728,
+                    action: "Review and potentially adjust prepayment fees and interest rebate policies to ensure fairness and transparency for customers.",
+                    status: "Done",
+                    subproduct: "Car Loan",
+                    actionable_category: "To Promote",
+                    feedback_category:
+                        '["Process Related", "Technical Issue/System", "Charges/Fees & Interest"]',
+                    feedback_json:
+                        '["redacted1", "redacted2"]',
+                },
+            ]),
+            {status: 200},
+        ]
     );
-}
 
-export {};
+    it("renders overview Actionables", async () => {
+        render(
+            <Actionables
+                setFromDate={mockSetFromDate}
+                fromDate={dayjs()}
+                setToDate={mockSetToDate}
+                toDate={dayjs()}
+                selectedProduct={[]}
+                setSelectedProduct={mockSetSelectedProduct}
+                selectedSource={[]}
+                setSelectedSource={mockSetSelectedSource}
+            />
+        );
+        expect(screen.getAllByText(/Actionables/i).length).toBe(2);
+        expect(await screen.findByLabelText(/From/i)).toBeInTheDocument();
+        expect(await screen.findByLabelText(/Products/i)).toBeInTheDocument();
+        expect(await screen.findByLabelText(/Sources/i)).toBeInTheDocument();
+        expect(
+            await screen.findByText(/Generated Actions/i)
+        ).toBeInTheDocument();
+        expect(await screen.findByText(/In Progress/i)).toBeInTheDocument();
+        expect(await screen.findByText(/Done/i)).toBeInTheDocument();
+        expect(await screen.findByText(/No data/i)).toBeInTheDocument();
+        expect(screen.getAllByText(/To Fix/i).length).toBe(2);
+        expect(screen.getAllByText(/To Keep In Mind/i).length).toBe(2);
+        expect(screen.getAllByText(/To Amplify/i).length).toBe(2);
+        expect(screen.getAllByText(/To Promote/i).length).toBe(2);
+    });
+});
