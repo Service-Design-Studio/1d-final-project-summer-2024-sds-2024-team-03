@@ -90,7 +90,7 @@ describe("Dashboard Components", () => {
                     actionable_category: "To Fix",
                     feedback_category: '["Staff Related"]',
                     feedback_json:
-                        '["Customer posted in X claiming that she has emailed CEO to complain about digital token. Acknowledged customer\\u2019s post and assured CM that it was shared with the relevant team for necessary action. Upon further checking, CM first called on 28 Feb and CSO guided CM to set up digital token. CM wrote in to customerservice@dbs.com and not to CEO\\u2019s email address and case was escalated on 1 March. Tech investigation shows that there was no attempt of digital token set up based on logs. Customer Relations Manager (CRM) contacted customer; however, CM was abusive over the phone and requested for a senior CRM. SCRM has tried contacting CM but she was unreachable since 1 March."]',
+                        '["redacted"]',
                 },
                 {
                     id: 728,
@@ -101,11 +101,11 @@ describe("Dashboard Components", () => {
                     feedback_category:
                         '["Process Related", "Technical Issue/System", "Charges/Fees & Interest"]',
                     feedback_json:
-                        '["Car Loan Please elaborate on why you have selected [QID4-ChoiceGroup-SelectedChoices].\\nPlease do not provide any sensitive personal information, including login passwords or one-time passwords.: Get the info on the spot", "Car Loan Please elaborate on why you have selected [QID4-ChoiceGroup-SelectedChoices].\\nPlease do not provide any sensitive personal information, including login passwords or one-time passwords.: Staff was professional and courteous over the phone. She is sharp and has high attention to details. ", "Car Loan (Optional) We have now come to the end of the survey. Before you go, please share your feedback (if any) for us to improve your DBS Car Loan experience with us.(Please do not provide any sensitive personal information, including login passwords or one-time passwords.): Prepayment fees and interest rebate is not fair."]',
+                        '["redacted1", "redacted2"]',
                 },
             ]),
             {status: 200},
-        ],
+        ]
         // SentimentScoreGraph
         [
             JSON.stringify([
